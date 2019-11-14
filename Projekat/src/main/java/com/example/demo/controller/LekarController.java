@@ -10,5 +10,5 @@ public class LekarController {
 
 	@Autowired
 	private LekarService lekarService;
-	
+	private String a;
 }
