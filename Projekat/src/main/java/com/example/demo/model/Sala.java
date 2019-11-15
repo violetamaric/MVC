@@ -19,7 +19,6 @@ public class Sala {
 	private Long id;
 	
 	@Column(name="broj", nullable=false)
-	private int broj;
 	private String oznaka;
 	
 	@OneToMany(mappedBy = "sala", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
