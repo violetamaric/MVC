@@ -20,6 +20,7 @@ public class Sala {
 	
 	@Column(name="broj", nullable=false)
 	private int broj;
+	private String oznaka;
 	
 	@OneToMany(mappedBy = "sala", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Pregled> listaPregleda = new HashSet<Pregled>();
@@ -36,11 +37,12 @@ public class Sala {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public int getBroj() {
-		return broj;
+
+	public String getOznaka() {
+		return oznaka;
 	}
-	public void setBroj(int broj) {
-		this.broj = broj;
+	public void setOznaka(String oznaka) {
+		this.oznaka = oznaka;
 	}
 	public Set<Pregled> getListaPregleda() {
 		return listaPregleda;
@@ -57,43 +59,16 @@ public class Sala {
 	public Sala() {
 		super();
 	}
+	
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + broj;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((listaOperacija == null) ? 0 : listaOperacija.hashCode());
-		result = prime * result + ((listaPregleda == null) ? 0 : listaPregleda.hashCode());
-		return result;
+	public boolean equals(Object arg0) {
+		// TODO Auto-generated method stub
+		return super.equals(arg0);
 	}
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Sala other = (Sala) obj;
-		if (broj != other.broj)
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (listaOperacija == null) {
-			if (other.listaOperacija != null)
-				return false;
-		} else if (!listaOperacija.equals(other.listaOperacija))
-			return false;
-		if (listaPregleda == null) {
-			if (other.listaPregleda != null)
-				return false;
-		} else if (!listaPregleda.equals(other.listaPregleda))
-			return false;
-		return true;
+	public int hashCode() {
+		// TODO Auto-generated method stub
+		return super.hashCode();
 	}
 	public Klinika getKlinika() {
 		return klinika;
