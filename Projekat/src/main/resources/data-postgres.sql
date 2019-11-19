@@ -1,5 +1,5 @@
-insert into pacijent (ime, prezime, lbo, korisnicko_ime, lozinka, email) values ('Pera', 'Peric', '001', 'pera', 'pera', 'pera@gmail.com');
-insert into pacijent (ime, prezime, lbo, korisnicko_ime, lozinka, email) values ('Mita', 'Mitic', '002', 'mita', 'mita', 'mita@gmail.com');
+insert into pacijent (ime, prezime, lbo,  lozinka, email, adresa, grad, drzava, telefon) values ('Pera', 'Peric', '001', 'pera', 'pera@gmail.com', 'Temerinska 55','Novi Sad', 'Srbija','065241359');
+insert into pacijent (ime, prezime, lbo,  lozinka, email, adresa, grad, drzava, telefon) values ('Mita', 'Mitic', '002', 'mita', 'mita@gmail.com', 'Petra Drapsina 89', 'Novi Sad', 'Srbija','0642255696');
 insert into administratorkc (ime, prezime, korisnicko_ime, lozinka, email) values ('MVC', 'MVC', 'mvc', 'mvc', 'mvc@gmail.com');
 insert into administrator_klinike (ime, prezime, korisnicko_ime, lozinka, email) values ('Maga', 'Lakic', 'maga', 'maga', 'maga@gmail.com');
 insert into administrator_klinike (ime, prezime, korisnicko_ime, lozinka, email) values ('Ceca', 'Antesevic', 'ceca', 'ceca', 'ceca@gmail.com');

@@ -1,5 +1,7 @@
 package com.example.demo.dto;
 
+import javax.persistence.Column;
+
 import com.example.demo.model.Pacijent;
 import com.example.demo.model.ZdravstveniKarton;
 
@@ -15,19 +17,23 @@ public class PacijentDTO {
 
 	private String lbo;
 
-	private String korisnickoIme;
-
 	private String lozinka;
 
 	private String email;
 	
+	private String adresa;
 	
+	private String grad;
+	
+	private String drzava;
+
+	private String telefon;
 
 	public PacijentDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	public PacijentDTO(Pacijent pacijent) {
 		super();
 		// TODO Auto-generated constructor stub
@@ -92,14 +98,6 @@ public class PacijentDTO {
 		this.lbo = lbo;
 	}
 
-	public String getKorisnickoIme() {
-		return korisnickoIme;
-	}
-
-	public void setKorisnickoIme(String korisnickoIme) {
-		this.korisnickoIme = korisnickoIme;
-	}
-
 	public String getLozinka() {
 		return lozinka;
 	}
@@ -115,7 +113,45 @@ public class PacijentDTO {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
+
+	public String getAdresa() {
+		return adresa;
+	}
+
+	public void setAdresa(String adresa) {
+		this.adresa = adresa;
+	}
+
+	public String getGrad() {
+		return grad;
+	}
+
+	public void setGrad(String grad) {
+		this.grad = grad;
+	}
+
+	public String getDrzava() {
+		return drzava;
+	}
+
+	public void setDrzava(String drzava) {
+		this.drzava = drzava;
+	}
+
+	public String getTelefon() {
+		return telefon;
+	}
+
+	public void setTelefon(String telefon) {
+		this.telefon = telefon;
+	}
+
+	@Override
+	public String toString() {
+		return "PacijentDTO [id=" + id + ", zdravstveniKarton=" + zdravstveniKarton + ", ime=" + ime + ", prezime="
+				+ prezime + ", lbo=" + lbo + ", lozinka=" + lozinka + ", email=" + email + ", adresa=" + adresa
+				+ ", grad=" + grad + ", drzava=" + drzava + ", telefon=" + telefon + "]";
+	}
 	
 
 }
