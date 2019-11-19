@@ -1,12 +1,19 @@
 package com.example.demo.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class MedicinskaSestra {
@@ -31,11 +38,15 @@ public class MedicinskaSestra {
 	@Column(name="lozinka", nullable=false)
 	private String lozinka;
 	
-	private ArrayList<Pacijent> listaPacijenata;
+	@ManyToMany(mappedBy = "listaMedicinskihSestara")
+	private Set<Pacijent> listaPacijenata = new HashSet<Pacijent>();
+	
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Klinika klinika;
 	//kalendar
 	
-	
+	@OneToMany(mappedBy = "medicinskaSestra", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Recept> recepti = new HashSet<Recept>();
 	
 	public String getIme() {
 		return ime;
@@ -67,10 +78,10 @@ public class MedicinskaSestra {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public ArrayList<Pacijent> getListaPacijenata() {
+	public Set<Pacijent> getListaPacijenata() {
 		return listaPacijenata;
 	}
-	public void setListaPacijenata(ArrayList<Pacijent> listaPacijenata) {
+	public void setListaPacijenata(Set<Pacijent> listaPacijenata) {
 		this.listaPacijenata = listaPacijenata;
 	}
 	public Klinika getKlinika() {
@@ -96,6 +107,18 @@ public class MedicinskaSestra {
 	public String toString() {
 		// TODO Auto-generated method stub
 		return super.toString();
+	}
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+	public Set<Recept> getRecepti() {
+		return recepti;
+	}
+	public void setRecepti(Set<Recept> recepti) {
+		this.recepti = recepti;
 	}
 	
 	

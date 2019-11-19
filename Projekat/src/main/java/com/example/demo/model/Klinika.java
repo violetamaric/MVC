@@ -1,12 +1,18 @@
 package com.example.demo.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Klinika {
@@ -14,7 +20,6 @@ public class Klinika {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
 	
 	@Column(name="naziv", nullable=false)
 	private String naziv;
@@ -24,12 +29,33 @@ public class Klinika {
 	
 	@Column(name="opis", nullable=false)
 	private String opis;
+	
+//	@Column(name="izvestajOKlinici", nullable=false)
+//	private IzvestajOKlinici izvestajOKlinici;
+	
 	//termini sloobodni
-	private ArrayList<Lekar> listaLekara;
-	private ArrayList<MedicinskaSestra> listaMedSestara;
-	private ArrayList<Sala> listaSala;
+	
+	@OneToMany(mappedBy = "klinika", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Pregled> listaPregleda = new HashSet<Pregled>();
+	
+	@OneToMany(mappedBy = "klinika", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Operacija> listaOperacija = new HashSet<Operacija>();
+	
+	@OneToMany(mappedBy = "klinika", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Lekar> listaLekara = new HashSet<Lekar>();
+	
+	
+	@OneToMany(mappedBy = "klinika", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<MedicinskaSestra> listaMedSestara = new HashSet<MedicinskaSestra>();
+	
+	@OneToMany(mappedBy = "klinika", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Sala> listaSala = new HashSet<Sala>();
 	//cenovnik
-	private ArrayList<AdministratorKlinike> listaAdminKlinike;
+	@OneToMany(mappedBy = "klinika", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<AdministratorKlinike> listaAdminKlinike = new HashSet<AdministratorKlinike>();
+	
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private KlinickiCentar klinickiCentar;
 	
 	@Column(name="ocena", nullable=false)
 	private int ocena; 
@@ -39,6 +65,18 @@ public class Klinika {
 	public String getNaziv() {
 		return naziv;
 	}
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+//	public IzvestajOKlinici getIzvestajOKlinici() {
+//		return izvestajOKlinici;
+//	}
+//	public void setIzvestajOKlinici(IzvestajOKlinici izvestajOKlinici) {
+//		this.izvestajOKlinici = izvestajOKlinici;
+//	}
 	public int getOcena() {
 		return ocena;
 	}
@@ -60,28 +98,28 @@ public class Klinika {
 	public void setOpis(String opis) {
 		this.opis = opis;
 	}
-	public ArrayList<Lekar> getListaLekara() {
+	public Set<Lekar> getListaLekara() {
 		return listaLekara;
 	}
-	public void setListaLekara(ArrayList<Lekar> listaLekara) {
+	public void setListaLekara(Set<Lekar> listaLekara) {
 		this.listaLekara = listaLekara;
 	}
-	public ArrayList<MedicinskaSestra> getListaMedSestara() {
+	public Set<MedicinskaSestra> getListaMedSestara() {
 		return listaMedSestara;
 	}
-	public void setListaMedSestara(ArrayList<MedicinskaSestra> listaMedSestara) {
+	public void setListaMedSestara(Set<MedicinskaSestra> listaMedSestara) {
 		this.listaMedSestara = listaMedSestara;
 	}
-	public ArrayList<Sala> getListaSala() {
+	public Set<Sala> getListaSala() {
 		return listaSala;
 	}
-	public void setListaSala(ArrayList<Sala> listaSala) {
+	public void setListaSala(Set<Sala> listaSala) {
 		this.listaSala = listaSala;
 	}
-	public ArrayList<AdministratorKlinike> getListaAdminKlinike() {
+	public Set<AdministratorKlinike> getListaAdminKlinike() {
 		return listaAdminKlinike;
 	}
-	public void setListaAdminKlinike(ArrayList<AdministratorKlinike> listaAdminKlinike) {
+	public void setListaAdminKlinike(Set<AdministratorKlinike> listaAdminKlinike) {
 		this.listaAdminKlinike = listaAdminKlinike;
 	}
 	public Klinika() {
@@ -101,6 +139,24 @@ public class Klinika {
 	public String toString() {
 		// TODO Auto-generated method stub
 		return super.toString();
+	}
+	public Set<Pregled> getListaPregleda() {
+		return listaPregleda;
+	}
+	public void setListaPregleda(Set<Pregled> listaPregleda) {
+		this.listaPregleda = listaPregleda;
+	}
+	public Set<Operacija> getListaOperacija() {
+		return listaOperacija;
+	}
+	public void setListaOperacija(Set<Operacija> listaOperacija) {
+		this.listaOperacija = listaOperacija;
+	}
+	public KlinickiCentar getKlinickiCentar() {
+		return klinickiCentar;
+	}
+	public void setKlinickiCentar(KlinickiCentar klinickiCentar) {
+		this.klinickiCentar = klinickiCentar;
 	}
 	
 	

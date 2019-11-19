@@ -1,12 +1,21 @@
 package com.example.demo.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Lekar {
@@ -30,11 +39,19 @@ public class Lekar {
 	@Column(name="lozinka", nullable=false)
 	private String lozinka;
 	
-	private ArrayList<Pacijent> listaPacijenata;
+	@ManyToMany
+	@JoinTable(name = "lekar_pacijent", joinColumns = @JoinColumn(name = "pacijent_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "lekar_id", referencedColumnName = "id"))
+	private Set<Pacijent> listaPacijenata = new HashSet<Pacijent>();
+	
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Klinika klinika;
 	//kalendar
-	private ArrayList<Operacija> listaOperacija;
-	private ArrayList<Pregled> listaPregleda;
+	
+	@OneToMany(mappedBy = "lekar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Operacija> listaOperacija = new HashSet<Operacija>();
+	
+	@OneToMany(mappedBy = "lekar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Pregled> listaPregleda = new HashSet<Pregled>();
 	
 	@Column(name="ocena", nullable=false)
 	private int ocena; 
@@ -59,16 +76,16 @@ public class Lekar {
 	public void setOcena(int ocena) {
 		this.ocena = ocena;
 	}
-	public ArrayList<Operacija> getListaOperacija() {
+	public Set<Operacija> getListaOperacija() {
 		return listaOperacija;
 	}
-	public void setListaOperacija(ArrayList<Operacija> listaOperacija) {
+	public void setListaOperacija(Set<Operacija> listaOperacija) {
 		this.listaOperacija = listaOperacija;
 	}
-	public ArrayList<Pregled> getListaPregleda() {
+	public Set<Pregled> getListaPregleda() {
 		return listaPregleda;
 	}
-	public void setListaPregleda(ArrayList<Pregled> listaPregleda) {
+	public void setListaPregleda(Set<Pregled> listaPregleda) {
 		this.listaPregleda = listaPregleda;
 	}
 	public String getIme() {
@@ -89,10 +106,10 @@ public class Lekar {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public ArrayList<Pacijent> getListaPacijenata() {
+	public Set<Pacijent> getListaPacijenata() {
 		return listaPacijenata;
 	}
-	public void setListaPacijenata(ArrayList<Pacijent> listaPacijenata) {
+	public void setListaPacijenata(Set<Pacijent> listaPacijenata) {
 		this.listaPacijenata = listaPacijenata;
 	}
 	public Klinika getKlinika() {
@@ -118,6 +135,12 @@ public class Lekar {
 	public String toString() {
 		// TODO Auto-generated method stub
 		return super.toString();
+	}
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
 	}
 	
 	

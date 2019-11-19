@@ -1,12 +1,16 @@
 package com.example.demo.model;
 
 import java.util.ArrayList;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class AdministratorKlinike {
@@ -30,11 +34,12 @@ public class AdministratorKlinike {
 	@Column(name="email", nullable=false)
 	private String email;
 	
-
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Klinika klinika; // samo id do klinike 
-	private ArrayList<Pregled> listaPregleda;
-	private ArrayList<Operacija> listaOperacija; //?? proveriti
 	
+//	private Set<Pregled> listaPregleda;
+//	private Set<Operacija> listaOperacija; //?? proveriti
+//	
 	public String getIme() {
 		return ime;
 	}
@@ -71,18 +76,27 @@ public class AdministratorKlinike {
 	public void setKlinika(Klinika klinika) {
 		this.klinika = klinika;
 	}
-	public ArrayList<Pregled> getListaPregleda() {
-		return listaPregleda;
+	
+	
+	
+	public Long getId() {
+		return id;
 	}
-	public void setListaPregleda(ArrayList<Pregled> listaPregleda) {
-		this.listaPregleda = listaPregleda;
+	public void setId(Long id) {
+		this.id = id;
 	}
-	public ArrayList<Operacija> getListaOperacija() {
-		return listaOperacija;
-	}
-	public void setListaOperacija(ArrayList<Operacija> listaOperacija) {
-		this.listaOperacija = listaOperacija;
-	}
+	//	public Set<Pregled> getListaPregleda() {
+//		return listaPregleda;
+//	}
+//	public void setListaPregleda(Set<Pregled> listaPregleda) {
+//		this.listaPregleda = listaPregleda;
+//	}
+//	public Set<Operacija> getListaOperacija() {
+//		return listaOperacija;
+//	}
+//	public void setListaOperacija(Set<Operacija> listaOperacija) {
+//		this.listaOperacija = listaOperacija;
+//	}
 	public AdministratorKlinike() {
 		super();
 	}
