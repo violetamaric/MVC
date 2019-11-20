@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.model.Lekar;
+import com.example.demo.model.Pacijent;
 import com.example.demo.repository.LekarRepository;
 
 
@@ -27,5 +28,9 @@ public class LekarService {
 	
 	public Lekar save(Lekar lekar) {
 		return lekarRepository.save(lekar);
+	}
+	
+	public Lekar findByEmailAndLozinka(String email, String lozinka) {
+		return lekarRepository.findByEmailAndLozinka(email, lozinka);
 	}
 }

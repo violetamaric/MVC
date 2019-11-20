@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import com.example.demo.model.AdministratorKC;
+import com.example.demo.model.Pacijent;
 
 public interface AdministratorKCRepository extends JpaRepository<AdministratorKC, Long> {
 	
@@ -13,7 +14,8 @@ public interface AdministratorKCRepository extends JpaRepository<AdministratorKC
 	
 	AdministratorKC findByEmail(String email);
 	
-	
+	@Query("select p from AdministratorKC p where p.email = ?1 and p.lozinka = ?2")
+	AdministratorKC findByEmailAndLozinka(String email, String lozinka);
 	
 //	@Query("select a from AdministratorKC a where a.email =?1 and a.lozinka?2")
 //	AdministratorKC fidAdminKCByEmailAndLozinka(String email, String lozinka);
