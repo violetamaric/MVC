@@ -1,14 +1,16 @@
 package com.example.demo.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class AdministratorKC {
-	
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,8 +22,6 @@ public class AdministratorKC {
 	@Column(name="prezime", nullable=false)
 	private String prezime;
 	
-	@Column(name="korisnickoIme", nullable=false)
-	private String korisnickoIme;
 	
 	@Column(name="lozinka", nullable=false)
 	private String lozinka;
@@ -29,7 +29,7 @@ public class AdministratorKC {
 	@Column(name="email", nullable=false)
 	private String email;
 	
-
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private KlinickiCentar klinickiCentar;
 	
 	public AdministratorKC() {
@@ -47,12 +47,7 @@ public class AdministratorKC {
 	public void setPrezime(String prezime) {
 		this.prezime = prezime;
 	}
-	public String getKorisnickoIme() {
-		return korisnickoIme;
-	}
-	public void setKorisnickoIme(String korisnickoIme) {
-		this.korisnickoIme = korisnickoIme;
-	}
+	
 	public String getLozinka() {
 		return lozinka;
 	}
@@ -87,4 +82,11 @@ public class AdministratorKC {
 		// TODO Auto-generated method stub
 		return super.toString();
 	}
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+	
 }

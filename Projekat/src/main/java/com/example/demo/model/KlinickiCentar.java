@@ -1,12 +1,17 @@
 package com.example.demo.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 @Entity
 public class KlinickiCentar {
@@ -24,9 +29,11 @@ public class KlinickiCentar {
 	@Column(name="opis", nullable=false)
 	private String opis;
 	
+	@OneToMany(mappedBy = "klinickiCentar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Klinika> listaKlinika = new HashSet<Klinika>();
 	
-	private ArrayList<Klinika> listaKlinika;
-	private ArrayList<AdministratorKC> listaAdminKC;
+	@OneToMany(mappedBy = "klinickiCentar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<AdministratorKC> listaAdminKC = new HashSet<AdministratorKC>();
 	//dijagnoza i sifrarnik 
 	public String getNaziv() {
 		return naziv;
@@ -46,16 +53,16 @@ public class KlinickiCentar {
 	public void setOpis(String opis) {
 		this.opis = opis;
 	}
-	public ArrayList<Klinika> getListaKlinika() {
+	public Set<Klinika> getListaKlinika() {
 		return listaKlinika;
 	}
-	public void setListaKlinika(ArrayList<Klinika> listaKlinika) {
+	public void setListaKlinika(Set<Klinika> listaKlinika) {
 		this.listaKlinika = listaKlinika;
 	}
-	public ArrayList<AdministratorKC> getListaAdminKC() {
+	public Set<AdministratorKC> getListaAdminKC() {
 		return listaAdminKC;
 	}
-	public void setListaAdminKC(ArrayList<AdministratorKC> listaAdminKC) {
+	public void setListaAdminKC(Set<AdministratorKC> listaAdminKC) {
 		this.listaAdminKC = listaAdminKC;
 	}
 	public KlinickiCentar() {
@@ -75,6 +82,12 @@ public class KlinickiCentar {
 	public String toString() {
 		// TODO Auto-generated method stub
 		return super.toString();
+	}
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
 	}
 	
 	
