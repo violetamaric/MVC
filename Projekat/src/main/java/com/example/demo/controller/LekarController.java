@@ -54,11 +54,11 @@ public class LekarController {
 		return new ResponseEntity<>(lekarDTO, HttpStatus.OK);
 	}
 	
-	@PutMapping(consumes = "application/json")
+	@PutMapping(value="/update", consumes = "application/json")
 	public ResponseEntity<LekarDTO> updateLekar(@RequestBody LekarDTO lekarDTO) {
 
 		// a student must exist
-		Lekar lekar = lekarService.findOne(lekarDTO.getId());
+		Lekar lekar = lekarService.findByEmail(lekarDTO.getEmail());
 
 		if (lekar == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -66,7 +66,7 @@ public class LekarController {
 
 		lekar.setIme(lekarDTO.getIme());
 		lekar.setPrezime(lekarDTO.getPrezime());
-		lekar.setEmail(lekarDTO.getEmail());
+		lekar.setTelefon(lekarDTO.getTelefon());
 
 		lekar = lekarService.save(lekar);
 		return new ResponseEntity<>(new LekarDTO(lekar), HttpStatus.OK);

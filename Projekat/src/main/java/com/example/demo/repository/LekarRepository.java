@@ -14,4 +14,8 @@ public interface LekarRepository extends JpaRepository<Lekar, Long>{
 	
 	@Query("select p from Lekar p where p.email = ?1 and p.lozinka = ?2")
 	Lekar findByEmailAndLozinka(String email, String lozinka);
+	
+	Lekar findByEmail(String email);
+	
+	
 }

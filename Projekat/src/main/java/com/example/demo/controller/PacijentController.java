@@ -3,6 +3,8 @@ package com.example.demo.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,17 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.PacijentDTO;
-import com.example.demo.dto.Uloga;
 import com.example.demo.dto.UserDTO;
-import com.example.demo.model.AdministratorKC;
-import com.example.demo.model.AdministratorKlinike;
-import com.example.demo.model.Lekar;
-import com.example.demo.model.MedicinskaSestra;
 import com.example.demo.model.Pacijent;
-import com.example.demo.service.AdministratorKCService;
-import com.example.demo.service.AdministratorKlinikeService;
-import com.example.demo.service.LekarService;
-import com.example.demo.service.MedicinskaSestraService;
+import com.example.demo.service.EmailService;
 import com.example.demo.service.PacijentService;
 
 @RestController
@@ -35,6 +29,11 @@ public class PacijentController {
 
 	@Autowired
 	private PacijentService pacijentService;
+	
+	@Autowired
+	private EmailService emailService;
+	
+	private Logger logger = LoggerFactory.getLogger(UserController.class);
 	
 	@GetMapping(value = "/all")
 	public ResponseEntity<List<PacijentDTO>> getAll() {
@@ -78,6 +77,20 @@ public class PacijentController {
 
 		pacijent = pacijentService.save(pacijent);
 		return new ResponseEntity<>(new PacijentDTO(pacijent), HttpStatus.CREATED);
+	}
+	
+	@PostMapping(path = "/signup", consumes = "application/json")
+	@CrossOrigin(origins = "http://localhost:3000")
+	public String signUpAsync(@RequestBody UserDTO userDTO){
+
+		//slanje emaila
+		try {
+			emailService.sendNotificaitionAsync(userDTO);
+		}catch( Exception e ){
+			logger.info("Greska prilikom slanja emaila: " + e.getMessage());
+		}
+
+		return "success";
 	}
 	
 

@@ -14,18 +14,21 @@ public class LekarDTO {
 	private String lozinka;
 
 	private String email;
+	
+	private String telefon;
 
 	public LekarDTO() {
 		super();
 	}
 
-	public LekarDTO(Long id, String ime, String prezime, String lozinka, String email) {
+	public LekarDTO(Long id, String ime, String prezime, String lozinka, String email, String telefon) {
 		super();
 		this.id = id;
 		this.ime = ime;
 		this.prezime = prezime;
 		this.lozinka = lozinka;
 		this.email = email;
+		this.telefon=telefon;
 	}
 	
 	public LekarDTO(Lekar lekar) {
@@ -36,6 +39,17 @@ public class LekarDTO {
 		this.prezime = lekar.getPrezime();
 		this.lozinka = lekar.getLozinka();
 		this.email = lekar.getEmail();
+		this.telefon = lekar.getTelefon();
+	}
+
+	
+	
+	public String getTelefon() {
+		return telefon;
+	}
+
+	public void setTelefon(String telefon) {
+		this.telefon = telefon;
 	}
 
 	public Long getId() {
