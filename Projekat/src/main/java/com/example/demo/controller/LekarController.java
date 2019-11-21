@@ -31,7 +31,6 @@ public class LekarController {
 
 		Lekar lekar = lekarService.findOne(id);
 
-		// studen must exist
 		if (lekar == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
@@ -59,6 +58,7 @@ public class LekarController {
 
 		// a student must exist
 		Lekar lekar = lekarService.findOne(lekarDTO.getId());
+		System.out.println("Lekar update " + lekar);
 
 		if (lekar == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
