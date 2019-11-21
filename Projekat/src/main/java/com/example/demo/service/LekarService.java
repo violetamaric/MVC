@@ -21,6 +21,9 @@ public class LekarService {
 	public Lekar findOne(Long id) {
 		return lekarRepository.findById(id).orElseGet(null);
 	}
+	public Lekar findByEmail(String email) {
+		return lekarRepository.findByEmail(email);
+	}
 	
 	public List<Lekar> findAll() {
 		return lekarRepository.findAll();

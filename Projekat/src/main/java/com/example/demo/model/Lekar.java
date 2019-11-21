@@ -39,6 +39,9 @@ public class Lekar {
 	@Column(name="lozinka", nullable=false)
 	private String lozinka;
 	
+	@Column(name="telefon", nullable=false)
+	private String telefon;
+	
 	@ManyToMany
 	@JoinTable(name = "lekar_pacijent", joinColumns = @JoinColumn(name = "pacijent_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "lekar_id", referencedColumnName = "id"))
 	private Set<Pacijent> listaPacijenata = new HashSet<Pacijent>();
@@ -58,6 +61,13 @@ public class Lekar {
 
 
 	
+	
+	public String getTelefon() {
+		return telefon;
+	}
+	public void setTelefon(String telefon) {
+		this.telefon = telefon;
+	}
 	public String getKorisnickoIme() {
 		return korisnickoIme;
 	}
