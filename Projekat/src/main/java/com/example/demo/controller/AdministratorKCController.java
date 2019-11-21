@@ -72,10 +72,10 @@ public class AdministratorKCController {
 	
 	//mozda treba preko maila ali nzm 
 	//vrati mi listu klinika u klinickom centru
-	@GetMapping(value = "/listaKlinika/{administratorKCId}")
-	public ResponseEntity<List<KlinikaDTO>> getListaKlinika(@PathVariable Long administratorKCId) {
+	@GetMapping(value = "/listaKlinika/{email}")
+	public ResponseEntity<List<KlinikaDTO>> getListaKlinika(@PathVariable String email) {
 
-		AdministratorKC administratorKC = administratorKCService.findById(administratorKCId);
+		AdministratorKC administratorKC = administratorKCService.findByEmail(email);
 		
 		KlinickiCentar klinickiCentar = administratorKC.getKlinickiCentar();
 		
@@ -97,10 +97,10 @@ public class AdministratorKCController {
 	}
 	
 	//vrati mi listu svih admina klinika u klinickom centru
-	@GetMapping(value = "/listaAdministratoraKlinika/{administratorKCId}")
-	public ResponseEntity<List<AdministratorKlinikeDTO>> getListaAdministratoraKlinika(@PathVariable Long administratorKCId) {
+	@GetMapping(value = "/listaAdministratoraKlinika/{email}")
+	public ResponseEntity<List<AdministratorKlinikeDTO>> getListaAdministratoraKlinika(@PathVariable String email) {
 
-		AdministratorKC administratorKC = administratorKCService.findById(administratorKCId);
+		AdministratorKC administratorKC = administratorKCService.findByEmail(email);
 		
 		KlinickiCentar klinickiCentar = administratorKC.getKlinickiCentar();
 		List<AdministratorKlinikeDTO> lista = new ArrayList<>();
@@ -119,10 +119,10 @@ public class AdministratorKCController {
 	}
 	
 	//vrati mi podatke o klinickom centru
-	@GetMapping(value = "/klinickiCentar/{administratorKCId}")
-	public ResponseEntity<KlinickiCentarDTO> getKlinickiCentar(@PathVariable Long administratorKCId) {
+	@GetMapping(value = "/klinickiCentar/{email}")
+	public ResponseEntity<KlinickiCentarDTO> getKlinickiCentar(@PathVariable String email) {
 		
-		AdministratorKC administratorKC = administratorKCService.findById(administratorKCId);
+		AdministratorKC administratorKC = administratorKCService.findByEmail(email);
 		
 		KlinickiCentar kc = administratorKC.getKlinickiCentar();
 		KlinickiCentarDTO kcDTO = new KlinickiCentarDTO();
