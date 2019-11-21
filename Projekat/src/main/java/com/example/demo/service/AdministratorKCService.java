@@ -15,9 +15,6 @@ public class AdministratorKCService {
 	@Autowired
 	private AdministratorKCRepository administratorKCRepository;
 	
-//	public AdministratorKC findAdminKCByEmailAndLozinka(String email, String lozinka) {
-//		return administratorKCRepository.fidAdminKCByEmailAndLozinka(email, lozinka);
-//	}
 
 	public List<AdministratorKC> findAll(){
 		return administratorKCRepository.findAll();
