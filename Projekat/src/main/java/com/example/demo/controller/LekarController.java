@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -38,7 +39,21 @@ public class LekarController {
 
 		return new ResponseEntity<>(new LekarDTO(lekar), HttpStatus.OK);
 	}
-
+	
+	@GetMapping(value = "/getLekarByEmail/{email}")
+	@CrossOrigin(origins = "http://localhost:3000")
+	public ResponseEntity<LekarDTO> findByEmail(@PathVariable String email){
+		
+		Lekar lekar = lekarService.findByEmail(email);
+		if (lekar == null) {
+			System.out.println("Lekar nije pronadjen");
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		System.out.println("Lekar je pronadjen : "+ lekar.getEmail());
+		
+		return new ResponseEntity<>(new LekarDTO(lekar), HttpStatus.OK);
+	}
+	
 	
 	@GetMapping(value = "/all")
 	public ResponseEntity<List<LekarDTO>> getAll() {
@@ -54,15 +69,19 @@ public class LekarController {
 		return new ResponseEntity<>(lekarDTO, HttpStatus.OK);
 	}
 	
-	@PutMapping(value="/update", consumes = "application/json")
+	@PutMapping(path="/update", consumes = "application/json")
+	@CrossOrigin(origins = "http://localhost:3000")
 	public ResponseEntity<LekarDTO> updateLekar(@RequestBody LekarDTO lekarDTO) {
 
 		// a student must exist
+		System.out.println("LEKAR UPDRATE");
 		Lekar lekar = lekarService.findByEmail(lekarDTO.getEmail());
 
-		if (lekar == null) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
+//		System.out.println("Lekar update: " + lekar.getEmail());
+//		if (lekar == null) {
+//			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//		}
+		
 
 		lekar.setIme(lekarDTO.getIme());
 		lekar.setPrezime(lekarDTO.getPrezime());
