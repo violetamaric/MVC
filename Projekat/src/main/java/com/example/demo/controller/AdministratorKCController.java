@@ -14,17 +14,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.AdministratorKCDTO;
 import com.example.demo.dto.AdministratorKlinikeDTO;
+import com.example.demo.dto.DijagnozaDTO;
 import com.example.demo.dto.KlinickiCentarDTO;
 import com.example.demo.dto.KlinikaDTO;
+import com.example.demo.dto.LekDTO;
 import com.example.demo.model.AdministratorKC;
 import com.example.demo.model.AdministratorKlinike;
+import com.example.demo.model.Dijagnoza;
 import com.example.demo.model.KlinickiCentar;
 import com.example.demo.model.Klinika;
+import com.example.demo.model.Lek;
 import com.example.demo.service.AdministratorKCService;
 
 /* Za pristupanje svim administratorima KC : http://localhost:8028/api/administratoriKC/svi
  * 
- * Za pronalazenje admina KC pomocu maila : http://localhost:8028/api/administratoriKC/ronadjenAdministratorKC/{email}
+ * Za pronalazenje admina KC pomocu maila : http://localhost:8028/api/administratoriKC/pronadjenAdministratorKC/{email}
  * 
  * Za vracanje liste klinika u klinickom centru
  *  na profilu administratoraKC:   http://localhost:8028/api/administratoriKC/listaKlinika/{administratorKCId}
@@ -135,17 +139,49 @@ public class AdministratorKCController {
 		return new ResponseEntity<>(kcDTO, HttpStatus.OK);
 	}
 	
-	//vrati mi listu zahteva od korisnika tj mejlove
-//	@GetMapping(value = "/listaZahtevaZaRegistraciju/{administratorKCId}")
-//	public ResponseEntity<List<AdministratorKlinikeDTO>> getListaZahtevaZaRegistraciju(@PathVariable Long administratorKCId) {
-//
-//		AdministratorKC administratorKC = administratorKCService.findById(administratorKCId);
-//		
-//		List<AdministratorKlinikeDTO> lista = new ArrayList<>();
-//		
-//
-//		return new ResponseEntity<>(lista, HttpStatus.OK);
-//	}
+	//vrati mi listu lekova u klinickom centru
+	@GetMapping(value = "/listaLekova/{email}")
+	public ResponseEntity<List<LekDTO>> getListaLekova(@PathVariable String email) {
+
+		AdministratorKC administratorKC = administratorKCService.findByEmail(email);
+		
+		KlinickiCentar klinickiCentar = administratorKC.getKlinickiCentar();
+		
+		List<LekDTO> lista = new ArrayList<>();
+		
+		for (Lek k : klinickiCentar.getListaLekova()) {
+			LekDTO kcDTO = new LekDTO();
+			kcDTO.setId(k.getId());
+			kcDTO.setNaziv(k.getNaziv());
+			kcDTO.setSifra(k.getSifra());
+			lista.add(kcDTO);
+		}
+
+		return new ResponseEntity<>(lista, HttpStatus.OK);
+
+		
+	}
+	
+	//vrati mi listu dijagnoza u klinickom centru
+	@GetMapping(value = "/listaDijagnoza/{email}")
+	public ResponseEntity<List<DijagnozaDTO>> getListaDijagnoza(@PathVariable String email) {
+
+		AdministratorKC administratorKC = administratorKCService.findByEmail(email);
+			
+		KlinickiCentar klinickiCentar = administratorKC.getKlinickiCentar();
+			
+		List<DijagnozaDTO> lista = new ArrayList<>();
+			
+		for (Dijagnoza k : klinickiCentar.getListaDijagnoza()) {
+			DijagnozaDTO kcDTO = new DijagnozaDTO();
+			kcDTO.setId(k.getId());
+			kcDTO.setNaziv(k.getNaziv());
+			kcDTO.setOpis(k.getOpis());
+			lista.add(kcDTO);
+		}
+
+		return new ResponseEntity<>(lista, HttpStatus.OK);	
+	}
 
 	
 	

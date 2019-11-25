@@ -10,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 @Entity
@@ -23,6 +24,9 @@ public class Dijagnoza {
 	
 	@Column(name="naziv", nullable=false)
 	private String naziv;
+	
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private KlinickiCentar klinickiCentar;
 	
 	@OneToMany(mappedBy = "dijagnoza", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<IzvestajOPregledu> listaIzvestajaOPregledu = new HashSet<IzvestajOPregledu>();
@@ -57,6 +61,15 @@ public class Dijagnoza {
 
 	public void setListaIzvestajaOPregledu(Set<IzvestajOPregledu> listaIzvestajaOPregledu) {
 		this.listaIzvestajaOPregledu = listaIzvestajaOPregledu;
+	}
+	
+
+	public KlinickiCentar getKlinickiCentar() {
+		return klinickiCentar;
+	}
+
+	public void setKlinickiCentar(KlinickiCentar klinickiCentar) {
+		this.klinickiCentar = klinickiCentar;
 	}
 
 	public Dijagnoza() {

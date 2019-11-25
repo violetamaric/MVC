@@ -35,6 +35,14 @@ public class KlinickiCentar {
 	@OneToMany(mappedBy = "klinickiCentar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<AdministratorKC> listaAdminKC = new HashSet<AdministratorKC>();
 	//dijagnoza i sifrarnik 
+	
+	@OneToMany(mappedBy = "klinickiCentar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Lek> listaLekova = new HashSet<Lek>();
+	
+	@OneToMany(mappedBy = "klinickiCentar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Dijagnoza> listaDijagnoza = new HashSet<Dijagnoza>();
+	
+	
 	public String getNaziv() {
 		return naziv;
 	}
@@ -64,6 +72,20 @@ public class KlinickiCentar {
 	}
 	public void setListaAdminKC(Set<AdministratorKC> listaAdminKC) {
 		this.listaAdminKC = listaAdminKC;
+	}
+	
+	
+	public Set<Lek> getListaLekova() {
+		return listaLekova;
+	}
+	public void setListaLekova(Set<Lek> listaLekova) {
+		this.listaLekova = listaLekova;
+	}
+	public Set<Dijagnoza> getListaDijagnoza() {
+		return listaDijagnoza;
+	}
+	public void setListaDijagnoza(Set<Dijagnoza> listaDijagnoza) {
+		this.listaDijagnoza = listaDijagnoza;
 	}
 	public KlinickiCentar() {
 		super();
