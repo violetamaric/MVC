@@ -10,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 @Entity
 public class Lek {
@@ -23,9 +24,13 @@ public class Lek {
 	@Column(name="sifra", nullable=false)
 	private String sifra;
 	
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private KlinickiCentar klinickiCentar;
+	
 	@OneToMany(mappedBy = "lek", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Recept> recepti = new HashSet<Recept>();
 
+	
 	public Long getId() {
 		return id;
 	}
@@ -56,6 +61,14 @@ public class Lek {
 
 	public void setRecepti(Set<Recept> recepti) {
 		this.recepti = recepti;
+	}
+
+	public KlinickiCentar getKlinickiCentar() {
+		return klinickiCentar;
+	}
+
+	public void setKlinickiCentar(KlinickiCentar klinickiCentar) {
+		this.klinickiCentar = klinickiCentar;
 	}
 
 	public Lek() {
