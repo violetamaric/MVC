@@ -44,6 +44,10 @@ public class PacijentDTO {
 		this.lbo = pacijent.getLbo();
 		this.lozinka = pacijent.getLozinka();
 		this.email = pacijent.getEmail();
+		this.adresa = pacijent.getAdresa();
+		this.grad = pacijent.getGrad();
+		this.drzava = pacijent.getDrzava();
+		this.telefon = pacijent.getTelefon();
 	}
 
 	public PacijentDTO(Long id, ZdravstveniKarton zdravstveniKarton, String ime, String prezime, String lbo,
