@@ -27,7 +27,8 @@ insert into sala (broj, klinika_id) values ('003A', 3);
 insert into pacijent (ime, prezime, lbo,  lozinka, email, adresa, grad, drzava, telefon) values ('Pera', 'Peric', '001', 'pera', 'pera@gmail.com', 'Temerinska 55','Novi Sad', 'Srbija','065241359');
 insert into pacijent (ime, prezime, lbo,  lozinka, email, adresa, grad, drzava, telefon) values ('Mita', 'Mitic', '002', 'mita', 'mita@gmail.com', 'Petra Drapsina 89', 'Novi Sad', 'Srbija','0642255696');
 
-
+insert into lekar_pacijent (pacijent_id, lekar_id) values (1,2);
+insert into lekar_pacijent (pacijent_id, lekar_id) values (2,2);
 
 
 
