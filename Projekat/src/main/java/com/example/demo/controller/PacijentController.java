@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.PacijentDTO;
 import com.example.demo.dto.UserDTO;
+import com.example.demo.model.KlinickiCentar;
 import com.example.demo.model.Pacijent;
 import com.example.demo.service.EmailService;
 import com.example.demo.service.PacijentService;
@@ -74,7 +75,8 @@ public class PacijentController {
 		pacijent.setGrad(pacijentDTO.getGrad());
 		pacijent.setDrzava(pacijentDTO.getDrzava());
 		pacijent.setTelefon(pacijentDTO.getTelefon());
-
+		pacijent.setOdobrenaRegistracija(pacijentDTO.getOdobrenaRegistracija());
+		
 		pacijent = pacijentService.save(pacijent);
 		return new ResponseEntity<>(new PacijentDTO(pacijent), HttpStatus.CREATED);
 	}
@@ -83,12 +85,18 @@ public class PacijentController {
 	@CrossOrigin(origins = "http://localhost:3000")
 	public String signUpAsync(@RequestBody UserDTO userDTO){
 
-		//slanje emaila
-		try {
-			emailService.sendNotificaitionAsync(userDTO);
-		}catch( Exception e ){
-			logger.info("Greska prilikom slanja emaila: " + e.getMessage());
-		}
+		Pacijent p = pacijentService.findByEmailAndLozinka(userDTO.getEmail(), userDTO.getLozinka());
+		KlinickiCentar kc = p.getKlinickiCentar();
+		
+		System.out.println("dodat u zahteve za registraciju");
+		kc.getZahteviZaRegistraciju().add(p);
+//		
+//		//slanje emaila
+//		try {
+//			emailService.sendNotificaitionAsync(userDTO);
+//		}catch( Exception e ){
+//			logger.info("Greska prilikom slanja emaila: " + e.getMessage());
+//		}
 
 		return "success";
 	}
