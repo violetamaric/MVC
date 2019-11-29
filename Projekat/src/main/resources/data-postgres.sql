@@ -25,8 +25,14 @@ insert into medicinska_sestra (ime, prezime, email, br_telefona, lozinka,klinika
 insert into sala (broj, klinika_id) values ('001C', 1);
 insert into sala (broj, klinika_id) values ('002B', 2);
 insert into sala (broj, klinika_id) values ('003A', 3);
+
 insert into pacijent (ime, prezime, lbo,  lozinka, email, adresa, grad, drzava, telefon,odobrena_registracija, klinicki_centar_id) values ('Pera', 'Peric', '001', 'pera', 'pera@gmail.com', 'Temerinska 55','Novi Sad', 'Srbija','065241359', TRUE, 1);
 insert into pacijent (ime, prezime, lbo,  lozinka, email, adresa, grad, drzava, telefon,odobrena_registracija, klinicki_centar_id) values ('Mita', 'Mitic', '002', 'mita', 'mita@gmail.com', 'Petra Drapsina 89', 'Novi Sad', 'Srbija','0642255696', FALSE, 1);
+
+
+insert into lekar_pacijent (pacijent_id, lekar_id) values (1,2);
+insert into lekar_pacijent (pacijent_id, lekar_id) values (2,2);
+
 
 
 
