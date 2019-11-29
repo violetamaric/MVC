@@ -32,8 +32,8 @@ public class MedicinskaSestra {
 	@Column(name="email", nullable=false)
 	private String email;
 	
-	@Column(name="korisnickoIme", nullable=false)
-	private String korisnickoIme;
+	@Column(name="brTelefona", nullable=false)
+	private String brTelefona;
 	
 	@Column(name="lozinka", nullable=false)
 	private String lozinka;
@@ -51,11 +51,11 @@ public class MedicinskaSestra {
 	public String getIme() {
 		return ime;
 	}
-	public String getKorisnickoIme() {
-		return korisnickoIme;
+	public String getBrTelefona() {
+		return brTelefona;
 	}
-	public void setKorisnickoIme(String korisnickoIme) {
-		this.korisnickoIme = korisnickoIme;
+	public void setBrTelefona(String brTelefona) {
+		this.brTelefona = brTelefona;
 	}
 	public String getLozinka() {
 		return lozinka;
