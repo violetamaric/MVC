@@ -1,6 +1,5 @@
 package com.example.demo.dto;
 
-import com.example.demo.model.Klinika;
 import com.example.demo.model.MedicinskaSestra;
 
 public class MedicinskaSestraDTO{
@@ -9,9 +8,19 @@ public class MedicinskaSestraDTO{
 	private String ime;
 	private String prezime;
 	private String email;
-	private Klinika klinika;
+	private String brTelefona;
+	private String lozinka;
 	
 	
+	
+	
+	
+	public String getLozinka() {
+		return lozinka;
+	}
+	public void setLozinka(String lozinka) {
+		this.lozinka = lozinka;
+	}
 	public Long getId() {
 		return id;
 	}
@@ -36,19 +45,22 @@ public class MedicinskaSestraDTO{
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public Klinika getKlinika() {
-		return klinika;
+
+	public String getBrTelefona() {
+		return brTelefona;
 	}
-	public void setKlinika(Klinika klinika) {
-		this.klinika = klinika;
+	public void setBrTelefona(String brTelefona) {
+		this.brTelefona = brTelefona;
 	}
-	public MedicinskaSestraDTO(Long id, String ime, String prezime, String email, Klinika klinika) {
+	public MedicinskaSestraDTO(Long id, String ime, String prezime, String email,String lozinka, String brTelefona) {
 		super();
 		this.id = id;
 		this.ime = ime;
 		this.prezime = prezime;
 		this.email = email;
-		this.klinika = klinika;
+		this.lozinka = lozinka;
+		this.brTelefona = brTelefona;
+
 	}
 	public MedicinskaSestraDTO() {
 		super();
@@ -59,7 +71,9 @@ public class MedicinskaSestraDTO{
 		this.ime = ms.getIme();
 		this.prezime = ms.getPrezime();
 		this.email = ms.getEmail();
-		this.klinika = ms.getKlinika();
+		this.lozinka = ms.getLozinka();
+		this.brTelefona = ms.getBrTelefona();
+
 	}
 	
 	
