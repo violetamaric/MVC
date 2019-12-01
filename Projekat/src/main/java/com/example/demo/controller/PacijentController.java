@@ -80,6 +80,19 @@ public class PacijentController {
 		return new ResponseEntity<>(new PacijentDTO(pacijent), HttpStatus.OK);
 	}
 	
+	@GetMapping(value = "/findPacijentEmail/{email}")
+	@CrossOrigin(origins = "http://localhost:3000")
+	public ResponseEntity<PacijentDTO> getPacijentByEmail(@PathVariable String email){
+		
+		System.out.println("Find pacijent by email");
+		Pacijent pacijent = pacijentService.findByEmail(email);
+		if(pacijent == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<>(new PacijentDTO(pacijent), HttpStatus.OK);
+	}
+	
+	
 	@PostMapping(path = "/register", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 	public ResponseEntity<PacijentDTO> savePacijent(@RequestBody PacijentDTO pacijentDTO) {

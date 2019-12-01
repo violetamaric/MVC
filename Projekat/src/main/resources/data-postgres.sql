@@ -26,13 +26,14 @@ insert into sala (broj, klinika_id) values ('001C', 1);
 insert into sala (broj, klinika_id) values ('002B', 2);
 insert into sala (broj, klinika_id) values ('003A', 3);
 
-insert into pacijent (ime, prezime, lbo,  lozinka, email, adresa, grad, drzava, telefon,odobrena_registracija, klinicki_centar_id) values ('Pera', 'Peric', '001', 'pera', 'pera@gmail.com', 'Temerinska 55','Novi Sad', 'Srbija','065241359', TRUE, 1);
-insert into pacijent (ime, prezime, lbo,  lozinka, email, adresa, grad, drzava, telefon,odobrena_registracija, klinicki_centar_id) values ('Mita', 'Mitic', '002', 'mita', 'mita@gmail.com', 'Petra Drapsina 89', 'Novi Sad', 'Srbija','0642255696', FALSE, 1);
+insert into pacijent (ime, prezime, lbo,  lozinka, email, adresa, grad, drzava, telefon) values ('Pera', 'Peric', '001', 'pera', 'pera@gmail.com', 'Temerinska 55','Novi Sad', 'Srbija','065241359');
+insert into pacijent (ime, prezime, lbo,  lozinka, email, adresa, grad, drzava, telefon) values ('Mita', 'Mitic', '002', 'mita', 'mita@gmail.com', 'Petra Drapsina 89', 'Novi Sad', 'Srbija','0642255696');
+insert into pacijent (ime, prezime, lbo,  lozinka, email, adresa, grad, drzava, telefon) values ('Jovan', 'Jovicic', '003', 'jovan', 'jovan@gmail.com', 'Petra Kocica 66', 'Novi Sad', 'Srbija','061221478');
+insert into pacijent (ime, prezime, lbo,  lozinka, email, adresa, grad, drzava, telefon) values ('Lara', 'Nikolic', '004', 'lara', 'lara@gmail.com', 'Kralja Petra 11', 'Novi Sad', 'Srbija','0642255696');
 
 
 insert into lekar_pacijent (pacijent_id, lekar_id) values (1,2);
 insert into lekar_pacijent (pacijent_id, lekar_id) values (2,2);
-
 
 
 
