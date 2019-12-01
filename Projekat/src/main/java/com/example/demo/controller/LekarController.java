@@ -107,6 +107,7 @@ public class LekarController {
 		List<PacijentDTO> lista = new ArrayList<>();
 		for (Pacijent p : lekar.getListaPacijenata() ) {
 			
+				System.out.println(p);
 				PacijentDTO pDTO = new PacijentDTO();
 				pDTO.setId(p.getId());
 				pDTO.setIme(p.getIme());

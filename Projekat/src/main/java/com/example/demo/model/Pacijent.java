@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -53,6 +54,12 @@ public class Pacijent {
 	
 	@Column(name = "telefon", nullable = false)
 	private String telefon;
+	
+	@Column(name = "odobrenaRegistracija", nullable = false)
+	private Boolean odobrenaRegistracija;
+	
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private KlinickiCentar klinickiCentar;
 
 	@ManyToMany
 	@JoinTable(name = "medicinskaSestra_pacijent", joinColumns = @JoinColumn(name = "pacijent_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "lekar_id", referencedColumnName = "id"))
@@ -209,6 +216,25 @@ public class Pacijent {
 	public void setTelefon(String telefon) {
 		this.telefon = telefon;
 	}
+	
+
+	public Boolean getOdobrenaRegistracija() {
+		return odobrenaRegistracija;
+	}
+
+	public void setOdobrenaRegistracija(Boolean odobrenaRegistracija) {
+		this.odobrenaRegistracija = odobrenaRegistracija;
+	}
+
+	public KlinickiCentar getKlinickiCentar() {
+		return klinickiCentar;
+	}
+
+	public void setKlinickiCentar(KlinickiCentar klinickiCentar) {
+		this.klinickiCentar = klinickiCentar;
+	}
+	
+	
 	
 
 }

@@ -42,6 +42,9 @@ public class KlinickiCentar {
 	@OneToMany(mappedBy = "klinickiCentar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Dijagnoza> listaDijagnoza = new HashSet<Dijagnoza>();
 	
+	@OneToMany(mappedBy = "klinickiCentar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Pacijent> zahteviZaRegistraciju = new HashSet<Pacijent>();
+	
 	
 	public String getNaziv() {
 		return naziv;
@@ -111,6 +114,15 @@ public class KlinickiCentar {
 	public void setId(Long id) {
 		this.id = id;
 	}
+	
+
+	public Set<Pacijent> getZahteviZaRegistraciju() {
+		return zahteviZaRegistraciju;
+	}
+	public void setZahteviZaRegistraciju(Set<Pacijent> zahteviZaRegistraciju) {
+		this.zahteviZaRegistraciju = zahteviZaRegistraciju;
+	}
+	
 	
 	
 }

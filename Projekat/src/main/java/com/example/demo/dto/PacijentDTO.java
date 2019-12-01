@@ -28,6 +28,8 @@ public class PacijentDTO {
 	private String drzava;
 
 	private String telefon;
+	
+	private Boolean odobrenaRegistracija;
 
 	public PacijentDTO() {
 		super();
@@ -44,10 +46,16 @@ public class PacijentDTO {
 		this.lbo = pacijent.getLbo();
 		this.lozinka = pacijent.getLozinka();
 		this.email = pacijent.getEmail();
+		this.odobrenaRegistracija = pacijent.getOdobrenaRegistracija();
+		this.adresa = pacijent.getAdresa();
+		this.grad = pacijent.getGrad();
+		this.drzava = pacijent.getDrzava();
+		this.telefon = pacijent.getTelefon();
+
 	}
 
 	public PacijentDTO(Long id, ZdravstveniKarton zdravstveniKarton, String ime, String prezime, String lbo,
-			String lozinka, String email) {
+			String lozinka, String email, Boolean odobrenaRegistracija) {
 		super();
 		this.id = id;
 		this.zdravstveniKarton = zdravstveniKarton;
@@ -56,6 +64,7 @@ public class PacijentDTO {
 		this.lbo = lbo;
 		this.lozinka = lozinka;
 		this.email = email;
+		this.odobrenaRegistracija = odobrenaRegistracija;
 	}
 
 	public Long getId() {
@@ -144,6 +153,15 @@ public class PacijentDTO {
 
 	public void setTelefon(String telefon) {
 		this.telefon = telefon;
+	}
+	
+
+	public Boolean getOdobrenaRegistracija() {
+		return odobrenaRegistracija;
+	}
+
+	public void setOdobrenaRegistracija(Boolean odobrenaRegistracija) {
+		this.odobrenaRegistracija = odobrenaRegistracija;
 	}
 
 	@Override
