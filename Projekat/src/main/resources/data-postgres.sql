@@ -1,3 +1,4 @@
+
 insert into klinicki_centar (naziv, adresa, opis) values ('Klinicki centar Srbije', 'Pasterova 2','Klinicki centar uvek na usluzi svojim pacijentima');
 insert into administratorkc (ime, prezime, lozinka, email, klinicki_centar_id) values ('MVC', 'MVC', 'mvc', 'mvc@gmail.com', 1);
 insert into klinika (naziv, adresa, opis, klinicki_centar_id, ocena) values ('Klinika Beograd', 'Pasterova 2','Klinika uvek na usluzi svojim pacijentima',1, 0);
@@ -18,12 +19,13 @@ insert into lekar (ime, prezime, email, lozinka,klinika_id, ocena, telefon) valu
 insert into lekar (ime, prezime, email, lozinka,klinika_id, ocena,  telefon) values ('Jovan','Jovanovic', 'jole@gmail.com', 'jole', 2, 0, '063/200-765');
 insert into lekar (ime, prezime, email, lozinka,klinika_id, ocena, telefon) values ('Dusan','Dusanovic', 'duskodule@gmail.com', 'dule', 3, 0, '066/993-785');
 
-insert into medicinska_sestra (ime, prezime, email, korisnicko_ime, lozinka,klinika_id) values ('Jelena','Jelenovic', 'jelena@gmail.com', 'jeca', 'jeca', 1);
-insert into medicinska_sestra (ime, prezime, email, korisnicko_ime, lozinka,klinika_id) values ('Olgica','Olganovic', 'olgaolgaa@gmail.com', 'olga', 'olga', 2);
-insert into medicinska_sestra (ime, prezime, email, korisnicko_ime, lozinka,klinika_id) values ('Gordana','Gordanovic', 'gocagordana@gmail.com', 'goca', 'goca', 3);
+insert into medicinska_sestra (ime, prezime, email, br_telefona, lozinka,klinika_id) values ('Jelena','Jelenovic', 'jelena@gmail.com', '066/222-665', 'jeca', 1);
+insert into medicinska_sestra (ime, prezime, email, br_telefona, lozinka,klinika_id) values ('Olgica','Olganovic', 'olgaolgaa@gmail.com','063/222-765', 'olga', 2);
+insert into medicinska_sestra (ime, prezime, email, br_telefona, lozinka,klinika_id) values ('Gordana','Gordanovic', 'gocagordana@gmail.com', '066/963-785', 'goca', 3);
 insert into sala (broj, klinika_id) values ('001C', 1);
 insert into sala (broj, klinika_id) values ('002B', 2);
 insert into sala (broj, klinika_id) values ('003A', 3);
+
 insert into pacijent (ime, prezime, lbo,  lozinka, email, adresa, grad, drzava, telefon) values ('Pera', 'Peric', '001', 'pera', 'pera@gmail.com', 'Temerinska 55','Novi Sad', 'Srbija','065241359');
 insert into pacijent (ime, prezime, lbo,  lozinka, email, adresa, grad, drzava, telefon) values ('Mita', 'Mitic', '002', 'mita', 'mita@gmail.com', 'Petra Drapsina 89', 'Novi Sad', 'Srbija','0642255696');
 insert into pacijent (ime, prezime, lbo,  lozinka, email, adresa, grad, drzava, telefon) values ('Jovan', 'Jovicic', '003', 'jovan', 'jovan@gmail.com', 'Petra Kocica 66', 'Novi Sad', 'Srbija','061221478');
@@ -32,12 +34,6 @@ insert into pacijent (ime, prezime, lbo,  lozinka, email, adresa, grad, drzava, 
 
 insert into lekar_pacijent (pacijent_id, lekar_id) values (1,2);
 insert into lekar_pacijent (pacijent_id, lekar_id) values (2,2);
-
-
-
-
-
-
 
 
 

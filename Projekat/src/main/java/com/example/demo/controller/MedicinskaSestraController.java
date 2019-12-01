@@ -7,13 +7,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.LekarDTO;
 import com.example.demo.dto.MedicinskaSestraDTO;
 import com.example.demo.dto.PacijentDTO;
+import com.example.demo.model.Lekar;
 import com.example.demo.model.MedicinskaSestra;
 import com.example.demo.model.Pacijent;
 import com.example.demo.service.MedicinskaSestraService;
@@ -28,57 +33,96 @@ public class MedicinskaSestraController {
 	@Autowired
 	private MedicinskaSestraService medicinskaSestraService;
 	
-//	@GetMapping(value = "/sve")
-//	public ResponseEntity<List<MedicinskaSestraDTO>> getAll() {
-//
-//		List<MedicinskaSestra> medSes = medicinskaSestraService.findAll();
-//
-//		List<MedicinskaSestraDTO> medSesDTO = new ArrayList<>();
-//		for (MedicinskaSestra ms : medSes) {
-//			medSesDTO.add(new MedicinskaSestraDTO(ms) );
+	@GetMapping(value = "/sve")
+	public ResponseEntity<List<MedicinskaSestraDTO>> getAll() {
+
+		List<MedicinskaSestra> medSes = medicinskaSestraService.findAll();
+
+		List<MedicinskaSestraDTO> medSesDTO = new ArrayList<>();
+		for (MedicinskaSestra ms : medSes) {
+			medSesDTO.add(new MedicinskaSestraDTO(ms) );
+		}
+
+		return new ResponseEntity<>(medSesDTO, HttpStatus.OK);
+	}
+
+	@GetMapping(value = "/medicinskaSestra/{email}")
+	public ResponseEntity<MedicinskaSestraDTO> getMedicinskaSestraByEmail(@PathVariable String email){
+		
+		MedicinskaSestra ms = medicinskaSestraService.findByEmail(email);
+		if (ms == null) {
+			System.out.println("NIJE PRONADJENA");
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		System.out.println("PRONADJENA: "+ ms.getEmail());
+		
+		return new ResponseEntity<>(new MedicinskaSestraDTO(ms), HttpStatus.OK);
+	}
+
+	//NE RADIII MIIIII
+	@GetMapping(value = "/listaPacijenata/{email}")
+	public ResponseEntity<List<PacijentDTO>> getListaPacijenata(@PathVariable String email) {
+
+		MedicinskaSestra ms = medicinskaSestraService.findByEmail(email);
+		
+		List<PacijentDTO> lista = new ArrayList<>();
+		
+		for (Pacijent p : ms.getListaPacijenata()) {
+			PacijentDTO pDTO = new PacijentDTO(p);
+			
+			lista.add(pDTO);
+		}
+
+		return new ResponseEntity<>(lista, HttpStatus.OK);
+
+		
+	}
+	
+	@PutMapping(path="/izmena", consumes = "application/json")
+	@CrossOrigin(origins = "http://localhost:3000")
+	public ResponseEntity<MedicinskaSestraDTO> izmeniMedicinskuSestru(@RequestBody MedicinskaSestraDTO msDTO) {
+
+		// a student must exist
+		System.out.println("MED SESTRA IZMENA");
+		MedicinskaSestra ms = medicinskaSestraService.findByEmail(msDTO.getEmail());
+
+//		System.out.println("Lekar update: " + lekar.getEmail());
+//		if (lekar == null) {
+//			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 //		}
-//
-//		return new ResponseEntity<>(medSesDTO, HttpStatus.OK);
-//	}
-//
-//	@GetMapping(value = "/medicinskaSestra/{email}")
-//	public ResponseEntity<MedicinskaSestraDTO> getMedicinskaSestraByEmail(@PathVariable String email){
-//		
-//		MedicinskaSestra ms = medicinskaSestraService.findByEmail(email);
-//		if (ms == null) {
-//			System.out.println("NIJE PRONADJENA");
-//			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//		}
-//		System.out.println("PRONADJENA: "+ ms.getEmail());
-//		
-//		return new ResponseEntity<>(new MedicinskaSestraDTO(ms), HttpStatus.OK);
-//	}
-//
-//	@GetMapping(value = "/listaPacijenata/{medSesId}")
-//	public ResponseEntity<List<PacijentDTO>> getListaPacijenata(@PathVariable Long medSesId) {
-//
-//		MedicinskaSestra ms = medicinskaSestraService.findById(medSesId);
-//		
-//		List<PacijentDTO> lista = new ArrayList<>();
-//		
-//		for (Pacijent p : ms.getListaPacijenata()) {
-//			PacijentDTO pDTO = new PacijentDTO();
-//			pDTO.setId(p.getId());
-//			pDTO.setAdresa(p.getAdresa());
-//			pDTO.setDrzava(p.getDrzava());
-//			pDTO.setEmail(p.getEmail());
-//			pDTO.setGrad(p.getGrad());
-//			pDTO.setIme(p.getIme());
-//			pDTO.setPrezime(p.getPrezime());
-//			pDTO.setLbo(p.getLbo());
-//			pDTO.setLozinka(p.getLozinka());
-//			pDTO.setTelefon(p.getTelefon());
-//			pDTO.setZdravstveniKarton(p.getZdravstveniKarton());
-//			lista.add(pDTO);
-//		}
-//
-//		return new ResponseEntity<>(lista, HttpStatus.OK);
-//
-//		
-//	}
+		if(msDTO.getIme() != null && msDTO.getIme() != "") {
+			System.out.println("izmenjeno ime admina");
+			ms.setIme(msDTO.getIme());
+			
+		}else {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			
+		}
+		if(msDTO.getPrezime()!= null && msDTO.getPrezime() != "") {
+			System.out.println("izmenjeno prezime admina");
+			ms.setPrezime(msDTO.getPrezime());
+			
+		}else {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		if(msDTO.getLozinka()!= null && msDTO.getLozinka() != "") {
+			System.out.println("izmenjena lozinka admina");
+			ms.setLozinka(msDTO.getLozinka());
+			
+		}else {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			
+		}
+		if(msDTO.getBrTelefona()!= null && msDTO.getBrTelefona() != "") {
+			System.out.println("izmenjena lozinka admina");
+			ms.setBrTelefona(msDTO.getBrTelefona());
+			
+		}else {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			
+		}
+		
+		ms = medicinskaSestraService.save(ms);
+		return new ResponseEntity<>(new MedicinskaSestraDTO(ms), HttpStatus.OK);
+	}
 }
