@@ -23,6 +23,7 @@ import com.example.demo.model.Klinika;
 import com.example.demo.model.Lekar;
 import com.example.demo.model.Pacijent;
 import com.example.demo.service.LekarService;
+import com.example.demo.service.PacijentService;
 
 
 @RestController
@@ -31,6 +32,9 @@ public class LekarController {
 
 	@Autowired
 	private LekarService lekarService;
+	
+	@Autowired
+	private PacijentService pacijenti;
 	
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<LekarDTO> getLekar(@PathVariable Long id) {
@@ -102,10 +106,12 @@ public class LekarController {
 	public ResponseEntity<List<PacijentDTO>> getPacijenataLekara(@PathVariable String email) {
 		System.out.println("//////////////////// LEKAR LISTA PACIJENATA /////////////////////////		");
 		Lekar lekar = lekarService.findByEmail(email);
+	
+		List<Pacijent> listaSvihP =  pacijenti.findAll();
 		System.out.println("Lista pacijenata od lekara: " + lekar.getEmail());
 		
 		List<PacijentDTO> lista = new ArrayList<>();
-		for (Pacijent p : lekar.getListaPacijenata() ) {
+		for (Pacijent p : listaSvihP ) {
 			
 				PacijentDTO pDTO = new PacijentDTO();
 				pDTO.setId(p.getId());
