@@ -92,7 +92,7 @@ public class AdministratorKCController {
 		return new ResponseEntity<>(new AdministratorKCDTO(administratorKC), HttpStatus.OK);
 	}
 	
-	//mozda treba preko maila ali nzm 
+	
 	//vrati mi listu klinika u klinickom centru
 	@GetMapping(value = "/listaKlinika/{email}")
 	public ResponseEntity<List<KlinikaDTO>> getListaKlinika(@PathVariable String email) {
@@ -220,7 +220,7 @@ public class AdministratorKCController {
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 
-	//izmena podataka o adminu NE ZNAM DA PROVERIM DA LI RADI
+	//izmena podataka o adminu 
 	@PutMapping(path="/izmena", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 	public ResponseEntity<AdministratorKCDTO> izmeniAdminaKC(@RequestBody AdministratorKCDTO akcDTO) {
@@ -263,7 +263,7 @@ public class AdministratorKCController {
 		return new ResponseEntity<>(new AdministratorKCDTO(aKC), HttpStatus.OK);
 	}
 
-	//potvrda registracije NE RADI 
+	//potvrda registracije 
 	@PostMapping(path = "/potvrda", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 	public String potvrdaRegistracijePacijenata(@RequestBody PacijentDTO pacijentDTO){

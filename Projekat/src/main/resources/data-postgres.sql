@@ -8,13 +8,19 @@ insert into administrator_klinike (ime, prezime, korisnicko_ime, lozinka, email,
 insert into administrator_klinike (ime, prezime, korisnicko_ime, lozinka, email, klinika_id) values ('Ceca', 'Antesevic', 'ceca', 'ceca', 'ceca@gmail.com', 2);
 insert into administrator_klinike (ime, prezime, korisnicko_ime, lozinka, email, klinika_id) values ('Viki', 'Maric', 'viki', 'viki', 'viki@gmail.com', 3);
 
-insert into lek (naziv, sifra) values ('Andol','001');
-insert into lek (naziv, sifra) values ('Cafetin','002');
-insert into lek (naziv, sifra) values ('Panadol','003');
-insert into lek (naziv, sifra) values ('Nitroglicerin','004');
-insert into lek (naziv, sifra) values ('Valsacor','005');
-insert into lek (naziv, sifra) values ('Tiastat','006');
-insert into lek (naziv, sifra) values ('Febricet','007');
+insert into lek (naziv, sifra,klinicki_centar_id) values ('Andol','001',1);
+insert into lek (naziv, sifra,klinicki_centar_id) values ('Cafetin','002',1);
+insert into lek (naziv, sifra,klinicki_centar_id) values ('Panadol','003',1);
+insert into lek (naziv, sifra,klinicki_centar_id) values ('Nitroglicerin','004',1);
+insert into lek (naziv, sifra,klinicki_centar_id) values ('Valsacor','005',1);
+insert into lek (naziv, sifra,klinicki_centar_id) values ('Tiastat','006',1);
+insert into lek (naziv, sifra,klinicki_centar_id) values ('Febricet','007',1);
+
+insert into dijagnoza(naziv, opis,klinicki_centar_id) values ('Prehlada','Prehlada',1);
+insert into dijagnoza(naziv, opis,klinicki_centar_id) values ('Infekcija','Infekcija',1);
+
+
+
 insert into lekar (ime, prezime, email, lozinka,klinika_id, ocena, telefon) values ('Milica','Markovic', 'micacica@gmail.com', 'mica', 1, 0, '066/243-665');
 insert into lekar (ime, prezime, email, lozinka,klinika_id, ocena,  telefon) values ('Jovan','Jovanovic', 'jole@gmail.com', 'jole', 2, 0, '063/200-765');
 insert into lekar (ime, prezime, email, lozinka,klinika_id, ocena, telefon) values ('Dusan','Dusanovic', 'duskodule@gmail.com', 'dule', 3, 0, '066/993-785');

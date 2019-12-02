@@ -94,9 +94,15 @@ public class PacijentController {
 		pacijent.setGrad(pacijentDTO.getGrad());
 		pacijent.setDrzava(pacijentDTO.getDrzava());
 		pacijent.setTelefon(pacijentDTO.getTelefon());
-		pacijent.setOdobrenaRegistracija(pacijentDTO.getOdobrenaRegistracija());
+		pacijent.setOdobrenaRegistracija(false);
 		
 		pacijent = pacijentService.save(pacijent);
+		
+//		KlinickiCentar kc = pacijent.getKlinickiCentar();
+//		
+//		System.out.println("dodat u zahteve za registraciju");
+//		kc.getZahteviZaRegistraciju().add(pacijent);
+		
 		return new ResponseEntity<>(new PacijentDTO(pacijent), HttpStatus.CREATED);
 	}
 	
@@ -104,18 +110,13 @@ public class PacijentController {
 	@CrossOrigin(origins = "http://localhost:3000")
 	public String signUpAsync(@RequestBody UserDTO userDTO){
 
-		Pacijent p = pacijentService.findByEmailAndLozinka(userDTO.getEmail(), userDTO.getLozinka());
-		KlinickiCentar kc = p.getKlinickiCentar();
 		
-		System.out.println("dodat u zahteve za registraciju");
-		kc.getZahteviZaRegistraciju().add(p);
-//		
-//		//slanje emaila
-//		try {
-//			emailService.sendNotificaitionAsync(userDTO);
-//		}catch( Exception e ){
-//			logger.info("Greska prilikom slanja emaila: " + e.getMessage());
-//		}
+		//slanje emaila
+		try {
+			emailService.sendNotificaitionAsync(userDTO);
+		}catch( Exception e ){
+			logger.info("Greska prilikom slanja emaila: " + e.getMessage());
+		}
 
 		return "success";
 	}
