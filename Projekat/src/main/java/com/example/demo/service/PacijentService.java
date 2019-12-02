@@ -30,8 +30,6 @@ public class PacijentService {
 	public Pacijent findByEmailAndLozinka(String email, String lozinka) {
 		return pacijentRepository.findByEmailAndLozinka(email, lozinka);
 	}
-	public Pacijent findByEmail(String email) {
-		return pacijentRepository.findByEmail(email);
-	}
+	
 	
 }
