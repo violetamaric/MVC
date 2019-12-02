@@ -27,13 +27,18 @@ import com.example.demo.model.KlinickiCentar;
 import com.example.demo.model.Lekar;
 
 import com.example.demo.model.Pacijent;
+import com.example.demo.service.AdministratorKCService;
 import com.example.demo.service.EmailService;
+import com.example.demo.service.KlinickiCentarService;
 import com.example.demo.service.PacijentService;
 
 @RestController
 @RequestMapping(value = "/api/pacijenti", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PacijentController {
 
+	@Autowired
+	private KlinickiCentarService KCService;
+	
 	@Autowired
 	private PacijentService pacijentService;
 	
@@ -94,31 +99,37 @@ public class PacijentController {
 		pacijent.setGrad(pacijentDTO.getGrad());
 		pacijent.setDrzava(pacijentDTO.getDrzava());
 		pacijent.setTelefon(pacijentDTO.getTelefon());
-		pacijent.setOdobrenaRegistracija(pacijentDTO.getOdobrenaRegistracija());
+		pacijent.setOdobrenaRegistracija(false);
+				
 		
+		System.out.println("--------------------------------------");
+		List<KlinickiCentar> listaKC = KCService.find();
+		KlinickiCentar kc = listaKC.get(0);
+		pacijent.setKlinickiCentar(kc);
 		pacijent = pacijentService.save(pacijent);
+		
+		kc.getZahteviZaRegistraciju().add(pacijent);
+		kc = KCService.save(kc);
+		
+		System.out.println("dodat u zahteve za registraciju");
+		
 		return new ResponseEntity<>(new PacijentDTO(pacijent), HttpStatus.CREATED);
 	}
 	
-	@PostMapping(path = "/signup", consumes = "application/json")
-	@CrossOrigin(origins = "http://localhost:3000")
-	public String signUpAsync(@RequestBody UserDTO userDTO){
-
-		Pacijent p = pacijentService.findByEmailAndLozinka(userDTO.getEmail(), userDTO.getLozinka());
-		KlinickiCentar kc = p.getKlinickiCentar();
-		
-		System.out.println("dodat u zahteve za registraciju");
-		kc.getZahteviZaRegistraciju().add(p);
-//		
+//	@PostMapping(path = "/signup", consumes = "application/json")
+//	@CrossOrigin(origins = "http://localhost:3000")
+//	public String signUpAsync(@RequestBody UserDTO userDTO){
+//
+//
 //		//slanje emaila
 //		try {
 //			emailService.sendNotificaitionAsync(userDTO);
 //		}catch( Exception e ){
 //			logger.info("Greska prilikom slanja emaila: " + e.getMessage());
 //		}
-
-		return "success";
-	}
+//
+//		return "success";
+//	}
 	
 	
 	@PutMapping(path="/update", consumes = "application/json")
