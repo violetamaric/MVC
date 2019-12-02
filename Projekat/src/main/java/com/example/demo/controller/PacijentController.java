@@ -27,18 +27,13 @@ import com.example.demo.model.KlinickiCentar;
 import com.example.demo.model.Lekar;
 
 import com.example.demo.model.Pacijent;
-import com.example.demo.service.AdministratorKCService;
 import com.example.demo.service.EmailService;
-import com.example.demo.service.KlinickiCentarService;
 import com.example.demo.service.PacijentService;
 
 @RestController
 @RequestMapping(value = "/api/pacijenti", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PacijentController {
 
-	@Autowired
-	private KlinickiCentarService KCService;
-	
 	@Autowired
 	private PacijentService pacijentService;
 	
@@ -85,19 +80,6 @@ public class PacijentController {
 		return new ResponseEntity<>(new PacijentDTO(pacijent), HttpStatus.OK);
 	}
 	
-	@GetMapping(value = "/findPacijentEmail/{email}")
-	@CrossOrigin(origins = "http://localhost:3000")
-	public ResponseEntity<PacijentDTO> getPacijentByEmail(@PathVariable String email){
-		
-		System.out.println("Find pacijent by email");
-		Pacijent pacijent = pacijentService.findByEmail(email);
-		if(pacijent == null) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
-		return new ResponseEntity<>(new PacijentDTO(pacijent), HttpStatus.OK);
-	}
-	
-	
 	@PostMapping(path = "/register", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 	public ResponseEntity<PacijentDTO> savePacijent(@RequestBody PacijentDTO pacijentDTO) {
@@ -113,36 +95,31 @@ public class PacijentController {
 		pacijent.setDrzava(pacijentDTO.getDrzava());
 		pacijent.setTelefon(pacijentDTO.getTelefon());
 		pacijent.setOdobrenaRegistracija(false);
-				
 		
-		System.out.println("--------------------------------------");
-		List<KlinickiCentar> listaKC = KCService.find();
-		KlinickiCentar kc = listaKC.get(0);
-		pacijent.setKlinickiCentar(kc);
 		pacijent = pacijentService.save(pacijent);
 		
-		kc.getZahteviZaRegistraciju().add(pacijent);
-		kc = KCService.save(kc);
-		
-		System.out.println("dodat u zahteve za registraciju");
+//		KlinickiCentar kc = pacijent.getKlinickiCentar();
+//		
+//		System.out.println("dodat u zahteve za registraciju");
+//		kc.getZahteviZaRegistraciju().add(pacijent);
 		
 		return new ResponseEntity<>(new PacijentDTO(pacijent), HttpStatus.CREATED);
 	}
 	
-//	@PostMapping(path = "/signup", consumes = "application/json")
-//	@CrossOrigin(origins = "http://localhost:3000")
-//	public String signUpAsync(@RequestBody UserDTO userDTO){
-//
-//
-//		//slanje emaila
-//		try {
-//			emailService.sendNotificaitionAsync(userDTO);
-//		}catch( Exception e ){
-//			logger.info("Greska prilikom slanja emaila: " + e.getMessage());
-//		}
-//
-//		return "success";
-//	}
+	@PostMapping(path = "/signup", consumes = "application/json")
+	@CrossOrigin(origins = "http://localhost:3000")
+	public String signUpAsync(@RequestBody UserDTO userDTO){
+
+		
+		//slanje emaila
+		try {
+			emailService.sendNotificaitionAsync(userDTO);
+		}catch( Exception e ){
+			logger.info("Greska prilikom slanja emaila: " + e.getMessage());
+		}
+
+		return "success";
+	}
 	
 	
 	@PutMapping(path="/update", consumes = "application/json")
