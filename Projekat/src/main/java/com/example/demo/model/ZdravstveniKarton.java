@@ -1,6 +1,5 @@
 package com.example.demo.model;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,7 +13,10 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class ZdravstveniKarton {
 	
 	@Id
@@ -38,6 +40,12 @@ public class ZdravstveniKarton {
 	
 	public ZdravstveniKarton() {
 		super();
+	}
+	public ZdravstveniKarton(ZdravstveniKarton zk) {
+		this.id = zk.getId();
+		this.visina = zk.getVisina();
+		this.tezina = zk.getTezina();
+		this.pacijent = zk.getPacijent();
 	}
 
 
