@@ -25,14 +25,14 @@ public class AdministratorKlinike {
 	@Column(name="prezime", nullable=false)
 	private String prezime;
 	
-	@Column(name="korisnickoIme", nullable=false)
-	private String korisnickoIme;
-	
 	@Column(name="lozinka", nullable=false)
 	private String lozinka;
 	
 	@Column(name="email", nullable=false)
 	private String email;
+	
+	@Column(name="telefon", nullable=false)
+	private String telefon;
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Klinika klinika; // samo id do klinike 
@@ -51,12 +51,6 @@ public class AdministratorKlinike {
 	}
 	public void setPrezime(String prezime) {
 		this.prezime = prezime;
-	}
-	public String getKorisnickoIme() {
-		return korisnickoIme;
-	}
-	public void setKorisnickoIme(String korisnickoIme) {
-		this.korisnickoIme = korisnickoIme;
 	}
 	public String getLozinka() {
 		return lozinka;
@@ -77,8 +71,12 @@ public class AdministratorKlinike {
 		this.klinika = klinika;
 	}
 	
-	
-	
+	public String getTelefon() {
+		return telefon;
+	}
+	public void setTelefon(String telefon) {
+		this.telefon = telefon;
+	}
 	public Long getId() {
 		return id;
 	}
