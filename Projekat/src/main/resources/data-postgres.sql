@@ -8,6 +8,7 @@ insert into administrator_klinike (ime, prezime, korisnicko_ime, lozinka, email,
 insert into administrator_klinike (ime, prezime, korisnicko_ime, lozinka, email, klinika_id) values ('Ceca', 'Antesevic', 'ceca', 'ceca', 'ceca@gmail.com', 2);
 insert into administrator_klinike (ime, prezime, korisnicko_ime, lozinka, email, klinika_id) values ('Viki', 'Maric', 'viki', 'viki', 'viki@gmail.com', 3);
 
+
 insert into lek (naziv, sifra, klinicki_centar_id) values ('Andol','001', 1);
 insert into lek (naziv, sifra, klinicki_centar_id) values ('Cafetin','002',1);
 insert into lek (naziv, sifra, klinicki_centar_id) values ('Panadol','003',1);
@@ -22,6 +23,7 @@ insert into dijagnoza(naziv, opis, oznaka, klinicki_centar_id ) values('Veliki k
 insert into dijagnoza(naziv, opis, oznaka, klinicki_centar_id ) values('Groznica Zapadnog Nila', 'Febris West Nile', 'A923', 1);
 insert into dijagnoza(naziv, opis, oznaka, klinicki_centar_id ) values('Velike boginje', 'Variola vera', 'B03', 1);
 insert into dijagnoza(naziv, opis, oznaka, klinicki_centar_id ) values('Male boginje bez komplikacija', 'Morbilli sine complicationibus', 'B059', 1);
+
 
 
 insert into lekar (ime, prezime, email, lozinka,klinika_id, ocena, telefon) values ('Milica','Markovic', 'micacica@gmail.com', 'mica', 1, 0, '066/243-665');

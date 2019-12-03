@@ -233,7 +233,7 @@ public class AdministratorKCController {
 		return new ResponseEntity<>(new AdministratorKCDTO(aKC), HttpStatus.OK);
 	}
 
-	//potvrda registracije
+
 	@PostMapping(path = "/potvrda", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 	public String potvrdaRegistracijePacijenata(@RequestBody PacijentDTO pDTO){
