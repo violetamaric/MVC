@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,7 @@ import com.example.demo.dto.KlinickiCentarDTO;
 import com.example.demo.dto.KlinikaDTO;
 import com.example.demo.dto.LekDTO;
 import com.example.demo.dto.PacijentDTO;
+import com.example.demo.dto.UserDTO;
 import com.example.demo.model.AdministratorKC;
 import com.example.demo.model.AdministratorKlinike;
 import com.example.demo.model.Dijagnoza;
@@ -34,21 +36,10 @@ import com.example.demo.model.Lek;
 import com.example.demo.model.Pacijent;
 import com.example.demo.service.AdministratorKCService;
 import com.example.demo.service.EmailService;
+import com.example.demo.service.KlinickiCentarService;
 import com.example.demo.service.PacijentService;
 
-/* Za pristupanje svim administratorima KC : http://localhost:8028/api/administratoriKC/svi
- * 
- * Za pronalazenje admina KC pomocu maila : http://localhost:8028/api/administratoriKC/pronadjenAdministratorKC/{email}
- * 
- * Za vracanje liste klinika u klinickom centru
- *  na profilu administratoraKC:   http://localhost:8028/api/administratoriKC/listaKlinika/{administratorKCId}
- *  
- *  Za vracanje liste admina klinika u klinickom centru
- *  na profilu administratoraKC: http://localhost:8028/api/administratoriKC/listaAdministratoraKlinika/{administratorKCId}
- *  
- *  Za vracanje podataka o KC na prof admina: http://localhost:8028/api/administratoriKC/klinickiCentar/{administratorKCId}
- *  
- *  */
+
 
 @RestController
 @RequestMapping(value="/api/administratoriKC", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -59,6 +50,9 @@ public class AdministratorKCController {
 	
 	@Autowired
 	private PacijentService pacijentService;
+	
+	@Autowired
+	private KlinickiCentarService KCService;
 	
 	@Autowired
 	private EmailService emailService;
@@ -92,7 +86,7 @@ public class AdministratorKCController {
 		return new ResponseEntity<>(new AdministratorKCDTO(administratorKC), HttpStatus.OK);
 	}
 	
-	
+
 	//vrati mi listu klinika u klinickom centru
 	@GetMapping(value = "/listaKlinika/{email}")
 	public ResponseEntity<List<KlinikaDTO>> getListaKlinika(@PathVariable String email) {
@@ -104,12 +98,7 @@ public class AdministratorKCController {
 		List<KlinikaDTO> lista = new ArrayList<>();
 		
 		for (Klinika k : klinickiCentar.getListaKlinika()) {
-			KlinikaDTO kcDTO = new KlinikaDTO();
-			kcDTO.setId(k.getId());
-			kcDTO.setNaziv(k.getNaziv());
-			kcDTO.setAdresa(k.getAdresa());
-			kcDTO.setOcena(k.getOcena());
-			kcDTO.setOpis(k.getOpis());
+			KlinikaDTO kcDTO = new KlinikaDTO(k);
 			lista.add(kcDTO);
 		}
 
@@ -128,11 +117,7 @@ public class AdministratorKCController {
 		List<AdministratorKlinikeDTO> lista = new ArrayList<>();
 		for (Klinika k : klinickiCentar.getListaKlinika() ) {
 			for(AdministratorKlinike a : k.getListaAdminKlinike()) {
-				AdministratorKlinikeDTO aDTO = new AdministratorKlinikeDTO();
-				aDTO.setId(a.getId());
-				aDTO.setIme(a.getIme());
-				aDTO.setPrezime(a.getPrezime());
-				aDTO.setEmail(a.getEmail());
+				AdministratorKlinikeDTO aDTO = new AdministratorKlinikeDTO(a);
 				lista.add(aDTO);
 			}
 		}
@@ -147,13 +132,8 @@ public class AdministratorKCController {
 		AdministratorKC administratorKC = administratorKCService.findByEmail(email);
 		
 		KlinickiCentar kc = administratorKC.getKlinickiCentar();
-		KlinickiCentarDTO kcDTO = new KlinickiCentarDTO();
-		kcDTO.setId(kc.getId());
-		kcDTO.setNaziv(kc.getNaziv());
-		kcDTO.setAdresa(kc.getAdresa());
-		kcDTO.setOpis(kc.getOpis());
-		
-	    
+		KlinickiCentarDTO kcDTO = new KlinickiCentarDTO(kc);
+		 
 		return new ResponseEntity<>(kcDTO, HttpStatus.OK);
 	}
 	
@@ -161,17 +141,12 @@ public class AdministratorKCController {
 	@GetMapping(value = "/listaLekova/{email}")
 	public ResponseEntity<List<LekDTO>> getListaLekova(@PathVariable String email) {
 
-		AdministratorKC administratorKC = administratorKCService.findByEmail(email);
-		
-		KlinickiCentar klinickiCentar = administratorKC.getKlinickiCentar();
-		
+		AdministratorKC administratorKC = administratorKCService.findByEmail(email);	
+		KlinickiCentar klinickiCentar = administratorKC.getKlinickiCentar();	
 		List<LekDTO> lista = new ArrayList<>();
 		
 		for (Lek k : klinickiCentar.getListaLekova()) {
-			LekDTO kcDTO = new LekDTO();
-			kcDTO.setId(k.getId());
-			kcDTO.setNaziv(k.getNaziv());
-			kcDTO.setSifra(k.getSifra());
+			LekDTO kcDTO = new LekDTO(k);
 			lista.add(kcDTO);
 		}
 
@@ -184,17 +159,12 @@ public class AdministratorKCController {
 	@GetMapping(value = "/listaDijagnoza/{email}")
 	public ResponseEntity<List<DijagnozaDTO>> getListaDijagnoza(@PathVariable String email) {
 
-		AdministratorKC administratorKC = administratorKCService.findByEmail(email);
-			
-		KlinickiCentar klinickiCentar = administratorKC.getKlinickiCentar();
-			
+		AdministratorKC administratorKC = administratorKCService.findByEmail(email);			
+		KlinickiCentar klinickiCentar = administratorKC.getKlinickiCentar();			
 		List<DijagnozaDTO> lista = new ArrayList<>();
 			
 		for (Dijagnoza k : klinickiCentar.getListaDijagnoza()) {
-			DijagnozaDTO kcDTO = new DijagnozaDTO();
-			kcDTO.setId(k.getId());
-			kcDTO.setNaziv(k.getNaziv());
-			kcDTO.setOpis(k.getOpis());
+			DijagnozaDTO kcDTO = new DijagnozaDTO(k);
 			lista.add(kcDTO);
 		}
 
@@ -263,28 +233,96 @@ public class AdministratorKCController {
 		return new ResponseEntity<>(new AdministratorKCDTO(aKC), HttpStatus.OK);
 	}
 
-	//potvrda registracije 
+
 	@PostMapping(path = "/potvrda", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
-	public String potvrdaRegistracijePacijenata(@RequestBody PacijentDTO pacijentDTO){
-
-		Pacijent p = pacijentService.findByEmailAndLozinka(pacijentDTO.getEmail(), pacijentDTO.getLozinka());
-		KlinickiCentar kc = p.getKlinickiCentar();
+	public String potvrdaRegistracijePacijenata(@RequestBody PacijentDTO pDTO){
+		System.out.println("------------------------------------");
 		
-		System.out.println("treba da se potvrdi");
-		p.setOdobrenaRegistracija(true);
-		kc.getZahteviZaRegistraciju().remove(p);
+		System.out.println("Pacijent " + pDTO.getIme() + " " + pDTO.getEmail());
+		
+		Pacijent p = pacijentService.findByEmail(pDTO.getEmail());
+		System.out.println(p.toString());
+//		System.out.println("kc by pacijent " + p.getKlinickiCentar().getId());
+		List<KlinickiCentar> listaKC = KCService.find();
+		KlinickiCentar kc = listaKC.get(0);
+		System.out.println("Klinicki centar" + kc.getId() + " " + kc.getNaziv());
+		
+		
+	
+		if(kc.getZahteviZaRegistraciju().isEmpty()) {
+			System.out.println("prazna listaaa");
+		}else {
+			p.setOdobrenaRegistracija(true);
+			p = pacijentService.save(p);
+			System.out.println(p.getOdobrenaRegistracija());
+			
+			kc.getZahteviZaRegistraciju().remove(p);
+			kc.setZahteviZaRegistraciju(kc.getZahteviZaRegistraciju());
+			kc = KCService.save(kc);
+			System.out.println(kc.getZahteviZaRegistraciju().toString());
+		}
+
+			
 		String subject ="Odobrena registracija";
-		String text = "Postovani " + p.getIme() + " " + p.getPrezime() + ",\n\nmolimo Vas da potvrdite vasu registraciju klikom na sledeci link: http://localhost:3000 .";
+		String text = "Postovani " + pDTO.getIme() + " " + pDTO.getPrezime() + ",\n\nmolimo Vas da potvrdite vasu registraciju klikom na sledeci link: http://localhost:3000 .";
+
+		System.out.println(text);
 		
 		//slanje emaila
 		try {
-			emailService.poslatiOdgovorPacijentu(pacijentDTO, subject, text);
+			emailService.poslatiOdgovorPacijentu(pDTO, subject, text);
 		}catch( Exception e ){
 			logger.info("Greska prilikom slanja emaila: " + e.getMessage());
 		}
 
 		return "success";
 	}
+	
+	//odbijanje registracije pacijenata
+		@PostMapping(path = "/odbijanje", consumes = "application/json")
+		@CrossOrigin(origins = "http://localhost:3000")
+		public String odbijanjeRegistracijePacijenata(@RequestBody PacijentDTO pDTO){
+			System.out.println("------------------------------------");
+			
+			System.out.println("Pacijent " + pDTO.getIme() + " " + pDTO.getEmail());
+//			
+			Pacijent p = pacijentService.findByEmail(pDTO.getEmail());
+//			System.out.println(p.toString());
+//			System.out.println("kc by pacijent " + p.getKlinickiCentar().getId());
+//			List<KlinickiCentar> listaKC = KCService.find();
+//			KlinickiCentar kc = listaKC.get(0);
+//			System.out.println("Klinicki centar" + kc.getId() + " " + kc.getNaziv());
+//			
+//			
+		
+//			if(kc.getZahteviZaRegistraciju().isEmpty()) {
+//				System.out.println("prazna listaaa");
+//			}else {
+//				p.setOdobrenaRegistracija(true);
+//				p = pacijentService.save(p);
+//				System.out.println(p.getOdobrenaRegistracija());
+//				
+//				kc.getZahteviZaRegistraciju().remove(p);
+//				kc.setZahteviZaRegistraciju(kc.getZahteviZaRegistraciju());
+//				kc = KCService.save(kc);
+//				System.out.println(kc.getZahteviZaRegistraciju().toString());
+//			}
+
+				
+			String subject ="Odobijena registracija";
+			String text = "Postovani " + pDTO.getIme() + " " + pDTO.getPrezime() + ",\n\nVasa registracija je odbijena od strane administratorskog tima Klinickog Centra.";
+
+			System.out.println(text);
+			
+			//slanje emaila
+			try {
+				emailService.poslatiOdgovorPacijentu(pDTO, subject, text);
+			}catch( Exception e ){
+				logger.info("Greska prilikom slanja emaila: " + e.getMessage());
+			}
+
+			return "success";
+		}
 	
 }

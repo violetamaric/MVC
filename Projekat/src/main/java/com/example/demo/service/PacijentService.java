@@ -18,6 +18,8 @@ public class PacijentService {
 		return pacijentRepository.findOneByLbo(lbo);
 	}
 	
+
+	
 	public List<Pacijent> findAll() {
 		return pacijentRepository.findAll();
 	}

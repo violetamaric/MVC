@@ -8,16 +8,21 @@ insert into administrator_klinike (ime, prezime, korisnicko_ime, lozinka, email,
 insert into administrator_klinike (ime, prezime, korisnicko_ime, lozinka, email, klinika_id) values ('Ceca', 'Antesevic', 'ceca', 'ceca', 'ceca@gmail.com', 2);
 insert into administrator_klinike (ime, prezime, korisnicko_ime, lozinka, email, klinika_id) values ('Viki', 'Maric', 'viki', 'viki', 'viki@gmail.com', 3);
 
-insert into lek (naziv, sifra,klinicki_centar_id) values ('Andol','001',1);
-insert into lek (naziv, sifra,klinicki_centar_id) values ('Cafetin','002',1);
-insert into lek (naziv, sifra,klinicki_centar_id) values ('Panadol','003',1);
-insert into lek (naziv, sifra,klinicki_centar_id) values ('Nitroglicerin','004',1);
-insert into lek (naziv, sifra,klinicki_centar_id) values ('Valsacor','005',1);
-insert into lek (naziv, sifra,klinicki_centar_id) values ('Tiastat','006',1);
-insert into lek (naziv, sifra,klinicki_centar_id) values ('Febricet','007',1);
 
-insert into dijagnoza(naziv, opis,klinicki_centar_id) values ('Prehlada','Prehlada',1);
-insert into dijagnoza(naziv, opis,klinicki_centar_id) values ('Infekcija','Infekcija',1);
+insert into lek (naziv, sifra, klinicki_centar_id) values ('Andol','001', 1);
+insert into lek (naziv, sifra, klinicki_centar_id) values ('Cafetin','002',1);
+insert into lek (naziv, sifra, klinicki_centar_id) values ('Panadol','003',1);
+insert into lek (naziv, sifra, klinicki_centar_id) values ('Nitroglicerin','004',1);
+insert into lek (naziv, sifra, klinicki_centar_id) values ('Valsacor','005',1);
+insert into lek (naziv, sifra, klinicki_centar_id) values ('Tiastat','006',1);
+insert into lek (naziv, sifra, klinicki_centar_id) values ('Febricet','007',1);
+
+insert into dijagnoza(naziv, opis, oznaka, klinicki_centar_id ) values('Trovanje hranom', 'Intoxicato ailmentaria per Clostridium perfringentem', 'A052', 1);
+insert into dijagnoza(naziv, opis, oznaka, klinicki_centar_id ) values('Trbušni tifus', 'Typhus abdominalis', 'A010', 1);
+insert into dijagnoza(naziv, opis, oznaka, klinicki_centar_id ) values('Veliki kašalj ', 'Pertussis', 'A37', 1);
+insert into dijagnoza(naziv, opis, oznaka, klinicki_centar_id ) values('Groznica Zapadnog Nila', 'Febris West Nile', 'A923', 1);
+insert into dijagnoza(naziv, opis, oznaka, klinicki_centar_id ) values('Velike boginje', 'Variola vera', 'B03', 1);
+insert into dijagnoza(naziv, opis, oznaka, klinicki_centar_id ) values('Male boginje bez komplikacija', 'Morbilli sine complicationibus', 'B059', 1);
 
 
 
@@ -32,13 +37,14 @@ insert into sala (broj, klinika_id) values ('001C', 1);
 insert into sala (broj, klinika_id) values ('002B', 2);
 insert into sala (broj, klinika_id) values ('003A', 3);
 
-insert into pacijent (ime, prezime, lbo,  lozinka, email, adresa, grad, drzava, telefon,odobrena_registracija, klinicki_centar_id) values ('Pera', 'Peric', '001', 'pera', 'pera@gmail.com', 'Temerinska 55','Novi Sad', 'Srbija','065241359', TRUE, 1);
-insert into pacijent (ime, prezime, lbo,  lozinka, email, adresa, grad, drzava, telefon,odobrena_registracija, klinicki_centar_id) values ('Mita', 'Mitic', '002', 'mita', 'mita@gmail.com', 'Petra Drapsina 89', 'Novi Sad', 'Srbija','0642255696', FALSE, 1);
+insert into pacijent (ime, prezime, lbo,  lozinka, email, adresa, grad, drzava, telefon, odobrena_registracija, klinicki_centar_id) values ('Pera', 'Peric', '001', 'pera', 'pera@gmail.com', 'Temerinska 55','Novi Sad', 'Srbija','065241359', true, 1);
+insert into pacijent (ime, prezime, lbo,  lozinka, email, adresa, grad, drzava, telefon, odobrena_registracija, klinicki_centar_id) values ('Mita', 'Mitic', '002', 'mita', 'mita@gmail.com', 'Petra Drapsina 89', 'Novi Sad', 'Srbija','0642255696', false, 1);
+insert into pacijent (ime, prezime, lbo,  lozinka, email, adresa, grad, drzava, telefon, odobrena_registracija, klinicki_centar_id) values ('Jovan', 'Jovicic', '003', 'jovan', 'jovan@gmail.com', 'Petra Kocica 66', 'Novi Sad', 'Srbija','061221478', true, 1);
+insert into pacijent (ime, prezime, lbo,  lozinka, email, adresa, grad, drzava, telefon, odobrena_registracija, klinicki_centar_id) values ('Lara', 'Nikolic', '004', 'lara', 'lara@gmail.com', 'Kralja Petra 11', 'Novi Sad', 'Srbija','0642255696', false, 1);
 
 
 insert into lekar_pacijent (pacijent_id, lekar_id) values (1,2);
 insert into lekar_pacijent (pacijent_id, lekar_id) values (2,2);
-
 
 
 
