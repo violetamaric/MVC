@@ -8,8 +8,12 @@ public class AdministratorKlinikeDTO {
 	private String ime;
 	private String prezime;
 	private String email;
+
 	private String lozinka;
 	private Long idKlinike;
+
+	private String telefon;
+
 	//nisam sigurna
 //	private String nazivKlinike; 
 	
@@ -23,19 +27,25 @@ public class AdministratorKlinikeDTO {
 		this.ime = adminKlinike.getIme();
 		this.prezime = adminKlinike.getPrezime();
 		this.email = adminKlinike.getEmail();
+    this.telefon = adminKlinike.getTelefon();
 		this.lozinka = adminKlinike.getLozinka();
 		this.idKlinike = adminKlinike.getKlinika().getId();
 //		this.nazivKlinike = adminKlinike.getKlinika().getNaziv();
 	}
 	
-	public AdministratorKlinikeDTO(Long id, String ime, String prezime, String email, String lozinka, Long idKlinike) {
+	
+	public AdministratorKlinikeDTO(Long id, String ime, String prezime, String email, String telefon, String lozinka, Long idKlinike) {
 		super();
 		this.id = id;
 		this.ime = ime;
 		this.prezime = prezime;
 		this.email = email;
+
 		this.lozinka = lozinka;
 		this.idKlinike = idKlinike;
+
+		this.telefon = telefon;
+
 //		this.nazivKlinike = nazivKlinike;
 	}
 	public Long getId() {
@@ -62,6 +72,16 @@ public class AdministratorKlinikeDTO {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+
+	public String getTelefon() {
+		return telefon;
+	}
+
+	public void setTelefon(String telefon) {
+		this.telefon = telefon;
+	}
+	
+	
 //	public String getNazivKlinike() {
 //		return nazivKlinike;
 //	}

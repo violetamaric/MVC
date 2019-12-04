@@ -10,12 +10,10 @@ import com.example.demo.model.Pacijent;
 public interface PacijentRepository extends JpaRepository<Pacijent, Long>{
 	
 	Pacijent findOneByLbo(String lbo);
-	
 	Page<Pacijent> findAll(Pageable pageable);
 	@Query("select p from Pacijent p where p.email = ?1 and p.lozinka = ?2")
 	Pacijent findByEmailAndLozinka(String email, String lozinka);
-	@Query("select p from Pacijent p where p.email = ?1")
-	Pacijent findByEmail(String email);
+
 	
 
 }

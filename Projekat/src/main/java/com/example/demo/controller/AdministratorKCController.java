@@ -240,6 +240,7 @@ public class AdministratorKCController {
 		return new ResponseEntity<>(new AdministratorKCDTO(aKC), HttpStatus.OK);
 	}
 
+
 	//potvrda registracije
 	@PostMapping(path = "/potvrda/{email}", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")

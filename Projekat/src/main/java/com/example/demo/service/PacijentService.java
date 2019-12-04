@@ -18,10 +18,6 @@ public class PacijentService {
 		return pacijentRepository.findOneByLbo(lbo);
 	}
 	
-	public Pacijent findByEmail(String email) {
-		return pacijentRepository.findByEmail(email);
-	}
-	
 	public List<Pacijent> findAll() {
 		return pacijentRepository.findAll();
 	}
@@ -36,6 +32,6 @@ public class PacijentService {
 	public Pacijent findByEmailAndLozinka(String email, String lozinka) {
 		return pacijentRepository.findByEmailAndLozinka(email, lozinka);
 	}
-	
+
 	
 }
