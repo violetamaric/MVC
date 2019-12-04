@@ -63,4 +63,5 @@ public class KlinikaController {
 		System.out.println(klinika.getNaziv());
 		return new ResponseEntity<>(new KlinikaDTO(klinika), HttpStatus.OK);
 	}
+
 }

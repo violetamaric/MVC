@@ -65,6 +65,9 @@ public class UserController {
 								pacijentDTO.getLozinka());
 						if (pacijent == null) {
 							return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+						}else if(pacijent.getOdobrenaRegistracija() == false){
+							System.out.println("NIJE ODOBRENA REGISTRACIJA OD STRANE ADMINA KC");
+							return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 						}else {
 							UserDTO userDTO = new UserDTO();
 							userDTO.setEmail(pacijent.getEmail());

@@ -11,6 +11,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -38,8 +40,10 @@ public class MedicinskaSestra {
 	@Column(name="lozinka", nullable=false)
 	private String lozinka;
 	
-	@ManyToMany(mappedBy = "listaMedicinskihSestara")
-	private Set<Pacijent> listaPacijenata = new HashSet<Pacijent>();
+	@ManyToMany
+	@JoinTable(name = "medicinska_sestra_pacijent", joinColumns = @JoinColumn(name = "pacijent_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "medicinska_sestra_id", referencedColumnName = "id"))
+	private Set<Pacijent> listaPacijenataMedSestra = new HashSet<Pacijent>();
+	
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Klinika klinika;
@@ -79,10 +83,10 @@ public class MedicinskaSestra {
 		this.email = email;
 	}
 	public Set<Pacijent> getListaPacijenata() {
-		return listaPacijenata;
+		return listaPacijenataMedSestra;
 	}
 	public void setListaPacijenata(Set<Pacijent> listaPacijenata) {
-		this.listaPacijenata = listaPacijenata;
+		this.listaPacijenataMedSestra = listaPacijenata;
 	}
 	public Klinika getKlinika() {
 		return klinika;

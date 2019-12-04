@@ -24,6 +24,16 @@ public class KlinikaService {
 	public List<Klinika> findAll() {
 		return klinikaRepository.findAll();
 	}
+	public Klinika save(Klinika klinika) {
+		return klinikaRepository.save(klinika);
+	}
+	public void delete(Klinika klinika) {
+		klinikaRepository.delete(klinika);
+	}
+	public Klinika findById(Long id) {
+		return klinikaRepository.findById(id).orElseGet(null);
+	}
+	
 }
 
 

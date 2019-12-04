@@ -61,8 +61,8 @@ public class Pacijent {
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private KlinickiCentar klinickiCentar;
 
-	@ManyToMany
-	@JoinTable(name = "medicinskaSestra_pacijent", joinColumns = @JoinColumn(name = "pacijent_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "lekar_id", referencedColumnName = "id"))
+	@ManyToMany(mappedBy ="listaPacijenataMedSestra")
+	//@JoinTable(name = "medicinskaSestra_pacijent", joinColumns = @JoinColumn(name = "pacijent_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "lekar_id", referencedColumnName = "id"))
 	private Set<MedicinskaSestra> listaMedicinskihSestara = new HashSet<MedicinskaSestra>();
 
 	@ManyToMany(mappedBy = "listaPacijenata")

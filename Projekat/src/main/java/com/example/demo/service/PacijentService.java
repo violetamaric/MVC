@@ -28,7 +28,11 @@ public class PacijentService {
 	public Pacijent save(Pacijent pacijent) {
 		return pacijentRepository.save(pacijent);
 	}
+	public void delete(Pacijent pacijent) {
+		pacijentRepository.delete(pacijent);
+	}
 
+	
 	public Pacijent findByEmailAndLozinka(String email, String lozinka) {
 		return pacijentRepository.findByEmailAndLozinka(email, lozinka);
 	}

@@ -15,4 +15,13 @@ public class AdministratorKlinikeService {
 	public AdministratorKlinike findByEmailAndLozinka(String email, String lozinka) {
 		return administratorKRepository.findByEmailAndLozinka(email, lozinka);
 	}
+	public AdministratorKlinike findById(Long id) {
+		return administratorKRepository.findById(id).orElseGet(null);
+	}
+	public AdministratorKlinike save(AdministratorKlinike administratorKlinike) {
+		return administratorKRepository.save(administratorKlinike);
+	}
+	public void delete(AdministratorKlinike administratorKlinike) {
+		administratorKRepository.delete(administratorKlinike);
+	}
 }

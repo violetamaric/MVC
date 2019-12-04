@@ -2,7 +2,6 @@ package com.example.demo.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +25,6 @@ import com.example.demo.dto.KlinickiCentarDTO;
 import com.example.demo.dto.KlinikaDTO;
 import com.example.demo.dto.LekDTO;
 import com.example.demo.dto.PacijentDTO;
-import com.example.demo.dto.UserDTO;
 import com.example.demo.model.AdministratorKC;
 import com.example.demo.model.AdministratorKlinike;
 import com.example.demo.model.Dijagnoza;
@@ -35,8 +33,10 @@ import com.example.demo.model.Klinika;
 import com.example.demo.model.Lek;
 import com.example.demo.model.Pacijent;
 import com.example.demo.service.AdministratorKCService;
+import com.example.demo.service.AdministratorKlinikeService;
 import com.example.demo.service.EmailService;
 import com.example.demo.service.KlinickiCentarService;
+import com.example.demo.service.KlinikaService;
 import com.example.demo.service.PacijentService;
 
 
@@ -49,7 +49,14 @@ public class AdministratorKCController {
 	private AdministratorKCService administratorKCService;
 	
 	@Autowired
+	private AdministratorKlinikeService administratorKlinikeService;
+	
+	@Autowired
 	private PacijentService pacijentService;
+	
+	@Autowired
+	private KlinikaService klinikaService;
+
 	
 	@Autowired
 	private KlinickiCentarService KCService;
@@ -234,24 +241,19 @@ public class AdministratorKCController {
 	}
 
 	//potvrda registracije
-	@PostMapping(path = "/potvrda", consumes = "application/json")
+	@PostMapping(path = "/potvrda/{email}", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
-	public String potvrdaRegistracijePacijenata(@RequestBody PacijentDTO pDTO){
+	public ResponseEntity<String> potvrdaRegistracijePacijenata(@PathVariable String email){
 		System.out.println("------------------------------------");
-		
-		System.out.println("Pacijent " + pDTO.getIme() + " " + pDTO.getEmail());
-		
-		Pacijent p = pacijentService.findByEmail(pDTO.getEmail());
-		System.out.println(p.toString());
-//		System.out.println("kc by pacijent " + p.getKlinickiCentar().getId());
+		Pacijent p = pacijentService.findByEmail(email);
+		PacijentDTO pDTO = new PacijentDTO(p);
+
 		List<KlinickiCentar> listaKC = KCService.find();
-		KlinickiCentar kc = listaKC.get(0);
-		System.out.println("Klinicki centar" + kc.getId() + " " + kc.getNaziv());
-		
-		
+		KlinickiCentar kc = listaKC.get(0);	
 	
 		if(kc.getZahteviZaRegistraciju().isEmpty()) {
 			System.out.println("prazna listaaa");
+			return new ResponseEntity<>("U listi ne postoji pacijent", HttpStatus.BAD_REQUEST);
 		}else {
 			p.setOdobrenaRegistracija(true);
 			p = pacijentService.save(p);
@@ -265,7 +267,8 @@ public class AdministratorKCController {
 
 			
 		String subject ="Odobrena registracija";
-		String text = "Postovani " + pDTO.getIme() + " " + pDTO.getPrezime() + ",\n\nmolimo Vas da potvrdite vasu registraciju klikom na sledeci link: http://localhost:3000 .";
+		String text = "Postovani " + pDTO.getIme() + " " + pDTO.getPrezime() 
+					+ ",\n\nMolimo Vas da potvrdite vasu registraciju klikom na sledeci link: http://localhost:3000 .";
 
 		System.out.println(text);
 		
@@ -274,55 +277,103 @@ public class AdministratorKCController {
 			emailService.poslatiOdgovorPacijentu(pDTO, subject, text);
 		}catch( Exception e ){
 			logger.info("Greska prilikom slanja emaila: " + e.getMessage());
+			return new ResponseEntity<>("Mail nije poslat", HttpStatus.BAD_REQUEST);
 		}
 
-		return "success";
+		return new ResponseEntity<>("Odobreno", HttpStatus.OK);
 	}
 	
 	//odbijanje registracije pacijenata
-		@PostMapping(path = "/odbijanje", consumes = "application/json")
-		@CrossOrigin(origins = "http://localhost:3000")
-		public String odbijanjeRegistracijePacijenata(@RequestBody PacijentDTO pDTO){
-			System.out.println("------------------------------------");
+	@PostMapping(path = "/odbijanje/{email}/{razlog}", consumes = "application/json")
+	@CrossOrigin(origins = "http://localhost:3000")
+	public ResponseEntity<String> odbijanjeRegistracijePacijenata(@PathVariable String email, @PathVariable String razlog){
+		System.out.println("------------------------------------");
+		Pacijent p = pacijentService.findByEmail(email);
+		PacijentDTO pDTO = new PacijentDTO(p);
+
+		List<KlinickiCentar> listaKC = KCService.find();
+		KlinickiCentar kc = listaKC.get(0);
+
+		if(kc.getZahteviZaRegistraciju().isEmpty()) {
+			System.out.println("prazna listaaa");
+			return new ResponseEntity<>("U listi ne postoji taj pacijent", HttpStatus.BAD_REQUEST);
+		}else {
+			System.out.println("Uspesno obrisan pacijent");
+			kc.getZahteviZaRegistraciju().remove(p);
+			pacijentService.delete(p);
+			kc.setZahteviZaRegistraciju(kc.getZahteviZaRegistraciju());
+			kc = KCService.save(kc);
 			
-			System.out.println("Pacijent " + pDTO.getIme() + " " + pDTO.getEmail());
-//			
-			Pacijent p = pacijentService.findByEmail(pDTO.getEmail());
-//			System.out.println(p.toString());
-//			System.out.println("kc by pacijent " + p.getKlinickiCentar().getId());
-//			List<KlinickiCentar> listaKC = KCService.find();
-//			KlinickiCentar kc = listaKC.get(0);
-//			System.out.println("Klinicki centar" + kc.getId() + " " + kc.getNaziv());
-//			
-//			
-		
-//			if(kc.getZahteviZaRegistraciju().isEmpty()) {
-//				System.out.println("prazna listaaa");
-//			}else {
-//				p.setOdobrenaRegistracija(true);
-//				p = pacijentService.save(p);
-//				System.out.println(p.getOdobrenaRegistracija());
-//				
-//				kc.getZahteviZaRegistraciju().remove(p);
-//				kc.setZahteviZaRegistraciju(kc.getZahteviZaRegistraciju());
-//				kc = KCService.save(kc);
-//				System.out.println(kc.getZahteviZaRegistraciju().toString());
-//			}
-
-				
-			String subject ="Odobijena registracija";
-			String text = "Postovani " + pDTO.getIme() + " " + pDTO.getPrezime() + ",\n\nVasa registracija je odbijena od strane administratorskog tima Klinickog Centra.";
-
-			System.out.println(text);
-			
-			//slanje emaila
-			try {
-				emailService.poslatiOdgovorPacijentu(pDTO, subject, text);
-			}catch( Exception e ){
-				logger.info("Greska prilikom slanja emaila: " + e.getMessage());
-			}
-
-			return "success";
 		}
+
+		String subject ="Odobijena registracija";
+		String text = "Postovani " + pDTO.getIme() + " " + pDTO.getPrezime() 
+					+ ",\n\nVasa registracija je odbijena od strane administratorskog tima Klinickog Centra. \nRazlog odbijanja: \n"
+					+ razlog + "\n\nS postovanjem,\nKlinicki Centar";
+		System.out.println(text);
+			
+		//slanje emaila
+		try {
+			emailService.poslatiOdgovorPacijentu(pDTO, subject, text);
+		}catch( Exception e ){
+			logger.info("Greska prilikom slanja emaila: " + e.getMessage());
+			return new ResponseEntity<>("Mail nije poslat", HttpStatus.BAD_REQUEST);
+		}
+
+		return new ResponseEntity<>("Odbijeno", HttpStatus.OK);
+	}
+	
+	//dodavanje nove klinike
+	@PostMapping(path = "/dodavanjeKlinike", consumes = "application/json")
+	@CrossOrigin(origins = "http://localhost:3000")
+	public ResponseEntity<KlinikaDTO> dodavanjeKlinike(@RequestBody KlinikaDTO klinikaDTO) {
+		System.out.println("------------------------------------------------------");
+		Klinika klinika = new Klinika();
+		klinika.setNaziv(klinikaDTO.getNaziv());
+		klinika.setOpis(klinikaDTO.getOpis());
+		klinika.setAdresa(klinikaDTO.getAdresa());
+		klinika.setOcena(klinikaDTO.getOcena());
+		
+		List<KlinickiCentar> listaKC = KCService.find();
+		KlinickiCentar kc = listaKC.get(0);
+		
+		klinika.setKlinickiCentar(kc);
+		
+		//TODO 1: DODATI ADMINE KLINIKE
+		//resila drugacije  
+//		for(Long id : klinikaDTO.getListaAdministratoraKlinike()) {
+//			AdministratorKlinike ak = administratorKlinikeService.findById(id);
+//			klinika.getListaAdminKlinike().add(ak);
+//			System.out.println("dodat admin klinike u kliniku");
+//		}
+		
+		klinika = klinikaService.save(klinika);
+		
+		kc.getListaKlinika().add(klinika);
+		kc = KCService.save(kc);
+
+		System.out.println("------------------------------------------------------");
+		return new ResponseEntity<>(new KlinikaDTO(klinika), HttpStatus.CREATED);
+	}
+	//dodavanje nove administratora klinike
+	@PostMapping(path = "/dodavanjeAdminaKlinike", consumes = "application/json")
+	@CrossOrigin(origins = "http://localhost:3000")
+	public ResponseEntity<AdministratorKlinikeDTO> dodavanjeAdminaKlinike(@RequestBody AdministratorKlinikeDTO akDTO) {
+		System.out.println("------------------------------------------------------");
+		AdministratorKlinike ak = new AdministratorKlinike();
+		ak.setIme(akDTO.getIme());
+		ak.setPrezime(akDTO.getPrezime());
+		ak.setEmail(akDTO.getEmail());
+		ak.setLozinka(akDTO.getLozinka());
+			
+		Klinika k = klinikaService.findById(akDTO.getIdKlinike());
+		ak.setKlinika(k);
+		ak = administratorKlinikeService.save(ak);
+		k.getListaAdminKlinike().add(ak);
+		k = klinikaService.save(k);
+
+		System.out.println("------------------------------------------------------");
+		return new ResponseEntity<>(new AdministratorKlinikeDTO(ak), HttpStatus.CREATED);
+	}
 	
 }
