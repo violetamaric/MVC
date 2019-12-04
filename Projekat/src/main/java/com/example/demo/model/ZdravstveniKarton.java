@@ -27,6 +27,9 @@ public class ZdravstveniKarton {
 	@Column(name="tezina", nullable=false)
 	private double tezina;
 	
+	@Column(name="krvnaGrupa", nullable=true)
+	private double krvnaGrupa;
+	
 	@OneToOne(fetch=FetchType.LAZY)
 	private Pacijent pacijent;
 	
