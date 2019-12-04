@@ -1,5 +1,8 @@
 package com.example.demo.dto;
 
+import java.util.ArrayList;
+
+import com.example.demo.model.AdministratorKlinike;
 import com.example.demo.model.Klinika;
 
 public class KlinikaDTO {
@@ -10,6 +13,8 @@ public class KlinikaDTO {
 	private String adresa;
 	private String opis;
 	private int ocena;
+//	private ArrayList<Long> listaAdministratoraKlinike = new ArrayList<Long>(); 
+	//lista id-eva administratora klinike
 	
 	public KlinikaDTO() {
 		super();
@@ -22,16 +27,30 @@ public class KlinikaDTO {
 		this.adresa = adresa;
 		this.opis = opis;
 		this.ocena = ocena;
+		
 	}
+//	public KlinikaDTO(Long id, String naziv, String adresa, String opis, int ocena, ArrayList<Long> lista) {
+//		super();
+//		this.id = id;
+//		this.naziv = naziv;
+//		this.adresa = adresa;
+//		this.opis = opis;
+//		this.ocena = ocena;
+//		this.listaAdministratoraKlinike = lista;
+//	}
 
 	public KlinikaDTO(Klinika klinika) {
 		super();
-		// TODO Auto-generated constructor stub
+		
 		this.id = klinika.getId();
 		this.naziv = klinika.getNaziv();
 		this.adresa = klinika.getAdresa();
 		this.opis = klinika.getOpis();
 		this.ocena = klinika.getOcena();
+//		for (AdministratorKlinike ak : klinika.getListaAdminKlinike()) {
+//			this.listaAdministratoraKlinike.add(ak.getId());
+//		}
+		
 	}
 
 	
@@ -73,7 +92,15 @@ public class KlinikaDTO {
 
 	public void setOcena(int ocena) {
 		this.ocena = ocena;
-	} 
+	}
+
+//	public ArrayList<Long> getListaAdministratoraKlinike() {
+//		return listaAdministratoraKlinike;
+//	}
+//
+//	public void setListaAdministratoraKlinike(ArrayList<Long> listaAdministratoraKlinike) {
+//		this.listaAdministratoraKlinike = listaAdministratoraKlinike;
+//	} 
 	
 	
 	

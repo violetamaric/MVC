@@ -22,6 +22,16 @@ public class AdministratorKlinikeService {
 	public AdministratorKlinike findByEmailAndLozinka(String email, String lozinka) {
 		return administratorKRepository.findByEmailAndLozinka(email, lozinka);
 	}
+
+	public AdministratorKlinike findById(Long id) {
+		return administratorKRepository.findById(id).orElseGet(null);
+	}
+	public AdministratorKlinike save(AdministratorKlinike administratorKlinike) {
+		return administratorKRepository.save(administratorKlinike);
+	}
+	public void delete(AdministratorKlinike administratorKlinike) {
+		administratorKRepository.delete(administratorKlinike);
+
 	
 	public AdministratorKlinike findByEmail(String email) {
 		return administratorKRepository.findByEmail(email);
@@ -31,7 +41,7 @@ public class AdministratorKlinikeService {
 		return administratorKRepository.findAll();
 	}
 	
-	public AdministratorKlinike save(AdministratorKlinike administrator) {
-		return administratorKRepository.save(administrator);
-	}
+	
+
+	
 }
