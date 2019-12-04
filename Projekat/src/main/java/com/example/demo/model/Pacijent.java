@@ -55,7 +55,7 @@ public class Pacijent {
 	@Column(name = "telefon", nullable = false)
 	private String telefon;
 	
-	@Column(name = "odobrenaRegistracija", nullable = false)
+	@Column(name = "odobrenaRegistracija", nullable = true)
 	private Boolean odobrenaRegistracija;
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -217,7 +217,6 @@ public class Pacijent {
 		this.telefon = telefon;
 	}
 	
-
 	public Boolean getOdobrenaRegistracija() {
 		return odobrenaRegistracija;
 	}
