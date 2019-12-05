@@ -61,6 +61,7 @@ public class PacijentController {
 		System.out.println(pacijent.getEmail() + "++++");
 		return new ResponseEntity<>(new PacijentDTO(pacijent), HttpStatus.OK);
 	}
+
 	@GetMapping(value = "/findPacijentEmail/{email}")
 	public ResponseEntity<PacijentDTO> getPacijentByEmail(@PathVariable String email) {
 		System.out.println("find pacijent");
@@ -74,6 +75,7 @@ public class PacijentController {
 	@GetMapping(value = "/findZK/{email}")
 	@CrossOrigin(origins = "http://localhost:3000")
 	public ResponseEntity<ZdravstveniKarton> getZK(@PathVariable String email) {
+
 		System.out.println("find pacijent");
 		
 		Pacijent pacijent = pacijentService.findByEmail(email);
@@ -81,6 +83,7 @@ public class PacijentController {
 		if (pacijent == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
+
 		ZdravstveniKarton zk = pacijent.getZdravstveniKarton();
 		System.out.println(pacijent.getEmail() + "++++");
 		Pacijent p = new Pacijent();
@@ -88,7 +91,7 @@ public class PacijentController {
 		zk.setPacijent(p);
 		return new ResponseEntity<>(new ZdravstveniKarton(zk), HttpStatus.OK);
 	}
-	
+
 	
 	@PostMapping(path = "/register", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")

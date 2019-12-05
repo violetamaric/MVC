@@ -3,14 +3,14 @@ insert into klinicki_centar (naziv, adresa, opis) values ('Klinicki centar Srbij
 
 insert into administratorkc (ime, prezime, lozinka, email, klinicki_centar_id) values ('MVC', 'MVC', 'mvc', 'mvc@gmail.com', 1);
 
+
 insert into klinika (naziv, adresa, opis, klinicki_centar_id, ocena) values ('Klinika Beograd', 'Pasterova 2','Klinika uvek na usluzi svojim pacijentima',1, 8);
 insert into klinika (naziv, adresa, opis, klinicki_centar_id, ocena) values ('Klinika Nis', 'Bulevar dr Zorana Djindjica 48','Klinika uvek na usluzi svojim pacijentima',1, 9);
 insert into klinika (naziv, adresa, opis, klinicki_centar_id, ocena) values ('Klinika Novi Sad', 'Hajduk Veljkova 1','Klinika uvek na usluzi svojim pacijentima',1, 10);
 
-insert into administrator_klinike (ime, prezime, korisnicko_ime, lozinka, email, klinika_id) values ('Maga', 'Lakic', 'maga', 'maga', 'maga@gmail.com', 1);
-insert into administrator_klinike (ime, prezime, korisnicko_ime, lozinka, email, klinika_id) values ('Ceca', 'Antesevic', 'ceca', 'ceca', 'ceca@gmail.com', 2);
-insert into administrator_klinike (ime, prezime, korisnicko_ime, lozinka, email, klinika_id) values ('Viki', 'Maric', 'viki', 'viki', 'viki@gmail.com', 3);
-
+insert into administrator_klinike (ime, prezime, lozinka, email, telefon, klinika_id) values ('Maga', 'Lakic', 'maga', 'maga@gmail.com', '066/000-665', 1);
+insert into administrator_klinike (ime, prezime, lozinka, email, telefon, klinika_id) values ('Ceca', 'Antesevic', 'ceca', 'ceca@gmail.com', '061/422-852', 2);
+insert into administrator_klinike (ime, prezime, lozinka, email, telefon, klinika_id) values ('Viki', 'Maric', 'viki', 'viki@gmail.com', '064/656-969', 3);
 
 insert into lek (naziv, sifra, klinicki_centar_id) values ('Andol','001', 1);
 insert into lek (naziv, sifra, klinicki_centar_id) values ('Cafetin','002',1);
@@ -51,4 +51,9 @@ insert into pacijent (ime, prezime, lbo,  lozinka, email, adresa, grad, drzava, 
 
 insert into lekar_pacijent (pacijent_id, lekar_id) values (1,2);
 insert into lekar_pacijent (pacijent_id, lekar_id) values (2,2);
+
+insert into medicinska_sestra_pacijent (pacijent_id, medicinska_sestra_id) values (1,2);
+insert into medicinska_sestra_pacijent (pacijent_id, medicinska_sestra_id) values (2,2);
+
+
 

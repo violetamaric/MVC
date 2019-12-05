@@ -22,16 +22,18 @@ import com.example.demo.model.Lekar;
 import com.example.demo.model.MedicinskaSestra;
 import com.example.demo.model.Pacijent;
 import com.example.demo.service.MedicinskaSestraService;
+import com.example.demo.service.PacijentService;
 
-/*
- * http://localhost:8028/api/medicinskaSestra/sve
- * */
+
 
 @RestController
 @RequestMapping(value="/api/medicinskaSestra", produces = MediaType.APPLICATION_JSON_VALUE)
 public class MedicinskaSestraController {
 	@Autowired
 	private MedicinskaSestraService medicinskaSestraService;
+	
+	@Autowired
+	private PacijentService pacijenti;
 	
 	@GetMapping(value = "/sve")
 	public ResponseEntity<List<MedicinskaSestraDTO>> getAll() {
@@ -59,24 +61,40 @@ public class MedicinskaSestraController {
 		return new ResponseEntity<>(new MedicinskaSestraDTO(ms), HttpStatus.OK);
 	}
 
-	//NE RADIII MIIIII
+	
 	@GetMapping(value = "/listaPacijenata/{email}")
+	@CrossOrigin(origins = "http://localhost:3000")
 	public ResponseEntity<List<PacijentDTO>> getListaPacijenata(@PathVariable String email) {
-
+		System.out.println("//////////////////// MED SESTRA LISTA PACIJENATA ////////////////////////");
+		
 		MedicinskaSestra ms = medicinskaSestraService.findByEmail(email);
 		
+		List<Pacijent> listaSvihP =  pacijenti.findAll();
+		System.out.println("Lista pacijenata od MED SESTRE: " + ms.getEmail());
 		List<PacijentDTO> lista = new ArrayList<>();
-		
-		for (Pacijent p : ms.getListaPacijenata()) {
-			PacijentDTO pDTO = new PacijentDTO(p);
 			
-			lista.add(pDTO);
+		for (Pacijent p : listaSvihP ) {
+			//DODAJ MAGDALENA 
+				System.out.println(p);
+				if(p.getOdobrenaRegistracija() == true) {
+					PacijentDTO pDTO = new PacijentDTO(p);
+					System.out.println("Pacijent dodat");
+					lista.add(pDTO);
+				}
+						
 		}
-
+		
+		System.out.println("*************");
+		for(PacijentDTO pd  : lista) {
+			System.out.println(pd);
+		}
+		System.out.println("*************");
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 
 		
 	}
+	
+	
 	
 	@PutMapping(path="/izmena", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")

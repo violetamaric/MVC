@@ -55,14 +55,14 @@ public class Pacijent {
 	@Column(name = "telefon", nullable = false)
 	private String telefon;
 	
-	@Column(name = "odobrenaRegistracija", nullable = false)
+	@Column(name = "odobrenaRegistracija", nullable = true)
 	private Boolean odobrenaRegistracija;
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private KlinickiCentar klinickiCentar;
 
-	@ManyToMany
-	@JoinTable(name = "medicinskaSestra_pacijent", joinColumns = @JoinColumn(name = "pacijent_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "lekar_id", referencedColumnName = "id"))
+	@ManyToMany(mappedBy ="listaPacijenataMedSestra")
+	//@JoinTable(name = "medicinskaSestra_pacijent", joinColumns = @JoinColumn(name = "pacijent_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "lekar_id", referencedColumnName = "id"))
 	private Set<MedicinskaSestra> listaMedicinskihSestara = new HashSet<MedicinskaSestra>();
 
 	@ManyToMany(mappedBy = "listaPacijenata")
@@ -217,7 +217,6 @@ public class Pacijent {
 		this.telefon = telefon;
 	}
 	
-
 	public Boolean getOdobrenaRegistracija() {
 		return odobrenaRegistracija;
 	}
