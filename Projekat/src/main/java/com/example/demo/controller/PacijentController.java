@@ -83,6 +83,9 @@ public class PacijentController {
 		}
 		ZdravstveniKarton zk = pacijent.getZdravstveniKarton();
 		System.out.println(pacijent.getEmail() + "++++");
+		Pacijent p = new Pacijent();
+		p.setEmail(pacijent.getEmail());
+		zk.setPacijent(p);
 		return new ResponseEntity<>(new ZdravstveniKarton(zk), HttpStatus.OK);
 	}
 	

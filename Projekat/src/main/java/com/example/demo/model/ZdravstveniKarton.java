@@ -29,8 +29,8 @@ public class ZdravstveniKarton {
 	@Column(name="tezina", nullable=false)
 	private double tezina;
 	
-	@Column(name="krvnaGrupa", nullable=true)
-	private double krvnaGrupa;
+	@Column(name="krvnaGrupa", nullable=false)
+	private String krvnaGrupa;
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	private Pacijent pacijent;
@@ -49,9 +49,16 @@ public class ZdravstveniKarton {
 		this.visina = zk.getVisina();
 		this.tezina = zk.getTezina();
 		this.pacijent = zk.getPacijent();
+		this.krvnaGrupa = zk.getKrvnaGrupa();
 	}
+	
 
-
+	public String getKrvnaGrupa() {
+		return krvnaGrupa;
+	}
+	public void setKrvnaGrupa(String krvnaGrupa) {
+		this.krvnaGrupa = krvnaGrupa;
+	}
 	public Set<Operacija> getListaOperacija() {
 		return listaOperacija;
 	}
