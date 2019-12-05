@@ -17,7 +17,9 @@ public class PacijentService {
 	public Pacijent findByLbo(String lbo) {
 		return pacijentRepository.findOneByLbo(lbo);
 	}
-	
+	public Pacijent findByEmail(String email) {
+		return pacijentRepository.findByEmail(email);
+	}
 	public List<Pacijent> findAll() {
 		return pacijentRepository.findAll();
 	}
