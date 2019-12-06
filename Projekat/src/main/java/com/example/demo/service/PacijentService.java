@@ -30,17 +30,10 @@ public class PacijentService {
 		pacijentRepository.delete(pacijent);
 	}
 	
-	public Pacijent findByEmail(String email) {
-		return pacijentRepository.findByEmail(email);
-	}
-
-	
 	public Pacijent findByEmailAndLozinka(String email, String lozinka) {
 		return pacijentRepository.findByEmailAndLozinka(email, lozinka);
 	}
-	public Pacijent findByEmail(String email) {
-		return pacijentRepository.findByEmail(email);
-	}
+	
 
 	
 }
