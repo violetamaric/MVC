@@ -29,6 +29,10 @@ public class PacijentService {
 	public void delete(Pacijent pacijent) {
 		pacijentRepository.delete(pacijent);
 	}
+	
+	public Pacijent findByEmail(String email) {
+		return pacijentRepository.findByEmail(email);
+	}
 
 	
 	public Pacijent findByEmailAndLozinka(String email, String lozinka) {
