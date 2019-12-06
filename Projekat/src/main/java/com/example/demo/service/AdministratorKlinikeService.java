@@ -31,7 +31,7 @@ public class AdministratorKlinikeService {
 	}
 	public void delete(AdministratorKlinike administratorKlinike) {
 		administratorKRepository.delete(administratorKlinike);
-
+	}
 	
 	public AdministratorKlinike findByEmail(String email) {
 		return administratorKRepository.findByEmail(email);

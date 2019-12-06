@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,9 +36,11 @@ import com.example.demo.model.Lek;
 import com.example.demo.model.Pacijent;
 import com.example.demo.service.AdministratorKCService;
 import com.example.demo.service.AdministratorKlinikeService;
+import com.example.demo.service.DijagnozaService;
 import com.example.demo.service.EmailService;
 import com.example.demo.service.KlinickiCentarService;
 import com.example.demo.service.KlinikaService;
+import com.example.demo.service.LekService;
 import com.example.demo.service.PacijentService;
 
 
@@ -57,15 +61,21 @@ public class AdministratorKCController {
 	@Autowired
 	private KlinikaService klinikaService;
 
-	
 	@Autowired
 	private KlinickiCentarService KCService;
 	
 	@Autowired
 	private EmailService emailService;
 	
+	@Autowired
+	private LekService lekService;
+	
+	@Autowired
+	private DijagnozaService dijagnozaService;
+	
 	private Logger logger = LoggerFactory.getLogger(UserController.class);
 	
+	//vrati mi sve admnistratore kc
 	@GetMapping(value = "/svi")
 	public ResponseEntity<List<AdministratorKCDTO>> getAll() {
 
@@ -80,6 +90,7 @@ public class AdministratorKCController {
 		return new ResponseEntity<>(administratoriKCDTO, HttpStatus.OK);
 	}
 	
+	//vrati mi trenutnog admnistratora kc
 	@GetMapping(value = "/pronadjenAdministratorKC/{email}")
 	public ResponseEntity<AdministratorKCDTO> getAdministratorKCByEmail(@PathVariable String email){
 		
@@ -93,7 +104,6 @@ public class AdministratorKCController {
 		return new ResponseEntity<>(new AdministratorKCDTO(administratorKC), HttpStatus.OK);
 	}
 	
-
 	//vrati mi listu klinika u klinickom centru
 	@GetMapping(value = "/listaKlinika/{email}")
 	public ResponseEntity<List<KlinikaDTO>> getListaKlinika(@PathVariable String email) {
@@ -240,7 +250,6 @@ public class AdministratorKCController {
 		return new ResponseEntity<>(new AdministratorKCDTO(aKC), HttpStatus.OK);
 	}
 
-
 	//potvrda registracije
 	@PostMapping(path = "/potvrda/{email}", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
@@ -356,6 +365,7 @@ public class AdministratorKCController {
 		System.out.println("------------------------------------------------------");
 		return new ResponseEntity<>(new KlinikaDTO(klinika), HttpStatus.CREATED);
 	}
+	
 	//dodavanje nove administratora klinike
 	@PostMapping(path = "/dodavanjeAdminaKlinike", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
@@ -366,6 +376,7 @@ public class AdministratorKCController {
 		ak.setPrezime(akDTO.getPrezime());
 		ak.setEmail(akDTO.getEmail());
 		ak.setLozinka(akDTO.getLozinka());
+		ak.setTelefon(akDTO.getTelefon());
 			
 		Klinika k = klinikaService.findById(akDTO.getIdKlinike());
 		ak.setKlinika(k);
@@ -376,5 +387,205 @@ public class AdministratorKCController {
 		System.out.println("------------------------------------------------------");
 		return new ResponseEntity<>(new AdministratorKlinikeDTO(ak), HttpStatus.CREATED);
 	}
+	
+	//dodavanje  novog leka
+	@PostMapping(path = "/dodavanjeLeka", consumes = "application/json")
+	@CrossOrigin(origins = "http://localhost:3000")
+	public ResponseEntity<LekDTO> dodavanjeLeka(@RequestBody LekDTO lekDTO) {
+		System.out.println("------------------------------------------------------");
+		Lek lek = new Lek();
+		lek.setNaziv(lekDTO.getNaziv());
+		lek.setSifra(lekDTO.getSifra());
+		
+		List<KlinickiCentar> listaKC = KCService.find();
+		KlinickiCentar kc = listaKC.get(0);
+		
+		lek.setKlinickiCentar(kc);
+			
+		lek = lekService.save(lek);		
+		kc.getListaLekova().add(lek);
+		kc = KCService.save(kc);
+
+		System.out.println("------------------------------------------------------");
+		return new ResponseEntity<>(new LekDTO(lek), HttpStatus.CREATED);
+	}
+	
+	//dodavanje nove dijagnoze
+	@PostMapping(path = "/dodavanjeDijagnoze", consumes = "application/json")
+	@CrossOrigin(origins = "http://localhost:3000")
+	public ResponseEntity<DijagnozaDTO> dodavanjeDijagnoze(@RequestBody DijagnozaDTO dijagnozaDTO) {
+		System.out.println("------------------------------------------------------");
+		Dijagnoza dijagnoza = new Dijagnoza();
+		
+		dijagnoza.setNaziv(dijagnozaDTO.getNaziv());
+		dijagnoza.setOpis(dijagnozaDTO.getOpis());
+		
+		dijagnoza.setOznaka(dijagnozaDTO.getOznaka());
+		
+		List<KlinickiCentar> listaKC = KCService.find();
+		KlinickiCentar kc = listaKC.get(0);
+		
+		dijagnoza.setKlinickiCentar(kc);
+			
+		dijagnoza = dijagnozaService.save(dijagnoza);		
+		kc.getListaDijagnoza().add(dijagnoza);
+		kc = KCService.save(kc);
+
+		System.out.println("------------------------------------------------------");
+		return new ResponseEntity<>(new DijagnozaDTO(dijagnoza), HttpStatus.CREATED);
+	}
+
+	//brisanje klinike
+	//brisanje admina klinike
+	//brisanje admina kc
+	//izmena klinike
+	//izmena admina klinike
+	
+	//brisanje leka
+	@PostMapping(path = "/brisanjeLeka", consumes = "application/json")
+	@CrossOrigin(origins = "http://localhost:3000")
+	public ResponseEntity<String> brisanjeLeka(@RequestBody LekDTO lekDTO) {
+		System.out.println("------------------------------------------------------");
+		System.out.println("pocinje");
+		Lek lek = lekService.findById(lekDTO.getId());
+		
+		List<KlinickiCentar> listaKC = KCService.find();
+		KlinickiCentar kc = listaKC.get(0);
+			
+		
+		if(kc.getListaLekova().contains(lek)) {
+			
+			Set<Lek> lista = kc.getListaLekova();
+			lista.remove(lek);
+			kc.getListaLekova().clear();
+			kc.setListaLekova(lista);
+			
+			lekService.delete(lek);	
+			
+			kc = KCService.save(kc);
+			System.out.println("obrisano");
+		}
+		
+		System.out.println("------------------------------------------------------");
+		return new ResponseEntity<>("uspesno obrisan lek", HttpStatus.OK);
+	}
+	
+	//brisanje dijagnoze
+	@PostMapping(path = "/brisanjeDijagnoze", consumes = "application/json")
+	@CrossOrigin(origins = "http://localhost:3000")
+	public ResponseEntity<String> brisanjeDijagnoze(@RequestBody DijagnozaDTO dijagnozaDTO) {
+		System.out.println("------------------------------------------------------");
+		Dijagnoza dijagnoza = dijagnozaService.findById(dijagnozaDTO.getId());	
+		
+		List<KlinickiCentar> listaKC = KCService.find();
+		KlinickiCentar kc = listaKC.get(0);
+			
+		if(kc.getListaDijagnoza().contains(dijagnoza)) {
+			
+			Set<Dijagnoza> lista = kc.getListaDijagnoza();
+			lista.remove(dijagnoza);
+			kc.getListaDijagnoza().clear();
+			kc.setListaDijagnoza(lista);
+			
+			dijagnozaService.delete(dijagnoza);	
+			
+			kc = KCService.save(kc);
+			System.out.println("obrisano");
+		}
+
+		System.out.println("------------------------------------------------------");
+		return new ResponseEntity<>("uspesno brisanje dijagnoze", HttpStatus.OK);
+	}
+
+	//izmena leka
+	@PutMapping(path = "/izmenaLeka", consumes = "application/json")
+	@CrossOrigin(origins = "http://localhost:3000")
+	public ResponseEntity<LekDTO> izmenaLeka(@RequestBody LekDTO lekDTO) {
+		System.out.println("------------------------------------------------------");
+		Lek lek = lekService.findById(lekDTO.getId());
+		
+		if(lekDTO.getNaziv() != null && lekDTO.getNaziv() != "") {
+			System.out.println("izmenjen naziv leka");
+			lek.setNaziv(lekDTO.getNaziv());	
+		}else {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			
+		}
+		if(lekDTO.getSifra() != null && lekDTO.getSifra() != "") {
+			System.out.println("izmenjena sifra leka");
+			//TODO 2: STAVITI ZABRANU DA NE MOZE ISTA SIFRA
+			lek.setSifra(lekDTO.getSifra());	
+		}else {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		lek = lekService.save(lek);
+
+		System.out.println("------------------------------------------------------");
+					
+		return new ResponseEntity<>(new LekDTO(lek), HttpStatus.CREATED);
+	}
+	
+	//izmena dijagnoze
+	@PutMapping(path = "/izmenaDijagnoze", consumes = "application/json")
+	@CrossOrigin(origins = "http://localhost:3000")
+	public ResponseEntity<DijagnozaDTO> izmenaDijagnoze(@RequestBody DijagnozaDTO dijagnozaDTO) {
+		System.out.println("------------------------------------------------------");
+		Dijagnoza dijagnoza = dijagnozaService.findById(dijagnozaDTO.getId());	
+		
+		if(dijagnozaDTO.getNaziv() != null && dijagnozaDTO.getNaziv() != "") {
+			System.out.println("izmenjen naziv dijagnoze");
+			dijagnoza.setNaziv(dijagnozaDTO.getNaziv());	
+		}else {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			
+		}
+		if(dijagnozaDTO.getOznaka() != null && dijagnozaDTO.getOznaka() != "") {
+			System.out.println("izmenjena oznaka dijagnoze");
+			//TODO 2: STAVITI ZABRANU DA NE MOZE ISTA SIFRA
+			dijagnoza.setOznaka(dijagnozaDTO.getOznaka());	
+		}else {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		if(dijagnozaDTO.getOpis() != null && dijagnozaDTO.getOpis() != "") {
+			System.out.println("izmenjen opis dijagnoze");
+			//TODO 2: STAVITI ZABRANU DA NE MOZE ISTA SIFRA
+			dijagnoza.setOpis(dijagnozaDTO.getOpis());	
+		}else {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		dijagnoza = dijagnozaService.save(dijagnoza);
+
+		System.out.println("------------------------------------------------------");
+		return new ResponseEntity<>(new DijagnozaDTO(dijagnoza), HttpStatus.CREATED);
+	}
+
+	//vracanje leka
+		@GetMapping(path = "/getLek/{id}")
+		@CrossOrigin(origins = "http://localhost:3000")
+		public ResponseEntity<LekDTO> getLek(@PathVariable Long id) {
+			System.out.println("------------------------------------------------------");
+
+			Lek lek = lekService.findById(id);
+			
+			LekDTO lekDTO = new LekDTO(lek);
+			
+			System.out.println("------------------------------------------------------");
+			return new ResponseEntity<>(lekDTO, HttpStatus.OK);
+		}
+	//vracanje dijagnoze
+		@GetMapping(path = "/getDijagnoza/{id}")
+		@CrossOrigin(origins = "http://localhost:3000")
+		public ResponseEntity<DijagnozaDTO> getDijagnoza(@PathVariable Long id) {
+			System.out.println("------------------------------------------------------");
+
+			Dijagnoza dijagnoza = dijagnozaService.findById(id);
+			
+			DijagnozaDTO dijagnozaDTO = new DijagnozaDTO(dijagnoza);
+			
+			System.out.println("------------------------------------------------------");
+			return new ResponseEntity<>(dijagnozaDTO, HttpStatus.OK);
+		}
 	
 }
