@@ -20,9 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.PacijentDTO;
 import com.example.demo.dto.UserDTO;
+import com.example.demo.model.KlinickiCentar;
 import com.example.demo.model.Pacijent;
 import com.example.demo.model.ZdravstveniKarton;
 import com.example.demo.service.EmailService;
+import com.example.demo.service.KlinickiCentarService;
 import com.example.demo.service.PacijentService;
 
 @RestController
@@ -31,6 +33,9 @@ public class PacijentController {
 
 	@Autowired
 	private PacijentService pacijentService;
+	
+	@Autowired
+	private KlinickiCentarService KCService;
 	
 	@Autowired
 	private EmailService emailService;
@@ -77,9 +82,10 @@ public class PacijentController {
 	public ResponseEntity<ZdravstveniKarton> getZK(@PathVariable String email) {
 
 		System.out.println("find pacijent");
+		System.out.println("zk");
 		
 		Pacijent pacijent = pacijentService.findByEmail(email);
-		System.out.println(pacijent);
+		System.out.println("Pacijent: " + pacijent);
 		if (pacijent == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
@@ -109,7 +115,14 @@ public class PacijentController {
 		pacijent.setTelefon(pacijentDTO.getTelefon());
 		pacijent.setOdobrenaRegistracija(false);
 		
+		List<KlinickiCentar>listaKC = KCService.find();
+		KlinickiCentar kc = listaKC.get(0);
+		pacijent.setKlinickiCentar(kc);
+		
 		pacijent = pacijentService.save(pacijent);
+		kc.getZahteviZaRegistraciju().add(pacijent);
+		kc = KCService.save(kc);
+		
 		
 //		KlinickiCentar kc = pacijent.getKlinickiCentar();
 //		
@@ -119,20 +132,20 @@ public class PacijentController {
 		return new ResponseEntity<>(new PacijentDTO(pacijent), HttpStatus.CREATED);
 	}
 	
-	@PostMapping(path = "/signup", consumes = "application/json")
-	@CrossOrigin(origins = "http://localhost:3000")
-	public String signUpAsync(@RequestBody UserDTO userDTO){
-
-		
-		//slanje emaila
-		try {
-			emailService.sendNotificaitionAsync(userDTO);
-		}catch( Exception e ){
-			logger.info("Greska prilikom slanja emaila: " + e.getMessage());
-		}
-
-		return "success";
-	}
+//	@PostMapping(path = "/signup", consumes = "application/json")
+//	@CrossOrigin(origins = "http://localhost:3000")
+//	public String signUpAsync(@RequestBody UserDTO userDTO){
+//
+//		
+//		//slanje emaila
+//		try {
+//			emailService.sendNotificaitionAsync(userDTO);
+//		}catch( Exception e ){
+//			logger.info("Greska prilikom slanja emaila: " + e.getMessage());
+//		}
+//
+//		return "success";
+//	}
 	
 	
 	@PutMapping(path="/update", consumes = "application/json")

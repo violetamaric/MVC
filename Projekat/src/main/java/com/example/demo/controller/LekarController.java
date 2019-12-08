@@ -112,6 +112,7 @@ public class LekarController {
 		
 		List<PacijentDTO> lista = new ArrayList<>();
 		for (Pacijent p : listaSvihP ) {
+			if(p.getOdobrenaRegistracija() == true) {
 			
 				System.out.println(p);
 				PacijentDTO pDTO = new PacijentDTO();
@@ -121,6 +122,7 @@ public class LekarController {
 				pDTO.setEmail(p.getEmail());
 				System.out.println("Pacijent dodat");
 				lista.add(pDTO);
+			}
 				
 		}
 		System.out.println("*************");

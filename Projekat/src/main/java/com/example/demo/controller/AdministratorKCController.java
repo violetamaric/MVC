@@ -361,7 +361,6 @@ public class AdministratorKCController {
 		
 		kc.getListaKlinika().add(klinika);
 		kc = KCService.save(kc);
-
 		System.out.println("------------------------------------------------------");
 		return new ResponseEntity<>(new KlinikaDTO(klinika), HttpStatus.CREATED);
 	}
