@@ -223,30 +223,17 @@ public class AdministratorKCController {
 		
 		if(akcDTO.getIme() != null && akcDTO.getIme() != "") {
 			System.out.println("izmenjeno ime admina");
-			aKC.setIme(akcDTO.getIme());
-			
-		}else {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-			
+			aKC.setIme(akcDTO.getIme());	
 		}
-		
-		
 		if(akcDTO.getPrezime() != null && akcDTO.getPrezime() != "") {
 			System.out.println("izmenjeno prezime admina");
 			aKC.setPrezime(akcDTO.getPrezime());
-		}else {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		
 		if(akcDTO.getLozinka() != null && akcDTO.getLozinka() != "") {
 			System.out.println("izmenjena lozinka admina");
 			aKC.setLozinka(akcDTO.getLozinka());
-		}else {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		
 		aKC = administratorKCService.save(aKC);
-		
 		return new ResponseEntity<>(new AdministratorKCDTO(aKC), HttpStatus.OK);
 	}
 
@@ -349,14 +336,6 @@ public class AdministratorKCController {
 		
 		klinika.setKlinickiCentar(kc);
 		
-		//TODO 1: DODATI ADMINE KLINIKE
-		//resila drugacije  
-//		for(Long id : klinikaDTO.getListaAdministratoraKlinike()) {
-//			AdministratorKlinike ak = administratorKlinikeService.findById(id);
-//			klinika.getListaAdminKlinike().add(ak);
-//			System.out.println("dodat admin klinike u kliniku");
-//		}
-		
 		klinika = klinikaService.save(klinika);
 		
 		kc.getListaKlinika().add(klinika);
@@ -365,7 +344,7 @@ public class AdministratorKCController {
 		return new ResponseEntity<>(new KlinikaDTO(klinika), HttpStatus.CREATED);
 	}
 	
-	//dodavanje nove administratora klinike
+	//dodavanje novog administratora klinike
 	@PostMapping(path = "/dodavanjeAdminaKlinike", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 	public ResponseEntity<AdministratorKlinikeDTO> dodavanjeAdminaKlinike(@RequestBody AdministratorKlinikeDTO akDTO) {
@@ -385,6 +364,30 @@ public class AdministratorKCController {
 
 		System.out.println("------------------------------------------------------");
 		return new ResponseEntity<>(new AdministratorKlinikeDTO(ak), HttpStatus.CREATED);
+	}
+	
+	//dodavanje novog administratora kc
+	@PostMapping(path = "/dodavanjeAdminaKC", consumes = "application/json")
+	@CrossOrigin(origins = "http://localhost:3000")
+	public ResponseEntity<AdministratorKCDTO> dodavanjeAdminaKC(@RequestBody AdministratorKCDTO akDTO) {
+		System.out.println("------------------------------------------------------");
+		AdministratorKC ak = new AdministratorKC();
+		ak.setIme(akDTO.getIme());
+		ak.setPrezime(akDTO.getPrezime());
+		ak.setEmail(akDTO.getEmail());
+		ak.setLozinka(akDTO.getLozinka());
+
+		List<KlinickiCentar> listaKC = KCService.find();
+		KlinickiCentar kc = listaKC.get(0);
+		ak.setKlinickiCentar(kc);
+		
+		ak = administratorKCService.save(ak);
+		
+		kc.getListaAdminKC().add(ak);
+		kc = KCService.save(kc);
+		
+		System.out.println("------------------------------------------------------");
+		return new ResponseEntity<>(new AdministratorKCDTO(ak), HttpStatus.CREATED);
 	}
 	
 	//dodavanje  novog leka
@@ -586,5 +589,6 @@ public class AdministratorKCController {
 			System.out.println("------------------------------------------------------");
 			return new ResponseEntity<>(dijagnozaDTO, HttpStatus.OK);
 		}
+	
 	
 }
