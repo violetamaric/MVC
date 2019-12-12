@@ -132,5 +132,6 @@ public class LekarController {
 		System.out.println("*************");
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
+
 	
 }
