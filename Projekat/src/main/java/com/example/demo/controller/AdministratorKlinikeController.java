@@ -107,7 +107,7 @@ public class AdministratorKlinikeController {
 	// dodavanje novog lekara
 	@PostMapping(path = "/dodavanjeLekara", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
-	public ResponseEntity<LekarDTO> dodavanjeLeka(@RequestBody LekarDTO lekarDTO) {
+	public ResponseEntity<LekarDTO> dodavanjeLekara(@RequestBody LekarDTO lekarDTO) {
 		System.out.println("------------------------------------------------------");
 		Lekar lekar = new Lekar();
 		lekar.setIme(lekarDTO.getIme());
@@ -115,10 +115,7 @@ public class AdministratorKlinikeController {
 		lekar.setEmail(lekarDTO.getEmail());
 		lekar.setTelefon(lekarDTO.getTelefon());
 		lekar.setLozinka(lekarDTO.getLozinka());
-
-		// izmjeniti
-	//	List<Klinika> listaKlinika = klinikaService.findAll();
-		int id = 3;
+		int id =3;
 		long idd = (long) id;
 		Klinika klinika = klinikaService.findById(idd);
 
@@ -129,8 +126,8 @@ public class AdministratorKlinikeController {
 		klinika = klinikaService.save(klinika);
 		System.out.println("Lekar je dodat");
 		System.out.println(lekar);
-
 		System.out.println("------------------------------------------------------");
+
 		return new ResponseEntity<>(new LekarDTO(lekar), HttpStatus.CREATED);
 	}
 }
