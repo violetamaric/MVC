@@ -15,10 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.dto.LekarDTO;
 import com.example.demo.dto.MedicinskaSestraDTO;
 import com.example.demo.dto.PacijentDTO;
-import com.example.demo.model.Lekar;
 import com.example.demo.model.MedicinskaSestra;
 import com.example.demo.model.Pacijent;
 import com.example.demo.service.MedicinskaSestraService;
@@ -103,39 +101,25 @@ public class MedicinskaSestraController {
 		System.out.println("MED SESTRA IZMENA");
 		MedicinskaSestra ms = medicinskaSestraService.findByEmail(msDTO.getEmail());
 
-//		System.out.println("Lekar update: " + lekar.getEmail());
-//		if (lekar == null) {
-//			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//		}
+
 		if(msDTO.getIme() != null && msDTO.getIme() != "") {
 			System.out.println("izmenjeno ime admina");
 			ms.setIme(msDTO.getIme());
-			
-		}else {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			
 		}
 		if(msDTO.getPrezime()!= null && msDTO.getPrezime() != "") {
 			System.out.println("izmenjeno prezime admina");
 			ms.setPrezime(msDTO.getPrezime());
 			
-		}else {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 		if(msDTO.getLozinka()!= null && msDTO.getLozinka() != "") {
 			System.out.println("izmenjena lozinka admina");
 			ms.setLozinka(msDTO.getLozinka());
 			
-		}else {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-			
 		}
 		if(msDTO.getBrTelefona()!= null && msDTO.getBrTelefona() != "") {
 			System.out.println("izmenjena lozinka admina");
 			ms.setBrTelefona(msDTO.getBrTelefona());
-			
-		}else {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			
 		}
 		
