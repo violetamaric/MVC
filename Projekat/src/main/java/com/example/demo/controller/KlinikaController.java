@@ -19,8 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.KlinikaDTO;
 import com.example.demo.dto.LekarDTO;
+import com.example.demo.dto.PacijentDTO;
+import com.example.demo.dto.TipPregledaDTO;
 import com.example.demo.model.Klinika;
 import com.example.demo.model.Lekar;
+import com.example.demo.model.Pacijent;
+import com.example.demo.model.TipPregleda;
 import com.example.demo.service.KlinikaService;
 import com.example.demo.service.LekarService;
 
@@ -170,4 +174,27 @@ public class KlinikaController {
 		System.out.println("------------------------------------------------------");
 		return new ResponseEntity<>("uspesno obrisan lekar !!!", HttpStatus.OK);
 	}
+	
+	@GetMapping(value = "/pacijentiKlinike/{id}")
+	@CrossOrigin(origins = "http://localhost:3000")
+	public ResponseEntity<List<PacijentDTO>> getPacijentiKlinike(@PathVariable Long id) {
+		System.out.println("//////////////////// Klinika i lista pacijenata /////////////////////////		");
+//		Klinika klinika = klinikaService.findById(id);
+
+		List<Pacijent> listaPacijenataKlinike = klinikaService.findByIdKlinike(id);
+		System.out.println("***********");
+		
+		for (Pacijent kp :listaPacijenataKlinike) {
+			System.out.println(kp);
+
+		}
+		List<PacijentDTO> lista = new ArrayList<PacijentDTO>();
+		for(Pacijent pp :listaPacijenataKlinike) {
+			PacijentDTO pD = new PacijentDTO(pp);
+			lista.add(pD);
+		}
+		System.out.println("*************");
+		return new ResponseEntity<>(lista, HttpStatus.OK);
+	}
+	
 }

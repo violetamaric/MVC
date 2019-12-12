@@ -34,7 +34,7 @@ public class LekarController {
 	private LekarService lekarService;
 	
 	@Autowired
-	private PacijentService pacijenti;
+	private PacijentService pacijentiSevice;
 	
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<LekarDTO> getLekar(@PathVariable Long id) {
@@ -58,7 +58,7 @@ public class LekarController {
 			System.out.println("Lekar nije pronadjen");
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		System.out.println("Lekar je pronadjen : "+ lekar.getEmail());
+		System.out.println("Lekar je pronadjen : "+ lekar);
 		
 		return new ResponseEntity<>(new LekarDTO(lekar), HttpStatus.OK);
 	}
@@ -107,7 +107,10 @@ public class LekarController {
 		System.out.println("//////////////////// LEKAR LISTA PACIJENATA /////////////////////////		");
 		Lekar lekar = lekarService.findByEmail(email);
 	
-		List<Pacijent> listaSvihP =  pacijenti.findAll();
+		List<Pacijent> listaSvihP =  pacijentiSevice.findAll();
+		for(Pacijent pp : listaSvihP) {
+			System.out.println("!!!! " + pp);
+		}
 		System.out.println("Lista pacijenata od lekara: " + lekar.getEmail());
 		
 		List<PacijentDTO> lista = new ArrayList<>();
@@ -115,11 +118,8 @@ public class LekarController {
 			if(p.getOdobrenaRegistracija() == true) {
 			
 				System.out.println(p);
-				PacijentDTO pDTO = new PacijentDTO();
-				pDTO.setId(p.getId());
-				pDTO.setIme(p.getIme());
-				pDTO.setPrezime(p.getPrezime());
-				pDTO.setEmail(p.getEmail());
+				PacijentDTO pDTO = new PacijentDTO(p);
+	
 				System.out.println("Pacijent dodat");
 				lista.add(pDTO);
 			}

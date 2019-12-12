@@ -50,6 +50,7 @@ insert into pacijent (ime, prezime, lbo,  lozinka, email, adresa, grad, drzava, 
 insert into pacijent (ime, prezime, lbo,  lozinka, email, adresa, grad, drzava, telefon, odobrena_registracija, klinicki_centar_id, zdravstveni_karton_id) values ('Mita', 'Mitic', '002', 'mita', 'mita@gmail.com', 'Petra Drapsina 89', 'Novi Sad', 'Srbija','0642255696', false, 1, 2);
 insert into pacijent (ime, prezime, lbo,  lozinka, email, adresa, grad, drzava, telefon, odobrena_registracija, klinicki_centar_id, zdravstveni_karton_id) values ('Jovan', 'Jovicic', '003', 'jovan', 'jovan@gmail.com', 'Petra Kocica 66', 'Novi Sad', 'Srbija','061221478', true, 1, 3);
 insert into pacijent (ime, prezime, lbo,  lozinka, email, adresa, grad, drzava, telefon, odobrena_registracija, klinicki_centar_id, zdravstveni_karton_id) values ('Lara', 'Nikolic', '004', 'lara', 'lara@gmail.com', 'Kralja Petra 11', 'Novi Sad', 'Srbija','0642255696', false, 1, 4);
+insert into pacijent (ime, prezime, lbo,  lozinka, email, adresa, grad, drzava, telefon, odobrena_registracija, klinicki_centar_id, zdravstveni_karton_id) values ('Anita', 'Antic', '005', 'anita', 'anita@gmail.com', 'Mise Dimitrijevica 66', 'Novi Sad', 'Srbija','069221478', true, 1, 3);
 
 insert into tip_pregleda(naziv) values ('dermatoloski pregled');
 insert into tip_pregleda(naziv) values ('oftalmoloski pregled');
@@ -59,6 +60,7 @@ insert into tip_pregleda(naziv) values ('psihijatrijski pregled');
 
 insert into lekar_pacijent (pacijent_id, lekar_id) values (1,2);
 insert into lekar_pacijent (pacijent_id, lekar_id) values (2,2);
+insert into lekar_pacijent (pacijent_id, lekar_id) values (5,2);
 
 insert into tip_pregleda_klinika (tip_pregleda_id, klinika_id) values (1,1);
 insert into tip_pregleda_klinika (tip_pregleda_id, klinika_id) values (1,2);
@@ -75,6 +77,9 @@ insert into tip_pregleda_klinika (tip_pregleda_id, klinika_id) values (4,3);
 insert into tip_pregleda_klinika (tip_pregleda_id, klinika_id) values (5,1);
 insert into tip_pregleda_klinika (tip_pregleda_id, klinika_id) values (5,2);
 insert into tip_pregleda_klinika (tip_pregleda_id, klinika_id) values (5,3);
+
+insert into klinika_pacijent (klinika_id, pacijent_id) values (3,3);
+insert into klinika_pacijent (klinika_id, pacijent_id) values (3,5);
 
 insert into medicinska_sestra_pacijent (pacijent_id, medicinska_sestra_id) values (1,2);
 insert into medicinska_sestra_pacijent (pacijent_id, medicinska_sestra_id) values (2,2);

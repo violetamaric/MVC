@@ -17,7 +17,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Pacijent {
 
 	@Id
@@ -68,6 +71,9 @@ public class Pacijent {
 	@ManyToMany(mappedBy = "listaPacijenata")
 	private Set<Lekar> listaLekara = new HashSet<Lekar>();
 
+	@ManyToMany(mappedBy = "listaPacijenata")
+	private Set<Klinika> listaKlinika = new HashSet<Klinika>();
+	
 	@OneToMany(mappedBy = "pacijent", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Operacija> listaOperacija = new HashSet<Operacija>();
 
