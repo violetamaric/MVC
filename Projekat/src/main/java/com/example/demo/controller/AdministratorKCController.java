@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -212,14 +211,8 @@ public class AdministratorKCController {
 	@CrossOrigin(origins = "http://localhost:3000")
 	public ResponseEntity<AdministratorKCDTO> izmeniAdminaKC(@RequestBody AdministratorKCDTO akcDTO) {
 
-		// a student must exist
 		System.out.println("ADMIN KC IZMENA");
 		AdministratorKC aKC = administratorKCService.findByEmail(akcDTO.getEmail());
-
-//		System.out.println("Lekar update: " + lekar.getEmail());
-//		if (lekar == null) {
-//			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//		}
 		
 		if(akcDTO.getIme() != null && akcDTO.getIme() != "") {
 			System.out.println("izmenjeno ime admina");
