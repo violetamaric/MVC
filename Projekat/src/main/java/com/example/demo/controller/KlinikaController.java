@@ -32,8 +32,6 @@ public class KlinikaController {
 	@Autowired
 	private LekarService lekarService;
 	
-	
-
 	@GetMapping(value = "/{id}")
 	@CrossOrigin(origins = "http://localhost:3000")
 	public ResponseEntity<KlinikaDTO> getKlinikaById(@PathVariable Long id) {
