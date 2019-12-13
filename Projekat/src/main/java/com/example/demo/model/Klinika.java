@@ -1,20 +1,28 @@
 package com.example.demo.model;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
-public class Klinika {
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+public class Klinika{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,6 +51,12 @@ public class Klinika {
 	@OneToMany(mappedBy = "klinika", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Lekar> listaLekara = new HashSet<Lekar>();
 	
+	@ManyToMany(mappedBy ="listaKlinika")
+	private Set<TipPregleda> listaTipovaPregleda = new HashSet<TipPregleda>();
+	
+	@ManyToMany
+	@JoinTable(name = "klinika_pacijent", joinColumns = @JoinColumn(name = "klinika_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "pacijent_id", referencedColumnName = "id"))
+	private Set<Pacijent> listaPacijenata = new HashSet<Pacijent>();
 	
 	@OneToMany(mappedBy = "klinika", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<MedicinskaSestra> listaMedSestara = new HashSet<MedicinskaSestra>();
@@ -61,9 +75,19 @@ public class Klinika {
 	//ocena 1-10
 	
 	
+	
 	public String getNaziv() {
 		return naziv;
 	}
+	
+	public Set<Pacijent> getListaPacijenata() {
+		return listaPacijenata;
+	}
+
+	public void setListaPacijenata(Set<Pacijent> listaPacijenata) {
+		this.listaPacijenata = listaPacijenata;
+	}
+
 	public Long getId() {
 		return id;
 	}
