@@ -5,14 +5,20 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.model.AdministratorKlinike;
 import com.example.demo.model.Klinika;
+import com.example.demo.model.Pacijent;
 import com.example.demo.repository.KlinikaRepository;
+import com.example.demo.repository.PacijentRepository;
 
 @Service
 public class KlinikaService {
 	@Autowired
 	private KlinikaRepository klinikaRepository;
+	
+	@Autowired
+	private PacijentRepository pacijentRepository;
+	
+	
 
 	public Klinika findOne(Long id) {
 		return klinikaRepository.findById(id).orElseGet(null);
@@ -39,6 +45,9 @@ public class KlinikaService {
 		return klinikaRepository.findById(id).orElseGet(null);
 	}
 	
+	public List<Pacijent>findByIdKlinike(Long id){
+		return pacijentRepository.findByIdKlinike(id);
+	}
 }
 
 
