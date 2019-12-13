@@ -26,12 +26,14 @@ insert into dijagnoza(naziv, opis, oznaka, klinicki_centar_id ) values('Groznica
 insert into dijagnoza(naziv, opis, oznaka, klinicki_centar_id ) values('Velike boginje', 'Variola vera', 'B03', 1);
 insert into dijagnoza(naziv, opis, oznaka, klinicki_centar_id ) values('Male boginje bez komplikacija', 'Morbilli sine complicationibus', 'B059', 1);
 
+
 insert into lekar (ime, prezime, email, lozinka,klinika_id, ocena, telefon) values ('Milica','Markovic', 'micacica@gmail.com', 'mica', 1, 0, '066/243-665');
 insert into lekar (ime, prezime, email, lozinka,klinika_id, ocena,  telefon) values ('Jovan','Jovanovic', 'jole@gmail.com', 'jole', 3, 0, '063/200-765');
 insert into lekar (ime, prezime, email, lozinka,klinika_id, ocena, telefon) values ('Dusan','Dusanovic', 'duskodule@gmail.com', 'dule', 3, 0, '066/993-785');
 insert into lekar (ime, prezime, email, lozinka,klinika_id, ocena, telefon) values ('Marija','Maric', 'marija@gmail.com', 'marija', 3, 5, '069/143-665');
 insert into lekar (ime, prezime, email, lozinka,klinika_id, ocena,  telefon) values ('Jelena','Janic', 'jelena@gmail.com', 'jelena', 3, 0, '063/209-785');
 insert into lekar (ime, prezime, email, lozinka,klinika_id, ocena, telefon) values ('Ivan','Ivanovic', 'ivan@gmail.com', 'ivan', 3, 0, '068/953-445');
+
 
 insert into medicinska_sestra (ime, prezime, email, br_telefona, lozinka,klinika_id) values ('Jelena','Jelenovic', 'jelena@gmail.com', '066/222-665', 'jeca', 1);
 insert into medicinska_sestra (ime, prezime, email, br_telefona, lozinka,klinika_id) values ('Olgica','Olganovic', 'olgaolgaa@gmail.com','063/222-765', 'olga', 2);
@@ -57,6 +59,7 @@ insert into tip_pregleda(naziv) values ('oftalmoloski pregled');
 insert into tip_pregleda(naziv) values ('ginekoloski pregled');
 insert into tip_pregleda(naziv) values ('stomatoloski pregled');
 insert into tip_pregleda(naziv) values ('psihijatrijski pregled');
+
 
 insert into lekar_pacijent (pacijent_id, lekar_id) values (1,2);
 insert into lekar_pacijent (pacijent_id, lekar_id) values (2,2);
