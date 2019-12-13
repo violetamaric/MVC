@@ -19,12 +19,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.KlinikaDTO;
 import com.example.demo.dto.LekarDTO;
+
 import com.example.demo.dto.PacijentDTO;
 import com.example.demo.dto.TipPregledaDTO;
 import com.example.demo.model.Klinika;
 import com.example.demo.model.Lekar;
 import com.example.demo.model.Pacijent;
 import com.example.demo.model.TipPregleda;
+
 import com.example.demo.service.KlinikaService;
 import com.example.demo.service.LekarService;
 
@@ -139,6 +141,7 @@ public class KlinikaController {
 //				lista = null;
 //			}
 //		}
+
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 	
@@ -194,7 +197,40 @@ public class KlinikaController {
 			lista.add(pD);
 		}
 		System.out.println("*************");
+
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 	
+	// brisanje lekara
+	@PostMapping(path = "/brisanjeLekara", consumes = "application/json")
+	@CrossOrigin(origins = "http://localhost:3000")
+	public ResponseEntity<String> brisanjeLekara(@RequestBody LekarDTO lekarDTO) {
+		System.out.println("------------------------------------------------------");
+		System.out.println("pocinje");
+		//lekar koji se brise
+		Lekar lekar = lekarService.findByEmail(lekarDTO.getEmail());
+		
+		List<Klinika> listaKlinika = klinikaService.findAll();
+		System.out.println("Id LEKAR KLINIKA: " + lekar.getKlinika().getId());
+
+		Long idLong = lekar.getKlinika().getId();
+
+		Klinika klinika = klinikaService.findById(idLong);
+		System.out.println("Klinika id ------------- : " + klinika.getId());
+
+		if (klinika.getListaLekara().contains(lekar)) {
+			System.out.println("LEKAR =============== " + lekar);
+			Set<Lekar> lista = klinika.getListaLekara();
+			lista.remove(lekar);
+			klinika.getListaLekara().clear();
+			klinika.setListaLekara(lista);	
+			
+			lekarService.delete(lekar);
+
+			klinika = klinikaService.save(klinika);
+			System.out.println("obrisano");
+		}
+		System.out.println("------------------------------------------------------");
+		return new ResponseEntity<>("uspesno obrisan lekar !!!", HttpStatus.OK);
+	}
 }
