@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,10 +19,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.KlinikaDTO;
 import com.example.demo.dto.LekarDTO;
+
 import com.example.demo.dto.PacijentDTO;
+import com.example.demo.dto.TipPregledaDTO;
 import com.example.demo.model.Klinika;
 import com.example.demo.model.Lekar;
 import com.example.demo.model.Pacijent;
+import com.example.demo.model.TipPregleda;
+
 import com.example.demo.service.KlinikaService;
 import com.example.demo.service.LekarService;
 
@@ -118,40 +124,113 @@ public class KlinikaController {
 	public ResponseEntity<List<LekarDTO>> getKlinikaLekari(@PathVariable Long id) {
 		System.out.println("//////////////////// KLINIKA LISTA LEKARA /////////////////////////		");
 		Klinika klinika = klinikaService.findById(id);
-	
-		List<Lekar> listaSvihLekara =  lekarService.findAll();
-	//	System.out.println("Lista pacijenata od lekara: " + lekar.getEmail());
-		
+//		List<Lekar> listaSvihLekara =  lekarService.findAll();
+
 		List<LekarDTO> lista = new ArrayList<>();
 	
-		for (Lekar l : listaSvihLekara ) {
+		for (Lekar l : klinika.getListaLekara() ) {
 			
-			if(klinika.getId() == l.getKlinika().getId()) {
-				//System.out.println(l.getKlinika().getId() + l.getIme());
-				LekarDTO lDTO = new LekarDTO();
-				lDTO.setId(l.getId());
-				lDTO.setIme(l.getIme());
-				lDTO.setPrezime(l.getPrezime());
-				lDTO.setEmail(l.getEmail());
-				lDTO.setTelefon(l.getTelefon());
+//			if(klinika.getId() == l.getKlinika().getId()) {
+				LekarDTO lDTO = new LekarDTO(l);
 				lista.add(lDTO);
-			}	
-//				System.out.println(p);
-//				PacijentDTO pDTO = new PacijentDTO();
-//				pDTO.setId(p.getId());
-//				pDTO.setIme(p.getIme());
-//				pDTO.setPrezime(p.getPrezime());
-//				pDTO.setEmail(p.getEmail());
-//				System.out.println("Pacijent dodat");
-//				lista.add(pDTO);
-//				
+//			}
 		}
-//		System.out.println("*************");
-//		for(PacijentDTO pd  : lista) {
-//			System.out.println(pd);
+//		for(Lekar ll : listaSvihLekara) {
+//			if(!lista.contains(ll.getEmail())) {
+//				System.out.println("Prazna listaaaaaaaaaaaaaaaaaaaaaaaa!!!!! ");
+//				lista = null;
+//			}
 //		}
-//		System.out.println("*************");
+
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 	
+	// brisanje lekara
+	@PostMapping(path = "/brisanjeLekara", consumes = "application/json")
+	@CrossOrigin(origins = "http://localhost:3000")
+	public ResponseEntity<String> brisanjeLekara(@RequestBody LekarDTO lekarDTO) {
+		System.out.println("------------------------------------------------------");
+		System.out.println("pocinje");
+		//lekar koji se brise
+		Lekar lekar = lekarService.findByEmail(lekarDTO.getEmail());
+		
+		List<Klinika> listaKlinika = klinikaService.findAll();
+		System.out.println("Id LEKAR KLINIKA: " + lekar.getKlinika().getId());
+
+		Long idLong = lekar.getKlinika().getId();
+
+		Klinika klinika = klinikaService.findById(idLong);
+		System.out.println("Klinika id ------------- : " + klinika.getId());
+
+		if (klinika.getListaLekara().contains(lekar)) {
+			System.out.println("LEKAR =============== " + lekar);
+			Set<Lekar> lista = klinika.getListaLekara();
+			lista.remove(lekar);
+			klinika.getListaLekara().clear();
+			klinika.setListaLekara(lista);	
+			
+			lekarService.delete(lekar);
+
+			klinika = klinikaService.save(klinika);
+			System.out.println("obrisano");
+		}
+		System.out.println("------------------------------------------------------");
+		return new ResponseEntity<>("uspesno obrisan lekar !!!", HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/pacijentiKlinike/{id}")
+	@CrossOrigin(origins = "http://localhost:3000")
+	public ResponseEntity<List<PacijentDTO>> getPacijentiKlinike(@PathVariable Long id) {
+		System.out.println("//////////////////// Klinika i lista pacijenata /////////////////////////		");
+//		Klinika klinika = klinikaService.findById(id);
+
+		List<Pacijent> listaPacijenataKlinike = klinikaService.findByIdKlinike(id);
+		System.out.println("***********");
+		
+		for (Pacijent kp :listaPacijenataKlinike) {
+			System.out.println(kp);
+
+		}
+		List<PacijentDTO> lista = new ArrayList<PacijentDTO>();
+		for(Pacijent pp :listaPacijenataKlinike) {
+			PacijentDTO pD = new PacijentDTO(pp);
+			lista.add(pD);
+		}
+		System.out.println("*************");
+
+		return new ResponseEntity<>(lista, HttpStatus.OK);
+	}
+	
+//	// brisanje lekara
+//	@PostMapping(path = "/brisanjeLekara", consumes = "application/json")
+//	@CrossOrigin(origins = "http://localhost:3000")
+//	public ResponseEntity<String> brisanjeLekara(@RequestBody LekarDTO lekarDTO) {
+//		System.out.println("------------------------------------------------------");
+//		System.out.println("pocinje");
+//		//lekar koji se brise
+//		Lekar lekar = lekarService.findByEmail(lekarDTO.getEmail());
+//		
+//		List<Klinika> listaKlinika = klinikaService.findAll();
+//		System.out.println("Id LEKAR KLINIKA: " + lekar.getKlinika().getId());
+//
+//		Long idLong = lekar.getKlinika().getId();
+//
+//		Klinika klinika = klinikaService.findById(idLong);
+//		System.out.println("Klinika id ------------- : " + klinika.getId());
+//
+//		if (klinika.getListaLekara().contains(lekar)) {
+//			System.out.println("LEKAR =============== " + lekar);
+//			Set<Lekar> lista = klinika.getListaLekara();
+//			lista.remove(lekar);
+//			klinika.getListaLekara().clear();
+//			klinika.setListaLekara(lista);	
+//			
+//			lekarService.delete(lekar);
+//
+//			klinika = klinikaService.save(klinika);
+//			System.out.println("obrisano");
+//		}
+//		System.out.println("------------------------------------------------------");
+//		return new ResponseEntity<>("uspesno obrisan lekar !!!", HttpStatus.OK);
+//	}
 }

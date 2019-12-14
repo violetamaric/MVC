@@ -104,6 +104,7 @@ public class PacijentController {
 	public ResponseEntity<PacijentDTO> savePacijent(@RequestBody PacijentDTO pacijentDTO) {
 
 		Pacijent pacijent = new Pacijent();
+		
 		pacijent.setLbo(pacijentDTO.getLbo());
 		pacijent.setIme(pacijentDTO.getIme());
 		pacijent.setPrezime(pacijentDTO.getPrezime());
