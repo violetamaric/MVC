@@ -1,73 +1,121 @@
 package com.example.demo.dto;
 
-import java.sql.Time;
 import java.util.Date;
 
 import com.example.demo.model.Pregled;
 
 public class PregledDTO {
 	private Long id;
+
 	private Date datum;
-	private Time trajanje; 
+
+	private Long tipPregledaID;
+
+	private Long lekarID;
+
+	private String pacijentEmail;
+
+	private Long klinikaID;
+
 	private double cena;
+
 	private boolean status;
-//	private TipPregleda tipPregleda;
-//	private Sala sala;
-//	private Lekar lekar;
-//	private Pacijent pacijent;
-//	private Klinika klinika;
-//	private IzvestajOPregledu izvestajOPregledu;
-	
+
+	public PregledDTO() {
+	}
+
+	@Override
+	public String toString() {
+		return "PregledDTO [id=" + id + ", datum=" + datum + ", tipPregledaID=" + tipPregledaID + ", lekarID=" + lekarID
+				+ ", pacijentEmail=" + pacijentEmail + ", klinikaID=" + klinikaID + ", cena=" + cena + ", status="
+				+ status + "]";
+	}
+
+	public PregledDTO(Long id, Date datum, Long tipPregledaID, Long lekarID, String pacijentEmail, Long klinikaID,
+			double cena, boolean status) {
+		this.id = id;
+		this.datum = datum;
+		this.tipPregledaID = tipPregledaID;
+		this.lekarID = lekarID;
+		this.pacijentEmail = pacijentEmail;
+		this.klinikaID = klinikaID;
+		this.cena = cena;
+		this.status = status;
+	}
+
+	public PregledDTO(Pregled pregled) {
+		this.id = pregled.getId();
+		this.datum = pregled.getDatum();
+		this.tipPregledaID = pregled.getTipPregleda().getId();
+		this.lekarID = pregled.getLekar().getId();
+		this.pacijentEmail = pregled.getPacijent().getEmail();
+		this.klinikaID = pregled.getKlinika().getId();
+		this.cena = pregled.getCena();
+		this.status = pregled.isStatus();
+	}
+
 	public Long getId() {
 		return id;
 	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
+
 	public Date getDatum() {
 		return datum;
 	}
+
 	public void setDatum(Date datum) {
 		this.datum = datum;
 	}
-	public Time getTrajanje() {
-		return trajanje;
+
+	public Long getTipPregledaID() {
+		return tipPregledaID;
 	}
-	public void setTrajanje(Time trajanje) {
-		this.trajanje = trajanje;
+
+	public void setTipPregledaID(Long tipPregledaID) {
+		this.tipPregledaID = tipPregledaID;
 	}
+
+	public Long getLekarID() {
+		return lekarID;
+	}
+
+	public void setLekarID(Long lekarID) {
+		this.lekarID = lekarID;
+	}
+
+	public String getPacijentEmail() {
+		return pacijentEmail;
+	}
+
+	public void setPacijentEmail(String pacijentEmail) {
+		this.pacijentEmail = pacijentEmail;
+	}
+
+	public Long getKlinikaID() {
+		return klinikaID;
+	}
+
+	public void setKlinikaID(Long klinikaID) {
+		this.klinikaID = klinikaID;
+	}
+
 	public double getCena() {
 		return cena;
 	}
+
 	public void setCena(double cena) {
 		this.cena = cena;
 	}
+
 	public boolean isStatus() {
 		return status;
 	}
+
 	public void setStatus(boolean status) {
 		this.status = status;
 	}
-	public PregledDTO(Long id, Date datum, Time trajanje, double cena, boolean status) {
-		super();
-		this.id = id;
-		this.datum = datum;
-		this.trajanje = trajanje;
-		this.cena = cena;
-		this.status = status;
-	}
-	public PregledDTO(Pregled p) {
-		super();
-		this.id = p.getId();
-		this.datum = p.getDatum();
-		this.trajanje = p.getTrajanje();
-		this.cena = p.getCena();
-		this.status = p.isStatus();
-	}
-	public PregledDTO() {
-		super();
-	}
-	
-	
-	
+
 }

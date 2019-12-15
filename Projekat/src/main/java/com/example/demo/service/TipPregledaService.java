@@ -20,4 +20,7 @@ public class TipPregledaService {
 	public List<TipPregleda>findByIdKlinike(Long id){
 		return TPRepository.findByIdKlinike(id);
 	}
+	public TipPregleda findById(Long id){
+		return TPRepository.findById(id).orElseGet(null);
+	}
 }
