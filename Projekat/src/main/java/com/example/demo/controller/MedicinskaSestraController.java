@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.MedicinskaSestraDTO;
 import com.example.demo.dto.PacijentDTO;
+import com.example.demo.dto.RadniDanDTO;
 import com.example.demo.model.MedicinskaSestra;
 import com.example.demo.model.Pacijent;
 import com.example.demo.model.RadniDan;
@@ -140,20 +141,20 @@ public class MedicinskaSestraController {
 
 	@GetMapping(value = "/listaRadnihDana/{email}")
 	@CrossOrigin(origins = "http://localhost:3000")
-	public ResponseEntity<RadniDan> getListaRadnihDana(@PathVariable String email) {
+	public ResponseEntity<List<RadniDanDTO>> getListaRadnihDana(@PathVariable String email) {
 		System.out.println("//////////////////// MED SESTRA LISTA Radnih dana ////////////////////////");
 		
 		MedicinskaSestra ms = medicinskaSestraService.findByEmail(email);
 		Set<RadniDan> listaRD = ms.getListaRadnihDana();
-		RadniDan radDan = new RadniDan();
+		List<RadniDanDTO> lista = new ArrayList<RadniDanDTO>();
 		for(RadniDan rd: listaRD) {
 			System.out.println(rd.getDatumPocetka());
-			radDan = rd;
+			lista.add(new RadniDanDTO(rd));
 		}
 		
 
 		System.out.println("*************");
-		return new ResponseEntity<>(radDan, HttpStatus.OK);
+		return new ResponseEntity<>(lista, HttpStatus.OK);
 
 		
 	}
