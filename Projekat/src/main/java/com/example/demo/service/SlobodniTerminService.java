@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.model.Pacijent;
+import com.example.demo.model.Pregled;
 import com.example.demo.model.SlobodniTermin;
 import com.example.demo.repository.SlobodniTerminRepository;
 
@@ -18,5 +19,10 @@ public class SlobodniTerminService {
 	public List<SlobodniTermin> findAll() {
 		return STRepository.findAll();
 	}
-	
+	public SlobodniTermin save(SlobodniTermin s) {
+		return STRepository.save(s);
+	}
+	public void delete(SlobodniTermin s) {
+		STRepository.delete(s);
+	}
 }
