@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.SalaDTO;
 import com.example.demo.dto.TipPregledaDTO;
+import com.example.demo.model.Sala;
 import com.example.demo.model.TipPregleda;
 import com.example.demo.service.KlinikaService;
 import com.example.demo.service.TipPregledaService;
@@ -28,6 +30,21 @@ public class TipPregledaController {
 	@Autowired
 	private KlinikaService klinikaService;
 
+	
+	@GetMapping(value = "/{id}")
+	@CrossOrigin(origins = "http://localhost:3000")
+	public ResponseEntity<TipPregledaDTO> findById(@PathVariable Long id) {
+
+		TipPregleda tp = TPService.findOne(id);
+
+		// studen must exist
+		if (tp == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		return new ResponseEntity<>(new TipPregledaDTO(tp), HttpStatus.OK);
+	}
+	
 	@GetMapping(value = "/all")
 	@CrossOrigin(origins = "http://localhost:3000")
 	public ResponseEntity<List<TipPregleda>> findAll() {

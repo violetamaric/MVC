@@ -7,7 +7,7 @@ public class SalaDTO {
 
 	private String naziv;
 
-	private nt broj;
+	private int broj;
 
 	private Long klinikaID;
 
