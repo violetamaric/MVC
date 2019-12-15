@@ -39,10 +39,6 @@ insert into medicinska_sestra (ime, prezime, email, br_telefona, lozinka,klinika
 insert into medicinska_sestra (ime, prezime, email, br_telefona, lozinka,klinika_id) values ('Olgica','Olganovic', 'olgaolgaa@gmail.com','063/222-765', 'olga', 2);
 insert into medicinska_sestra (ime, prezime, email, br_telefona, lozinka,klinika_id) values ('Gordana','Gordanovic', 'gocagordana@gmail.com', '066/963-785', 'goca', 3);
 
-insert into sala (broj, klinika_id) values ('001C', 1);
-insert into sala (broj, klinika_id) values ('002B', 2);
-insert into sala (broj, klinika_id) values ('003A', 3);
-
 insert into zdravstveni_karton (visina, tezina, krvna_grupa) values (180,80, 'AB');
 insert into zdravstveni_karton (visina, tezina, krvna_grupa) values (190,90, 'A');
 insert into zdravstveni_karton (visina, tezina, krvna_grupa) values (185,85, 'B');
@@ -92,3 +88,15 @@ insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, c
 insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status) values ('15-12-2019', 3, 2, 3, 3, 15, false);
 insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status) values ('18-12-2019', 4, 1, 4, 1, 20, true);
 insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status) values ('19-12-2019', 2, 2, 2, 2, 30, false);
+
+insert into sala(naziv, broj, klinika_id) values ('O', 1, 3);
+insert into sala(naziv, broj, klinika_id) values ('O', 2, 3);
+insert into sala(naziv, broj, klinika_id) values ('P', 1, 3);
+insert into sala(naziv, broj, klinika_id) values ('P', 2, 3);
+insert into sala(naziv, broj, klinika_id) values ('O', 3, 3);
+insert into sala(naziv, broj, klinika_id) values ('O', 1, 2);
+insert into sala(naziv, broj, klinika_id) values ('O', 2, 2);
+insert into sala(naziv, broj, klinika_id) values ('P', 1, 2);
+insert into sala(naziv, broj, klinika_id) values ('P', 2, 2);
+insert into sala(naziv, broj, klinika_id) values ('O', 3, 2);
+
