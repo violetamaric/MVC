@@ -24,9 +24,9 @@ public class RadniDan {
 	@Column(name = "datumKraja", nullable = false)
 	private Date datumKraja;
 	
-//	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-//	private MedicinskaSestra medicinskaSestra;
-//	
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private MedicinskaSestra medicinskaSestra;
+	
 
 	public Long getId() {
 		return id;
@@ -53,6 +53,14 @@ public class RadniDan {
 	} 
 	
 	
+	public MedicinskaSestra getMedicinskaSestra() {
+		return medicinskaSestra;
+	}
+
+	public void setMedicinskaSestra(MedicinskaSestra medicinskaSestra) {
+		this.medicinskaSestra = medicinskaSestra;
+	}
+
 	public RadniDan() {
 		super();
 	}
