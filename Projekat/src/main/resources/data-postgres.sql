@@ -111,3 +111,5 @@ insert into sala(naziv, broj, klinika_id) values ('P', 1, 2);
 insert into sala(naziv, broj, klinika_id) values ('P', 2, 2);
 insert into sala(naziv, broj, klinika_id) values ('O', 3, 2);
 
+
+
