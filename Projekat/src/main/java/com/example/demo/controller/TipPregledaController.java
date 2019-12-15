@@ -30,13 +30,13 @@ public class TipPregledaController {
 
 	@GetMapping(value = "/all")
 	@CrossOrigin(origins = "http://localhost:3000")
-	public ResponseEntity<List<TipPregleda>> findAll() {
+	public ResponseEntity<List<TipPregledaDTO>> findAll() {
 
 		List<TipPregleda> tp = TPService.findAll();
-		List<TipPregleda> listaTP = new ArrayList<>();
+		List<TipPregledaDTO> listaTP = new ArrayList<>();
 
 		for (TipPregleda tipP : tp) {
-			listaTP.add(new TipPregleda(tipP));
+			listaTP.add(new TipPregledaDTO(tipP));
 		}
 
 		return new ResponseEntity<>(listaTP, HttpStatus.OK);

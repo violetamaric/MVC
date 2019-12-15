@@ -74,7 +74,8 @@ public class MedicinskaSestraController {
 		for (Pacijent p : listaSvihP ) {
 			//DODAJ MAGDALENA 
 				System.out.println(p);
-				if(p.getOdobrenaRegistracija() == true) {
+				//TODO 1: TREBA DODATI USLOV DA JE PACIJENT NA TOJ KLINICI NA KOJOJ JE MEDICINSKA SESTRA
+				if(p.getOdobrenaRegistracija() == true ) {
 					PacijentDTO pDTO = new PacijentDTO(p);
 					System.out.println("Pacijent dodat");
 					lista.add(pDTO);

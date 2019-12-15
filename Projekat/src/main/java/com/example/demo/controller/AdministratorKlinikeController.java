@@ -83,22 +83,34 @@ public class AdministratorKlinikeController {
 	// izmjena podataka admina klinika
 	@PutMapping(path = "/update", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
-	public ResponseEntity<AdministratorKlinikeDTO> updateAdminKlinike(
-			@RequestBody AdministratorKlinikeDTO administratorKlinikeDTO) {
+	public ResponseEntity<AdministratorKlinikeDTO> updateAdminKlinike(@RequestBody AdministratorKlinikeDTO administratorKlinikeDTO) {
 
 		// a student must exist
 		System.out.println("ADMIN KLINIKE UPDRATE");
-		AdministratorKlinike adminiKlinike = administratorKlinikeService
-				.findByEmail(administratorKlinikeDTO.getEmail());
+		AdministratorKlinike adminiKlinike = administratorKlinikeService.findByEmail(administratorKlinikeDTO.getEmail());
 
-//		System.out.println("Lekar update: " + lekar.getEmail());
-//		if (lekar == null) {
-//			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		
+		if(administratorKlinikeDTO.getIme() != "" && administratorKlinikeDTO.getIme() != null ) {
+			adminiKlinike.setIme(administratorKlinikeDTO.getIme());
+		}
+		if(administratorKlinikeDTO.getPrezime() != "" && administratorKlinikeDTO.getPrezime() != null  ) {
+			adminiKlinike.setPrezime(administratorKlinikeDTO.getPrezime());
+		}
+		if(administratorKlinikeDTO.getTelefon() != "" && administratorKlinikeDTO.getTelefon() != null) {
+			adminiKlinike.setTelefon(administratorKlinikeDTO.getTelefon());
+		}
+		if(administratorKlinikeDTO.getLozinka() != "" && administratorKlinikeDTO.getLozinka() != null) {
+			adminiKlinike.setLozinka(administratorKlinikeDTO.getLozinka());
+		}
+//		if(administratorKlinikeDTO.getIdKlinike() != 0 && administratorKlinikeDTO.getIdKlinike() != null) {
+//			List<Klinika> klinike = klinikaService.findAll();
+//			for(Klinika k : klinike) {
+//				if(k.getId() == administratorKlinikeDTO.getIdKlinike()) {
+//					administratorKlinikeDTO.setIdKlinike(k.getId());
+//				}
+//			}
 //		}
-
-		adminiKlinike.setIme(administratorKlinikeDTO.getIme());
-		adminiKlinike.setPrezime(administratorKlinikeDTO.getPrezime());
-		adminiKlinike.setTelefon(administratorKlinikeDTO.getTelefon());
+		
 
 		adminiKlinike = administratorKlinikeService.save(adminiKlinike);
 		return new ResponseEntity<>(new AdministratorKlinikeDTO(adminiKlinike), HttpStatus.OK);

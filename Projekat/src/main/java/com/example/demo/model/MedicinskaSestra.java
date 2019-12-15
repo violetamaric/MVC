@@ -1,6 +1,5 @@
 package com.example.demo.model;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -52,6 +51,23 @@ public class MedicinskaSestra {
 	@OneToMany(mappedBy = "medicinskaSestra", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Recept> recepti = new HashSet<Recept>();
 	
+//	@OneToMany(mappedBy = "radni_dan", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//	private Set<RadniDan> listaRadnihDana = new HashSet<RadniDan>();
+//	
+	
+	
+	public Set<Pacijent> getListaPacijenataMedSestra() {
+		return listaPacijenataMedSestra;
+	}
+	public void setListaPacijenataMedSestra(Set<Pacijent> listaPacijenataMedSestra) {
+		this.listaPacijenataMedSestra = listaPacijenataMedSestra;
+	}
+//	public Set<RadniDan> getListaRadnihDana() {
+//		return listaRadnihDana;
+//	}
+//	public void setListaRadnihDana(Set<RadniDan> listaRadnihDana) {
+//		this.listaRadnihDana = listaRadnihDana;
+//	}
 	public String getIme() {
 		return ime;
 	}
