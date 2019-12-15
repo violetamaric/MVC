@@ -16,15 +16,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.PregledDTO;
+import com.example.demo.dto.SlobodniTerminDTO;
 import com.example.demo.model.Klinika;
 import com.example.demo.model.Lekar;
 import com.example.demo.model.Pacijent;
 import com.example.demo.model.Pregled;
+import com.example.demo.model.SlobodniTermin;
 import com.example.demo.model.TipPregleda;
 import com.example.demo.service.KlinikaService;
 import com.example.demo.service.LekarService;
 import com.example.demo.service.PacijentService;
 import com.example.demo.service.PregledService;
+import com.example.demo.service.SlobodniTerminService;
 import com.example.demo.service.TipPregledaService;
 
 @RestController
@@ -40,7 +43,8 @@ public class PregledController {
 	private PacijentService pacijentService;
 	@Autowired
 	private TipPregledaService tipPregledaService;
-	
+	@Autowired
+	private SlobodniTerminService STService;
 
 	@PostMapping(path="/new", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
@@ -62,6 +66,64 @@ public class PregledController {
 		
 
 		pregled = pregledService.save(pregled);
+		
+//		List<SlobodniTermin>st = STService.findAll();
+//		for(SlobodniTermin sstt:st) {
+//			if()
+//		}
+		
+
+		return new ResponseEntity<>(new PregledDTO(pregled), HttpStatus.OK);
+	}
+	@PostMapping(path="/newST", consumes = "application/json")
+	@CrossOrigin(origins = "http://localhost:3000")
+	public ResponseEntity<PregledDTO> noviPregledizST(@RequestBody PregledDTO pregledDTO) {
+		System.out.println("dodavanje novog pregleda");
+		System.out.println(pregledDTO);
+		Pregled pregled = new Pregled();
+		pregled.setCena(pregledDTO.getCena());
+		pregled.setDatum(pregledDTO.getDatum());
+		Klinika klinika = klinikaService.findById(pregledDTO.getKlinikaID());
+		pregled.setKlinika(klinika);
+		Lekar lekar = lekarService.findOne(pregledDTO.getLekarID());
+		pregled.setLekar(lekar);
+		Pacijent pacijent = pacijentService.findByEmail(pregledDTO.getPacijentEmail());
+		pregled.setPacijent(pacijent);
+		pregled.setStatus(false);
+		TipPregleda tp = tipPregledaService.findOne(pregledDTO.getTipPregledaID());
+		pregled.setTipPregleda(tp);
+		
+
+		pregled = pregledService.save(pregled);
+		
+		List<SlobodniTermin>st = STService.findAll();
+		
+//		List<SlobodniTerminDTO> stDTO = new ArrayList<>();
+//		for (SlobodniTermin sstt : st) {
+//			stDTO.add(new SlobodniTerminDTO(sstt));
+//			System.out.println(new SlobodniTerminDTO(sstt));
+//			
+//			
+//		}
+		
+		for(SlobodniTermin sstt:st) {
+			if(pregled.getKlinika().equals(sstt.getKlinika()) &&
+					pregled.getCena() == sstt.getCena() &&
+					pregled.getLekar().equals(sstt.getLekar()) &&
+					pregled.getTipPregleda().equals(sstt.getTipPregleda())) {
+				STService.delete(sstt);
+				break;
+			}
+		}
+//		st = STService.findAll();
+//		
+//		stDTO = new ArrayList<>();
+//		for (SlobodniTermin sstt : st) {
+//			stDTO.add(new SlobodniTerminDTO(sstt));
+//			System.out.println(new SlobodniTerminDTO(sstt));
+//			
+//			
+//		}
 		
 
 		return new ResponseEntity<>(new PregledDTO(pregled), HttpStatus.OK);

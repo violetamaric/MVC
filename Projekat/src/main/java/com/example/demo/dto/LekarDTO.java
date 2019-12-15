@@ -18,12 +18,14 @@ public class LekarDTO {
 	private String telefon;
 	
 	private Long klinikaID;
+	
+	private int ocena;
 
 	public LekarDTO() {
 		super();
 	}
 
-	public LekarDTO(Long id, String ime, String prezime, String lozinka,Long klinikaID, String email, String telefon) {
+	public LekarDTO(Long id, String ime, String prezime, String lozinka,Long klinikaID, String email, String telefon, int ocena) {
 		super();
 		this.id = id;
 		this.ime = ime;
@@ -32,6 +34,7 @@ public class LekarDTO {
 		this.email = email;
 		this.telefon=telefon;
 		this.klinikaID = klinikaID;
+		this.ocena = ocena;
 	}
 	
 	public LekarDTO(Lekar lekar) {
@@ -44,10 +47,19 @@ public class LekarDTO {
 		this.email = lekar.getEmail();
 		this.klinikaID = lekar.getKlinika().getId();
 		this.telefon = lekar.getTelefon();
+		this.ocena = lekar.getOcena();
 	}
 
 	
 	
+	public int getOcena() {
+		return ocena;
+	}
+
+	public void setOcena(int ocena) {
+		this.ocena = ocena;
+	}
+
 	public Long getKlinikaID() {
 		return klinikaID;
 	}
