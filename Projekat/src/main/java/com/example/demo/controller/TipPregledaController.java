@@ -30,16 +30,15 @@ public class TipPregledaController {
 
 	@GetMapping(value = "/all")
 	@CrossOrigin(origins = "http://localhost:3000")
-	public ResponseEntity<List<TipPregledaDTO>> findAll() {
+
+	public ResponseEntity<List<TipPregleda>> findAll() {
 
 		List<TipPregleda> tp = TPService.findAll();
-		List<TipPregledaDTO> listaTP = new ArrayList<>();
+		List<TipPregleda> listaTP = new ArrayList<>();
 
-		for (TipPregleda tipP : tp) {
-			listaTP.add(new TipPregledaDTO(tipP));
-		}
-
-		return new ResponseEntity<>(listaTP, HttpStatus.OK);
+		for (TipPregleda tipP : tp) 
+			listaTP.add(new TipPregleda(tipP));
+	return new ResponseEntity<>(listaTP, HttpStatus.OK);
 	}
 
 	@GetMapping(value = "/tipPregledaKlinike/{id}")
@@ -63,4 +62,5 @@ public class TipPregledaController {
 		System.out.println("*************");
 		return new ResponseEntity<>(tp, HttpStatus.OK);
 	}
+
 }

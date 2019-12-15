@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.PregledDTO;
+
 import com.example.demo.model.Klinika;
 import com.example.demo.model.Lekar;
 import com.example.demo.model.Pacijent;
@@ -24,6 +25,11 @@ import com.example.demo.model.TipPregleda;
 import com.example.demo.service.KlinikaService;
 import com.example.demo.service.LekarService;
 import com.example.demo.service.PacijentService;
+
+import com.example.demo.dto.SalaDTO;
+import com.example.demo.model.Sala;
+
+
 import com.example.demo.service.PregledService;
 import com.example.demo.service.TipPregledaService;
 
@@ -41,6 +47,7 @@ public class PregledController {
 	@Autowired
 	private TipPregledaService tipPregledaService;
 	
+
 	@PostMapping(path="/new", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 	public ResponseEntity<PregledDTO> noviPregled(@RequestBody PregledDTO pregledDTO) {
@@ -65,6 +72,8 @@ public class PregledController {
 
 		return new ResponseEntity<>(new PregledDTO(pregled), HttpStatus.OK);
 	}
+
+
 
 	
 	@GetMapping(value = "/{id}")
@@ -94,6 +103,26 @@ public class PregledController {
 		return new ResponseEntity<>(pregledDTO, HttpStatus.OK);
 	}
 	
+	@GetMapping(value = "preuzmiPregledeKlinike/{id}")
+	public ResponseEntity<List<PregledDTO>> getPreglediKlinike(@PathVariable Long id) {
+
+		Klinika klinika = klinikaService.findOne(id);
+		List<Pregled> pregledi = pregledService.findAll();
+		List<PregledDTO> lista = new ArrayList<PregledDTO>();
+		for(Pregled s : pregledi) {
+			if(s.getKlinika().getId()==klinika.getId()) {
+				PregledDTO pregledDTO = new PregledDTO(s);
+				lista.add(pregledDTO);
+			}
+		}
+		
+		System.out.println("Lista pregleda u klinici:" + klinika.getNaziv() + " ID: " + id);
+		for(PregledDTO ss: lista) {
+			System.out.println(ss.getCena());
+		}
+		
+		return new ResponseEntity<>(lista, HttpStatus.OK);
+	}
 	
 
 }
