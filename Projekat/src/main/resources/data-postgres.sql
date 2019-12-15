@@ -83,16 +83,18 @@ insert into klinika_pacijent (klinika_id, pacijent_id) values (3,5);
 insert into medicinska_sestra_pacijent (pacijent_id, medicinska_sestra_id) values (1,2);
 insert into medicinska_sestra_pacijent (pacijent_id, medicinska_sestra_id) values (2,2);
 
---insert into slobodni_termin(datum, tip_pregleda_id, lekar_id, klinika_id, cena, status, popust) values ('15-dec-2019', 3, 2, 3, 15, false, 50.0);
---insert into slobodni_termin(datum, tip_pregleda_id, lekar_id, klinika_id, cena, status, popust) values ('18-dec-2019', 4, 1, 1, 20, true, 25.0);
---insert into slobodni_termin(datum, tip_pregleda_id, lekar_id, klinika_id, cena, status, popust) values ('19-dec-2019', 2, 2, 2, 30, false, 10.0);
-
 
 insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status) values ('12-dec-2019', 1, 2, 1, 3, 30, true);
 insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status) values ('13-dec-2019', 2, 1, 2, 3, 50, true);
 insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status) values ('15-dec-2019', 3, 2, 3, 3, 15, false);
 insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status) values ('18-dec-2019', 4, 1, 4, 1, 20, true);
 insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status) values ('19-dec-2019', 2, 2, 2, 2, 30, false);
+
+
+insert into slobodni_termin(datum, tip_pregleda_id, lekar_id, klinika_id, cena, status, popust) values ('15-dec-2019', 3, 2, 3, 15, false, 50.0);
+insert into slobodni_termin(datum, tip_pregleda_id, lekar_id, klinika_id, cena, status, popust) values ('18-dec-2019', 4, 1, 1, 20, true, 25.0);
+insert into slobodni_termin(datum, tip_pregleda_id, lekar_id, klinika_id, cena, status, popust) values ('19-dec-2019', 2, 2, 2, 30, false, 10.0);
+
 
 insert into sala(naziv, broj, klinika_id) values ('O', 1, 3);
 insert into sala(naziv, broj, klinika_id) values ('O', 2, 3);
@@ -107,5 +109,6 @@ insert into sala(naziv, broj, klinika_id) values ('O', 3, 2);
 
 insert into radni_dan (datum_pocetka, datum_kraja,  medicinska_sestra_id) values ('11-dec-2019 06:00:00+01:00', '11-dec-2019 13:59:00+01:00', 1);
 insert into radni_dan (datum_pocetka, datum_kraja,  medicinska_sestra_id) values ('12-dec-2019 06:00:00+01:00', '12-dec-2019 13:59:00+01:00', 1);
+
 
 

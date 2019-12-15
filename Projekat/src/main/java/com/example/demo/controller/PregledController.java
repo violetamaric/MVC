@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.PregledDTO;
 
+
 import com.example.demo.model.Klinika;
 import com.example.demo.model.Lekar;
 import com.example.demo.model.Pacijent;
@@ -26,15 +27,17 @@ import com.example.demo.service.KlinikaService;
 import com.example.demo.service.LekarService;
 import com.example.demo.service.PacijentService;
 
+
 import com.example.demo.dto.SalaDTO;
 import com.example.demo.model.Sala;
+
 
 
 import com.example.demo.service.PregledService;
 import com.example.demo.service.TipPregledaService;
 
 @RestController
-@RequestMapping(value = "/api/pregled", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/pregledi", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PregledController {
 	@Autowired
 	private PregledService pregledService;
@@ -63,7 +66,7 @@ public class PregledController {
 		Pacijent pacijent = pacijentService.findByEmail(pregledDTO.getPacijentEmail());
 		pregled.setPacijent(pacijent);
 		pregled.setStatus(false);
-		TipPregleda tp = tipPregledaService.findById(pregledDTO.getTipPregledaID());
+		TipPregleda tp = tipPregledaService.findOne(pregledDTO.getTipPregledaID());
 		pregled.setTipPregleda(tp);
 		
 
@@ -72,8 +75,6 @@ public class PregledController {
 
 		return new ResponseEntity<>(new PregledDTO(pregled), HttpStatus.OK);
 	}
-
-
 
 	
 	@GetMapping(value = "/{id}")
@@ -102,7 +103,9 @@ public class PregledController {
 
 		return new ResponseEntity<>(pregledDTO, HttpStatus.OK);
 	}
+
 	
+
 	@GetMapping(value = "preuzmiPregledeKlinike/{id}")
 	public ResponseEntity<List<PregledDTO>> getPreglediKlinike(@PathVariable Long id) {
 
