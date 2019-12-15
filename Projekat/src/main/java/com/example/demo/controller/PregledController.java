@@ -20,6 +20,7 @@ import com.example.demo.model.Klinika;
 import com.example.demo.model.Lekar;
 import com.example.demo.model.Pacijent;
 import com.example.demo.model.Pregled;
+import com.example.demo.model.SlobodniTermin;
 import com.example.demo.model.TipPregleda;
 import com.example.demo.service.KlinikaService;
 import com.example.demo.service.LekarService;
@@ -28,7 +29,7 @@ import com.example.demo.service.PregledService;
 import com.example.demo.service.TipPregledaService;
 
 @RestController
-@RequestMapping(value = "/api/pregled", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/pregledi", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PregledController {
 	@Autowired
 	private PregledService pregledService;
@@ -93,7 +94,7 @@ public class PregledController {
 
 		return new ResponseEntity<>(pregledDTO, HttpStatus.OK);
 	}
-	
+
 	
 
 }
