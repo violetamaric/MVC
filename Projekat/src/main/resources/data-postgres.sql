@@ -82,6 +82,9 @@ insert into klinika_pacijent (klinika_id, pacijent_id) values (3,5);
 
 insert into medicinska_sestra_pacijent (pacijent_id, medicinska_sestra_id) values (1,2);
 insert into medicinska_sestra_pacijent (pacijent_id, medicinska_sestra_id) values (2,2);
+insert into medicinska_sestra_pacijent (pacijent_id, medicinska_sestra_id) values (3,1);
+insert into medicinska_sestra_pacijent (pacijent_id, medicinska_sestra_id) values (1,1);
+insert into medicinska_sestra_pacijent (pacijent_id, medicinska_sestra_id) values (2,1);
 
 
 insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status) values ('12-dec-2019', 1, 2, 1, 3, 30, true);
@@ -107,8 +110,12 @@ insert into sala(naziv, broj, klinika_id) values ('P', 1, 2);
 insert into sala(naziv, broj, klinika_id) values ('P', 2, 2);
 insert into sala(naziv, broj, klinika_id) values ('O', 3, 2);
 
-insert into radni_dan (datum_pocetka, datum_kraja,  medicinska_sestra_id) values ('11-dec-2019 06:00:00+01:00', '11-dec-2019 13:59:00+01:00', 1);
+insert into radni_dan (datum_pocetka, datum_kraja,  medicinska_sestra_id) values ('11-dec-2019 06:00:00+02:00', '11-dec-2019 13:59:00+02:00', 1);
 insert into radni_dan (datum_pocetka, datum_kraja,  medicinska_sestra_id) values ('12-dec-2019 06:00:00+01:00', '12-dec-2019 13:59:00+01:00', 1);
+insert into radni_dan (datum_pocetka, datum_kraja,  medicinska_sestra_id) values ('10-dec-2019 06:00:00+01:00', '10-dec-2019 13:59:00+01:00', 1);
+insert into radni_dan (datum_pocetka, datum_kraja,  medicinska_sestra_id) values ('09-dec-2019 06:00:00+01:00', '09-dec-2019 13:59:00+01:00', 1);
+insert into radni_dan (datum_pocetka, datum_kraja,  medicinska_sestra_id) values ('13-dec-2019 06:00:00+01:00', '13-dec-2019 13:59:00+01:00', 1);
+insert into radni_dan (datum_pocetka, datum_kraja,  medicinska_sestra_id) values ('16-dec-2019 06:00:00+01:00', '16-dec-2019 13:59:00+01:00', 1);
 
 
 

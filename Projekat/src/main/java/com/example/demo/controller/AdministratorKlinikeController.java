@@ -88,20 +88,23 @@ public class AdministratorKlinikeController {
 		// a student must exist
 		System.out.println("ADMIN KLINIKE UPDRATE");
 		AdministratorKlinike adminiKlinike = administratorKlinikeService.findByEmail(administratorKlinikeDTO.getEmail());
-
 		
-		if(administratorKlinikeDTO.getIme() != "" && administratorKlinikeDTO.getIme() != null ) {
-			adminiKlinike.setIme(administratorKlinikeDTO.getIme());
+		if(administratorKlinikeDTO.getEmail() != "" && administratorKlinikeDTO.getEmail() != null ) {
+			if(administratorKlinikeDTO.getIme() != "" && administratorKlinikeDTO.getIme() != null ) {
+				adminiKlinike.setIme(administratorKlinikeDTO.getIme());
+			}
+			if(administratorKlinikeDTO.getPrezime() != "" && administratorKlinikeDTO.getPrezime() != null  ) {
+				adminiKlinike.setPrezime(administratorKlinikeDTO.getPrezime());
+			}
+			if(administratorKlinikeDTO.getTelefon() != "" && administratorKlinikeDTO.getTelefon() != null) {
+				adminiKlinike.setTelefon(administratorKlinikeDTO.getTelefon());
+			}
+			if(administratorKlinikeDTO.getLozinka() != "" && administratorKlinikeDTO.getLozinka() != null) {
+				adminiKlinike.setLozinka(administratorKlinikeDTO.getLozinka());
+			}
 		}
-		if(administratorKlinikeDTO.getPrezime() != "" && administratorKlinikeDTO.getPrezime() != null  ) {
-			adminiKlinike.setPrezime(administratorKlinikeDTO.getPrezime());
-		}
-		if(administratorKlinikeDTO.getTelefon() != "" && administratorKlinikeDTO.getTelefon() != null) {
-			adminiKlinike.setTelefon(administratorKlinikeDTO.getTelefon());
-		}
-		if(administratorKlinikeDTO.getLozinka() != "" && administratorKlinikeDTO.getLozinka() != null) {
-			adminiKlinike.setLozinka(administratorKlinikeDTO.getLozinka());
-		}
+		
+		
 //		if(administratorKlinikeDTO.getIdKlinike() != 0 && administratorKlinikeDTO.getIdKlinike() != null) {
 //			List<Klinika> klinike = klinikaService.findAll();
 //			for(Klinika k : klinike) {

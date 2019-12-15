@@ -284,17 +284,17 @@ public class AdministratorKCController {
 		List<KlinickiCentar> listaKC = KCService.find();
 		KlinickiCentar kc = listaKC.get(0);
 
-		if(kc.getZahteviZaRegistraciju().isEmpty()) {
-			System.out.println("prazna listaaa");
-			return new ResponseEntity<>("U listi ne postoji taj pacijent", HttpStatus.BAD_REQUEST);
-		}else {
+//		if(kc.getZahteviZaRegistraciju().isEmpty()) {
+//			System.out.println("prazna listaaa");
+//			return new ResponseEntity<>("U listi ne postoji taj pacijent", HttpStatus.BAD_REQUEST);
+//		}else {
 			System.out.println("Uspesno obrisan pacijent");
 			kc.getZahteviZaRegistraciju().remove(p);
-			pacijentService.delete(p);
+//			pacijentService.delete(p);
 			kc.setZahteviZaRegistraciju(kc.getZahteviZaRegistraciju());
 			kc = KCService.save(kc);
 			
-		}
+//		}
 
 		String subject ="Odobijena registracija";
 		String text = "Postovani " + pDTO.getIme() + " " + pDTO.getPrezime() 
