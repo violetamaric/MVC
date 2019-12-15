@@ -20,7 +20,6 @@ import com.example.demo.model.Klinika;
 import com.example.demo.model.Lekar;
 import com.example.demo.model.Pacijent;
 import com.example.demo.model.Pregled;
-import com.example.demo.model.SlobodniTermin;
 import com.example.demo.model.TipPregleda;
 import com.example.demo.service.KlinikaService;
 import com.example.demo.service.LekarService;
@@ -42,6 +41,7 @@ public class PregledController {
 	@Autowired
 	private TipPregledaService tipPregledaService;
 	
+
 	@PostMapping(path="/new", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 	public ResponseEntity<PregledDTO> noviPregled(@RequestBody PregledDTO pregledDTO) {
@@ -57,7 +57,7 @@ public class PregledController {
 		Pacijent pacijent = pacijentService.findByEmail(pregledDTO.getPacijentEmail());
 		pregled.setPacijent(pacijent);
 		pregled.setStatus(false);
-		TipPregleda tp = tipPregledaService.findById(pregledDTO.getTipPregledaID());
+		TipPregleda tp = tipPregledaService.findOne(pregledDTO.getTipPregledaID());
 		pregled.setTipPregleda(tp);
 		
 
@@ -66,6 +66,7 @@ public class PregledController {
 
 		return new ResponseEntity<>(new PregledDTO(pregled), HttpStatus.OK);
 	}
+
 
 	
 	@GetMapping(value = "/{id}")
@@ -95,6 +96,28 @@ public class PregledController {
 		return new ResponseEntity<>(pregledDTO, HttpStatus.OK);
 	}
 
+	
+
+	@GetMapping(value = "preuzmiPregledeKlinike/{id}")
+	public ResponseEntity<List<PregledDTO>> getPreglediKlinike(@PathVariable Long id) {
+
+		Klinika klinika = klinikaService.findOne(id);
+		List<Pregled> pregledi = pregledService.findAll();
+		List<PregledDTO> lista = new ArrayList<PregledDTO>();
+		for(Pregled s : pregledi) {
+			if(s.getKlinika().getId()==klinika.getId()) {
+				PregledDTO pregledDTO = new PregledDTO(s);
+				lista.add(pregledDTO);
+			}
+		}
+		
+		System.out.println("Lista pregleda u klinici:" + klinika.getNaziv() + " ID: " + id);
+		for(PregledDTO ss: lista) {
+			System.out.println(ss.getCena());
+		}
+		
+		return new ResponseEntity<>(lista, HttpStatus.OK);
+	}
 	
 
 }

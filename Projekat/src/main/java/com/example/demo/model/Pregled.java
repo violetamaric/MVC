@@ -25,10 +25,12 @@ public class Pregled {
 
 	@Column(name = "datum", nullable = false)
 	private Date datum;
+
 	
 	@Column(name="trajanje", nullable=true)
 	private Time trajanje; //dateTime
 	
+
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private TipPregleda tipPregleda;
 

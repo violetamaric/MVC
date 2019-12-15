@@ -18,8 +18,11 @@ public class Sala {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@Column(name="naziv", nullable=false)
+	private String naziv;
+	
 	@Column(name="broj", nullable=false)
-	private String oznaka;
+	private int broj;
 	
 	@OneToMany(mappedBy = "sala", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Pregled> listaPregleda = new HashSet<Pregled>();
@@ -36,12 +39,18 @@ public class Sala {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
-	public String getOznaka() {
-		return oznaka;
+	
+	public String getNaziv() {
+		return naziv;
 	}
-	public void setOznaka(String oznaka) {
-		this.oznaka = oznaka;
+	public void setNaziv(String naziv) {
+		this.naziv = naziv;
+	}
+	public int getBroj() {
+		return broj;
+	}
+	public void setBroj(int broj) {
+		this.broj = broj;
 	}
 	public Set<Pregled> getListaPregleda() {
 		return listaPregleda;

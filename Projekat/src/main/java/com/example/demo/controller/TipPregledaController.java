@@ -28,6 +28,21 @@ public class TipPregledaController {
 	@Autowired
 	private KlinikaService klinikaService;
 
+	
+	@GetMapping(value = "/{id}")
+	@CrossOrigin(origins = "http://localhost:3000")
+	public ResponseEntity<TipPregledaDTO> findById(@PathVariable Long id) {
+
+		TipPregleda tp = TPService.findOne(id);
+
+		// studen must exist
+		if (tp == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		return new ResponseEntity<>(new TipPregledaDTO(tp), HttpStatus.OK);
+	}
+	
 	@GetMapping(value = "/all")
 	@CrossOrigin(origins = "http://localhost:3000")
 	public ResponseEntity<List<TipPregledaDTO>> findAll() {
@@ -40,6 +55,7 @@ public class TipPregledaController {
 		}
 
 		return new ResponseEntity<>(listaTP, HttpStatus.OK);
+
 	}
 
 	@GetMapping(value = "/tipPregledaKlinike/{id}")

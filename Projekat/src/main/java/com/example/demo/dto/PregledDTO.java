@@ -10,12 +10,25 @@ public class PregledDTO {
 	private Date datum;
 
 	private Long tipPregledaID;
+	private String nazivTP;
 
 	private Long lekarID;
+	private String imeL;
+	private String prezimeL;
+
 
 	private String pacijentEmail;
 
 	private Long klinikaID;
+
+
+	private Long pacijentID;
+	private String imeP;
+	private String prezimeP;
+	
+
+	private String nazivKl;
+	
 
 	private double cena;
 
@@ -52,6 +65,60 @@ public class PregledDTO {
 		this.klinikaID = pregled.getKlinika().getId();
 		this.cena = pregled.getCena();
 		this.status = pregled.isStatus();
+		this.nazivKl = pregled.getKlinika().getNaziv();
+		this.imeL = pregled.getLekar().getIme();
+		this.imeP = pregled.getPacijent().getIme();
+		this.nazivTP = pregled.getTipPregleda().getNaziv();
+		this.prezimeL = pregled.getLekar().getPrezime();
+		this.prezimeP = pregled.getPacijent().getPrezime();
+	}
+
+	public String getPrezimeL() {
+		return prezimeL;
+	}
+
+	public void setPrezimeL(String prezimeL) {
+		this.prezimeL = prezimeL;
+	}
+
+	public String getPrezimeP() {
+		return prezimeP;
+	}
+
+	public void setPrezimeP(String prezimeP) {
+		this.prezimeP = prezimeP;
+	}
+
+	public String getNazivTP() {
+		return nazivTP;
+	}
+
+	public void setNazivTP(String nazivTP) {
+		this.nazivTP = nazivTP;
+	}
+
+	public String getImeL() {
+		return imeL;
+	}
+
+	public void setImeL(String imeL) {
+		this.imeL = imeL;
+	}
+
+	public String getImeP() {
+		return imeP;
+	}
+
+	public void setImeP(String imeP) {
+		this.imeP = imeP;
+	}
+
+	public String getNazivKl() {
+		return nazivKl;
+	}
+
+	public void setNazivKl(String nazivKl) {
+		this.nazivKl = nazivKl;
 	}
 
 	public Long getId() {
