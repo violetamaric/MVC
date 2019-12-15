@@ -14,5 +14,6 @@ public interface TipPregledaRepository extends JpaRepository<TipPregleda,Long>{
 	
 	@Query("select tp from TipPregleda tp inner join tp.listaKlinika lk where lk.id = ?1")
 	List<TipPregleda> findByIdKlinike(Long id);
+
 	
 }

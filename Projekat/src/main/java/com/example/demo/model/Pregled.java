@@ -1,7 +1,6 @@
 package com.example.demo.model;
 
 import java.sql.Time;
-import java.text.DateFormat;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
@@ -17,47 +16,22 @@ import javax.persistence.OneToOne;
 
 @Entity
 public class Pregled {
-<<<<<<< Updated upstream
 
-=======
-<<<<<<< Updated upstream
-	
-=======
  //dodati satnicu pregleda i salu za brze preglede koje bira pacijent
->>>>>>> Stashed changes
->>>>>>> Stashed changes
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@Column(name = "datum", nullable = false)
 	private Date datum;
-<<<<<<< Updated upstream
-
-	@Column(name = "trajanje", nullable = false)
-=======
-<<<<<<< Updated upstream
 	
-	@Column(name="trajanje", nullable=false)
+	@Column(name="trajanje", nullable=true)
 	private Time trajanje; //dateTime
 	
-	@Column(name="tipPregleda", nullable=false)
-	private String tipPregleda; //enum
-	
-=======
-
-	//treba false ali kasnije promjeniti
-	@Column(name = "trajanje", nullable = true)
->>>>>>> Stashed changes
-	private Time trajanje; // dateTime
-
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private TipPregleda tipPregleda;
 
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Sala sala;
 
