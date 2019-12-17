@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.PacijentDTO;
-import com.example.demo.dto.UserDTO;
 import com.example.demo.model.KlinickiCentar;
 import com.example.demo.model.Pacijent;
 import com.example.demo.model.ZdravstveniKarton;
@@ -41,6 +42,8 @@ public class PacijentController {
 	private EmailService emailService;
 	
 	private Logger logger = LoggerFactory.getLogger(UserController.class);
+	
+
 	
 	@GetMapping(value = "/all")
 	public ResponseEntity<List<PacijentDTO>> getAll() {
@@ -151,6 +154,7 @@ public class PacijentController {
 	
 	@PutMapping(path="/update", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('PACIJENT')")
 	public ResponseEntity<PacijentDTO> updatePacijent(@RequestBody PacijentDTO pacijentDTO) {
 
 		// a student must exist

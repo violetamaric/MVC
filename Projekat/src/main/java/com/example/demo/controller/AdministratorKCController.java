@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -76,6 +77,7 @@ public class AdministratorKCController {
 	
 	//vrati mi sve admnistratore kc
 	@GetMapping(value = "/svi")
+	@PreAuthorize("hasAuthority('ADMIN_KC')")
 	public ResponseEntity<List<AdministratorKCDTO>> getAll() {
 
 		List<AdministratorKC> administratoriKC = administratorKCService.findAll();
@@ -105,6 +107,7 @@ public class AdministratorKCController {
 	
 	//vrati mi listu klinika u klinickom centru
 	@GetMapping(value = "/listaKlinika/{email}")
+	@PreAuthorize("hasAuthority('ADMIN_KC')")
 	public ResponseEntity<List<KlinikaDTO>> getListaKlinika(@PathVariable String email) {
 
 		AdministratorKC administratorKC = administratorKCService.findByEmail(email);
@@ -125,6 +128,7 @@ public class AdministratorKCController {
 	
 	//vrati mi listu svih admina klinika u klinickom centru
 	@GetMapping(value = "/listaAdministratoraKlinika/{email}")
+	@PreAuthorize("hasAuthority('ADMIN_KC')")
 	public ResponseEntity<List<AdministratorKlinikeDTO>> getListaAdministratoraKlinika(@PathVariable String email) {
 
 		AdministratorKC administratorKC = administratorKCService.findByEmail(email);
@@ -143,6 +147,7 @@ public class AdministratorKCController {
 	
 	//vrati mi podatke o klinickom centru
 	@GetMapping(value = "/klinickiCentar/{email}")
+	@PreAuthorize("hasAuthority('ADMIN_KC')")
 	public ResponseEntity<KlinickiCentarDTO> getKlinickiCentar(@PathVariable String email) {
 		
 		AdministratorKC administratorKC = administratorKCService.findByEmail(email);
@@ -173,6 +178,7 @@ public class AdministratorKCController {
 	
 	//vrati mi listu dijagnoza u klinickom centru
 	@GetMapping(value = "/listaDijagnoza/{email}")
+	@PreAuthorize("hasAuthority('ADMIN_KC')")
 	public ResponseEntity<List<DijagnozaDTO>> getListaDijagnoza(@PathVariable String email) {
 
 		AdministratorKC administratorKC = administratorKCService.findByEmail(email);			
@@ -189,6 +195,7 @@ public class AdministratorKCController {
 
 	//vrati mi listu zahteva od korisnika tj mejlove
 	@GetMapping(value = "/listaZahtevaZaRegistraciju/{email}")
+	@PreAuthorize("hasAuthority('ADMIN_KC')")
 	public ResponseEntity<List<PacijentDTO>> getListaZahtevaZaRegistraciju(@PathVariable String email) {
 
 		AdministratorKC administratorKC = administratorKCService.findByEmail(email);
@@ -209,6 +216,7 @@ public class AdministratorKCController {
 	//izmena podataka o adminu 
 	@PutMapping(path="/izmena", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('ADMIN_KC')")
 	public ResponseEntity<AdministratorKCDTO> izmeniAdminaKC(@RequestBody AdministratorKCDTO akcDTO) {
 
 		System.out.println("ADMIN KC IZMENA");
@@ -233,6 +241,7 @@ public class AdministratorKCController {
 	//potvrda registracije
 	@PostMapping(path = "/potvrda/{email}", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('ADMIN_KC')")
 	public ResponseEntity<String> potvrdaRegistracijePacijenata(@PathVariable String email){
 		System.out.println("------------------------------------");
 		Pacijent p = pacijentService.findByEmail(email);
@@ -276,6 +285,7 @@ public class AdministratorKCController {
 	//odbijanje registracije pacijenata
 	@PostMapping(path = "/odbijanje/{email}/{razlog}", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('ADMIN_KC')")
 	public ResponseEntity<String> odbijanjeRegistracijePacijenata(@PathVariable String email, @PathVariable String razlog){
 		System.out.println("------------------------------------");
 		Pacijent p = pacijentService.findByEmail(email);
@@ -316,6 +326,7 @@ public class AdministratorKCController {
 	//dodavanje nove klinike
 	@PostMapping(path = "/dodavanjeKlinike", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('ADMIN_KC')")
 	public ResponseEntity<KlinikaDTO> dodavanjeKlinike(@RequestBody KlinikaDTO klinikaDTO) {
 		System.out.println("------------------------------------------------------");
 		Klinika klinika = new Klinika();
@@ -362,6 +373,7 @@ public class AdministratorKCController {
 	//dodavanje novog administratora kc
 	@PostMapping(path = "/dodavanjeAdminaKC", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('ADMIN_KC')")
 	public ResponseEntity<AdministratorKCDTO> dodavanjeAdminaKC(@RequestBody AdministratorKCDTO akDTO) {
 		System.out.println("------------------------------------------------------");
 		AdministratorKC ak = new AdministratorKC();
@@ -386,6 +398,7 @@ public class AdministratorKCController {
 	//dodavanje  novog leka
 	@PostMapping(path = "/dodavanjeLeka", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('ADMIN_KC')")
 	public ResponseEntity<LekDTO> dodavanjeLeka(@RequestBody LekDTO lekDTO) {
 		System.out.println("------------------------------------------------------");
 		Lek lek = new Lek();
@@ -408,6 +421,7 @@ public class AdministratorKCController {
 	//dodavanje nove dijagnoze
 	@PostMapping(path = "/dodavanjeDijagnoze", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('ADMIN_KC')")
 	public ResponseEntity<DijagnozaDTO> dodavanjeDijagnoze(@RequestBody DijagnozaDTO dijagnozaDTO) {
 		System.out.println("------------------------------------------------------");
 		Dijagnoza dijagnoza = new Dijagnoza();
@@ -439,6 +453,7 @@ public class AdministratorKCController {
 	//brisanje leka
 	@PostMapping(path = "/brisanjeLeka", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('ADMIN_KC')")
 	public ResponseEntity<String> brisanjeLeka(@RequestBody LekDTO lekDTO) {
 		System.out.println("------------------------------------------------------");
 		System.out.println("pocinje");
@@ -468,6 +483,7 @@ public class AdministratorKCController {
 	//brisanje dijagnoze
 	@PostMapping(path = "/brisanjeDijagnoze", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('ADMIN_KC')")
 	public ResponseEntity<String> brisanjeDijagnoze(@RequestBody DijagnozaDTO dijagnozaDTO) {
 		System.out.println("------------------------------------------------------");
 		Dijagnoza dijagnoza = dijagnozaService.findById(dijagnozaDTO.getId());	
@@ -495,6 +511,7 @@ public class AdministratorKCController {
 	//izmena leka
 	@PutMapping(path = "/izmenaLeka", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('ADMIN_KC')")
 	public ResponseEntity<LekDTO> izmenaLeka(@RequestBody LekDTO lekDTO) {
 		System.out.println("------------------------------------------------------");
 		Lek lek = lekService.findById(lekDTO.getId());
@@ -524,6 +541,7 @@ public class AdministratorKCController {
 	//izmena dijagnoze
 	@PutMapping(path = "/izmenaDijagnoze", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('ADMIN_KC')")
 	public ResponseEntity<DijagnozaDTO> izmenaDijagnoze(@RequestBody DijagnozaDTO dijagnozaDTO) {
 		System.out.println("------------------------------------------------------");
 		Dijagnoza dijagnoza = dijagnozaService.findById(dijagnozaDTO.getId());	
