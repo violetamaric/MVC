@@ -45,7 +45,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     @Override
-    @Bean(name = BeanIds.AUTHENTICATION_MANAGER)   
+    @Bean  
     public AuthenticationManager authenticationManagerBean() throws Exception {
 
         return super.authenticationManagerBean();
@@ -69,7 +69,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     
     @Override
 
-	protected void configure(HttpSecurity http) throws Exception {
+	public void configure(HttpSecurity http) throws Exception {
 
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 
@@ -115,7 +115,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 		// TokenAuthenticationFilter ce ignorisati sve ispod navedene putanjess
 
-		web.ignoring().antMatchers(HttpMethod.POST, "/auth/**");
+		web.ignoring().antMatchers(HttpMethod.POST, "/api/korisnici/**");
 
 		//web.ignoring().antMatchers(HttpMethod.POST, "/auth/login");
 

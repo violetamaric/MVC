@@ -87,5 +87,9 @@ insert into klinika_pacijent (klinika_id, pacijent_id) values (3,5);
 insert into medicinska_sestra_pacijent (pacijent_id, medicinska_sestra_id) values (1,2);
 insert into medicinska_sestra_pacijent (pacijent_id, medicinska_sestra_id) values (2,2);
 
-
+insert into authority (uloga) values ('PACIJENT');
+insert into authority (uloga) values ('LEKAR');
+insert into authority (uloga) values ('MED_SESTRA');
+insert into authority (uloga) values ('ADMIN_KC');
+insert into authority (uloga) values ('ADMIN_KLINIKE');
 
