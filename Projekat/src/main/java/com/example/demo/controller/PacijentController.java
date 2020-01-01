@@ -71,6 +71,7 @@ public class PacijentController {
 	}
 
 	@GetMapping(value = "/findPacijentEmail/{email}")
+	@PreAuthorize("hasAuthority('PACIJENT')")
 	public ResponseEntity<PacijentDTO> getPacijentByEmail(@PathVariable String email) {
 		System.out.println("find pacijent");
 		Pacijent pacijent = pacijentService.findByEmail(email);

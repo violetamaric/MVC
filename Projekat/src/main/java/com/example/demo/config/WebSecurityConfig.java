@@ -1,11 +1,10 @@
-package com.example.demo.security;
+package com.example.demo.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,6 +16,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
+import com.example.demo.security.RestAuthenticationEntryPoint;
+import com.example.demo.security.TokenAuthenticationFilter;
+import com.example.demo.security.TokenUtils;
 import com.example.demo.service.CustomUserDetailsService;
 
 @Configuration
@@ -52,7 +54,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     }
 
-
+  
 
     // Definisemo nacin autentifikacije
 
@@ -61,6 +63,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 
         auth.userDetailsService(jwtUserDetailsService).passwordEncoder(passwordEncoder());
+         
 
     }
 
@@ -83,7 +86,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 				// /api/foo 
 
-				.authorizeRequests().antMatchers("/auth/**").permitAll()
+				.authorizeRequests().antMatchers("/api/korisnici**").permitAll()
 
 
 
@@ -116,7 +119,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		// TokenAuthenticationFilter ce ignorisati sve ispod navedene putanjess
 
 		web.ignoring().antMatchers(HttpMethod.POST, "/api/korisnici/**");
-
+		web.ignoring().antMatchers(HttpMethod.GET, "/api/korisnici/**");
 		//web.ignoring().antMatchers(HttpMethod.POST, "/auth/login");
 
 		//web.ignoring().antMatchers(HttpMethod.POST, "/auth/register");
@@ -128,5 +131,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/**/*.css", "/**/*.js");
 
 	}
+	
+
 
 }

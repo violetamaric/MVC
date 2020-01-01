@@ -3,7 +3,9 @@ package com.example.demo.controller;
 import java.io.IOException;
 import java.util.Collection;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +15,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -47,22 +50,22 @@ public class UserController {
 	private AuthenticationManager authenticationManager;
 
 	@Autowired
-//	private CustomUserDetailsService userDetailsService;
-//
-//	@Autowired
-//	private PacijentService pacijentService;
-//
-//	@Autowired
-//	private LekarService lekarService;
-//
-//	@Autowired
-//	private MedicinskaSestraService medicinskaSestraService;
-//
-//	@Autowired
-//	private AdministratorKCService administratorKCService;
-//
-//	@Autowired
-//	private AdministratorKlinikeService administratorKlinikeService;
+	private CustomUserDetailsService userDetailsService;
+
+	@Autowired
+	private PacijentService pacijentService;
+
+	@Autowired
+	private LekarService lekarService;
+
+	@Autowired
+	private MedicinskaSestraService medicinskaSestraService;
+
+	@Autowired
+	private AdministratorKCService administratorKCService;
+
+	@Autowired
+	private AdministratorKlinikeService administratorKlinikeService;
 
 
 	
@@ -139,8 +142,22 @@ public class UserController {
 //		}
 //		
 //	}
+//	@RequestMapping(value = "/getUser", method = RequestMethod.GET)
+//	@CrossOrigin(origins = "http://localhost:3000")
+//	public ResponseEntity<UserDTO> getUser(){
+//		System.out.println("GET USER");
+//		
+//		UserDTO userDTO = new UserDTO();
+//		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//		System.out.println(SecurityContextHolder.getContext().getAuthentication());
+//		userDTO.setEmail((String) auth.getPrincipal());
+//		System.out.println(userDTO.getEmail());
+//		System.out.println(auth.getAuthorities());
+//		return new ResponseEntity<>(userDTO, HttpStatus.OK);
+//	}
+	
 	@RequestMapping(value = "/login", method = RequestMethod.POST)@CrossOrigin(origins = "http://localhost:3000")
-	public ResponseEntity<?> createAuthenticationToken(@RequestBody UserDTO userDTO,
+	public ResponseEntity<?> createAuthenticationToken(HttpServletRequest req,@RequestBody UserDTO userDTO,
 
 			HttpServletResponse response) throws AuthenticationException, IOException {
 		System.out.println("LOGIN");
@@ -158,6 +175,11 @@ public class UserController {
 						userDTO.getLozinka()));
 		
 		SecurityContextHolder.getContext().setAuthentication(authentication);
+		System.out.println("***" + SecurityContextHolder.getContext().getAuthentication());
+//		SecurityContext sc = SecurityContextHolder.getContext();
+//	    sc.setAuthentication(authentication);
+//	    HttpSession session = req.getSession(true);
+//	    session.setAttribute(SPRING_SECURITY_CONTEXT_KEY, sc);
 
 		Object nekiKorisnik = authentication.getPrincipal();
 
@@ -171,7 +193,7 @@ public class UserController {
 
 			int expiresIn = tokenUtils.getExpiredIn();
 
-			return ResponseEntity.ok(new UserTokenState(jwt, expiresIn));
+			return ResponseEntity.ok(new UserTokenState(jwt, expiresIn, ((Authority) roles.iterator().next()).getUloga(),((Pacijent)authentication.getPrincipal()).getEmail()));
 
 		} else if (nekiKorisnik instanceof Lekar) {
 
@@ -183,7 +205,7 @@ public class UserController {
 
 			int expiresIn = tokenUtils.getExpiredIn();
 
-			return ResponseEntity.ok(new UserTokenState(jwt, expiresIn));
+			return ResponseEntity.ok(new UserTokenState(jwt, expiresIn, ((Authority) roles.iterator().next()).getUloga(),((Lekar)authentication.getPrincipal()).getEmail()));
 
 		} else if (nekiKorisnik instanceof MedicinskaSestra) {
 
@@ -195,7 +217,7 @@ public class UserController {
 
 			int expiresIn = tokenUtils.getExpiredIn();
 
-			return ResponseEntity.ok(new UserTokenState(jwt, expiresIn));
+			return ResponseEntity.ok(new UserTokenState(jwt, expiresIn, ((Authority) roles.iterator().next()).getUloga(),((MedicinskaSestra)authentication.getPrincipal()).getEmail()));
 
 		} else if (nekiKorisnik instanceof AdministratorKlinike) {
 
@@ -207,7 +229,7 @@ public class UserController {
 
 			int expiresIn = tokenUtils.getExpiredIn();
 
-			return ResponseEntity.ok(new UserTokenState(jwt, expiresIn));
+			return ResponseEntity.ok(new UserTokenState(jwt, expiresIn, ((Authority) roles.iterator().next()).getUloga(),((AdministratorKlinike)authentication.getPrincipal()).getEmail()));
 
 		} else if (nekiKorisnik instanceof AdministratorKC) {
 
@@ -216,10 +238,9 @@ public class UserController {
 			Collection<?> roles = administratorKlinickogCentra.getAuthorities();
 
 			String jwt = tokenUtils.tokenAK(administratorKlinickogCentra, (Authority) roles.iterator().next());
-
 			int expiresIn = tokenUtils.getExpiredIn();
 
-			return ResponseEntity.ok(new UserTokenState(jwt, expiresIn));
+			return ResponseEntity.ok(new UserTokenState(jwt, expiresIn, ((Authority) roles.iterator().next()).getUloga(),((AdministratorKC)authentication.getPrincipal()).getEmail()));
 
 		} else {
 
