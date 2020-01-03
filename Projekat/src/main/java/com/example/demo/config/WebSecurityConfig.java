@@ -75,34 +75,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	public void configure(HttpSecurity http) throws Exception {
 
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-
-
-
 				.exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
-
-
-
 				// svim korisnicima dopusti da pristupe putanjama /auth/**, /h2-console/** i
-
 				// /api/foo 
-
-				.authorizeRequests().antMatchers("/api/korisnici**").permitAll()
-
-
-
+				.authorizeRequests().antMatchers("/api**").permitAll()
 				.anyRequest().authenticated().and()
-
-
-
 				.cors().and()
-
-
-
 				.addFilterBefore(new TokenAuthenticationFilter(tokenUtils, jwtUserDetailsService),
-
 						BasicAuthenticationFilter.class);
-
-
 
 		http.csrf().disable();
 
@@ -118,8 +98,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 		// TokenAuthenticationFilter ce ignorisati sve ispod navedene putanjess
 
-		web.ignoring().antMatchers(HttpMethod.POST, "/api/korisnici/**");
-		web.ignoring().antMatchers(HttpMethod.GET, "/api/korisnici/**");
+//		web.ignoring().antMatchers(HttpMethod.POST, "/api/korisnici/**");
+//		web.ignoring().antMatchers(HttpMethod.GET, "/api/korisnici/**");
 		//web.ignoring().antMatchers(HttpMethod.POST, "/auth/login");
 
 		//web.ignoring().antMatchers(HttpMethod.POST, "/auth/register");

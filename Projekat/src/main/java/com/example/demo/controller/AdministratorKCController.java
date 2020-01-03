@@ -44,7 +44,7 @@ import com.example.demo.service.LekService;
 import com.example.demo.service.PacijentService;
 
 
-
+@CrossOrigin
 @RestController
 @RequestMapping(value="/api/administratoriKC", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AdministratorKCController {
@@ -92,6 +92,7 @@ public class AdministratorKCController {
 	}
 	
 	//vrati mi trenutnog admnistratora kc
+	@PreAuthorize("hasAuthority('ADMINISTRATORKC')")
 	@GetMapping(value = "/pronadjenAdministratorKC/{email}")
 	public ResponseEntity<AdministratorKCDTO> getAdministratorKCByEmail(@PathVariable String email){
 		
