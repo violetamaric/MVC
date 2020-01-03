@@ -92,7 +92,7 @@ public class AdministratorKCController {
 	}
 	
 	//vrati mi trenutnog admnistratora kc
-	@PreAuthorize("hasAuthority('ADMINISTRATORKC')")
+	@PreAuthorize("hasAuthority('ADMIN_KC')")
 	@GetMapping(value = "/pronadjenAdministratorKC/{email}")
 	public ResponseEntity<AdministratorKCDTO> getAdministratorKCByEmail(@PathVariable String email){
 		

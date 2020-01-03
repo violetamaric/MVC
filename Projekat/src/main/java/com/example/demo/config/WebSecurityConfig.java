@@ -78,7 +78,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
 				// svim korisnicima dopusti da pristupe putanjama /auth/**, /h2-console/** i
 				// /api/foo 
-				.authorizeRequests().antMatchers("/api**").permitAll()
+				.authorizeRequests().antMatchers("/api/korisnici**").permitAll()
 				.anyRequest().authenticated().and()
 				.cors().and()
 				.addFilterBefore(new TokenAuthenticationFilter(tokenUtils, jwtUserDetailsService),
@@ -98,8 +98,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 		// TokenAuthenticationFilter ce ignorisati sve ispod navedene putanjess
 
-//		web.ignoring().antMatchers(HttpMethod.POST, "/api/korisnici/**");
-//		web.ignoring().antMatchers(HttpMethod.GET, "/api/korisnici/**");
+		web.ignoring().antMatchers(HttpMethod.POST, "/api/korisnici/**");
+		web.ignoring().antMatchers(HttpMethod.GET, "/api/korisnici/**");
 		//web.ignoring().antMatchers(HttpMethod.POST, "/auth/login");
 
 		//web.ignoring().antMatchers(HttpMethod.POST, "/auth/register");
