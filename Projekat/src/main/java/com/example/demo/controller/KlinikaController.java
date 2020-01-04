@@ -145,11 +145,6 @@ public class KlinikaController {
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 	
-<<<<<<< Updated upstream
-=======
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
 	// brisanje lekara
 	@PostMapping(path = "/brisanjeLekara", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
@@ -205,8 +200,7 @@ public class KlinikaController {
 
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
-	
-<<<<<<< Updated upstream
+
 	// brisanje lekara
 	@PostMapping(path = "/brisanjeLekara", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
@@ -239,7 +233,7 @@ public class KlinikaController {
 		System.out.println("------------------------------------------------------");
 		return new ResponseEntity<>("uspesno obrisan lekar !!!", HttpStatus.OK);
 	}
-=======
+
 //	// brisanje lekara
 //	@PostMapping(path = "/brisanjeLekara", consumes = "application/json")
 //	@CrossOrigin(origins = "http://localhost:3000")
@@ -272,6 +266,5 @@ public class KlinikaController {
 //		System.out.println("------------------------------------------------------");
 //		return new ResponseEntity<>("uspesno obrisan lekar !!!", HttpStatus.OK);
 //	}
->>>>>>> Stashed changes
->>>>>>> Stashed changes
+
 }
