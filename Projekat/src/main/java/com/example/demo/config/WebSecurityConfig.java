@@ -75,34 +75,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	public void configure(HttpSecurity http) throws Exception {
 
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-
-
-
 				.exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
-
-
-
 				// svim korisnicima dopusti da pristupe putanjama /auth/**, /h2-console/** i
-
 				// /api/foo 
-
 				.authorizeRequests().antMatchers("/api/korisnici**").permitAll()
-
-
-
 				.anyRequest().authenticated().and()
-
-
-
 				.cors().and()
-
-
-
 				.addFilterBefore(new TokenAuthenticationFilter(tokenUtils, jwtUserDetailsService),
-
 						BasicAuthenticationFilter.class);
-
-
 
 		http.csrf().disable();
 

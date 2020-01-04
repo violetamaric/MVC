@@ -56,12 +56,26 @@ public class MedicinskaSestra implements UserDetails{
 	private Set<Recept> recepti = new HashSet<Recept>();
 	
 
+
 	@ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
 	@JoinTable(name = "medicinska_sestra_authority",
 			joinColumns = @JoinColumn(name = "medicinska_sestra_id", referencedColumnName = "id"),
 			inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
 	private Set<Authority> authorities;
 	
+
+	@OneToMany(mappedBy = "medicinskaSestra", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<RadniDan> listaRadnihDana = new HashSet<RadniDan>();
+	
+	
+
+	public Set<RadniDan> getListaRadnihDana() {
+		return listaRadnihDana;
+	}
+	public void setListaRadnihDana(Set<RadniDan> listaRadnihDana) {
+		this.listaRadnihDana = listaRadnihDana;
+	}
+
 	public String getIme() {
 		return ime;
 	}

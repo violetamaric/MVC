@@ -156,7 +156,8 @@ public class UserController {
 //		return new ResponseEntity<>(userDTO, HttpStatus.OK);
 //	}
 	
-	@RequestMapping(value = "/login", method = RequestMethod.POST)@CrossOrigin(origins = "http://localhost:3000")
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	@CrossOrigin(origins = "http://localhost:3000")
 	public ResponseEntity<?> createAuthenticationToken(HttpServletRequest req,@RequestBody UserDTO userDTO,
 
 			HttpServletResponse response) throws AuthenticationException, IOException {

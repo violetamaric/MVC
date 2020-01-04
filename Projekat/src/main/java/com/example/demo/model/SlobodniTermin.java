@@ -15,9 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 @Entity
-public class Pregled {
-
- //dodati satnicu pregleda i salu za brze preglede koje bira pacijent
+public class SlobodniTermin {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,13 +23,13 @@ public class Pregled {
 
 	@Column(name = "datum", nullable = false)
 	private Date datum;
-
 	
-
-	//treba false ali kasnije promjeniti
-	@Column(name = "trajanje", nullable = true)
-	private Time trajanje; // dateTime
-
+	@Column(name="trajanje", nullable=true)
+	private Time trajanje; //dateTime
+	
+	@Column(name="popust", nullable=false)
+	private double popust;
+	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private TipPregleda tipPregleda;
 
@@ -44,8 +42,6 @@ public class Pregled {
 //	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 //	private MedicinskaSestra medicinskaSestra;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private Pacijent pacijent;
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Klinika klinika;
@@ -60,8 +56,9 @@ public class Pregled {
 	@JoinColumn(name = "izvestajOPregledu_id")
 	private IzvestajOPregledu izvestajOPregledu;
 
-	public Pregled() {
+	public SlobodniTermin() {
 		super();
+		// TODO Auto-generated constructor stub
 	}
 
 	public Date getDatum() {
@@ -152,13 +149,7 @@ public class Pregled {
 //	public void setMedicinskaSestra(MedicinskaSestra medicinskaSestra) {
 //		this.medicinskaSestra = medicinskaSestra;
 //	}
-	public Pacijent getPacijent() {
-		return pacijent;
-	}
 
-	public void setPacijent(Pacijent pacijent) {
-		this.pacijent = pacijent;
-	}
 
 	public Klinika getKlinika() {
 		return klinika;
@@ -176,4 +167,14 @@ public class Pregled {
 		this.izvestajOPregledu = izvestajOPregledu;
 	}
 
+	public double getPopust() {
+		return popust;
+	}
+
+	public void setPopust(double popust) {
+		this.popust = popust;
+	}
+	
+	
+	
 }
