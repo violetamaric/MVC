@@ -278,8 +278,10 @@ public class TokenUtils {
 	// Funkcija za preuzimanje JWT tokena iz zahteva
 
 	public String getToken(HttpServletRequest request) {
+		System.out.println("get token");
 
 		String authHeader = getAuthHeaderFromHeader(request);
+		System.out.println("auth Header" + authHeader);
 
 
 

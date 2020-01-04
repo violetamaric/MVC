@@ -47,4 +47,10 @@ public class Authority implements GrantedAuthority {
         this.id = id;
     }
 
+	@Override
+	public String toString() {
+		return "Authority [id=" + id + ", uloga=" + uloga + "]";
+	}
+
+    
 }
