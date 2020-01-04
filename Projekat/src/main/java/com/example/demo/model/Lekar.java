@@ -50,7 +50,8 @@ public class Lekar implements UserDetails{
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Klinika klinika;
-	//kalendar
+	
+	//dodati za kalendar 
 	
 	@OneToMany(mappedBy = "lekar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Operacija> listaOperacija = new HashSet<Operacija>();
