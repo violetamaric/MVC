@@ -39,6 +39,7 @@ public class MedicinskaSestraController {
 	
 	//vrati sve medicinske sestre
 	@GetMapping(value = "/sve")
+	@CrossOrigin(origins = "http://localhost:3000")
 	public ResponseEntity<List<MedicinskaSestraDTO>> getAll() {
 
 		List<MedicinskaSestra> medSes = medicinskaSestraService.findAll();
