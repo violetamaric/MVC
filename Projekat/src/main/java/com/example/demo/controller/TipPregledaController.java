@@ -30,15 +30,6 @@ public class TipPregledaController {
 
 	@GetMapping(value = "/all")
 	@CrossOrigin(origins = "http://localhost:3000")
-<<<<<<< Updated upstream
-	public ResponseEntity<List<TipPregleda>> findAll() {
-
-		List<TipPregleda> tp = TPService.findAll();
-		List<TipPregleda> listaTP = new ArrayList<>();
-
-		for (TipPregleda tipP : tp) {
-			listaTP.add(new TipPregleda(tipP));
-=======
 	public ResponseEntity<List<TipPregledaDTO>> findAll() {
 
 		List<TipPregleda> tp = TPService.findAll();
@@ -46,7 +37,6 @@ public class TipPregledaController {
 
 		for (TipPregleda tipP : tp) {
 			listaTP.add(new TipPregledaDTO(tipP));
->>>>>>> Stashed changes
 		}
 
 		return new ResponseEntity<>(listaTP, HttpStatus.OK);
@@ -73,8 +63,6 @@ public class TipPregledaController {
 		System.out.println("*************");
 		return new ResponseEntity<>(tp, HttpStatus.OK);
 	}
-<<<<<<< Updated upstream
 }
-=======
-}
->>>>>>> Stashed changes
+
+
