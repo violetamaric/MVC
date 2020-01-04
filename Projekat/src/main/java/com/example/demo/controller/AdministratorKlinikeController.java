@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.dto.AdministratorKlinikeDTO;
 import com.example.demo.dto.LekarDTO;
 import com.example.demo.model.AdministratorKlinike;
-
 import com.example.demo.model.Klinika;
 import com.example.demo.model.Lekar;
 import com.example.demo.service.AdministratorKlinikeService;
@@ -83,22 +83,39 @@ public class AdministratorKlinikeController {
 	// izmjena podataka admina klinika
 	@PutMapping(path = "/update", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
-	public ResponseEntity<AdministratorKlinikeDTO> updateAdminKlinike(
-			@RequestBody AdministratorKlinikeDTO administratorKlinikeDTO) {
+	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
+	public ResponseEntity<AdministratorKlinikeDTO> updateAdminKlinike(@RequestBody AdministratorKlinikeDTO administratorKlinikeDTO) {
+
 
 		// a student must exist
 		System.out.println("ADMIN KLINIKE UPDRATE");
-		AdministratorKlinike adminiKlinike = administratorKlinikeService
-				.findByEmail(administratorKlinikeDTO.getEmail());
-
-//		System.out.println("Lekar update: " + lekar.getEmail());
-//		if (lekar == null) {
-//			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		AdministratorKlinike adminiKlinike = administratorKlinikeService.findByEmail(administratorKlinikeDTO.getEmail());
+		
+		if(administratorKlinikeDTO.getEmail() != "" && administratorKlinikeDTO.getEmail() != null ) {
+			if(administratorKlinikeDTO.getIme() != "" && administratorKlinikeDTO.getIme() != null ) {
+				adminiKlinike.setIme(administratorKlinikeDTO.getIme());
+			}
+			if(administratorKlinikeDTO.getPrezime() != "" && administratorKlinikeDTO.getPrezime() != null  ) {
+				adminiKlinike.setPrezime(administratorKlinikeDTO.getPrezime());
+			}
+			if(administratorKlinikeDTO.getTelefon() != "" && administratorKlinikeDTO.getTelefon() != null) {
+				adminiKlinike.setTelefon(administratorKlinikeDTO.getTelefon());
+			}
+			if(administratorKlinikeDTO.getLozinka() != "" && administratorKlinikeDTO.getLozinka() != null) {
+				adminiKlinike.setLozinka(administratorKlinikeDTO.getLozinka());
+			}
+		}
+		
+		
+//		if(administratorKlinikeDTO.getIdKlinike() != 0 && administratorKlinikeDTO.getIdKlinike() != null) {
+//			List<Klinika> klinike = klinikaService.findAll();
+//			for(Klinika k : klinike) {
+//				if(k.getId() == administratorKlinikeDTO.getIdKlinike()) {
+//					administratorKlinikeDTO.setIdKlinike(k.getId());
+//				}
+//			}
 //		}
-
-		adminiKlinike.setIme(administratorKlinikeDTO.getIme());
-		adminiKlinike.setPrezime(administratorKlinikeDTO.getPrezime());
-		adminiKlinike.setTelefon(administratorKlinikeDTO.getTelefon());
+		
 
 		adminiKlinike = administratorKlinikeService.save(adminiKlinike);
 		return new ResponseEntity<>(new AdministratorKlinikeDTO(adminiKlinike), HttpStatus.OK);
@@ -107,7 +124,7 @@ public class AdministratorKlinikeController {
 	// dodavanje novog lekara
 	@PostMapping(path = "/dodavanjeLekara", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
-
+	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
 	public ResponseEntity<LekarDTO> dodavanjeLeka(@RequestBody LekarDTO lekarDTO) {
 		System.out.println("------------------------------------------------------");
 

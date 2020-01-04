@@ -27,9 +27,10 @@ public class Pregled {
 	private Date datum;
 
 	
-	@Column(name="trajanje", nullable=true)
-	private Time trajanje; //dateTime
-	
+
+	//treba false ali kasnije promjeniti
+	@Column(name = "trajanje", nullable = true)
+	private Time trajanje; // dateTime
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private TipPregleda tipPregleda;

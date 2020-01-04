@@ -45,6 +45,7 @@ public class TipPregledaController {
 	
 	@GetMapping(value = "/all")
 	@CrossOrigin(origins = "http://localhost:3000")
+
 	public ResponseEntity<List<TipPregledaDTO>> findAll() {
 
 		List<TipPregleda> tp = TPService.findAll();
@@ -79,4 +80,7 @@ public class TipPregledaController {
 		System.out.println("*************");
 		return new ResponseEntity<>(tp, HttpStatus.OK);
 	}
+
+
 }
+

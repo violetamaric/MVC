@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.PregledDTO;
+
+
 import com.example.demo.model.Klinika;
 import com.example.demo.model.Lekar;
 import com.example.demo.model.Pacijent;
@@ -24,6 +26,13 @@ import com.example.demo.model.TipPregleda;
 import com.example.demo.service.KlinikaService;
 import com.example.demo.service.LekarService;
 import com.example.demo.service.PacijentService;
+
+
+import com.example.demo.dto.SalaDTO;
+import com.example.demo.model.Sala;
+
+
+
 import com.example.demo.service.PregledService;
 import com.example.demo.service.TipPregledaService;
 
@@ -66,7 +75,6 @@ public class PregledController {
 
 		return new ResponseEntity<>(new PregledDTO(pregled), HttpStatus.OK);
 	}
-
 
 	
 	@GetMapping(value = "/{id}")

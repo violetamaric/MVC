@@ -1,6 +1,6 @@
 package com.example.demo.model;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,8 +17,11 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 @Entity
-public class MedicinskaSestra {
+public class MedicinskaSestra implements UserDetails{
 	
 	
 	@Id
@@ -52,6 +55,27 @@ public class MedicinskaSestra {
 	@OneToMany(mappedBy = "medicinskaSestra", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Recept> recepti = new HashSet<Recept>();
 	
+
+
+	@ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	@JoinTable(name = "medicinska_sestra_authority",
+			joinColumns = @JoinColumn(name = "medicinska_sestra_id", referencedColumnName = "id"),
+			inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
+	private Set<Authority> authorities;
+	
+
+	@OneToMany(mappedBy = "medicinskaSestra", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<RadniDan> listaRadnihDana = new HashSet<RadniDan>();
+	
+	
+
+	public Set<RadniDan> getListaRadnihDana() {
+		return listaRadnihDana;
+	}
+	public void setListaRadnihDana(Set<RadniDan> listaRadnihDana) {
+		this.listaRadnihDana = listaRadnihDana;
+	}
+
 	public String getIme() {
 		return ime;
 	}
@@ -124,6 +148,51 @@ public class MedicinskaSestra {
 	public void setRecepti(Set<Recept> recepti) {
 		this.recepti = recepti;
 	}
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		// TODO Auto-generated method stub
+		return this.authorities;
+	}
+	@Override
+	public String getPassword() {
+		// TODO Auto-generated method stub
+		return lozinka;
+	}
+	@Override
+	public String getUsername() {
+		// TODO Auto-generated method stub
+		return email;
+	}
+	@Override
+	public boolean isAccountNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+	@Override
+	public boolean isAccountNonLocked() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+	@Override
+	public boolean isCredentialsNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+	@Override
+	public boolean isEnabled() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+	public Set<Pacijent> getListaPacijenataMedSestra() {
+		return listaPacijenataMedSestra;
+	}
+	public void setListaPacijenataMedSestra(Set<Pacijent> listaPacijenataMedSestra) {
+		this.listaPacijenataMedSestra = listaPacijenataMedSestra;
+	}
+	public void setAuthorities(Set<Authority> authorities) {
+		this.authorities = authorities;
+	}
+	
 	
 	
 }
