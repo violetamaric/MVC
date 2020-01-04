@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +29,7 @@ import com.example.demo.service.KlinickiCentarService;
 import com.example.demo.service.PacijentService;
 
 @RestController
-@RequestMapping(value = "/api/pacijenti")
+@RequestMapping(value = "/api/pacijenti", produces=MediaType.APPLICATION_JSON_VALUE)
 public class PacijentController {
 
 	@Autowired
@@ -67,13 +68,14 @@ public class PacijentController {
 		return new ResponseEntity<>(new PacijentDTO(pacijent), HttpStatus.OK);
 	}
 
-	@GetMapping(value = "/findPacijentEmail/{email:.+}", produces=MediaType.APPLICATION_JSON_VALUE)
+//	@GetMapping(value = "/findPacijentEmail/{email:.+}")
+	@GetMapping(value = "/findPacijentEmail")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('PACIJENT')")
-	public ResponseEntity<?> getPacijentByEmail(@PathVariable String email) {
+	public ResponseEntity<?> getPacijentByEmail(Principal p) {
 		System.out.println("find pacijent");
-		System.out.println(email);
-		Pacijent pacijent = pacijentService.findByEmail(email);
+		System.out.println(p.getName());
+		Pacijent pacijent = pacijentService.findByEmail(p.getName());
 		System.out.println("pacijent " + pacijent);
 		if (pacijent == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);

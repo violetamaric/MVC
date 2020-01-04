@@ -2,7 +2,6 @@ package com.example.demo.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,10 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.MedicinskaSestraDTO;
 import com.example.demo.dto.PacijentDTO;
-import com.example.demo.dto.RadniDanDTO;
 import com.example.demo.model.MedicinskaSestra;
 import com.example.demo.model.Pacijent;
-import com.example.demo.model.RadniDan;
 import com.example.demo.service.KlinikaService;
 import com.example.demo.service.MedicinskaSestraService;
 import com.example.demo.service.PacijentService;
@@ -139,23 +136,23 @@ public class MedicinskaSestraController {
 		return new ResponseEntity<>(new MedicinskaSestraDTO(ms), HttpStatus.OK);
 	}
 
-	@GetMapping(value = "/listaRadnihDana/{email}")
-	@CrossOrigin(origins = "http://localhost:3000")
-	public ResponseEntity<List<RadniDanDTO>> getListaRadnihDana(@PathVariable String email) {
-		System.out.println("//////////////////// MED SESTRA LISTA Radnih dana ////////////////////////");
-		
-		MedicinskaSestra ms = medicinskaSestraService.findByEmail(email);
-		Set<RadniDan> listaRD = ms.getListaRadnihDana();
-		List<RadniDanDTO> lista = new ArrayList<RadniDanDTO>();
-		for(RadniDan rd: listaRD) {
-			System.out.println(rd.getDatumPocetka());
-			lista.add(new RadniDanDTO(rd));
-		}
-		
-
-		System.out.println("*************");
-		return new ResponseEntity<>(lista, HttpStatus.OK);
-
-		
-	}
+//	@GetMapping(value = "/listaRadnihDana/{email}")
+//	@CrossOrigin(origins = "http://localhost:3000")
+//	public ResponseEntity<List<RadniDanDTO>> getListaRadnihDana(@PathVariable String email) {
+//		System.out.println("//////////////////// MED SESTRA LISTA Radnih dana ////////////////////////");
+//		
+//		MedicinskaSestra ms = medicinskaSestraService.findByEmail(email);
+//		Set<RadniDan> listaRD = ms.getListaRadnihDana();
+//		List<RadniDanDTO> lista = new ArrayList<RadniDanDTO>();
+//		for(RadniDan rd: listaRD) {
+//			System.out.println(rd.getDatumPocetka());
+//			lista.add(new RadniDanDTO(rd));
+//		}
+//		
+//
+//		System.out.println("*************");
+//		return new ResponseEntity<>(lista, HttpStatus.OK);
+//
+//		
+//	}
 }
