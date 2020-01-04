@@ -64,17 +64,17 @@ public class MedicinskaSestra implements UserDetails{
 	private Set<Authority> authorities;
 	
 
-	@OneToMany(mappedBy = "medicinskaSestra", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<RadniDan> listaRadnihDana = new HashSet<RadniDan>();
-	
-	
-
-	public Set<RadniDan> getListaRadnihDana() {
-		return listaRadnihDana;
-	}
-	public void setListaRadnihDana(Set<RadniDan> listaRadnihDana) {
-		this.listaRadnihDana = listaRadnihDana;
-	}
+//	@OneToMany(mappedBy = "medicinskaSestra", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//	private Set<RadniDan> listaRadnihDana = new HashSet<RadniDan>();
+//	
+//	
+//
+//	public Set<RadniDan> getListaRadnihDana() {
+//		return listaRadnihDana;
+//	}
+//	public void setListaRadnihDana(Set<RadniDan> listaRadnihDana) {
+//		this.listaRadnihDana = listaRadnihDana;
+//	}
 
 	public String getIme() {
 		return ime;
