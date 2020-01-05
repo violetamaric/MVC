@@ -14,6 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+//import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import com.example.demo.security.RestAuthenticationEntryPoint;
@@ -36,6 +37,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
 
     }
+    
+//    @Bean
+//
+//    public BCrypt passwordDecoder() {
+//
+//        return new BCrypt();
+//
+//    }
 
     @Autowired
     private CustomUserDetailsService jwtUserDetailsService;

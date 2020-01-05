@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -78,7 +79,8 @@ public class AdministratorKCController {
 	//vrati mi sve admnistratore kc
 	@GetMapping(value = "/svi")
 	@PreAuthorize("hasAuthority('ADMIN_KC')")
-	public ResponseEntity<List<AdministratorKCDTO>> getAll() {
+	@CrossOrigin(origins = "http://localhost:3000")
+	public ResponseEntity<List<AdministratorKCDTO>> getAll(Principal p) {
 
 		List<AdministratorKC> administratoriKC = administratorKCService.findAll();
 
@@ -93,10 +95,11 @@ public class AdministratorKCController {
 	
 	//vrati mi trenutnog admnistratora kc
 	@PreAuthorize("hasAuthority('ADMIN_KC')")
-	@GetMapping(value = "/pronadjenAdministratorKC/{email}")
-	public ResponseEntity<AdministratorKCDTO> getAdministratorKCByEmail(@PathVariable String email){
-		
-		AdministratorKC administratorKC = administratorKCService.findByEmail(email);
+	@CrossOrigin(origins = "http://localhost:3000")
+	@GetMapping(value = "/pronadjenAdministratorKC")
+	public ResponseEntity<AdministratorKCDTO> getAdministratorKCByEmail(Principal p){
+		System.out.println(p.getName());
+		AdministratorKC administratorKC = administratorKCService.findByEmail(p.getName());
 		if (administratorKC == null) {
 			System.out.println("NIJE PRONADJEN");
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -107,11 +110,12 @@ public class AdministratorKCController {
 	}
 	
 	//vrati mi listu klinika u klinickom centru
-	@GetMapping(value = "/listaKlinika/{email}")
+	@GetMapping(value = "/listaKlinika")
+	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('ADMIN_KC')")
-	public ResponseEntity<List<KlinikaDTO>> getListaKlinika(@PathVariable String email) {
+	public ResponseEntity<List<KlinikaDTO>> getListaKlinika(Principal p) {
 
-		AdministratorKC administratorKC = administratorKCService.findByEmail(email);
+		AdministratorKC administratorKC = administratorKCService.findByEmail(p.getName());
 		
 		KlinickiCentar klinickiCentar = administratorKC.getKlinickiCentar();
 		
@@ -128,11 +132,12 @@ public class AdministratorKCController {
 	}
 	
 	//vrati mi listu svih admina klinika u klinickom centru
-	@GetMapping(value = "/listaAdministratoraKlinika/{email}")
+	@GetMapping(value = "/listaAdministratoraKlinika")
+	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('ADMIN_KC')")
-	public ResponseEntity<List<AdministratorKlinikeDTO>> getListaAdministratoraKlinika(@PathVariable String email) {
+	public ResponseEntity<List<AdministratorKlinikeDTO>> getListaAdministratoraKlinika(Principal p) {
 
-		AdministratorKC administratorKC = administratorKCService.findByEmail(email);
+		AdministratorKC administratorKC = administratorKCService.findByEmail(p.getName());
 		
 		KlinickiCentar klinickiCentar = administratorKC.getKlinickiCentar();
 		List<AdministratorKlinikeDTO> lista = new ArrayList<>();
@@ -147,11 +152,12 @@ public class AdministratorKCController {
 	}
 	
 	//vrati mi podatke o klinickom centru
-	@GetMapping(value = "/klinickiCentar/{email}")
+	@GetMapping(value = "/klinickiCentar")
+	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('ADMIN_KC')")
-	public ResponseEntity<KlinickiCentarDTO> getKlinickiCentar(@PathVariable String email) {
+	public ResponseEntity<KlinickiCentarDTO> getKlinickiCentar(Principal p) {
 		
-		AdministratorKC administratorKC = administratorKCService.findByEmail(email);
+		AdministratorKC administratorKC = administratorKCService.findByEmail(p.getName());
 		
 		KlinickiCentar kc = administratorKC.getKlinickiCentar();
 		KlinickiCentarDTO kcDTO = new KlinickiCentarDTO(kc);
@@ -160,10 +166,12 @@ public class AdministratorKCController {
 	}
 	
 	//vrati mi listu lekova u klinickom centru
-	@GetMapping(value = "/listaLekova/{email}")
-	public ResponseEntity<List<LekDTO>> getListaLekova(@PathVariable String email) {
+	@GetMapping(value = "/listaLekova")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('ADMIN_KC')")
+	public ResponseEntity<List<LekDTO>> getListaLekova(Principal p) {
 
-		AdministratorKC administratorKC = administratorKCService.findByEmail(email);	
+		AdministratorKC administratorKC = administratorKCService.findByEmail(p.getName());	
 		KlinickiCentar klinickiCentar = administratorKC.getKlinickiCentar();	
 		List<LekDTO> lista = new ArrayList<>();
 		
@@ -178,11 +186,12 @@ public class AdministratorKCController {
 	}
 	
 	//vrati mi listu dijagnoza u klinickom centru
-	@GetMapping(value = "/listaDijagnoza/{email}")
+	@GetMapping(value = "/listaDijagnoza")
+	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('ADMIN_KC')")
-	public ResponseEntity<List<DijagnozaDTO>> getListaDijagnoza(@PathVariable String email) {
+	public ResponseEntity<List<DijagnozaDTO>> getListaDijagnoza(Principal p) {
 
-		AdministratorKC administratorKC = administratorKCService.findByEmail(email);			
+		AdministratorKC administratorKC = administratorKCService.findByEmail(p.getName());			
 		KlinickiCentar klinickiCentar = administratorKC.getKlinickiCentar();			
 		List<DijagnozaDTO> lista = new ArrayList<>();
 			
@@ -195,11 +204,12 @@ public class AdministratorKCController {
 	}
 
 	//vrati mi listu zahteva od korisnika tj mejlove
-	@GetMapping(value = "/listaZahtevaZaRegistraciju/{email}")
+	@GetMapping(value = "/listaZahtevaZaRegistraciju")
 	@PreAuthorize("hasAuthority('ADMIN_KC')")
-	public ResponseEntity<List<PacijentDTO>> getListaZahtevaZaRegistraciju(@PathVariable String email) {
+	@CrossOrigin(origins = "http://localhost:3000")
+	public ResponseEntity<List<PacijentDTO>> getListaZahtevaZaRegistraciju(Principal pr) {
 
-		AdministratorKC administratorKC = administratorKCService.findByEmail(email);
+		AdministratorKC administratorKC = administratorKCService.findByEmail(pr.getName());
 		
 		KlinickiCentar kc = administratorKC.getKlinickiCentar();
 		List<PacijentDTO> lista = new ArrayList<PacijentDTO>();
@@ -403,7 +413,7 @@ public class AdministratorKCController {
 	@PostMapping(path = "/dodavanjeLeka", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('ADMIN_KC')")
-	public ResponseEntity<LekDTO> dodavanjeLeka(@RequestBody LekDTO lekDTO) {
+	public ResponseEntity<LekDTO> dodavanjeLeka(Principal p, @RequestBody LekDTO lekDTO) {
 		System.out.println("------------------------------------------------------");
 		Lek lek = new Lek();
 		lek.setNaziv(lekDTO.getNaziv());
