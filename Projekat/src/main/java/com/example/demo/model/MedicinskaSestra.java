@@ -20,9 +20,9 @@ import javax.persistence.OneToMany;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+
 @Entity
 public class MedicinskaSestra implements UserDetails{
-	
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -63,18 +63,6 @@ public class MedicinskaSestra implements UserDetails{
 			inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
 	private Set<Authority> authorities;
 	
-
-//	@OneToMany(mappedBy = "medicinskaSestra", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//	private Set<RadniDan> listaRadnihDana = new HashSet<RadniDan>();
-//	
-//	
-//
-//	public Set<RadniDan> getListaRadnihDana() {
-//		return listaRadnihDana;
-//	}
-//	public void setListaRadnihDana(Set<RadniDan> listaRadnihDana) {
-//		this.listaRadnihDana = listaRadnihDana;
-//	}
 
 	public String getIme() {
 		return ime;
@@ -193,6 +181,32 @@ public class MedicinskaSestra implements UserDetails{
 		this.authorities = authorities;
 	}
 	
+//	@OneToMany(mappedBy = "medicinskaSestra", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//	private Set<OdmorOdsustvoMedicinskaSestra> listaOdmorOdsustvo = new HashSet<OdmorOdsustvoMedicinskaSestra>();
+//	
+//	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "medicinskaSestra")
+//    @JsonIgnore
+//    private List<OdmorOdsustvoMedicinskaSestra> odsustvo;
+//
+//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "medicinskaSestra")
+//    @JsonIgnore
+//    private List<OdmorOdsustvoMedicinskaSestra> odmor;
+	
+
+	
+
+//	@OneToMany(mappedBy = "medicinskaSestra", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//	private Set<RadniDan> listaRadnihDana = new HashSet<RadniDan>();
+//	
+//	
+//
+//	public Set<RadniDan> getListaRadnihDana() {
+//		return listaRadnihDana;
+//	}
+//	public void setListaRadnihDana(Set<RadniDan> listaRadnihDana) {
+//		this.listaRadnihDana = listaRadnihDana;
+//	}
+
 	
 	
 }

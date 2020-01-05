@@ -413,8 +413,9 @@ public class AdministratorKCController {
 	@PostMapping(path = "/dodavanjeLeka", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('ADMIN_KC')")
-	public ResponseEntity<LekDTO> dodavanjeLeka(Principal p, @RequestBody LekDTO lekDTO) {
+	public ResponseEntity<LekDTO> dodavanjeLeka(@RequestBody LekDTO lekDTO) {
 		System.out.println("------------------------------------------------------");
+//		System.out.println(p.getName());
 		Lek lek = new Lek();
 		lek.setNaziv(lekDTO.getNaziv());
 		lek.setSifra(lekDTO.getSifra());
