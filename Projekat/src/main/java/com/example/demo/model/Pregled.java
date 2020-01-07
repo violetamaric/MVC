@@ -14,6 +14,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Entity
 public class Pregled {
 
@@ -24,9 +26,8 @@ public class Pregled {
 	private Long id;
 
 	@Column(name = "datum", nullable = false)
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date datum;
-
-	
 
 	//treba false ali kasnije promjeniti
 	@Column(name = "trajanje", nullable = true)

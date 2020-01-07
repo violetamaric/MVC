@@ -365,6 +365,7 @@ public class AdministratorKCController {
 	//dodavanje novog administratora klinike
 	@PostMapping(path = "/dodavanjeAdminaKlinike", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('ADMIN_KC')")
 	public ResponseEntity<AdministratorKlinikeDTO> dodavanjeAdminaKlinike(@RequestBody AdministratorKlinikeDTO akDTO) {
 		System.out.println("------------------------------------------------------");
 		AdministratorKlinike ak = new AdministratorKlinike();
@@ -590,9 +591,10 @@ public class AdministratorKCController {
 	}
 
 	//vracanje leka
-		@GetMapping(path = "/getLek/{id}")
-		@CrossOrigin(origins = "http://localhost:3000")
-		public ResponseEntity<LekDTO> getLek(@PathVariable Long id) {
+	@GetMapping(path = "/getLek/{id}")
+	@PreAuthorize("hasAuthority('ADMIN_KC')")
+	@CrossOrigin(origins = "http://localhost:3000")
+	public ResponseEntity<LekDTO> getLek(@PathVariable Long id) {
 			System.out.println("------------------------------------------------------");
 
 			Lek lek = lekService.findById(id);
@@ -603,9 +605,10 @@ public class AdministratorKCController {
 			return new ResponseEntity<>(lekDTO, HttpStatus.OK);
 		}
 	//vracanje dijagnoze
-		@GetMapping(path = "/getDijagnoza/{id}")
-		@CrossOrigin(origins = "http://localhost:3000")
-		public ResponseEntity<DijagnozaDTO> getDijagnoza(@PathVariable Long id) {
+	@GetMapping(path = "/getDijagnoza/{id}")
+	@PreAuthorize("hasAuthority('ADMIN_KC')")
+	@CrossOrigin(origins = "http://localhost:3000")
+	public ResponseEntity<DijagnozaDTO> getDijagnoza(@PathVariable Long id) {
 			System.out.println("------------------------------------------------------");
 
 			Dijagnoza dijagnoza = dijagnozaService.findById(id);
@@ -616,5 +619,36 @@ public class AdministratorKCController {
 			return new ResponseEntity<>(dijagnozaDTO, HttpStatus.OK);
 		}
 	
+	//ucitavanje klinike
+	@GetMapping(value = "/getKlinika/{id}")
+	@PreAuthorize("hasAuthority('ADMIN_KC')")
+	@CrossOrigin(origins = "http://localhost:3000")
+	public ResponseEntity<KlinikaDTO> getKlinikaById(@PathVariable Long id) {
+
+		Klinika k = klinikaService.findOne(id);
+		System.out.println("Pretraga klinike po ID");
+		if (k == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		System.out.println(k.getNaziv() + " " + k.getId());
+		return new ResponseEntity<>(new KlinikaDTO(k), HttpStatus.OK);
+	}
+	//izmena podataka klinike
+	@PutMapping(path="/update", consumes = "application/json")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('ADMIN_KC')")
+	public ResponseEntity<KlinikaDTO> updateKliniku(@RequestBody KlinikaDTO klinikaDTO) {
+
+		Klinika klinika = klinikaService.findById(klinikaDTO.getId());
+		
+		klinika.setNaziv(klinikaDTO.getNaziv());
+		klinika.setAdresa(klinikaDTO.getAdresa());
+		klinika.setOpis(klinikaDTO.getOpis());
+		klinika.setOcena(klinikaDTO.getOcena());
+
+		klinika = klinikaService.save(klinika);
+		System.out.println("Izmjenjena k: " + klinika);
+		return new ResponseEntity<>(new KlinikaDTO(klinika), HttpStatus.OK);
+	}
 	
 }

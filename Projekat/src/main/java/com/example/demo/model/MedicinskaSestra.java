@@ -55,6 +55,9 @@ public class MedicinskaSestra implements UserDetails{
 	@OneToMany(mappedBy = "medicinskaSestra", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Recept> recepti = new HashSet<Recept>();
 	
+	@OneToMany(mappedBy = "medicinskaSestra", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<OdmorOdsustvoMedicinskaSestra> listaOdmorOdsustvo = new HashSet<OdmorOdsustvoMedicinskaSestra>();
+	
 
 
 	@ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
@@ -180,10 +183,14 @@ public class MedicinskaSestra implements UserDetails{
 	public void setAuthorities(Set<Authority> authorities) {
 		this.authorities = authorities;
 	}
+	public Set<OdmorOdsustvoMedicinskaSestra> getListaOdmorOdsustvo() {
+		return listaOdmorOdsustvo;
+	}
+	public void setListaOdmorOdsustvo(Set<OdmorOdsustvoMedicinskaSestra> listaOdmorOdsustvo) {
+		this.listaOdmorOdsustvo = listaOdmorOdsustvo;
+	}
 	
-//	@OneToMany(mappedBy = "medicinskaSestra", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//	private Set<OdmorOdsustvoMedicinskaSestra> listaOdmorOdsustvo = new HashSet<OdmorOdsustvoMedicinskaSestra>();
-//	
+	
 //	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "medicinskaSestra")
 //    @JsonIgnore
 //    private List<OdmorOdsustvoMedicinskaSestra> odsustvo;
