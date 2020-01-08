@@ -205,6 +205,17 @@ public class KlinikaController {
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 	
+	@PutMapping(path="/oceni/{id}/{ocena}", consumes = "application/json")
+	@CrossOrigin(origins = "http://localhost:3000")
+	public ResponseEntity<KlinikaDTO> oceniKliniku(@PathVariable Long id, @PathVariable int ocena) {
+
+		Klinika klinika = klinikaService.findById(id);
+		int temp = klinika.getOcena();
+		klinika.setOcena((temp + ocena)/2);
+		klinikaService.save(klinika);
+		
+		return new ResponseEntity<>(new KlinikaDTO(klinika), HttpStatus.OK);
+	}
 
 //	// brisanje lekara
 //	@PostMapping(path = "/brisanjeLekara", consumes = "application/json")
