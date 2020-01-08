@@ -86,14 +86,6 @@ insert into medicinska_sestra_pacijent (pacijent_id, medicinska_sestra_id) value
 insert into medicinska_sestra_pacijent (pacijent_id, medicinska_sestra_id) values (1,1);
 insert into medicinska_sestra_pacijent (pacijent_id, medicinska_sestra_id) values (2,1);
 
-
-insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status) values ('12-dec-2019 08:00', 1, 2, 1, 3, 3000, true);
-insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status) values ('13-dec-2019 10:00', 2, 1, 2, 3, 5000, true);
-insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status) values ('15-dec-2019 15:00', 3, 2, 3, 3, 1500, false);
-insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status) values ('18-dec-2019 14:00', 4, 1, 4, 1, 2000, true);
-insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status) values ('19-dec-2019 08:00', 2, 2, 2, 2, 3000, false);
-
-
 insert into slobodni_termin(datum, tip_pregleda_id, lekar_id, klinika_id, cena, status, popust) values ('15-dec-2019', 3, 2, 3, 15, false, 50.0);
 insert into slobodni_termin(datum, tip_pregleda_id, lekar_id, klinika_id, cena, status, popust) values ('18-dec-2019', 4, 1, 1, 20, true, 25.0);
 insert into slobodni_termin(datum, tip_pregleda_id, lekar_id, klinika_id, cena, status, popust) values ('19-dec-2019', 2, 2, 2, 30, false, 10.0);
@@ -109,6 +101,19 @@ insert into sala(naziv, broj, klinika_id) values ('O', 2, 2);
 insert into sala(naziv, broj, klinika_id) values ('P', 1, 2);
 insert into sala(naziv, broj, klinika_id) values ('P', 2, 2);
 insert into sala(naziv, broj, klinika_id) values ('O', 3, 2);
+
+insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status, sala_id) values ('12-dec-2019 08:00', 1, 2, 1, 3, 3000, 1, 1);
+insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status, sala_id) values ('13-dec-2019 10:00', 2, 1, 2, 3, 5000, 1, 2);
+insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status, sala_id) values ('15-dec-2019 15:00', 3, 2, 3, 3, 1500, 2, 3);
+insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status, sala_id) values ('18-dec-2019 14:00', 4, 1, 4, 1, 2000, 0, 4);
+insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status) values ('19-dec-2019 08:00', 2, 2, 2, 2, 3000, 0);
+insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status, sala_id) values ('20-dec-2019 08:00', 1, 3, 1, 3, 2500, 0, 4);
+insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status, sala_id) values ('21-dec-2019 08:00', 3, 2, 3, 1, 3000, 0, 3);
+insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status, sala_id) values ('22-dec-2019 08:00', 1, 2, 3, 1, 3500, 4, 2);
+insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status, sala_id) values ('23-dec-2019 08:00', 1, 3, 2, 2, 6000, 0, 1);
+insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status, sala_id) values ('24-dec-2019 08:00', 2, 4, 4, 1, 5000, 0, 1);
+insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status, sala_id) values ('25-dec-2019 08:00', 3, 4, 3, 2, 6000, 0, 1);
+insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status, sala_id) values ('26-dec-2019 08:00', 4, 5, 2, 3, 4500, 0, 1);
 
 --insert into radni_dan (datum_pocetka, datum_kraja,  medicinska_sestra_id) values ('11-dec-2019 06:00:00+02:00', '11-dec-2019 13:59:00+02:00', 1);
 --insert into radni_dan (datum_pocetka, datum_kraja,  medicinska_sestra_id) values ('12-dec-2019 06:00:00+01:00', '12-dec-2019 13:59:00+01:00', 1);
