@@ -249,6 +249,7 @@ public class AdministratorKCController {
 		return new ResponseEntity<>(new AdministratorKCDTO(aKC), HttpStatus.OK);
 	}
 
+	//TODO 1: NE RADI
 	//potvrda registracije
 	@PostMapping(path = "/potvrda/{email}", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
@@ -293,6 +294,7 @@ public class AdministratorKCController {
 		return new ResponseEntity<>("Odobreno", HttpStatus.OK);
 	}
 	
+	//TODO 2: NE RADI
 	//odbijanje registracije pacijenata
 	@PostMapping(path = "/odbijanje/{email}/{razlog}", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
@@ -460,11 +462,11 @@ public class AdministratorKCController {
 		return new ResponseEntity<>(new DijagnozaDTO(dijagnoza), HttpStatus.CREATED);
 	}
 
-	//brisanje klinike
-	//brisanje admina klinike
-	//brisanje admina kc
-	//izmena klinike
-	//izmena admina klinike
+	//TODO 3: brisanje klinike
+	//TODO 4: brisanje admina klinike
+	//TODO 5: brisanje admina kc
+	
+	//TODO 7: izmena admina klinike
 	
 	//brisanje leka
 	@PostMapping(path = "/brisanjeLeka", consumes = "application/json")
@@ -623,7 +625,7 @@ public class AdministratorKCController {
 	@GetMapping(value = "/getKlinika/{id}")
 	@PreAuthorize("hasAuthority('ADMIN_KC')")
 	@CrossOrigin(origins = "http://localhost:3000")
-	public ResponseEntity<KlinikaDTO> getKlinikaById(@PathVariable Long id) {
+	public ResponseEntity<KlinikaDTO> getKlinika(@PathVariable Long id) {
 
 		Klinika k = klinikaService.findOne(id);
 		System.out.println("Pretraga klinike po ID");
@@ -633,6 +635,8 @@ public class AdministratorKCController {
 		System.out.println(k.getNaziv() + " " + k.getId());
 		return new ResponseEntity<>(new KlinikaDTO(k), HttpStatus.OK);
 	}
+	
+	
 	//izmena podataka klinike
 	@PutMapping(path="/update", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
@@ -649,6 +653,54 @@ public class AdministratorKCController {
 		klinika = klinikaService.save(klinika);
 		System.out.println("Izmjenjena k: " + klinika);
 		return new ResponseEntity<>(new KlinikaDTO(klinika), HttpStatus.OK);
+	}
+	
+	
+	//ucitavanje admina klinike
+	@GetMapping(value = "/getAdminKlinikeByEmail/{email}")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority( 'ADMIN_KC')")
+	public ResponseEntity<AdministratorKlinikeDTO> findByEmail(@PathVariable String email) {
+
+		AdministratorKlinike adminiKlinike = administratorKlinikeService.findByEmail(email);
+		if (adminiKlinike == null) {
+			System.out.println("admin klinike nije pronadjen");
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		System.out.println("Admin klinike je pronadjen : " + adminiKlinike.getEmail());
+
+		return new ResponseEntity<>(new AdministratorKlinikeDTO(adminiKlinike), HttpStatus.OK);
+	}
+	//izmena admina klinike
+	
+	@PutMapping(path = "/updateAK", consumes = "application/json")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('ADMIN_KC')")
+	public ResponseEntity<AdministratorKlinikeDTO> updateAdminKlinike(@RequestBody AdministratorKlinikeDTO administratorKlinikeDTO) {
+
+
+		// a student must exist
+		System.out.println("ADMIN KLINIKE UPDRATE");
+		AdministratorKlinike adminiKlinike = administratorKlinikeService.findByEmail(administratorKlinikeDTO.getEmail());
+		
+		if(administratorKlinikeDTO.getEmail() != "" && administratorKlinikeDTO.getEmail() != null ) {
+			if(administratorKlinikeDTO.getIme() != "" && administratorKlinikeDTO.getIme() != null ) {
+				adminiKlinike.setIme(administratorKlinikeDTO.getIme());
+			}
+			if(administratorKlinikeDTO.getPrezime() != "" && administratorKlinikeDTO.getPrezime() != null  ) {
+				adminiKlinike.setPrezime(administratorKlinikeDTO.getPrezime());
+			}
+			if(administratorKlinikeDTO.getTelefon() != "" && administratorKlinikeDTO.getTelefon() != null) {
+				adminiKlinike.setTelefon(administratorKlinikeDTO.getTelefon());
+			}
+			if(administratorKlinikeDTO.getLozinka() != "" && administratorKlinikeDTO.getLozinka() != null) {
+				adminiKlinike.setLozinka(administratorKlinikeDTO.getLozinka());
+			}
+		}
+
+
+		adminiKlinike = administratorKlinikeService.save(adminiKlinike);
+		return new ResponseEntity<>(new AdministratorKlinikeDTO(adminiKlinike), HttpStatus.OK);
 	}
 	
 }

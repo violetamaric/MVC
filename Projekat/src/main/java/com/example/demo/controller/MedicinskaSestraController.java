@@ -1,12 +1,15 @@
 package com.example.demo.controller;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,9 +19,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.MedicinskaSestraDTO;
+import com.example.demo.dto.OdmorOdsustvoDTO;
 import com.example.demo.dto.PacijentDTO;
 import com.example.demo.model.MedicinskaSestra;
+import com.example.demo.model.OdmorOdsustvoMedicinskaSestra;
 import com.example.demo.model.Pacijent;
+import com.example.demo.model.TipOdmorOdsustvo;
+import com.example.demo.model.ZdravstveniKarton;
 import com.example.demo.service.KlinikaService;
 import com.example.demo.service.MedicinskaSestraService;
 import com.example.demo.service.PacijentService;
@@ -37,8 +44,12 @@ public class MedicinskaSestraController {
 	@Autowired
 	private KlinikaService klinikaService;
 	
+	@Autowired
+	private PacijentService pacijentService;
+	
 	//vrati sve medicinske sestre
 	@GetMapping(value = "/sve")
+	@PreAuthorize("hasAuthority('MED_SESTRA')")
 	@CrossOrigin(origins = "http://localhost:3000")
 	public ResponseEntity<List<MedicinskaSestraDTO>> getAll() {
 
@@ -53,10 +64,12 @@ public class MedicinskaSestraController {
 	}
 
 	//vrati odredjenu med sestru
-	@GetMapping(value = "/medicinskaSestra/{email}")
-	public ResponseEntity<MedicinskaSestraDTO> getMedicinskaSestraByEmail(@PathVariable String email){
+	@GetMapping(value = "/medicinskaSestra")
+	@PreAuthorize("hasAuthority('MED_SESTRA')")
+	@CrossOrigin(origins = "http://localhost:3000")
+	public ResponseEntity<MedicinskaSestraDTO> getMedicinskaSestraByEmail(Principal p){
 		
-		MedicinskaSestra ms = medicinskaSestraService.findByEmail(email);
+		MedicinskaSestra ms = medicinskaSestraService.findByEmail(p.getName());
 		if (ms == null) {
 			System.out.println("NIJE PRONADJENA");
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -67,12 +80,13 @@ public class MedicinskaSestraController {
 	}
 
 	//vrati listu pacijenata
-	@GetMapping(value = "/listaPacijenata/{email}")
+	@GetMapping(value = "/listaPacijenata")
+	@PreAuthorize("hasAuthority('MED_SESTRA')")
 	@CrossOrigin(origins = "http://localhost:3000")
-	public ResponseEntity<List<PacijentDTO>> getListaPacijenata(@PathVariable String email) {
+	public ResponseEntity<List<PacijentDTO>> getListaPacijenata(Principal pr) {
 		System.out.println("//////////////////// MED SESTRA LISTA PACIJENATA ////////////////////////");
 		
-		MedicinskaSestra ms = medicinskaSestraService.findByEmail(email);
+		MedicinskaSestra ms = medicinskaSestraService.findByEmail(pr.getName());
 		
 		List<Pacijent> listaPacijenataKlinike = klinikaService.findByIdKlinike(ms.getKlinika().getId());
 		
@@ -104,6 +118,7 @@ public class MedicinskaSestraController {
 	
 	//izmeni medicinsku sestru
 	@PutMapping(path="/izmena", consumes = "application/json")
+	@PreAuthorize("hasAuthority('MED_SESTRA')")
 	@CrossOrigin(origins = "http://localhost:3000")
 	public ResponseEntity<MedicinskaSestraDTO> izmeniMedicinskuSestru(@RequestBody MedicinskaSestraDTO msDTO) {
 
@@ -137,6 +152,96 @@ public class MedicinskaSestraController {
 		return new ResponseEntity<>(new MedicinskaSestraDTO(ms), HttpStatus.OK);
 	}
 
+	//vrati listu pacijenata
+//	@GetMapping(value = "/findPacijentEmail/{email:.+}")
+	@GetMapping(value = "/findPacijentEmail/{email}")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('MED_SESTRA')")
+	public ResponseEntity<?> getPacijentByEmail(@PathVariable String email) {
+		System.out.println("find pacijent");
+		Pacijent pacijent = pacijentService.findByEmail(email);
+		System.out.println("pacijent " + pacijent);
+		if (pacijent == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		System.out.println(pacijent.getEmail() + "++++");
+		return ResponseEntity.ok(new PacijentDTO(pacijent));
+	}
+
+	@GetMapping(value = "/findZK/{email}")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('MED_SESTRA')")
+	public ResponseEntity<ZdravstveniKarton> getZK(@PathVariable String email) {
+
+		System.out.println("find pacijent");
+		System.out.println("zk");
+
+		Pacijent pacijent = pacijentService.findByEmail(email);
+		System.out.println("Pacijent: " + pacijent);
+		if (pacijent == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		ZdravstveniKarton zk = pacijent.getZdravstveniKarton();
+		System.out.println(pacijent.getEmail() + "++++");
+		Pacijent p = new Pacijent();
+		p.setEmail(pacijent.getEmail());
+		zk.setPacijent(p);
+		return new ResponseEntity<>(new ZdravstveniKarton(zk), HttpStatus.OK);
+	}
+	
+	
+	//vrati mi listu odmor/odsustvo med sestre
+	@GetMapping(value = "/listaOdsustvo")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('MED_SESTRA')")
+	public ResponseEntity<List<OdmorOdsustvoDTO>> getOdsustvo(Principal p) {
+
+		System.out.println("ODSUSTVO");
+		MedicinskaSestra ms = medicinskaSestraService.findByEmail(p.getName());
+		
+		if (ms == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		List<OdmorOdsustvoDTO> omsDTO = new ArrayList<>();
+		for(OdmorOdsustvoMedicinskaSestra oms : ms.getListaOdmorOdsustvo()) {
+			if(oms.getTip() == TipOdmorOdsustvo.ODSUSTVO) {
+				System.out.println("Jedan zahtev: " + oms.getTip()+ " " + oms.isStatus() );
+				System.out.println(oms.getDatumOd() + " " + oms.getDatumDo());
+				omsDTO.add(new OdmorOdsustvoDTO(oms));
+			}
+			
+		}
+		
+		return new ResponseEntity<>(omsDTO, HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/listaOdmor")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('MED_SESTRA')")
+	public ResponseEntity<List<OdmorOdsustvoDTO>> getOdmor(Principal p) {
+
+		System.out.println("ODMOR ");
+		MedicinskaSestra ms = medicinskaSestraService.findByEmail(p.getName());
+		
+		if (ms == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		List<OdmorOdsustvoDTO> omsDTO = new ArrayList<>();
+		for(OdmorOdsustvoMedicinskaSestra oms : ms.getListaOdmorOdsustvo()) {
+			if (oms.getTip() == TipOdmorOdsustvo.ODMOR) {
+				System.out.println("Jedan zahtev: " + oms.getTip()+ " " + oms.isStatus() );
+				System.out.println(oms.getDatumOd() + " " + oms.getDatumDo());
+				omsDTO.add(new OdmorOdsustvoDTO(oms));
+			}
+			
+		}
+		
+		return new ResponseEntity<>(omsDTO, HttpStatus.OK);
+	}
+	
 //	@GetMapping(value = "/listaRadnihDana/{email}")
 //	@CrossOrigin(origins = "http://localhost:3000")
 //	public ResponseEntity<List<RadniDanDTO>> getListaRadnihDana(@PathVariable String email) {

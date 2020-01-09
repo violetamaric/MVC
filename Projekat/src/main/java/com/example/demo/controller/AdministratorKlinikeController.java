@@ -68,7 +68,7 @@ public class AdministratorKlinikeController {
 
 	@GetMapping(value = "/getAdminKlinikeByEmail/{email}")
 	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('ADMIN_KC', 'ADMIN_KLINIKE')")
+	@PreAuthorize("hasAuthority( 'ADMIN_KLINIKE')")
 	public ResponseEntity<AdministratorKlinikeDTO> findByEmail(@PathVariable String email) {
 
 		AdministratorKlinike adminiKlinike = administratorKlinikeService.findByEmail(email);
@@ -84,7 +84,7 @@ public class AdministratorKlinikeController {
 	// izmjena podataka admina klinika
 	@PutMapping(path = "/update", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('ADMIN_KC', 'ADMIN_KLINIKE')")
+	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
 	public ResponseEntity<AdministratorKlinikeDTO> updateAdminKlinike(@RequestBody AdministratorKlinikeDTO administratorKlinikeDTO) {
 
 

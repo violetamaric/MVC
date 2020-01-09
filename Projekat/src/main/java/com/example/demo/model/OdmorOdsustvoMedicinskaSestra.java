@@ -47,6 +47,7 @@ public class OdmorOdsustvoMedicinskaSestra {
 	public OdmorOdsustvoMedicinskaSestra() {
 		super();
 	}
+	
 	public String getOpis() {
 		return opis;
 	}
