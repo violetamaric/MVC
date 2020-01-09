@@ -1,49 +1,124 @@
 package com.example.demo.dto;
 
-import com.example.demo.model.Pregled;
+import java.util.Date;
 
+import com.example.demo.model.Pregled;
 
 public class PregledDTO {
 	private Long id;
 
-	private String datum;
+	private Date datum;
 
 	private Long tipPregledaID;
+	private String nazivTP;
 
 	private Long lekarID;
+	private String imeL;
+	private String prezimeL;
+
+
+	private String pacijentEmail;
+
+	private Long klinikaID;
+
 
 	private Long pacijentID;
+	private String imeP;
+	private String prezimeP;
 	
-	private Long klinikaID;
+
+	private String nazivKl;
 	
+
 	private double cena;
-	
+
 	private boolean status;
 
 	public PregledDTO() {
 	}
 
-	public PregledDTO(Long id, String datum, Long tipPregledaID, Long lekarID, Long pacijentID, Long klinikaID,
+	@Override
+	public String toString() {
+		return "PregledDTO [id=" + id + ", datum=" + datum + ", tipPregledaID=" + tipPregledaID + ", lekarID=" + lekarID
+				+ ", pacijentEmail=" + pacijentEmail + ", klinikaID=" + klinikaID + ", cena=" + cena + ", status="
+				+ status + "]";
+	}
+
+	public PregledDTO(Long id, Date datum, Long tipPregledaID, Long lekarID, String pacijentEmail, Long klinikaID,
 			double cena, boolean status) {
 		this.id = id;
 		this.datum = datum;
 		this.tipPregledaID = tipPregledaID;
 		this.lekarID = lekarID;
-		this.pacijentID = pacijentID;
+		this.pacijentEmail = pacijentEmail;
 		this.klinikaID = klinikaID;
 		this.cena = cena;
 		this.status = status;
 	}
-	
-	public PregledDTO(Pregled pregled){
+
+	public PregledDTO(Pregled pregled) {
 		this.id = pregled.getId();
-		this.datum = pregled.getDatum().toString();
+		this.datum = pregled.getDatum();
 		this.tipPregledaID = pregled.getTipPregleda().getId();
 		this.lekarID = pregled.getLekar().getId();
-		this.pacijentID = pregled.getPacijent().getId();
+		this.pacijentEmail = pregled.getPacijent().getEmail();
 		this.klinikaID = pregled.getKlinika().getId();
 		this.cena = pregled.getCena();
 		this.status = pregled.isStatus();
+		this.nazivKl = pregled.getKlinika().getNaziv();
+		this.imeL = pregled.getLekar().getIme();
+		this.imeP = pregled.getPacijent().getIme();
+		this.nazivTP = pregled.getTipPregleda().getNaziv();
+		this.prezimeL = pregled.getLekar().getPrezime();
+		this.prezimeP = pregled.getPacijent().getPrezime();
+	}
+
+	public String getPrezimeL() {
+		return prezimeL;
+	}
+
+	public void setPrezimeL(String prezimeL) {
+		this.prezimeL = prezimeL;
+	}
+
+	public String getPrezimeP() {
+		return prezimeP;
+	}
+
+	public void setPrezimeP(String prezimeP) {
+		this.prezimeP = prezimeP;
+	}
+
+	public String getNazivTP() {
+		return nazivTP;
+	}
+
+	public void setNazivTP(String nazivTP) {
+		this.nazivTP = nazivTP;
+	}
+
+	public String getImeL() {
+		return imeL;
+	}
+
+	public void setImeL(String imeL) {
+		this.imeL = imeL;
+	}
+
+	public String getImeP() {
+		return imeP;
+	}
+
+	public void setImeP(String imeP) {
+		this.imeP = imeP;
+	}
+
+	public String getNazivKl() {
+		return nazivKl;
+	}
+
+	public void setNazivKl(String nazivKl) {
+		this.nazivKl = nazivKl;
 	}
 
 	public Long getId() {
@@ -54,11 +129,11 @@ public class PregledDTO {
 		this.id = id;
 	}
 
-	public String getDatum() {
+	public Date getDatum() {
 		return datum;
 	}
 
-	public void setDatum(String datum) {
+	public void setDatum(Date datum) {
 		this.datum = datum;
 	}
 
@@ -78,12 +153,12 @@ public class PregledDTO {
 		this.lekarID = lekarID;
 	}
 
-	public Long getPacijentID() {
-		return pacijentID;
+	public String getPacijentEmail() {
+		return pacijentEmail;
 	}
 
-	public void setPacijentID(Long pacijentID) {
-		this.pacijentID = pacijentID;
+	public void setPacijentEmail(String pacijentEmail) {
+		this.pacijentEmail = pacijentEmail;
 	}
 
 	public Long getKlinikaID() {
@@ -109,6 +184,5 @@ public class PregledDTO {
 	public void setStatus(boolean status) {
 		this.status = status;
 	}
-	
-	
+
 }

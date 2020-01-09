@@ -200,6 +200,7 @@ public class KlinikaController {
 
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
+	
 
 //	// brisanje lekara
 //	@PostMapping(path = "/brisanjeLekara", consumes = "application/json")

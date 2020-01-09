@@ -19,6 +19,7 @@ import com.example.demo.dto.MedicinskaSestraDTO;
 import com.example.demo.dto.PacijentDTO;
 import com.example.demo.model.MedicinskaSestra;
 import com.example.demo.model.Pacijent;
+import com.example.demo.service.KlinikaService;
 import com.example.demo.service.MedicinskaSestraService;
 import com.example.demo.service.PacijentService;
 
@@ -33,7 +34,12 @@ public class MedicinskaSestraController {
 	@Autowired
 	private PacijentService pacijenti;
 	
+	@Autowired
+	private KlinikaService klinikaService;
+	
+	//vrati sve medicinske sestre
 	@GetMapping(value = "/sve")
+	@CrossOrigin(origins = "http://localhost:3000")
 	public ResponseEntity<List<MedicinskaSestraDTO>> getAll() {
 
 		List<MedicinskaSestra> medSes = medicinskaSestraService.findAll();
@@ -46,6 +52,7 @@ public class MedicinskaSestraController {
 		return new ResponseEntity<>(medSesDTO, HttpStatus.OK);
 	}
 
+	//vrati odredjenu med sestru
 	@GetMapping(value = "/medicinskaSestra/{email}")
 	public ResponseEntity<MedicinskaSestraDTO> getMedicinskaSestraByEmail(@PathVariable String email){
 		
@@ -59,7 +66,7 @@ public class MedicinskaSestraController {
 		return new ResponseEntity<>(new MedicinskaSestraDTO(ms), HttpStatus.OK);
 	}
 
-	
+	//vrati listu pacijenata
 	@GetMapping(value = "/listaPacijenata/{email}")
 	@CrossOrigin(origins = "http://localhost:3000")
 	public ResponseEntity<List<PacijentDTO>> getListaPacijenata(@PathVariable String email) {
@@ -67,14 +74,17 @@ public class MedicinskaSestraController {
 		
 		MedicinskaSestra ms = medicinskaSestraService.findByEmail(email);
 		
-		List<Pacijent> listaSvihP =  pacijenti.findAll();
+		List<Pacijent> listaPacijenataKlinike = klinikaService.findByIdKlinike(ms.getKlinika().getId());
+		
+		//List<Pacijent> listaSvihP =  pacijenti.findAll();
 		System.out.println("Lista pacijenata od MED SESTRE: " + ms.getEmail());
 		List<PacijentDTO> lista = new ArrayList<>();
 			
-		for (Pacijent p : listaSvihP ) {
-			//DODAJ MAGDALENA 
+		for (Pacijent p : listaPacijenataKlinike ) {
+			
 				System.out.println(p);
-				if(p.getOdobrenaRegistracija() == true) {
+				
+				if(p.getOdobrenaRegistracija() == true ) {
 					PacijentDTO pDTO = new PacijentDTO(p);
 					System.out.println("Pacijent dodat");
 					lista.add(pDTO);
@@ -83,16 +93,16 @@ public class MedicinskaSestraController {
 		}
 		
 		System.out.println("*************");
-		for(PacijentDTO pd  : lista) {
-			System.out.println(pd);
-		}
+//		for(PacijentDTO pd  : lista) {
+//			System.out.println(pd);
+//		}
 		System.out.println("*************");
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 
 		
 	}
 	
-	
+	//izmeni medicinsku sestru
 	@PutMapping(path="/izmena", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 	public ResponseEntity<MedicinskaSestraDTO> izmeniMedicinskuSestru(@RequestBody MedicinskaSestraDTO msDTO) {
@@ -126,4 +136,24 @@ public class MedicinskaSestraController {
 		ms = medicinskaSestraService.save(ms);
 		return new ResponseEntity<>(new MedicinskaSestraDTO(ms), HttpStatus.OK);
 	}
+
+//	@GetMapping(value = "/listaRadnihDana/{email}")
+//	@CrossOrigin(origins = "http://localhost:3000")
+//	public ResponseEntity<List<RadniDanDTO>> getListaRadnihDana(@PathVariable String email) {
+//		System.out.println("//////////////////// MED SESTRA LISTA Radnih dana ////////////////////////");
+//		
+//		MedicinskaSestra ms = medicinskaSestraService.findByEmail(email);
+//		Set<RadniDan> listaRD = ms.getListaRadnihDana();
+//		List<RadniDanDTO> lista = new ArrayList<RadniDanDTO>();
+//		for(RadniDan rd: listaRD) {
+//			System.out.println(rd.getDatumPocetka());
+//			lista.add(new RadniDanDTO(rd));
+//		}
+//		
+//
+//		System.out.println("*************");
+//		return new ResponseEntity<>(lista, HttpStatus.OK);
+//
+//		
+//	}
 }

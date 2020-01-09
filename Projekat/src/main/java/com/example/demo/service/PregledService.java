@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.model.Lekar;
+import com.example.demo.model.Pacijent;
 import com.example.demo.model.Pregled;
 import com.example.demo.repository.LekarRepository;
 import com.example.demo.repository.PregledRepository;
