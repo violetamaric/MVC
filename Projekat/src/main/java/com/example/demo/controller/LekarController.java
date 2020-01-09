@@ -15,16 +15,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.dto.AdministratorKlinikeDTO;
-import com.example.demo.dto.KlinikaDTO;
 import com.example.demo.dto.LekarDTO;
 import com.example.demo.dto.PacijentDTO;
-import com.example.demo.model.AdministratorKlinike;
-import com.example.demo.model.Klinika;
 import com.example.demo.model.Lekar;
 import com.example.demo.model.Pacijent;
+import com.example.demo.model.Pregled;
 import com.example.demo.service.LekarService;
 import com.example.demo.service.PacijentService;
+import com.example.demo.service.PregledService;
 
 @RestController
 @RequestMapping(value = "/api/lekari", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -35,6 +33,9 @@ public class LekarController {
 
 	@Autowired
 	private PacijentService pacijentiSevice;
+
+	@Autowired
+	private PregledService pregledService;
 
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<LekarDTO> getLekar(@PathVariable Long id) {
@@ -131,14 +132,23 @@ public class LekarController {
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 
-	@PutMapping(path = "/oceni/{id}/{ocena}", consumes = "application/json")
+	@PutMapping(path = "/oceni/{id}/{ocena}/{pregled_id}", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
-	public ResponseEntity<LekarDTO> oceniKliniku(@PathVariable Long id, @PathVariable int ocena) {
+	public ResponseEntity<LekarDTO> oceniLekara(@PathVariable Long id, @PathVariable int ocena,
+			@PathVariable Long pregled_id) {
 
 		Lekar lekar = lekarService.findById(id);
 		int temp = lekar.getOcena();
 		lekar.setOcena((temp + ocena) / 2);
 		lekarService.save(lekar);
+		Pregled pregled = pregledService.findById(pregled_id);
+		if (pregled.getStatus() == 3) {
+			pregled.setStatus(5);
+			pregledService.save(pregled);
+		} else if (pregled.getStatus() == 4) {
+			pregled.setStatus(6);
+			pregledService.save(pregled);
+		}
 
 		return new ResponseEntity<>(new LekarDTO(lekar), HttpStatus.OK);
 	}

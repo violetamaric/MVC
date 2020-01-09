@@ -20,16 +20,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.KlinikaDTO;
 import com.example.demo.dto.LekarDTO;
-
 import com.example.demo.dto.PacijentDTO;
-import com.example.demo.dto.TipPregledaDTO;
 import com.example.demo.model.Klinika;
 import com.example.demo.model.Lekar;
 import com.example.demo.model.Pacijent;
-import com.example.demo.model.TipPregleda;
-
+import com.example.demo.model.Pregled;
 import com.example.demo.service.KlinikaService;
 import com.example.demo.service.LekarService;
+import com.example.demo.service.PregledService;
 
 @RestController
 @RequestMapping(value = "/api/klinike", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -38,7 +36,9 @@ public class KlinikaController {
 	private KlinikaService klinikaService;
 	@Autowired
 	private LekarService lekarService;
-	
+	@Autowired
+	private PregledService pregledService;
+
 	@GetMapping(value = "/{id}")
 	@CrossOrigin(origins = "http://localhost:3000")
 	public ResponseEntity<KlinikaDTO> getKlinikaById(@PathVariable Long id) {
@@ -52,7 +52,7 @@ public class KlinikaController {
 		System.out.println(k.getNaziv() + " " + k.getId());
 		return new ResponseEntity<>(new KlinikaDTO(k), HttpStatus.OK);
 	}
-	
+
 	@GetMapping(value = "/all")
 	@PreAuthorize("hasAuthority('PACIJENT')")
 	public ResponseEntity<List<KlinikaDTO>> getAll() {
@@ -67,7 +67,7 @@ public class KlinikaController {
 
 		return new ResponseEntity<>(klinikaDTO, HttpStatus.OK);
 	}
-	
+
 	@GetMapping(value = "/findKlinikaByNaziv/{naziv}")
 	public ResponseEntity<KlinikaDTO> getKlinikaByNaziv(@PathVariable String naziv) {
 		System.out.println("find klinika by naziv");
@@ -78,26 +78,24 @@ public class KlinikaController {
 		System.out.println(klinika.getNaziv());
 		return new ResponseEntity<>(new KlinikaDTO(klinika), HttpStatus.OK);
 	}
-	
+
 	@GetMapping(value = "/findKlinikaByAdresa/{adresa}")
 	public ResponseEntity<KlinikaDTO> getKlinikaByAdresa(@PathVariable String adresa) {
 		System.out.println("find klinika by adresa");
-		if(adresa.contains("%20"))
+		if (adresa.contains("%20"))
 			adresa.replace("%20", " ");
-	
-		
+
 		Klinika klinika = klinikaService.findByAdresa(adresa);
-		
+
 		if (klinika == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		
+
 		System.out.println(klinika.getNaziv());
 		return new ResponseEntity<>(new KlinikaDTO(klinika), HttpStatus.OK);
 	}
 
-	
-	@PutMapping(path="/update", consumes = "application/json")
+	@PutMapping(path = "/update", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 	public ResponseEntity<KlinikaDTO> updateKliniku(@RequestBody KlinikaDTO klinikaDTO) {
 
@@ -109,7 +107,6 @@ public class KlinikaController {
 //		if (lekar == null) {
 //			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 //		}
-		
 
 		klinika.setNaziv(klinikaDTO.getNaziv());
 		klinika.setAdresa(klinikaDTO.getAdresa());
@@ -120,7 +117,7 @@ public class KlinikaController {
 		System.out.println("Izmjenjena k: " + klinika);
 		return new ResponseEntity<>(new KlinikaDTO(klinika), HttpStatus.OK);
 	}
-	
+
 	@GetMapping(value = "/listaLekaraKlinika/{id}")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('PACIJENT')")
@@ -130,12 +127,12 @@ public class KlinikaController {
 //		List<Lekar> listaSvihLekara =  lekarService.findAll();
 
 		List<LekarDTO> lista = new ArrayList<>();
-	
-		for (Lekar l : klinika.getListaLekara() ) {
-			
+
+		for (Lekar l : klinika.getListaLekara()) {
+
 //			if(klinika.getId() == l.getKlinika().getId()) {
-				LekarDTO lDTO = new LekarDTO(l);
-				lista.add(lDTO);
+			LekarDTO lDTO = new LekarDTO(l);
+			lista.add(lDTO);
 //			}
 		}
 //		for(Lekar ll : listaSvihLekara) {
@@ -147,7 +144,6 @@ public class KlinikaController {
 
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
-	
 
 	// brisanje lekara
 	@PostMapping(path = "/brisanjeLekara", consumes = "application/json")
@@ -155,9 +151,9 @@ public class KlinikaController {
 	public ResponseEntity<String> brisanjeLekara(@RequestBody LekarDTO lekarDTO) {
 		System.out.println("------------------------------------------------------");
 		System.out.println("pocinje");
-		//lekar koji se brise
+		// lekar koji se brise
 		Lekar lekar = lekarService.findByEmail(lekarDTO.getEmail());
-		
+
 		List<Klinika> listaKlinika = klinikaService.findAll();
 		System.out.println("Id LEKAR KLINIKA: " + lekar.getKlinika().getId());
 
@@ -171,8 +167,8 @@ public class KlinikaController {
 			Set<Lekar> lista = klinika.getListaLekara();
 			lista.remove(lekar);
 			klinika.getListaLekara().clear();
-			klinika.setListaLekara(lista);	
-			
+			klinika.setListaLekara(lista);
+
 			lekarService.delete(lekar);
 
 			klinika = klinikaService.save(klinika);
@@ -181,7 +177,7 @@ public class KlinikaController {
 		System.out.println("------------------------------------------------------");
 		return new ResponseEntity<>("uspesno obrisan lekar !!!", HttpStatus.OK);
 	}
-	
+
 	@GetMapping(value = "/pacijentiKlinike/{id}")
 	@CrossOrigin(origins = "http://localhost:3000")
 	public ResponseEntity<List<PacijentDTO>> getPacijentiKlinike(@PathVariable Long id) {
@@ -190,13 +186,13 @@ public class KlinikaController {
 
 		List<Pacijent> listaPacijenataKlinike = klinikaService.findByIdKlinike(id);
 		System.out.println("***********");
-		
-		for (Pacijent kp :listaPacijenataKlinike) {
+
+		for (Pacijent kp : listaPacijenataKlinike) {
 			System.out.println(kp);
 
 		}
 		List<PacijentDTO> lista = new ArrayList<PacijentDTO>();
-		for(Pacijent pp :listaPacijenataKlinike) {
+		for (Pacijent pp : listaPacijenataKlinike) {
 			PacijentDTO pD = new PacijentDTO(pp);
 			lista.add(pD);
 		}
@@ -204,16 +200,25 @@ public class KlinikaController {
 
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
-	
-	@PutMapping(path="/oceni/{id}/{ocena}", consumes = "application/json")
+
+	@PutMapping(path = "/oceni/{id}/{ocena}/{pregled_id}", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
-	public ResponseEntity<KlinikaDTO> oceniKliniku(@PathVariable Long id, @PathVariable int ocena) {
+	public ResponseEntity<KlinikaDTO> oceniKliniku(@PathVariable Long id, @PathVariable int ocena,
+			@PathVariable Long pregled_id) {
 
 		Klinika klinika = klinikaService.findById(id);
 		int temp = klinika.getOcena();
-		klinika.setOcena((temp + ocena)/2);
+		klinika.setOcena((temp + ocena) / 2);
 		klinikaService.save(klinika);
-		
+		Pregled pregled = pregledService.findById(pregled_id);
+		if (pregled.getStatus() == 3) {
+			pregled.setStatus(4);
+			pregledService.save(pregled);
+		} else if (pregled.getStatus() == 5) {
+			pregled.setStatus(6);
+			pregledService.save(pregled);
+		}
+
 		return new ResponseEntity<>(new KlinikaDTO(klinika), HttpStatus.OK);
 	}
 

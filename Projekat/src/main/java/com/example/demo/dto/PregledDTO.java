@@ -36,6 +36,9 @@ public class PregledDTO {
 	//1-potvrdjeno
 	//2-odbijeno
 	//3-zavrsen pregled
+	//4-ocenjena samo klinika
+	//5-ocenjen samo lekar
+	//6-ocenjen i lekar i klinika
 	private int status;
 
 	public PregledDTO() {
