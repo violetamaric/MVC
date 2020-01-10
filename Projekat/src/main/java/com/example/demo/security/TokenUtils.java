@@ -279,6 +279,7 @@ public class TokenUtils {
 
 	public String getToken(HttpServletRequest request) {
 		System.out.println("get token");
+		System.out.println(request);
 
 		String authHeader = getAuthHeaderFromHeader(request);
 		System.out.println("auth Header" + authHeader);
