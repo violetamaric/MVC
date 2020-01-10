@@ -45,8 +45,8 @@ public class TipPregledaController {
 	}
 	
 	@GetMapping(value = "/all")
+	@PreAuthorize("hasAuthority('PACIJENT')")
 	@CrossOrigin(origins = "http://localhost:3000")
-
 	public ResponseEntity<List<TipPregledaDTO>> findAll() {
 
 		List<TipPregleda> tp = TPService.findAll();

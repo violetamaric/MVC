@@ -84,14 +84,15 @@ public class PacijentController {
 		return ResponseEntity.ok(new PacijentDTO(pacijent));
 	}
 
-	@GetMapping(value = "/findZK/{email}")
+	@GetMapping(value = "/findZK")
 	@CrossOrigin(origins = "http://localhost:3000")
-	public ResponseEntity<ZdravstveniKarton> getZK(@PathVariable String email) {
+	@PreAuthorize("hasAuthority('PACIJENT')")
+	public ResponseEntity<ZdravstveniKarton> getZK(Principal pr) {
 
 		System.out.println("find pacijent");
 		System.out.println("zk");
 
-		Pacijent pacijent = pacijentService.findByEmail(email);
+		Pacijent pacijent = pacijentService.findByEmail(pr.getName());
 		System.out.println("Pacijent: " + pacijent);
 		if (pacijent == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
