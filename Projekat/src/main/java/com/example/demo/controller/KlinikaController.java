@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,10 +40,13 @@ public class KlinikaController {
 	@Autowired
 	private LekarService lekarService;
 	
-	@GetMapping(value = "/{id}")
+	@GetMapping(value = "/finKlinikaById/{id}")
 	@CrossOrigin(origins = "http://localhost:3000")
-	public ResponseEntity<KlinikaDTO> getKlinikaById(@PathVariable Long id) {
-
+	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
+	public ResponseEntity<?> getKlinikaById(@PathVariable Long id) {
+		System.out.println("Metoda find by id klinika: ");
+		System.out.println(id);
+		
 		Klinika k = klinikaService.findOne(id);
 		System.out.println("Pretraga klinike po ID");
 		// studen must exist
@@ -49,10 +54,12 @@ public class KlinikaController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		System.out.println(k.getNaziv() + " " + k.getId());
-		return new ResponseEntity<>(new KlinikaDTO(k), HttpStatus.OK);
+		return ResponseEntity.ok(new KlinikaDTO(k));
 	}
 	
 	@GetMapping(value = "/all")
+	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
+	@CrossOrigin(origins = "http://localhost:3000")
 	public ResponseEntity<List<KlinikaDTO>> getAll() {
 
 		List<Klinika> klinike = klinikaService.findAll();
@@ -97,6 +104,7 @@ public class KlinikaController {
 	
 	@PutMapping(path="/update", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
 	public ResponseEntity<KlinikaDTO> updateKliniku(@RequestBody KlinikaDTO klinikaDTO) {
 
 		// a student must exist
@@ -121,6 +129,7 @@ public class KlinikaController {
 	
 	@GetMapping(value = "/listaLekaraKlinika/{id}")
 	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
 	public ResponseEntity<List<LekarDTO>> getKlinikaLekari(@PathVariable Long id) {
 		System.out.println("//////////////////// KLINIKA LISTA LEKARA /////////////////////////		");
 		Klinika klinika = klinikaService.findById(id);
@@ -148,6 +157,7 @@ public class KlinikaController {
 	// brisanje lekara
 	@PostMapping(path = "/brisanjeLekara", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
 	public ResponseEntity<String> brisanjeLekara(@RequestBody LekarDTO lekarDTO) {
 		System.out.println("------------------------------------------------------");
 		System.out.println("pocinje");

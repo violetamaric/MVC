@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,18 +51,19 @@ public class LekarController {
 		return new ResponseEntity<>(new LekarDTO(lekar), HttpStatus.OK);
 	}
 	
-	@GetMapping(value = "/getLekarByEmail/{email}")
+	@GetMapping(value = "/getLekarByEmail")
 	@CrossOrigin(origins = "http://localhost:3000")
-	public ResponseEntity<LekarDTO> findByEmail(@PathVariable String email){
+	@PreAuthorize("hasAuthority('ADMIN_KLINIKE') or hasAuthority('LEKAR')")
+	public ResponseEntity<?> findByEmail(Principal p){
 		
-		Lekar lekar = lekarService.findByEmail(email);
+		Lekar lekar = lekarService.findByEmail(p.getName());
 		if (lekar == null) {
 			System.out.println("Lekar nije pronadjen");
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		System.out.println("Lekar je pronadjen : "+ lekar);
 		
-		return new ResponseEntity<>(new LekarDTO(lekar), HttpStatus.OK);
+		return ResponseEntity.ok(new LekarDTO(lekar));
 	}
 	
 	
@@ -80,12 +83,12 @@ public class LekarController {
 	
 	@PutMapping(path="/update", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('LEKAR')")
 	public ResponseEntity<LekarDTO> updateLekar(@RequestBody LekarDTO lekarDTO) {
 
 		// a student must exist
 		System.out.println("LEKAR UPDRATE");
 		Lekar lekar = lekarService.findByEmail(lekarDTO.getEmail());
-
 //		System.out.println("Lekar update: " + lekar.getEmail());
 //		if (lekar == null) {
 //			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
