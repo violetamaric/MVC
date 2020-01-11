@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +29,6 @@ import com.example.demo.service.LekarService;
 
 @RestController
 @RequestMapping(value = "/api/adminKlinike", produces = MediaType.APPLICATION_JSON_VALUE)
-
 public class AdministratorKlinikeController {
 	@Autowired
 	private AdministratorKlinikeService administratorKlinikeService;
@@ -67,19 +67,37 @@ public class AdministratorKlinikeController {
 		return new ResponseEntity<>(administratorKlinikeDTO, HttpStatus.OK);
 	}
 
-	@GetMapping(value = "/getAdminKlinikeByEmail/{email}")
+//	@GetMapping(value = "/getLekarByEmail")
+//	@CrossOrigin(origins = "http://localhost:3000")
+//	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
+//	public ResponseEntity<?> findByEmailLekara(Principal p){
+//		
+//		Lekar lekar = lekarService.findByEmail(p.getName());
+//		if (lekar == null) {
+//			System.out.println("Lekar nije pronadjen");
+//			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//		}
+//		System.out.println("Lekar je pronadjen : "+ lekar);
+//		
+//		return ResponseEntity.ok(new LekarDTO(lekar));
+//	}
+//	
+	
+
+	@GetMapping(value = "/getAdminKlinikeByEmail")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority( 'ADMIN_KLINIKE') or hasAuthority('ADMIN_KC')")
 	public ResponseEntity<AdministratorKlinikeDTO> findByEmail(@PathVariable String email) {
 
 		AdministratorKlinike adminiKlinike = administratorKlinikeService.findByEmail(email);
+
 		if (adminiKlinike == null) {
 			System.out.println("admin klinike nije pronadjen");
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		System.out.println("Admin klinike je pronadjen : " + adminiKlinike.getEmail());
 
-		return new ResponseEntity<>(new AdministratorKlinikeDTO(adminiKlinike), HttpStatus.OK);
+		return ResponseEntity.ok(new AdministratorKlinikeDTO(adminiKlinike));
 	}
 
 	// izmjena podataka admina klinika
@@ -103,9 +121,9 @@ public class AdministratorKlinikeController {
 			if(administratorKlinikeDTO.getTelefon() != "" && administratorKlinikeDTO.getTelefon() != null) {
 				adminiKlinike.setTelefon(administratorKlinikeDTO.getTelefon());
 			}
-			if(administratorKlinikeDTO.getLozinka() != "" && administratorKlinikeDTO.getLozinka() != null) {
-				adminiKlinike.setLozinka(administratorKlinikeDTO.getLozinka());
-			}
+//			if(administratorKlinikeDTO.getLozinka() != "" && administratorKlinikeDTO.getLozinka() != null) {
+//				adminiKlinike.setLozinka(administratorKlinikeDTO.getLozinka());
+//			}
 		}
 		
 		

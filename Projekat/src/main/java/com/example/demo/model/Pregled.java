@@ -54,8 +54,15 @@ public class Pregled {
 	@Column(name = "cena", nullable = false)
 	private double cena;
 
+	//0-nije ni potvrdjeno ni odbijeno
+	//1-potvrdjeno
+	//2-odbijeno
+	//3-zavrsen pregled
+	//4-ocenjena samo klinika
+	//5-ocenjen samo lekar
+	//6-ocenjen i lekar i klinika
 	@Column(name = "status", nullable = false)
-	private boolean status;
+	private int status;
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "izvestajOPregledu_id")
@@ -139,11 +146,13 @@ public class Pregled {
 		return super.toString();
 	}
 
-	public boolean isStatus() {
+
+
+	public int getStatus() {
 		return status;
 	}
 
-	public void setStatus(boolean status) {
+	public void setStatus(int status) {
 		this.status = status;
 	}
 

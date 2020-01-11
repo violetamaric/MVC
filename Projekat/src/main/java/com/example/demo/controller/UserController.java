@@ -229,7 +229,7 @@ public class UserController {
 			String jwt = tokenUtils.tokenAKC(administratorKlinike, (Authority) roles.iterator().next());
 
 			int expiresIn = tokenUtils.getExpiredIn();
-
+			
 			return ResponseEntity.ok(new UserTokenState(jwt, expiresIn, ((Authority) roles.iterator().next()).getUloga(),((AdministratorKlinike)authentication.getPrincipal()).getEmail()));
 
 		} else if (nekiKorisnik instanceof AdministratorKC) {

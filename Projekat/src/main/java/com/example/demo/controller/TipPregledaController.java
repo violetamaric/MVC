@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,8 +45,8 @@ public class TipPregledaController {
 	}
 	
 	@GetMapping(value = "/all")
+	@PreAuthorize("hasAuthority('PACIJENT')")
 	@CrossOrigin(origins = "http://localhost:3000")
-
 	public ResponseEntity<List<TipPregledaDTO>> findAll() {
 
 		List<TipPregleda> tp = TPService.findAll();
@@ -61,6 +62,7 @@ public class TipPregledaController {
 
 	@GetMapping(value = "/tipPregledaKlinike/{id}")
 	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
 	public ResponseEntity<List<TipPregledaDTO>> gettipPregledaKlinike(@PathVariable Long id) {
 		System.out.println("//////////////////// LEKAR LISTA TP KLINIKE /////////////////////////		");
 //		Klinika klinika = klinikaService.findById(id);
