@@ -20,6 +20,9 @@ public class PacijentService {
 	public Pacijent findByEmail(String email) {
 		return pacijentRepository.findByEmail(email);
 	}
+	public Pacijent findByID(Long id) {
+		return pacijentRepository.findById(id).orElseGet(null);
+	}
 	public List<Pacijent> findAll() {
 		return pacijentRepository.findAll();
 	}
