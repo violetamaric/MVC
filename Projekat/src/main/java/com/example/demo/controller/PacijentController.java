@@ -71,7 +71,7 @@ public class PacijentController {
 //	@GetMapping(value = "/findPacijentEmail/{email:.+}")
 	@GetMapping(value = "/findPacijentEmail")
 	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('PACIJENT')")
+	@PreAuthorize("hasAuthority( 'PACIJENT') or hasAuthority('MED_SESTRA')")
 	public ResponseEntity<?> getPacijentByEmail(Principal p) {
 		System.out.println("find pacijent");
 		System.out.println(p.getName());
@@ -86,6 +86,7 @@ public class PacijentController {
 
 	@GetMapping(value = "/findZK/{email}")
 	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority( 'PACIJENT') or hasAuthority('MED_SESTRA')")
 	public ResponseEntity<ZdravstveniKarton> getZK(@PathVariable String email) {
 
 		System.out.println("find pacijent");

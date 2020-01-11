@@ -3,7 +3,6 @@ package com.example.demo.controller;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,12 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.dto.MedicinskaSestraDTO;
 import com.example.demo.dto.OdmorOdsustvoDTO;
 import com.example.demo.dto.PacijentDTO;
-import com.example.demo.dto.PregledDTO;
 import com.example.demo.model.MedicinskaSestra;
 import com.example.demo.model.OdmorOdsustvoMedicinskaSestra;
 import com.example.demo.model.Pacijent;
-import com.example.demo.model.Pregled;
-import com.example.demo.model.ZdravstveniKarton;
 import com.example.demo.service.KlinikaService;
 import com.example.demo.service.MedicinskaSestraService;
 import com.example.demo.service.PacijentService;
@@ -39,14 +34,10 @@ public class MedicinskaSestraController {
 	@Autowired
 	private MedicinskaSestraService medicinskaSestraService;
 	
-	@Autowired
-	private PacijentService pacijenti;
 	
 	@Autowired
 	private KlinikaService klinikaService;
 	
-	@Autowired
-	private PacijentService pacijentService;
 	
 	//vrati sve medicinske sestre
 	@GetMapping(value = "/sve")
@@ -153,70 +144,45 @@ public class MedicinskaSestraController {
 		return new ResponseEntity<>(new MedicinskaSestraDTO(ms), HttpStatus.OK);
 	}
 
-	//vrati listu pacijenata
-//	@GetMapping(value = "/findPacijentEmail/{email:.+}")
-	@GetMapping(value = "/findPacijentEmail/{email}")
-	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('MED_SESTRA')")
-	public ResponseEntity<?> getPacijentByEmail(@PathVariable String email) {
-		System.out.println("find pacijent");
-		Pacijent pacijent = pacijentService.findByEmail(email);
-		System.out.println("pacijent " + pacijent);
-		if (pacijent == null) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
-		System.out.println(pacijent.getEmail() + "++++");
-		return ResponseEntity.ok(new PacijentDTO(pacijent));
-	}
-
-	@GetMapping(value = "/findZK/{email}")
-	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('MED_SESTRA')")
-	public ResponseEntity<ZdravstveniKarton> getZK(@PathVariable String email) {
-
-		System.out.println("find pacijent");
-		System.out.println("zk");
-
-		Pacijent pacijent = pacijentService.findByEmail(email);
-		System.out.println("Pacijent: " + pacijent);
-		if (pacijent == null) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
-
-		ZdravstveniKarton zk = pacijent.getZdravstveniKarton();
-		System.out.println(pacijent.getEmail() + "++++");
-		Pacijent p = new Pacijent();
-		p.setEmail(pacijent.getEmail());
-		zk.setPacijent(p);
-		return new ResponseEntity<>(new ZdravstveniKarton(zk), HttpStatus.OK);
-	}
-	
-	
-//	//vrati mi listu odmor/odsustvo med sestre
-//	@GetMapping(value = "/listaOdsustvo")
+//	//vrati odredjenog pacijenta
+////	@GetMapping(value = "/findPacijentEmail/{email:.+}")
+//	@GetMapping(value = "/findPacijentEmail/{email}")
 //	@CrossOrigin(origins = "http://localhost:3000")
 //	@PreAuthorize("hasAuthority('MED_SESTRA')")
-//	public ResponseEntity<List<OdmorOdsustvoDTO>> getOdsustvo(Principal p) {
-//
-//		System.out.println("ODSUSTVO");
-//		MedicinskaSestra ms = medicinskaSestraService.findByEmail(p.getName());
-//		
-//		if (ms == null) {
+//	public ResponseEntity<?> getPacijentByEmail(@PathVariable String email) {
+//		System.out.println("find pacijent");
+//		Pacijent pacijent = pacijentService.findByEmail(email);
+//		System.out.println("pacijent " + pacijent);
+//		if (pacijent == null) {
 //			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 //		}
-//		
-//		List<OdmorOdsustvoDTO> omsDTO = new ArrayList<>();
-//		for(OdmorOdsustvoMedicinskaSestra oms : ms.getListaOdmorOdsustvo()) {
-//			if(oms.getTip() == TipOdmorOdsustvo.ODSUSTVO) {
-//				System.out.println("Jedan zahtev: " + oms.getTip()+ " " + oms.isStatus() );
-//				System.out.println(oms.getDatumOd() + " " + oms.getDatumDo());
-//				omsDTO.add(new OdmorOdsustvoDTO(oms));
-//			}
-//			
-//		}
-//		
-//		return new ResponseEntity<>(omsDTO, HttpStatus.OK);
+//		System.out.println(pacijent.getEmail() + "++++");
+//		return ResponseEntity.ok(new PacijentDTO(pacijent));
 //	}
+
+//	//zdravstveni karton
+//	@GetMapping(value = "/findZK/{email}")
+//	@CrossOrigin(origins = "http://localhost:3000")
+//	@PreAuthorize("hasAuthority('MED_SESTRA')")
+//	public ResponseEntity<ZdravstveniKarton> getZK(@PathVariable String email) {
+//
+//		System.out.println("find pacijent");
+//		System.out.println("zk");
+//
+//		Pacijent pacijent = pacijentService.findByEmail(email);
+//		System.out.println("Pacijent: " + pacijent);
+//		if (pacijent == null) {
+//			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//		}
+//
+//		ZdravstveniKarton zk = pacijent.getZdravstveniKarton();
+//		System.out.println(pacijent.getEmail() + "++++");
+//		Pacijent p = new Pacijent();
+//		p.setEmail(pacijent.getEmail());
+//		zk.setPacijent(p);
+//		return new ResponseEntity<>(new ZdravstveniKarton(zk), HttpStatus.OK);
+//	}
+//	
 	
 	
 	//ovo je lista i odmora i odsustva 
@@ -246,26 +212,26 @@ public class MedicinskaSestraController {
 	}
 	
 	
-	//vraca listu pregleda
-	@GetMapping(value = "/listaPregleda/{email}")
-	@CrossOrigin(origins = "http://localhost:3000")
-	public ResponseEntity<List<PregledDTO>> getListaPregleda(@PathVariable String email) {
-		System.out.println("//////////////////// MED SESTRA LISTA Radnih dana ////////////////////////");
-		
-		MedicinskaSestra ms = medicinskaSestraService.findByEmail(email);
-//		Set<Pregled> listaRD = ms.getListaPregleda();
-		List<PregledDTO> lista = new ArrayList<PregledDTO>();
-//		for(Pregled rd: listaRD) {
-//			System.out.println(rd.getDatumPocetka());
-//			lista.add(new PregledDTO(rd));
-//		}
-		
-
-		System.out.println("*************");
-		return new ResponseEntity<>(lista, HttpStatus.OK);
-
-		
-	}
+//	//vraca listu pregleda
+//	@GetMapping(value = "/listaPregleda/{email}")
+//	@CrossOrigin(origins = "http://localhost:3000")
+//	public ResponseEntity<List<PregledDTO>> getListaPregleda(@PathVariable String email) {
+//		System.out.println("//////////////////// MED SESTRA LISTA Radnih dana ////////////////////////");
+//		
+//		MedicinskaSestra ms = medicinskaSestraService.findByEmail(email);
+////		Set<Pregled> listaRD = ms.getListaPregleda();
+//		List<PregledDTO> lista = new ArrayList<PregledDTO>();
+////		for(Pregled rd: listaRD) {
+////			System.out.println(rd.getDatumPocetka());
+////			lista.add(new PregledDTO(rd));
+////		}
+//		
+//
+//		System.out.println("*************");
+//		return new ResponseEntity<>(lista, HttpStatus.OK);
+//
+//		
+//	}
 	
 //	@GetMapping(value = "/listaRadnihDana/{email}")
 //	@CrossOrigin(origins = "http://localhost:3000")

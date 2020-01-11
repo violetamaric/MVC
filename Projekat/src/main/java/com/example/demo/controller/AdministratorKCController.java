@@ -3,7 +3,6 @@ package com.example.demo.controller;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,25 +22,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.AdministratorKCDTO;
 import com.example.demo.dto.AdministratorKlinikeDTO;
-import com.example.demo.dto.DijagnozaDTO;
-import com.example.demo.dto.KlinickiCentarDTO;
 import com.example.demo.dto.KlinikaDTO;
-import com.example.demo.dto.LekDTO;
 import com.example.demo.dto.PacijentDTO;
 import com.example.demo.model.AdministratorKC;
 import com.example.demo.model.AdministratorKlinike;
-import com.example.demo.model.Dijagnoza;
 import com.example.demo.model.KlinickiCentar;
 import com.example.demo.model.Klinika;
-import com.example.demo.model.Lek;
 import com.example.demo.model.Pacijent;
 import com.example.demo.service.AdministratorKCService;
 import com.example.demo.service.AdministratorKlinikeService;
-import com.example.demo.service.DijagnozaService;
 import com.example.demo.service.EmailService;
 import com.example.demo.service.KlinickiCentarService;
 import com.example.demo.service.KlinikaService;
-import com.example.demo.service.LekService;
 import com.example.demo.service.PacijentService;
 
 
@@ -68,11 +60,6 @@ public class AdministratorKCController {
 	@Autowired
 	private EmailService emailService;
 	
-	@Autowired
-	private LekService lekService;
-	
-	@Autowired
-	private DijagnozaService dijagnozaService;
 	
 	private Logger logger = LoggerFactory.getLogger(UserController.class);
 	
@@ -96,10 +83,10 @@ public class AdministratorKCController {
 	//vrati mi trenutnog admnistratora kc
 	@PreAuthorize("hasAuthority('ADMIN_KC')")
 	@CrossOrigin(origins = "http://localhost:3000")
-	@GetMapping(value = "/pronadjenAdministratorKC")
-	public ResponseEntity<AdministratorKCDTO> getAdministratorKCByEmail(Principal p){
-		System.out.println(p.getName());
-		AdministratorKC administratorKC = administratorKCService.findByEmail(p.getName());
+	@GetMapping(value = "/pronadjenAdministratorKC/{email}")
+	public ResponseEntity<AdministratorKCDTO> getAdministratorKCByEmail(@PathVariable String email){
+		System.out.println(email);
+		AdministratorKC administratorKC = administratorKCService.findByEmail(email);
 		if (administratorKC == null) {
 			System.out.println("NIJE PRONADJEN");
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -109,99 +96,22 @@ public class AdministratorKCController {
 		return new ResponseEntity<>(new AdministratorKCDTO(administratorKC), HttpStatus.OK);
 	}
 	
-	//vrati mi listu klinika u klinickom centru
-	@GetMapping(value = "/listaKlinika")
-	@CrossOrigin(origins = "http://localhost:3000")
+	//vrati mi admina kc pomocu id-a
 	@PreAuthorize("hasAuthority('ADMIN_KC')")
-	public ResponseEntity<List<KlinikaDTO>> getListaKlinika(Principal p) {
-
-		AdministratorKC administratorKC = administratorKCService.findByEmail(p.getName());
-		
-		KlinickiCentar klinickiCentar = administratorKC.getKlinickiCentar();
-		
-		List<KlinikaDTO> lista = new ArrayList<>();
-		
-		for (Klinika k : klinickiCentar.getListaKlinika()) {
-			KlinikaDTO kcDTO = new KlinikaDTO(k);
-			lista.add(kcDTO);
+	@CrossOrigin(origins = "http://localhost:3000")
+	@GetMapping(value = "/pronadjenAdminKC/{id}")
+	public ResponseEntity<AdministratorKCDTO> getAdministratorKCByEmail(@PathVariable Long id){
+		System.out.println(id);
+		AdministratorKC administratorKC = administratorKCService.findById(id);
+		if (administratorKC == null) {
+			System.out.println("NIJE PRONADJEN");
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-
-		return new ResponseEntity<>(lista, HttpStatus.OK);
-
+		System.out.println("PRONADJEN: "+ administratorKC.getEmail());
 		
+		return new ResponseEntity<>(new AdministratorKCDTO(administratorKC), HttpStatus.OK);
 	}
-	
-	//vrati mi listu svih admina klinika u klinickom centru
-	@GetMapping(value = "/listaAdministratoraKlinika")
-	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('ADMIN_KC')")
-	public ResponseEntity<List<AdministratorKlinikeDTO>> getListaAdministratoraKlinika(Principal p) {
 
-		AdministratorKC administratorKC = administratorKCService.findByEmail(p.getName());
-		
-		KlinickiCentar klinickiCentar = administratorKC.getKlinickiCentar();
-		List<AdministratorKlinikeDTO> lista = new ArrayList<>();
-		for (Klinika k : klinickiCentar.getListaKlinika() ) {
-			for(AdministratorKlinike a : k.getListaAdminKlinike()) {
-				AdministratorKlinikeDTO aDTO = new AdministratorKlinikeDTO(a);
-				lista.add(aDTO);
-			}
-		}
-
-		return new ResponseEntity<>(lista, HttpStatus.OK);
-	}
-	
-	//vrati mi podatke o klinickom centru
-	@GetMapping(value = "/klinickiCentar")
-	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('ADMIN_KC')")
-	public ResponseEntity<KlinickiCentarDTO> getKlinickiCentar(Principal p) {
-		
-		AdministratorKC administratorKC = administratorKCService.findByEmail(p.getName());
-		
-		KlinickiCentar kc = administratorKC.getKlinickiCentar();
-		KlinickiCentarDTO kcDTO = new KlinickiCentarDTO(kc);
-		 
-		return new ResponseEntity<>(kcDTO, HttpStatus.OK);
-	}
-	
-	//vrati mi listu lekova u klinickom centru
-	@GetMapping(value = "/listaLekova")
-	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('ADMIN_KC')")
-	public ResponseEntity<List<LekDTO>> getListaLekova(Principal p) {
-
-		AdministratorKC administratorKC = administratorKCService.findByEmail(p.getName());	
-		KlinickiCentar klinickiCentar = administratorKC.getKlinickiCentar();	
-		List<LekDTO> lista = new ArrayList<>();
-		
-		for (Lek k : klinickiCentar.getListaLekova()) {
-			LekDTO kcDTO = new LekDTO(k);
-			lista.add(kcDTO);
-		}
-
-		return new ResponseEntity<>(lista, HttpStatus.OK);
-
-		
-	}
-	
-	//vrati mi listu dijagnoza u klinickom centru
-	@GetMapping(value = "/listaDijagnoza")
-	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('ADMIN_KC')")
-	public ResponseEntity<List<DijagnozaDTO>> getListaDijagnoza(Principal p) {
-
-		AdministratorKC administratorKC = administratorKCService.findByEmail(p.getName());			
-		KlinickiCentar klinickiCentar = administratorKC.getKlinickiCentar();			
-		List<DijagnozaDTO> lista = new ArrayList<>();
-			
-		for (Dijagnoza k : klinickiCentar.getListaDijagnoza()) {
-			DijagnozaDTO kcDTO = new DijagnozaDTO(k);
-			lista.add(kcDTO);
-		}
-
-		return new ResponseEntity<>(lista, HttpStatus.OK);	
-	}
 
 	//vrati mi listu zahteva od korisnika tj mejlove
 	@GetMapping(value = "/listaZahtevaZaRegistraciju")
@@ -227,7 +137,7 @@ public class AdministratorKCController {
 	//izmena podataka o adminu 
 	@PutMapping(path="/izmena", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('ADMIN_KC')")
+	@PreAuthorize("hasRole('ADMIN_KC')")
 	public ResponseEntity<AdministratorKCDTO> izmeniAdminaKC(@RequestBody AdministratorKCDTO akcDTO) {
 
 		System.out.println("ADMIN KC IZMENA");
@@ -336,6 +246,12 @@ public class AdministratorKCController {
 		return new ResponseEntity<>("Odbijeno", HttpStatus.OK);
 	}
 	
+	//TODO 3: brisanje klinike
+	//TODO 4: brisanje admina klinike
+	//TODO 5: brisanje admina kc
+	
+	//TODO 7: izmena admina klinike
+	
 	//dodavanje nove klinike
 	@PostMapping(path = "/dodavanjeKlinike", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
@@ -412,295 +328,5 @@ public class AdministratorKCController {
 		return new ResponseEntity<>(new AdministratorKCDTO(ak), HttpStatus.CREATED);
 	}
 	
-	//dodavanje  novog leka
-	@PostMapping(path = "/dodavanjeLeka", consumes = "application/json")
-	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('ADMIN_KC')")
-	public ResponseEntity<LekDTO> dodavanjeLeka(@RequestBody LekDTO lekDTO) {
-		System.out.println("------------------------------------------------------");
-//		System.out.println(p.getName());
-		Lek lek = new Lek();
-		lek.setNaziv(lekDTO.getNaziv());
-		lek.setSifra(lekDTO.getSifra());
-		
-		List<KlinickiCentar> listaKC = KCService.find();
-		KlinickiCentar kc = listaKC.get(0);
-		
-		lek.setKlinickiCentar(kc);
-			
-		lek = lekService.save(lek);		
-		kc.getListaLekova().add(lek);
-		kc = KCService.save(kc);
-
-		System.out.println("------------------------------------------------------");
-		return new ResponseEntity<>(new LekDTO(lek), HttpStatus.CREATED);
-	}
-	
-	//dodavanje nove dijagnoze
-	@PostMapping(path = "/dodavanjeDijagnoze", consumes = "application/json")
-	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('ADMIN_KC')")
-	public ResponseEntity<DijagnozaDTO> dodavanjeDijagnoze(@RequestBody DijagnozaDTO dijagnozaDTO) {
-		System.out.println("------------------------------------------------------");
-		Dijagnoza dijagnoza = new Dijagnoza();
-		
-		dijagnoza.setNaziv(dijagnozaDTO.getNaziv());
-		dijagnoza.setOpis(dijagnozaDTO.getOpis());
-		
-		dijagnoza.setOznaka(dijagnozaDTO.getOznaka());
-		
-		List<KlinickiCentar> listaKC = KCService.find();
-		KlinickiCentar kc = listaKC.get(0);
-		
-		dijagnoza.setKlinickiCentar(kc);
-			
-		dijagnoza = dijagnozaService.save(dijagnoza);		
-		kc.getListaDijagnoza().add(dijagnoza);
-		kc = KCService.save(kc);
-
-		System.out.println("------------------------------------------------------");
-		return new ResponseEntity<>(new DijagnozaDTO(dijagnoza), HttpStatus.CREATED);
-	}
-
-	//TODO 3: brisanje klinike
-	//TODO 4: brisanje admina klinike
-	//TODO 5: brisanje admina kc
-	
-	//TODO 7: izmena admina klinike
-	
-	//brisanje leka
-	@PostMapping(path = "/brisanjeLeka", consumes = "application/json")
-	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('ADMIN_KC')")
-	public ResponseEntity<String> brisanjeLeka(@RequestBody LekDTO lekDTO) {
-		System.out.println("------------------------------------------------------");
-		System.out.println("pocinje");
-		Lek lek = lekService.findById(lekDTO.getId());
-		
-		List<KlinickiCentar> listaKC = KCService.find();
-		KlinickiCentar kc = listaKC.get(0);
-			
-		
-		if(kc.getListaLekova().contains(lek)) {
-			
-			Set<Lek> lista = kc.getListaLekova();
-			lista.remove(lek);
-			kc.getListaLekova().clear();
-			kc.setListaLekova(lista);
-			
-			lekService.delete(lek);	
-			
-			kc = KCService.save(kc);
-			System.out.println("obrisano");
-		}
-		
-		System.out.println("------------------------------------------------------");
-		return new ResponseEntity<>("uspesno obrisan lek", HttpStatus.OK);
-	}
-	
-	//brisanje dijagnoze
-	@PostMapping(path = "/brisanjeDijagnoze", consumes = "application/json")
-	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('ADMIN_KC')")
-	public ResponseEntity<String> brisanjeDijagnoze(@RequestBody DijagnozaDTO dijagnozaDTO) {
-		System.out.println("------------------------------------------------------");
-		Dijagnoza dijagnoza = dijagnozaService.findById(dijagnozaDTO.getId());	
-		
-		List<KlinickiCentar> listaKC = KCService.find();
-		KlinickiCentar kc = listaKC.get(0);
-			
-		if(kc.getListaDijagnoza().contains(dijagnoza)) {
-			
-			Set<Dijagnoza> lista = kc.getListaDijagnoza();
-			lista.remove(dijagnoza);
-			kc.getListaDijagnoza().clear();
-			kc.setListaDijagnoza(lista);
-			
-			dijagnozaService.delete(dijagnoza);	
-			
-			kc = KCService.save(kc);
-			System.out.println("obrisano");
-		}
-
-		System.out.println("------------------------------------------------------");
-		return new ResponseEntity<>("uspesno brisanje dijagnoze", HttpStatus.OK);
-	}
-
-	//izmena leka
-	@PutMapping(path = "/izmenaLeka", consumes = "application/json")
-	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('ADMIN_KC')")
-	public ResponseEntity<LekDTO> izmenaLeka(@RequestBody LekDTO lekDTO) {
-		System.out.println("------------------------------------------------------");
-		Lek lek = lekService.findById(lekDTO.getId());
-		
-		if(lekDTO.getNaziv() != null && lekDTO.getNaziv() != "") {
-			System.out.println("izmenjen naziv leka");
-			lek.setNaziv(lekDTO.getNaziv());	
-		}else {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-			
-		}
-		if(lekDTO.getSifra() != null && lekDTO.getSifra() != "") {
-			System.out.println("izmenjena sifra leka");
-			//TODO 2: STAVITI ZABRANU DA NE MOZE ISTA SIFRA
-			lek.setSifra(lekDTO.getSifra());	
-		}else {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-		
-		lek = lekService.save(lek);
-
-		System.out.println("------------------------------------------------------");
-					
-		return new ResponseEntity<>(new LekDTO(lek), HttpStatus.CREATED);
-	}
-	
-	//izmena dijagnoze
-	@PutMapping(path = "/izmenaDijagnoze", consumes = "application/json")
-	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('ADMIN_KC')")
-	public ResponseEntity<DijagnozaDTO> izmenaDijagnoze(@RequestBody DijagnozaDTO dijagnozaDTO) {
-		System.out.println("------------------------------------------------------");
-		Dijagnoza dijagnoza = dijagnozaService.findById(dijagnozaDTO.getId());	
-		
-		if(dijagnozaDTO.getNaziv() != null && dijagnozaDTO.getNaziv() != "") {
-			System.out.println("izmenjen naziv dijagnoze");
-			dijagnoza.setNaziv(dijagnozaDTO.getNaziv());	
-		}else {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-			
-		}
-		if(dijagnozaDTO.getOznaka() != null && dijagnozaDTO.getOznaka() != "") {
-			System.out.println("izmenjena oznaka dijagnoze");
-			//TODO 2: STAVITI ZABRANU DA NE MOZE ISTA SIFRA
-			dijagnoza.setOznaka(dijagnozaDTO.getOznaka());	
-		}else {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-		if(dijagnozaDTO.getOpis() != null && dijagnozaDTO.getOpis() != "") {
-			System.out.println("izmenjen opis dijagnoze");
-			//TODO 2: STAVITI ZABRANU DA NE MOZE ISTA SIFRA
-			dijagnoza.setOpis(dijagnozaDTO.getOpis());	
-		}else {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-		
-		dijagnoza = dijagnozaService.save(dijagnoza);
-
-		System.out.println("------------------------------------------------------");
-		return new ResponseEntity<>(new DijagnozaDTO(dijagnoza), HttpStatus.CREATED);
-	}
-
-	//vracanje leka
-	@GetMapping(path = "/getLek/{id}")
-	@PreAuthorize("hasAuthority('ADMIN_KC')")
-	@CrossOrigin(origins = "http://localhost:3000")
-	public ResponseEntity<LekDTO> getLek(@PathVariable Long id) {
-			System.out.println("------------------------------------------------------");
-
-			Lek lek = lekService.findById(id);
-			
-			LekDTO lekDTO = new LekDTO(lek);
-			
-			System.out.println("------------------------------------------------------");
-			return new ResponseEntity<>(lekDTO, HttpStatus.OK);
-		}
-	//vracanje dijagnoze
-	@GetMapping(path = "/getDijagnoza/{id}")
-	@PreAuthorize("hasAuthority('ADMIN_KC')")
-	@CrossOrigin(origins = "http://localhost:3000")
-	public ResponseEntity<DijagnozaDTO> getDijagnoza(@PathVariable Long id) {
-			System.out.println("------------------------------------------------------");
-
-			Dijagnoza dijagnoza = dijagnozaService.findById(id);
-			
-			DijagnozaDTO dijagnozaDTO = new DijagnozaDTO(dijagnoza);
-			
-			System.out.println("------------------------------------------------------");
-			return new ResponseEntity<>(dijagnozaDTO, HttpStatus.OK);
-		}
-	
-	//ucitavanje klinike
-	@GetMapping(value = "/getKlinika/{id}")
-	@PreAuthorize("hasAuthority('ADMIN_KC')")
-	@CrossOrigin(origins = "http://localhost:3000")
-	public ResponseEntity<KlinikaDTO> getKlinika(@PathVariable Long id) {
-
-		Klinika k = klinikaService.findOne(id);
-		System.out.println("Pretraga klinike po ID");
-		if (k == null) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
-		System.out.println(k.getNaziv() + " " + k.getId());
-		return new ResponseEntity<>(new KlinikaDTO(k), HttpStatus.OK);
-	}
-	
-	
-	//izmena podataka klinike
-	@PutMapping(path="/update", consumes = "application/json")
-	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('ADMIN_KC')")
-	public ResponseEntity<KlinikaDTO> updateKliniku(@RequestBody KlinikaDTO klinikaDTO) {
-
-		Klinika klinika = klinikaService.findById(klinikaDTO.getId());
-		
-		klinika.setNaziv(klinikaDTO.getNaziv());
-		klinika.setAdresa(klinikaDTO.getAdresa());
-		klinika.setOpis(klinikaDTO.getOpis());
-		klinika.setOcena(klinikaDTO.getOcena());
-
-		klinika = klinikaService.save(klinika);
-		System.out.println("Izmjenjena k: " + klinika);
-		return new ResponseEntity<>(new KlinikaDTO(klinika), HttpStatus.OK);
-	}
-	
-	
-	//ucitavanje admina klinike
-	@GetMapping(value = "/getAdminKlinikeByEmail/{email}")
-	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority( 'ADMIN_KC')")
-	public ResponseEntity<AdministratorKlinikeDTO> findByEmail(@PathVariable String email) {
-
-		AdministratorKlinike adminiKlinike = administratorKlinikeService.findByEmail(email);
-		if (adminiKlinike == null) {
-			System.out.println("admin klinike nije pronadjen");
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
-		System.out.println("Admin klinike je pronadjen : " + adminiKlinike.getEmail());
-
-		return new ResponseEntity<>(new AdministratorKlinikeDTO(adminiKlinike), HttpStatus.OK);
-	}
-	//izmena admina klinike
-	
-	@PutMapping(path = "/updateAK", consumes = "application/json")
-	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('ADMIN_KC')")
-	public ResponseEntity<AdministratorKlinikeDTO> updateAdminKlinike(@RequestBody AdministratorKlinikeDTO administratorKlinikeDTO) {
-
-
-		// a student must exist
-		System.out.println("ADMIN KLINIKE UPDRATE");
-		AdministratorKlinike adminiKlinike = administratorKlinikeService.findByEmail(administratorKlinikeDTO.getEmail());
-		
-		if(administratorKlinikeDTO.getEmail() != "" && administratorKlinikeDTO.getEmail() != null ) {
-			if(administratorKlinikeDTO.getIme() != "" && administratorKlinikeDTO.getIme() != null ) {
-				adminiKlinike.setIme(administratorKlinikeDTO.getIme());
-			}
-			if(administratorKlinikeDTO.getPrezime() != "" && administratorKlinikeDTO.getPrezime() != null  ) {
-				adminiKlinike.setPrezime(administratorKlinikeDTO.getPrezime());
-			}
-			if(administratorKlinikeDTO.getTelefon() != "" && administratorKlinikeDTO.getTelefon() != null) {
-				adminiKlinike.setTelefon(administratorKlinikeDTO.getTelefon());
-			}
-			if(administratorKlinikeDTO.getLozinka() != "" && administratorKlinikeDTO.getLozinka() != null) {
-				adminiKlinike.setLozinka(administratorKlinikeDTO.getLozinka());
-			}
-		}
-
-
-		adminiKlinike = administratorKlinikeService.save(adminiKlinike);
-		return new ResponseEntity<>(new AdministratorKlinikeDTO(adminiKlinike), HttpStatus.OK);
-	}
 	
 }
