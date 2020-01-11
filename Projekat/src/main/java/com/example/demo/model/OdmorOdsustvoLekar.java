@@ -34,7 +34,7 @@ public class OdmorOdsustvoLekar {
 	private String opis;
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private Lekar lekar;
+	private Lekar lekar; 
 	
 	@Column(name="status", nullable=false)
 	private boolean status; //odobreno-1, odbijeno-0
@@ -42,12 +42,24 @@ public class OdmorOdsustvoLekar {
 	@Column(name="tip", nullable=false)
 	private TipOdmorOdsustvo tip;
 	
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Klinika klinika;
+	
 //	private Time trajanje;
 	
 	
 	public Long getId() {
 		return id;
 	}
+
+	public Klinika getKlinika() {
+		return klinika;
+	}
+
+	public void setKlinika(Klinika klinika) {
+		this.klinika = klinika;
+	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}

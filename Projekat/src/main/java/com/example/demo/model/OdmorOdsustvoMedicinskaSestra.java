@@ -44,10 +44,28 @@ public class OdmorOdsustvoMedicinskaSestra {
 	@Column(name="tip", nullable=false)
 	private TipOdmorOdsustvo tip;
 
+	
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Klinika klinika;
+	
 	public OdmorOdsustvoMedicinskaSestra() {
 		super();
 	}
 	
+	
+
+	public Klinika getKlinika() {
+		return klinika;
+	}
+
+
+
+	public void setKlinika(Klinika klinika) {
+		this.klinika = klinika;
+	}
+
+
+
 	public String getOpis() {
 		return opis;
 	}

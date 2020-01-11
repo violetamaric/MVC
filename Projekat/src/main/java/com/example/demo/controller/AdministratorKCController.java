@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,7 @@ import com.example.demo.model.AdministratorKC;
 import com.example.demo.model.AdministratorKlinike;
 import com.example.demo.model.KlinickiCentar;
 import com.example.demo.model.Klinika;
+import com.example.demo.model.Lek;
 import com.example.demo.model.Pacijent;
 import com.example.demo.service.AdministratorKCService;
 import com.example.demo.service.AdministratorKlinikeService;
@@ -159,23 +161,26 @@ public class AdministratorKCController {
 		return new ResponseEntity<>(new AdministratorKCDTO(aKC), HttpStatus.OK);
 	}
 
-	//TODO 1: NE RADI
 	//potvrda registracije
-	@PostMapping(path = "/potvrda/{email}", consumes = "application/json")
+	@PostMapping(path = "/potvrda", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('ADMIN_KC')")
-	public ResponseEntity<String> potvrdaRegistracijePacijenata(@PathVariable String email){
+	public ResponseEntity<String> potvrdaRegistracijePacijenata(@RequestBody PacijentDTO paDTO){
 		System.out.println("------------------------------------");
-		Pacijent p = pacijentService.findByEmail(email);
-		PacijentDTO pDTO = new PacijentDTO(p);
-
+		
 		List<KlinickiCentar> listaKC = KCService.find();
 		KlinickiCentar kc = listaKC.get(0);	
-	
+		
+		Pacijent p = pacijentService.findByEmail(paDTO.getEmail());
+		PacijentDTO pDTO = new PacijentDTO(p);
+		
+//		Set<Pacijent> listaz = kc.getZahteviZaRegistraciju();
+		
 		if(kc.getZahteviZaRegistraciju().isEmpty()) {
 			System.out.println("prazna listaaa");
 			return new ResponseEntity<>("U listi ne postoji pacijent", HttpStatus.BAD_REQUEST);
 		}else {
+			
 			p.setOdobrenaRegistracija(true);
 			p = pacijentService.save(p);
 			System.out.println(p.getOdobrenaRegistracija());
@@ -206,28 +211,36 @@ public class AdministratorKCController {
 	
 	//TODO 2: NE RADI
 	//odbijanje registracije pacijenata
-	@PostMapping(path = "/odbijanje/{email}/{razlog}", consumes = "application/json")
+	@PostMapping(path = "/odbijanje/{razlog}", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('ADMIN_KC')")
-	public ResponseEntity<String> odbijanjeRegistracijePacijenata(@PathVariable String email, @PathVariable String razlog){
+	public ResponseEntity<String> odbijanjeRegistracijePacijenata(@RequestBody PacijentDTO paDTO, @PathVariable String razlog){
 		System.out.println("------------------------------------");
-		Pacijent p = pacijentService.findByEmail(email);
+		Pacijent p = pacijentService.findByEmail(paDTO.getEmail());
 		PacijentDTO pDTO = new PacijentDTO(p);
 
 		List<KlinickiCentar> listaKC = KCService.find();
 		KlinickiCentar kc = listaKC.get(0);
 
-//		if(kc.getZahteviZaRegistraciju().isEmpty()) {
-//			System.out.println("prazna listaaa");
-//			return new ResponseEntity<>("U listi ne postoji taj pacijent", HttpStatus.BAD_REQUEST);
-//		}else {
+
 			System.out.println("Uspesno obrisan pacijent");
 			kc.getZahteviZaRegistraciju().remove(p);
-//			pacijentService.delete(p);
+
 			kc.setZahteviZaRegistraciju(kc.getZahteviZaRegistraciju());
 			kc = KCService.save(kc);
 			
-//		}
+
+			if(kc.getZahteviZaRegistraciju().contains(p)) {
+				Set<Pacijent> lista = kc.getZahteviZaRegistraciju();
+				lista.remove(p);
+				kc.getZahteviZaRegistraciju().clear();
+				kc.setZahteviZaRegistraciju(lista);
+				kc = KCService.save(kc);
+				System.out.println("obrisano");
+				
+			}
+			
+			
 
 		String subject ="Odobijena registracija";
 		String text = "Postovani " + pDTO.getIme() + " " + pDTO.getPrezime() 
@@ -242,6 +255,11 @@ public class AdministratorKCController {
 			logger.info("Greska prilikom slanja emaila: " + e.getMessage());
 			return new ResponseEntity<>("Mail nije poslat", HttpStatus.BAD_REQUEST);
 		}
+//		List<Pacijent> pac = pacijentService.findAll();
+//		pac.remove(p);
+		
+		pacijentService.delete(p);
+		
 
 		return new ResponseEntity<>("Odbijeno", HttpStatus.OK);
 	}
@@ -250,7 +268,6 @@ public class AdministratorKCController {
 	//TODO 4: brisanje admina klinike
 	//TODO 5: brisanje admina kc
 	
-	//TODO 7: izmena admina klinike
 	
 	//dodavanje nove klinike
 	@PostMapping(path = "/dodavanjeKlinike", consumes = "application/json")
