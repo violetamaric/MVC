@@ -21,10 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.dto.MedicinskaSestraDTO;
 import com.example.demo.dto.OdmorOdsustvoDTO;
 import com.example.demo.dto.PacijentDTO;
+import com.example.demo.dto.PregledDTO;
 import com.example.demo.model.MedicinskaSestra;
 import com.example.demo.model.OdmorOdsustvoMedicinskaSestra;
 import com.example.demo.model.Pacijent;
-import com.example.demo.model.TipOdmorOdsustvo;
+import com.example.demo.model.Pregled;
 import com.example.demo.model.ZdravstveniKarton;
 import com.example.demo.service.KlinikaService;
 import com.example.demo.service.MedicinskaSestraService;
@@ -191,32 +192,34 @@ public class MedicinskaSestraController {
 	}
 	
 	
-	//vrati mi listu odmor/odsustvo med sestre
-	@GetMapping(value = "/listaOdsustvo")
-	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('MED_SESTRA')")
-	public ResponseEntity<List<OdmorOdsustvoDTO>> getOdsustvo(Principal p) {
-
-		System.out.println("ODSUSTVO");
-		MedicinskaSestra ms = medicinskaSestraService.findByEmail(p.getName());
-		
-		if (ms == null) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
-		
-		List<OdmorOdsustvoDTO> omsDTO = new ArrayList<>();
-		for(OdmorOdsustvoMedicinskaSestra oms : ms.getListaOdmorOdsustvo()) {
-			if(oms.getTip() == TipOdmorOdsustvo.ODSUSTVO) {
-				System.out.println("Jedan zahtev: " + oms.getTip()+ " " + oms.isStatus() );
-				System.out.println(oms.getDatumOd() + " " + oms.getDatumDo());
-				omsDTO.add(new OdmorOdsustvoDTO(oms));
-			}
-			
-		}
-		
-		return new ResponseEntity<>(omsDTO, HttpStatus.OK);
-	}
+//	//vrati mi listu odmor/odsustvo med sestre
+//	@GetMapping(value = "/listaOdsustvo")
+//	@CrossOrigin(origins = "http://localhost:3000")
+//	@PreAuthorize("hasAuthority('MED_SESTRA')")
+//	public ResponseEntity<List<OdmorOdsustvoDTO>> getOdsustvo(Principal p) {
+//
+//		System.out.println("ODSUSTVO");
+//		MedicinskaSestra ms = medicinskaSestraService.findByEmail(p.getName());
+//		
+//		if (ms == null) {
+//			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//		}
+//		
+//		List<OdmorOdsustvoDTO> omsDTO = new ArrayList<>();
+//		for(OdmorOdsustvoMedicinskaSestra oms : ms.getListaOdmorOdsustvo()) {
+//			if(oms.getTip() == TipOdmorOdsustvo.ODSUSTVO) {
+//				System.out.println("Jedan zahtev: " + oms.getTip()+ " " + oms.isStatus() );
+//				System.out.println(oms.getDatumOd() + " " + oms.getDatumDo());
+//				omsDTO.add(new OdmorOdsustvoDTO(oms));
+//			}
+//			
+//		}
+//		
+//		return new ResponseEntity<>(omsDTO, HttpStatus.OK);
+//	}
 	
+	
+	//ovo je lista i odmora i odsustva 
 	@GetMapping(value = "/listaOdmor")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('MED_SESTRA')")
@@ -231,15 +234,37 @@ public class MedicinskaSestraController {
 		
 		List<OdmorOdsustvoDTO> omsDTO = new ArrayList<>();
 		for(OdmorOdsustvoMedicinskaSestra oms : ms.getListaOdmorOdsustvo()) {
-			if (oms.getTip() == TipOdmorOdsustvo.ODMOR) {
+			//if (oms.getTip() == TipOdmorOdsustvo.ODMOR) {
 				System.out.println("Jedan zahtev: " + oms.getTip()+ " " + oms.isStatus() );
 				System.out.println(oms.getDatumOd() + " " + oms.getDatumDo());
 				omsDTO.add(new OdmorOdsustvoDTO(oms));
-			}
+			//}
 			
 		}
 		
 		return new ResponseEntity<>(omsDTO, HttpStatus.OK);
+	}
+	
+	
+	//vraca listu pregleda
+	@GetMapping(value = "/listaPregleda/{email}")
+	@CrossOrigin(origins = "http://localhost:3000")
+	public ResponseEntity<List<PregledDTO>> getListaPregleda(@PathVariable String email) {
+		System.out.println("//////////////////// MED SESTRA LISTA Radnih dana ////////////////////////");
+		
+		MedicinskaSestra ms = medicinskaSestraService.findByEmail(email);
+//		Set<Pregled> listaRD = ms.getListaPregleda();
+		List<PregledDTO> lista = new ArrayList<PregledDTO>();
+//		for(Pregled rd: listaRD) {
+//			System.out.println(rd.getDatumPocetka());
+//			lista.add(new PregledDTO(rd));
+//		}
+		
+
+		System.out.println("*************");
+		return new ResponseEntity<>(lista, HttpStatus.OK);
+
+		
 	}
 	
 //	@GetMapping(value = "/listaRadnihDana/{email}")

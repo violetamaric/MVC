@@ -146,7 +146,9 @@ insert into administrator_klinike_authority (administrator_klinike_id, authority
 insert into administrator_klinike_authority (administrator_klinike_id, authority_id) values (3,5);
 
 insert into odmor_odsustvo_medicinska_sestra (medicinska_sestra_id, datum_od, datum_do, opis, tip, status) values (2, '2019-11-21 00:00:01', '2019-12-01 23:59:59', 'odmor ili odsustvo', 1, FALSE);
-insert into odmor_odsustvo_medicinska_sestra (medicinska_sestra_id, datum_od, datum_do, opis, tip, status) values (2, '2020-01-01', '2020-01-20', 'odmor ili odsustvo', 0, TRUE);
+insert into odmor_odsustvo_medicinska_sestra (medicinska_sestra_id, datum_od, datum_do, opis, tip, status) values (2, '2020-01-01', '2020-01-05', 'odmor ili odsustvo', 0, TRUE);
+insert into odmor_odsustvo_medicinska_sestra (medicinska_sestra_id, datum_od, datum_do, opis, tip, status) values (2, '2019-12-02 00:00:01', '2019-12-05 23:59:59', 'odmor ili odsustvo', 1, FALSE);
+insert into odmor_odsustvo_medicinska_sestra (medicinska_sestra_id, datum_od, datum_do, opis, tip, status) values (2, '2020-01-06', '2020-01-10', 'odmor ili odsustvo', 0, TRUE);
 
 insert into odmor_odsustvo_lekar (lekar_id, datum_od, datum_do, opis, tip, status) values (2, '2019-11-21', '2019-12-01', 'odmor ili odsustvo', 0, FALSE);
 

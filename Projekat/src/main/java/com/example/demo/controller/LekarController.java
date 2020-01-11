@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,13 +16,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.dto.AdministratorKlinikeDTO;
 import com.example.demo.dto.LekarDTO;
 import com.example.demo.dto.PacijentDTO;
-import com.example.demo.model.AdministratorKlinike;
-import com.example.demo.model.Klinika;
+import com.example.demo.dto.PregledDTO;
 import com.example.demo.model.Lekar;
 import com.example.demo.model.Pacijent;
+import com.example.demo.model.Pregled;
 import com.example.demo.service.LekarService;
 import com.example.demo.service.PacijentService;
 
@@ -133,5 +133,27 @@ public class LekarController {
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 
+	//VRACA LISTU PREGLEDA, ODMORA I ODSUSTVA
+	@GetMapping(value = "/listaPregleda/{email}")
+	@CrossOrigin(origins = "http://localhost:3000")
+	public ResponseEntity<List<PregledDTO>> getListaPregleda(@PathVariable String email) {
+		System.out.println("*************");
+		Lekar lek = lekarService.findByEmail(email);
+		
+		Set<Pregled> listaRD = lek.getListaPregleda();
+		
+		List<PregledDTO> lista = new ArrayList<PregledDTO>();
+		for(Pregled rd: listaRD) {
+			System.out.println(rd.getDatum());
+			System.out.println(rd.getTrajanje());
+			lista.add(new PregledDTO(rd));
+		}
+		
+
+		System.out.println("*************");
+		return new ResponseEntity<>(lista, HttpStatus.OK);
+
+		
+	}
 	
 }
