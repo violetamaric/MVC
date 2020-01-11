@@ -137,7 +137,7 @@ public class AdministratorKCController {
 	//izmena podataka o adminu 
 	@PutMapping(path="/izmena", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasRole('ADMIN_KC')")
+	@PreAuthorize("hasAuthority('ADMIN_KC')")
 	public ResponseEntity<AdministratorKCDTO> izmeniAdminaKC(@RequestBody AdministratorKCDTO akcDTO) {
 
 		System.out.println("ADMIN KC IZMENA");
