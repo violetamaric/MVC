@@ -120,9 +120,9 @@ public class AdministratorKlinikeController {
 			if(administratorKlinikeDTO.getTelefon() != "" && administratorKlinikeDTO.getTelefon() != null) {
 				adminiKlinike.setTelefon(administratorKlinikeDTO.getTelefon());
 			}
-			if(administratorKlinikeDTO.getLozinka() != "" && administratorKlinikeDTO.getLozinka() != null) {
-				adminiKlinike.setLozinka(administratorKlinikeDTO.getLozinka());
-			}
+//			if(administratorKlinikeDTO.getLozinka() != "" && administratorKlinikeDTO.getLozinka() != null) {
+//				adminiKlinike.setLozinka(administratorKlinikeDTO.getLozinka());
+//			}
 		}
 		
 		
