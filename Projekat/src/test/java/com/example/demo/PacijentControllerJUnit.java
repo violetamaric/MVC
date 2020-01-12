@@ -48,7 +48,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:test.properties")
-public class PacijentControllerTest {
+public class PacijentControllerJUnit {
 	
 	@Autowired
 	TokenUtils tokenUtils;
@@ -62,9 +62,7 @@ public class PacijentControllerTest {
 
 	@Autowired
 	private PacijentService pacijentService;
-	
-
-	
+		
 	public static final Long DB_ID = 1L;
 	public static final String DB_IME = "Pera";
 	public static final String DB_PREZIME = "Peric";
@@ -73,33 +71,47 @@ public class PacijentControllerTest {
 	public static final int DB_KOL = 5;
 
 	private static final String URL_PREFIX = "/api/pacijenti";
-
-	private MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
-			MediaType.APPLICATION_JSON.getSubtype(), Charset.forName("utf8"));
-
-	private MockMvc mockMvc;
-
-	@Autowired
-	private WebApplicationContext webApplicationContext;
-
-	@PostConstruct
-	public void setup() {
-		this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-	}
-
 	
+	@Test
+	public void testFindAll() {
+//		Authority a = new Authority();
+//		a.setId(new Long(1L));
+//		a.setName(new String("PACIJENT"));
+//
+//		System.out.println("????????????????????auth" + a);
+//		
+//		String jwt = tokenUtils.tokenPacijent(pacijent, a);
+//		assertNotNull(jwt);
+//		
+//		System.out.println("1111111");
+//	    final Authentication authentication = authenticationManager
+//
+//				.authenticate(new UsernamePasswordAuthenticationToken(pacijent2.getEmail(),
+//
+//						"pera"));
+//		System.out.println("1111111");
+//		SecurityContextHolder.getContext().setAuthentication(authentication);
+
+		List<PacijentDTO> pacijenti = (pacijentController.getAll()).getBody();
+		assertThat(pacijenti).hasSize(DB_KOL);
+//		assertThat(pacijenti)
+	}
+	
+	@Test
+	public void testFindByID() {
+		PacijentDTO pacijent = (PacijentDTO) (pacijentController.getPacijentByID(DB_ID)).getBody();
+		assertThat(pacijent).hasFieldOrProperty("email");
+		assertThat(pacijent).isNotNull();
+		assertThat(pacijent.getId()).isEqualTo(DB_ID);
+		assertThat(pacijent.getIme()).isEqualTo(DB_IME);
+		assertThat(pacijent.getPrezime()).isEqualTo(DB_PREZIME);
+	}
 	
 	@Test
     @Transactional
     @Rollback(true)
-	public void testGetAllPacijente() throws Exception {
-		
-//		UsernamePasswordAuthenticationToken u = new UsernamePasswordAuthenticationToken("mmvvcc",
-//
-//				"mmvvcc");
-		System.out.println("test get all pacijente");
+	public void testUpdatePacijent() {
 		PacijentDTO pacijent2 = (PacijentDTO) (pacijentController.getPacijentByID(DB_ID)).getBody();
-		System.out.println("*****************pacijent 2" + pacijent2);
 		Pacijent pacijent = new Pacijent();
 		pacijent.setId(DB_ID);
 		pacijent.setIme(DB_NOVO_IME);
@@ -112,32 +124,66 @@ public class PacijentControllerTest {
 		pacijent.setDrzava(pacijent2.getDrzava());
 		pacijent.setTelefon(pacijent2.getTelefon());
 		pacijent.setOdobrenaRegistracija(pacijent2.getOdobrenaRegistracija());
-		System.out.println("----------------pacijent 2" + pacijent2);
 		
-		Authority a = new Authority();
-		a.setId(new Long(1L));
-		a.setName(new String("PACIJENT"));
-
-		System.out.println("????????????????????auth" + a);
+		pacijent = pacijentService.save(pacijent);
+		assertThat(pacijent).isNotNull();
 		
-		String jwt = tokenUtils.tokenPacijent(pacijent, a);
-		assertNotNull(jwt);
-		
-		System.out.println("1111111");
-	    final Authentication authentication = authenticationManager
-
-				.authenticate(new UsernamePasswordAuthenticationToken(pacijent2.getEmail(),
-
-						"pera"));
-		System.out.println("1111111");
-		SecurityContextHolder.getContext().setAuthentication(authentication);
-		
-		mockMvc.perform(get(URL_PREFIX + "/all").header("Authorization", jwt)).andExpect(status().isOk())
-//		mockMvc.perform(get(URL_PREFIX + "/all")).andExpect(status().isOk())
-				.andExpect(content().contentType(contentType)).andExpect(jsonPath("$", hasSize(DB_KOL)))
-				.andExpect(jsonPath("$.[*].id").value(hasItem(DB_ID.intValue())))
-				.andExpect(jsonPath("$.[*].ime").value(hasItem(DB_IME)))
-				.andExpect(jsonPath("$.[*].prezime").value(hasItem(DB_PREZIME)));
+		PacijentDTO pacijent3 = (PacijentDTO) (pacijentController.getPacijentByID(DB_ID)).getBody();
+        assertThat(pacijent3.getIme()).isEqualTo(DB_NOVO_IME);
+        assertThat(pacijent3.getPrezime()).isEqualTo(DB_NOVO_PREZIME);
+        assertThat(pacijent3.getId()).isEqualTo(DB_ID);
+		assertThat(pacijent3).hasFieldOrProperty("email");
+		assertThat(pacijent3).isNotNull();
 	}
+	
+	@Test
+    @Transactional
+    @Rollback(true) //it can be omitted because it is true by default
+	public void testAdd() {
+		Pacijent pacijent = new Pacijent();
+		pacijent.setIme(DB_NOVO_IME);
+		pacijent.setPrezime(DB_NOVO_PREZIME);
+		pacijent.setLbo("101");
+		pacijent.setEmail("test@gmail.com");
+		pacijent.setLozinka("test");
+		pacijent.setAdresa("Temerinska 4");
+		pacijent.setGrad("Novi Sad");
+		pacijent.setDrzava("Srbija");
+		pacijent.setTelefon("060789654");
+		pacijent.setOdobrenaRegistracija(false);
+//		
+//		Authority a = new Authority();
+//		a.setId(new Long(1L));
+//		a.setName(new String("PACIJENT"));
+//
+//		System.out.println("????????????????????auth" + a);
+//		
+//		String jwt = tokenUtils.tokenPacijent(pacijent, a);
+//		assertNotNull(jwt);
+//		
+//		System.out.println("1111111");
+//	    final Authentication authentication = authenticationManager
+//
+//				.authenticate(new UsernamePasswordAuthenticationToken(pacijent2.getEmail(),
+//
+//						pacijent2.getLozinka()));
+//		System.out.println("1111111");
+//		SecurityContextHolder.getContext().setAuthentication(authentication);
+//
+//		
+		int dbSizeBeforeAdd = (pacijentController.getAll()).getBody().size();
+		
+		Pacijent dbPacijent = pacijentService.save(pacijent);
+		assertThat(dbPacijent).isNotNull();
+				
+		// Validate that new student is in the database
+        List<PacijentDTO> pacijenti = (pacijentController.getAll()).getBody();
+        assertThat(pacijenti).hasSize(dbSizeBeforeAdd + 1);
+        PacijentDTO pDTO = new PacijentDTO(dbPacijent);
+        pDTO = pacijenti.get(pacijenti.size() - 1); //get last student
+        assertThat(pDTO.getIme()).isEqualTo(DB_NOVO_IME);
+        assertThat(pDTO.getPrezime()).isEqualTo(DB_NOVO_PREZIME);        
+	}
+	
 
 }

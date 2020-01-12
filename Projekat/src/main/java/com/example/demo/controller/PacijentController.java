@@ -46,6 +46,7 @@ public class PacijentController {
 	private Logger logger = LoggerFactory.getLogger(UserController.class);
 
 	@GetMapping(value = "/all", produces = "application/json;charset=UTF-8")
+//	@PreAuthorize("hasAuthority('PACIJENT')") 
 	public ResponseEntity<List<PacijentDTO>> getAll() {
 
 		List<Pacijent> pacijenti = pacijentService.findAll();
@@ -110,9 +111,16 @@ public class PacijentController {
 
 	@PostMapping(path = "/register", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
-	public ResponseEntity<PacijentDTO> savePacijent(@RequestBody PacijentDTO pacijentDTO) {
+	public ResponseEntity<PacijentDTO> registerPacijent(@RequestBody PacijentDTO pacijentDTO) {
 
 		Pacijent pacijent = new Pacijent();
+		
+		List<Pacijent> pacijenti = pacijentService.findAll();
+		for (Pacijent p :pacijenti) {
+			if(p.getLbo().equals(pacijentDTO.getLbo())) {
+				return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+			}
+		}
 
 		pacijent.setLbo(pacijentDTO.getLbo());
 		pacijent.setIme(pacijentDTO.getIme());
