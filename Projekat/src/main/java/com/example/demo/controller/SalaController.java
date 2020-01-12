@@ -18,11 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.dto.LekDTO;
 import com.example.demo.dto.SalaDTO;
-import com.example.demo.model.KlinickiCentar;
 import com.example.demo.model.Klinika;
-import com.example.demo.model.Lek;
 import com.example.demo.model.Sala;
 import com.example.demo.service.KlinikaService;
 import com.example.demo.service.SalaService;
@@ -33,10 +30,10 @@ import com.example.demo.service.SalaService;
 public class SalaController {
 	@Autowired
 	private SalaService salaService;
-	
+
 	@Autowired
 	private KlinikaService klinikaService;
-	
+
 	@GetMapping(value = "/{id}")
 	@CrossOrigin(origins = "http://localhost:3000")
 	public ResponseEntity<SalaDTO> findById(@PathVariable Long id) {
@@ -50,7 +47,7 @@ public class SalaController {
 
 		return new ResponseEntity<>(new SalaDTO(sala), HttpStatus.OK);
 	}
-	
+
 	@GetMapping(value = "/all")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
@@ -66,7 +63,7 @@ public class SalaController {
 
 		return new ResponseEntity<>(salaDTO, HttpStatus.OK);
 	}
-	
+
 	@GetMapping(value = "preuzmiSaleKlinike/{id}")
 	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
 	public ResponseEntity<List<SalaDTO>> getSaleKlinike(@PathVariable Long id) {
@@ -74,76 +71,105 @@ public class SalaController {
 		Klinika klinika = klinikaService.findOne(id);
 		List<Sala> sale = salaService.findAll();
 		List<SalaDTO> lista = new ArrayList<SalaDTO>();
-		for(Sala s : sale) {
-			if(s.getKlinika().getId()==klinika.getId()) {
+		for (Sala s : sale) {
+			if (s.getKlinika().getId() == klinika.getId()) {
 				SalaDTO salaDTO = new SalaDTO(s);
 				lista.add(salaDTO);
 			}
 		}
-		
+
 		System.out.println("Lista sala u klinici:" + klinika.getNaziv() + " ID: " + id);
-		for(SalaDTO ss: lista) {
+		for (SalaDTO ss : lista) {
 			System.out.println(ss.getNaziv() + ss.getBroj());
 		}
-		
+
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
-	
-	//brisanje sale
+
+	// brisanje sale
 	@PostMapping(path = "/brisanjeSale", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
 	public ResponseEntity<String> brisanjeSale(@RequestBody SalaDTO salaDTO) {
 		System.out.println("------------------------------------------------------");
 		System.out.println("pocinje");
-		Long  id = salaDTO.getId();
-		Sala sala = salaService.findById(id);
-		Long idK = (Long)salaDTO.getKlinikaID();
+		System.out.println(salaDTO);
+//		Long  id = salaDTO.getId();
+		Sala sala = salaService.findById(salaDTO.getId());
+		System.out.println(sala);
+		Long idK = (Long) salaDTO.getKlinikaID();
 		Klinika klinika = klinikaService.findById(idK);
-			
-		
-		if(klinika.getListaSala().contains(sala)) {
-			
+		System.out.println("OK");
+
+		if (klinika.getListaSala().contains(sala)) {
+
 			Set<Sala> lista = klinika.getListaSala();
+			System.out.println("--prije---");
+			for (Sala s : lista) {
+				System.out.println(s.getNaziv() + s.getBroj());
+			}
+			System.out.println("-----------");
 			lista.remove(sala);
+
 			klinika.getListaSala().clear();
 			klinika.setListaSala(lista);
-			
-			salaService.delete(sala);	
-			
+			salaService.delete(sala);
+			System.out.println("--psole---");
+			for (Sala s : lista) {
+				System.out.println(s.getNaziv() + s.getBroj());
+			}
+			System.out.println("-----------");
 			klinika = klinikaService.save(klinika);
 			System.out.println("obrisano");
 		}
-		
+
 		System.out.println("------------------------------------------------------");
 		return new ResponseEntity<>("uspesno obrisana sala", HttpStatus.OK);
 	}
-	
-	//izmena leka
+
+	@PostMapping(path = "/dodajSalu", consumes = "application/json")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
+	public ResponseEntity<SalaDTO> novaSala(@RequestBody SalaDTO sDTO) {
+		System.out.println("dodavanje nove sale");
+		System.out.println(sDTO);
+		Sala s = new Sala();
+		s.setNaziv(sDTO.getNaziv());
+		s.setBroj(sDTO.getBroj());
+		Klinika k = klinikaService.findById(sDTO.getKlinikaID());
+		s.setKlinika(k);
+
+		s = salaService.save(s);
+
+		return new ResponseEntity<>(new SalaDTO(s), HttpStatus.OK);
+	}
+
+	// izmena sale
 	@PutMapping(path = "/izmenaSale", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
 	public ResponseEntity<SalaDTO> izmenaSale(@RequestBody SalaDTO salaDTO) {
 		System.out.println("------------------------------------------------------");
 		Sala sala = salaService.findById(salaDTO.getId());
-		
+
 		Klinika klinika = klinikaService.findById(salaDTO.getKlinikaID());
-		
-		if(salaDTO.getNaziv() != null && salaDTO.getNaziv() != "") {
+
+		if (salaDTO.getNaziv() != null && salaDTO.getNaziv() != "") {
 			System.out.println("izmenjen naziv sale");
-			sala.setNaziv(salaDTO.getNaziv());	
-		}else {
+			sala.setNaziv(salaDTO.getNaziv());
+		} else {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-			
+
 		}
-	
-			sala.setBroj(salaDTO.getBroj());	
-	
+
+		sala.setBroj(salaDTO.getBroj());
+
 		sala.setId(salaDTO.getId());
 		sala.setKlinika(klinika);
 		sala = salaService.save(sala);
 
 		System.out.println("------------------------------------------------------");
-					
+
 		return new ResponseEntity<>(new SalaDTO(sala), HttpStatus.CREATED);
 	}
 }
