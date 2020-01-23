@@ -24,7 +24,6 @@ import com.example.demo.model.OdmorOdsustvoMedicinskaSestra;
 import com.example.demo.model.Pacijent;
 import com.example.demo.service.KlinikaService;
 import com.example.demo.service.MedicinskaSestraService;
-import com.example.demo.service.PacijentService;
 
 
 

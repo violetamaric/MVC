@@ -1,8 +1,6 @@
 package com.example.demo.model;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,28 +10,26 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 
 @Entity
-public class RadniDan {
+public class Termin {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	@Column(name = "datumPocetka", nullable = false)
-	private Date datumPocetka; //od 9
+	private Date datumPocetka;  //nije datum vec vreme!!!!
 	
 	@Column(name = "datumKraja", nullable = false)
-	private Date datumKraja; //do 17
+	private Date datumKraja;
 	
-	@OneToMany(mappedBy = "radniDan", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<Termin> termini = new HashSet<Termin>();
-	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private MedicinskaSestra medicinskaSestra;
-	
+	@Column(name= "status", nullable= false)
+	private boolean status; //zauzet ili slobodan 
 
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private RadniDan radniDan;
+	
 	public Long getId() {
 		return id;
 	}
@@ -56,29 +52,30 @@ public class RadniDan {
 
 	public void setDatumKraja(Date datumKraja) {
 		this.datumKraja = datumKraja;
-	} 
+	}
+
+	public boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
 	
 	
-	public MedicinskaSestra getMedicinskaSestra() {
-		return medicinskaSestra;
+
+	public RadniDan getRadniDan() {
+		return radniDan;
 	}
 
-	public void setMedicinskaSestra(MedicinskaSestra medicinskaSestra) {
-		this.medicinskaSestra = medicinskaSestra;
+	public void setRadniDan(RadniDan radniDan) {
+		this.radniDan = radniDan;
 	}
 
-	public Set<Termin> getTermini() {
-		return termini;
-	}
-
-	public void setTermini(Set<Termin> termini) {
-		this.termini = termini;
-	}
-
-	public RadniDan() {
+	public Termin() {
 		super();
 	}
-
+	
 	@Override
 	public boolean equals(Object obj) {
 		// TODO Auto-generated method stub
@@ -96,4 +93,11 @@ public class RadniDan {
 		// TODO Auto-generated method stub
 		return super.toString();
 	}
+	
+	
+	
+	
+	
+	
+	
 }

@@ -174,3 +174,8 @@ insert into odmor_odsustvo_medicinska_sestra (klinika_id,medicinska_sestra_id, d
 
 insert into odmor_odsustvo_lekar (klinika_id,lekar_id, datum_od, datum_do, opis, tip, status) values (3,2, '2019-11-21', '2019-12-01', 'odmor ili odsustvo', 0, FALSE);
 
+
+insert into radni_dan(medicinska_sestra_id, datum_pocetka, datum_kraja) values (2,'2020-01-21 09:00:00', '2020-01-21 17:00:00' );
+
+--insert into tremin(radni_dan_id, datum_pocetka, datum_kraja, status) values(1,'2020-01-21 09:00:00', '2020-01-21 10:00:00', FALSE);
+--insert into tremin(radni_dan_id, datum_pocetka, datum_kraja, status) values(1,'2020-01-21 10:00:00', '2020-01-21 11:00:00', FALSE);

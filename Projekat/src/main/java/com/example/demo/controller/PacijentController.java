@@ -4,8 +4,6 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,7 +22,6 @@ import com.example.demo.dto.PacijentDTO;
 import com.example.demo.model.KlinickiCentar;
 import com.example.demo.model.Pacijent;
 import com.example.demo.model.ZdravstveniKarton;
-import com.example.demo.service.EmailService;
 import com.example.demo.service.KlinickiCentarService;
 import com.example.demo.service.PacijentService;
 
@@ -37,11 +34,6 @@ public class PacijentController {
 
 	@Autowired
 	private KlinickiCentarService KCService;
-
-	@Autowired
-	private EmailService emailService;
-
-	private Logger logger = LoggerFactory.getLogger(UserController.class);
 
 	@GetMapping(value = "/all")
 	public ResponseEntity<List<PacijentDTO>> getAll() {
@@ -71,7 +63,7 @@ public class PacijentController {
 //	@GetMapping(value = "/findPacijentEmail/{email:.+}")
 	@GetMapping(value = "/findPacijentEmail")
 	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority( 'PACIJENT') or hasAuthority('MED_SESTRA')")
+	@PreAuthorize("hasAuthority('PACIJENT')")
 	public ResponseEntity<?> getPacijentByEmail(Principal p) {
 		System.out.println("find pacijent");
 		System.out.println(p.getName());
@@ -86,14 +78,53 @@ public class PacijentController {
 
 	@GetMapping(value = "/findZK")
 	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority( 'PACIJENT') or hasAuthority('MED_SESTRA')")
-	public ResponseEntity<ZdravstveniKarton> getZK(@PathVariable String email) {
+	@PreAuthorize("hasAuthority('PACIJENT')")
+	public ResponseEntity<ZdravstveniKarton> getZK(Principal pr) {
+
+		System.out.println("find pacijent");
+		System.out.println("zk");
+
+		Pacijent pacijent = pacijentService.findByEmail(pr.getName());
+		System.out.println("Pacijent: " + pacijent);
+		if (pacijent == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		ZdravstveniKarton zk = pacijent.getZdravstveniKarton();
+		System.out.println(pacijent.getEmail() + "++++");
+		Pacijent p = new Pacijent();
+		p.setEmail(pacijent.getEmail());
+		zk.setPacijent(p);
+		return new ResponseEntity<>(new ZdravstveniKarton(zk), HttpStatus.OK);
+	}	
+
+	//metoda za vracanje pacijenta- za med sestru
+	@GetMapping(value = "/findPacijentEmailMS" , consumes = "application/json")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('MED_SESTRA')")
+	public ResponseEntity<PacijentDTO> getPacijentByEmailMS(@RequestBody PacijentDTO pacijentDTO) {
+		System.out.println("find pacijent");
+		System.out.println(pacijentDTO.getEmail());
+		Pacijent pacijent = pacijentService.findByEmail(pacijentDTO.getEmail());
+		System.out.println("pacijent " + pacijent);
+		if (pacijent == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		System.out.println(pacijent.getEmail() + "++++");
+		return ResponseEntity.ok(new PacijentDTO(pacijent));
+	}
+
+	//metoda za vracanje zdravstvenog kartona- za med sestru
+	@GetMapping(value = "/findZKMS" , consumes = "application/json")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('MED_SESTRA')")
+	public ResponseEntity<ZdravstveniKarton> getZKMS(@RequestBody PacijentDTO pacijentDTO) {
 
 
 		System.out.println("find pacijent");
 		System.out.println("zk");
 
-		Pacijent pacijent = pacijentService.findByEmail(email);
+		Pacijent pacijent = pacijentService.findByEmail(pacijentDTO.getEmail());
 		System.out.println("Pacijent: " + pacijent);
 		if (pacijent == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -140,20 +171,6 @@ public class PacijentController {
 		return new ResponseEntity<>(new PacijentDTO(pacijent), HttpStatus.CREATED);
 	}
 
-//	@PostMapping(path = "/signup", consumes = "application/json")
-//	@CrossOrigin(origins = "http://localhost:3000")
-//	public String signUpAsync(@RequestBody UserDTO userDTO){
-//
-//		
-//		//slanje emaila
-//		try {
-//			emailService.sendNotificaitionAsync(userDTO);
-//		}catch( Exception e ){
-//			logger.info("Greska prilikom slanja emaila: " + e.getMessage());
-//		}
-//
-//		return "success";
-//	}
 
 	@PutMapping(path = "/update", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
@@ -164,10 +181,6 @@ public class PacijentController {
 		System.out.println("LEKAR UPDRATE");
 		Pacijent pacijent = pacijentService.findByEmail(pacijentDTO.getEmail());
 
-//		System.out.println("Lekar update: " + lekar.getEmail());
-//		if (lekar == null) {
-//			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//		}
 
 		pacijent.setIme(pacijentDTO.getIme());
 		pacijent.setPrezime(pacijentDTO.getPrezime());
