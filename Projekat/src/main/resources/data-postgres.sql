@@ -44,11 +44,11 @@ insert into zdravstveni_karton (visina, tezina, krvna_grupa) values (190,90, 'A'
 insert into zdravstveni_karton (visina, tezina, krvna_grupa) values (185,85, 'B');
 insert into zdravstveni_karton (visina, tezina, krvna_grupa) values (195,95, '0');
 
-insert into pacijent (ime, prezime, lbo,  lozinka, email, adresa, grad, drzava, telefon, odobrena_registracija, klinicki_centar_id, zdravstveni_karton_id) values ('Pera', 'Peric', '00136547865', '$2y$12$quB17Sy.NyfuOK2gV0xAYuMWL9Hq7D.enZa/iVlDh/4qz.5dbr8fy', 'pera@gmail.com', 'Temerinska 55','Novi Sad', 'Srbija','065241359', true, 1, 1);
-insert into pacijent (ime, prezime, lbo,  lozinka, email, adresa, grad, drzava, telefon, odobrena_registracija, klinicki_centar_id, zdravstveni_karton_id) values ('Mita', 'Mitic', '00234212256', '$2y$12$dsfxuPfCtOdH/1hNS6nYg.bV9KVvYSV8ieibaUVvnoPbDaQmAK3Y.', 'mita@gmail.com', 'Petra Drapsina 89', 'Novi Sad', 'Srbija','0642255696', false, 1, 2);
-insert into pacijent (ime, prezime, lbo,  lozinka, email, adresa, grad, drzava, telefon, odobrena_registracija, klinicki_centar_id, zdravstveni_karton_id) values ('Jovan', 'Jovicic', '00378975346', '$2y$12$aKFrJ1lPai6EBwofijLvOOw67h2GD2sxlBf8TdKPc3ykqKIfo8ayW', 'jovan@gmail.com', 'Petra Kocica 66', 'Novi Sad', 'Srbija','061221478', true, 1, 3);
-insert into pacijent (ime, prezime, lbo,  lozinka, email, adresa, grad, drzava, telefon, odobrena_registracija, klinicki_centar_id, zdravstveni_karton_id) values ('Lara', 'Nikolic', '00487885437', '$2y$12$Q71g/k/ItGEpebDRS9727OJ/EutFXhCp1GjpUO4ofljoIGTGs7u0.', 'lara@gmail.com', 'Kralja Petra 11', 'Novi Sad', 'Srbija','0642255696', false, 1, 4);
-insert into pacijent (ime, prezime, lbo,  lozinka, email, adresa, grad, drzava, telefon, odobrena_registracija, klinicki_centar_id, zdravstveni_karton_id) values ('Anita', 'Antic', '00500987234', '$2y$12$cttD74SUFF/vnIJ3r6/yYebun0yY1Zji2pNkncrY/b87/e5za29tO', 'anita@gmail.com', 'Mise Dimitrijevica 66', 'Novi Sad', 'Srbija','069221478', true, 1, 3);
+insert into pacijent (ime, prezime, lbo, jmbg, lozinka, email, adresa, grad, drzava, telefon, odobrena_registracija, klinicki_centar_id, zdravstveni_karton_id) values ('Pera', 'Peric', '00136547865', '0612967800002', '$2y$12$quB17Sy.NyfuOK2gV0xAYuMWL9Hq7D.enZa/iVlDh/4qz.5dbr8fy', 'pera@gmail.com', 'Temerinska 55','Novi Sad', 'Srbija','065241359', true, 1, 1);
+insert into pacijent (ime, prezime, lbo, jmbg, lozinka, email, adresa, grad, drzava, telefon, odobrena_registracija, klinicki_centar_id, zdravstveni_karton_id) values ('Mita', 'Mitic', '00234212256', '0504988800520', '$2y$12$dsfxuPfCtOdH/1hNS6nYg.bV9KVvYSV8ieibaUVvnoPbDaQmAK3Y.', 'mita@gmail.com', 'Petra Drapsina 89', 'Novi Sad', 'Srbija','0642255696', false, 1, 2);
+insert into pacijent (ime, prezime, lbo, jmbg, lozinka, email, adresa, grad, drzava, telefon, odobrena_registracija, klinicki_centar_id, zdravstveni_karton_id) values ('Jovan', 'Jovicic', '00378975346', '1511965840036', '$2y$12$aKFrJ1lPai6EBwofijLvOOw67h2GD2sxlBf8TdKPc3ykqKIfo8ayW', 'jovan@gmail.com', 'Petra Kocica 66', 'Novi Sad', 'Srbija','061221478', true, 1, 3);
+insert into pacijent (ime, prezime, lbo, jmbg, lozinka, email, adresa, grad, drzava, telefon, odobrena_registracija, klinicki_centar_id, zdravstveni_karton_id) values ('Lara', 'Nikolic', '00487885437', '2306999804556', '$2y$12$Q71g/k/ItGEpebDRS9727OJ/EutFXhCp1GjpUO4ofljoIGTGs7u0.', 'lara@gmail.com', 'Kralja Petra 11', 'Novi Sad', 'Srbija','0642255696', false, 1, 4);
+insert into pacijent (ime, prezime, lbo, jmbg, lozinka, email, adresa, grad, drzava, telefon, odobrena_registracija, klinicki_centar_id, zdravstveni_karton_id) values ('Anita', 'Antic', '00500987234', '0105949806635', '$2y$12$cttD74SUFF/vnIJ3r6/yYebun0yY1Zji2pNkncrY/b87/e5za29tO', 'anita@gmail.com', 'Mise Dimitrijevica 66', 'Novi Sad', 'Srbija','069221478', true, 1, 3);
 
 insert into tip_pregleda(naziv) values ('dermatoloski pregled');
 insert into tip_pregleda(naziv) values ('oftalmoloski pregled');
@@ -130,6 +130,12 @@ insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, c
 --insert into radni_dan (datum_pocetka, datum_kraja,  medicinska_sestra_id) values ('09-dec-2019 06:00:00+01:00', '09-dec-2019 13:59:00+01:00', 1);
 --insert into radni_dan (datum_pocetka, datum_kraja,  medicinska_sestra_id) values ('13-dec-2019 06:00:00+01:00', '13-dec-2019 13:59:00+01:00', 1);
 --insert into radni_dan (datum_pocetka, datum_kraja,  medicinska_sestra_id) values ('16-dec-2019 06:00:00+01:00', '16-dec-2019 13:59:00+01:00', 1);
+
+insert into operacija (datum, tip_operacije, sala_id, lekar_id, pacijent_id, cena, klinika_id) values ('12-mar-2020 08:00', 'mala hiruska intervencija', 1, 1, 1, 10000, 1);
+insert into operacija (datum, tip_operacije, sala_id, lekar_id, pacijent_id, cena, klinika_id) values ('13-mar-2020 08:00', 'velika hiruska intervencija', 3, 2, 2, 15000, 3);
+insert into operacija (datum, tip_operacije, sala_id, lekar_id, pacijent_id, cena, klinika_id) values ('14-mar-2020 08:00', 'mala hiruska intervencija', 2, 3, 3, 10000, 3);
+insert into operacija (datum, tip_operacije, sala_id, lekar_id, pacijent_id, cena, klinika_id) values ('15-mar-2020 08:00', 'velika hiruska intervencija', 3, 2, 1, 20000, 1);
+
 
 insert into authority (uloga) values ('PACIJENT');
 insert into authority (uloga) values ('LEKAR');

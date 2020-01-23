@@ -25,7 +25,7 @@ public class Operacija {
 	@Column(name="tipOperacije", nullable=false)
 	private String tipOperacije;
 	
-	@Column(name="trajanje", nullable=false)
+	@Column(name="trajanje", nullable=true)
 	private Time trajanje;
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -40,8 +40,8 @@ public class Operacija {
 	@Column(name="cena", nullable=false)
 	private double cena;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private ZdravstveniKarton zdravstveniKarton;
+//	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//	private ZdravstveniKarton zdravstveniKarton;
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Klinika klinika;
@@ -112,12 +112,12 @@ public class Operacija {
 	public void setPacijent(Pacijent pacijent) {
 		this.pacijent = pacijent;
 	}
-	public ZdravstveniKarton getZdravstveniKarton() {
-		return zdravstveniKarton;
-	}
-	public void setZdravstveniKarton(ZdravstveniKarton zdravstveniKarton) {
-		this.zdravstveniKarton = zdravstveniKarton;
-	}
+//	public ZdravstveniKarton getZdravstveniKarton() {
+//		return zdravstveniKarton;
+//	}
+//	public void setZdravstveniKarton(ZdravstveniKarton zdravstveniKarton) {
+//		this.zdravstveniKarton = zdravstveniKarton;
+//	}
 	public Klinika getKlinika() {
 		return klinika;
 	}

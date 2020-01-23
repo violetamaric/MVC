@@ -16,6 +16,8 @@ public class PacijentDTO {
 	private String prezime;
 
 	private String lbo;
+	
+	private String jmbg;
 
 	private String lozinka;
 
@@ -51,11 +53,12 @@ public class PacijentDTO {
 		this.grad = pacijent.getGrad();
 		this.drzava = pacijent.getDrzava();
 		this.telefon = pacijent.getTelefon();
+		this.jmbg = pacijent.getJmbg();
 
 	}
 
 	public PacijentDTO(Long id, ZdravstveniKarton zdravstveniKarton, String ime, String prezime, String lbo,
-			String lozinka, String email, Boolean odobrenaRegistracija) {
+			String lozinka, String email, Boolean odobrenaRegistracija, String jmbg) {
 		super();
 		this.id = id;
 		this.zdravstveniKarton = zdravstveniKarton;
@@ -65,6 +68,7 @@ public class PacijentDTO {
 		this.lozinka = lozinka;
 		this.email = email;
 		this.odobrenaRegistracija = odobrenaRegistracija;
+		this.jmbg = jmbg;
 	}
 
 	public Long getId() {
@@ -105,6 +109,14 @@ public class PacijentDTO {
 
 	public void setLbo(String lbo) {
 		this.lbo = lbo;
+	}
+
+	public String getJmbg() {
+		return jmbg;
+	}
+
+	public void setJmbg(String jmbg) {
+		this.jmbg = jmbg;
 	}
 
 	public String getLozinka() {
