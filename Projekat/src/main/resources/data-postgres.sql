@@ -99,11 +99,11 @@ insert into slobodni_termin(datum, tip_pregleda_id, lekar_id, klinika_id, cena, 
 insert into slobodni_termin(datum, tip_pregleda_id, lekar_id, klinika_id, cena, status, popust) values ('19-dec-2019 08:00', 2, 2, 2, 3000, false, 10.0);
 
 
-insert into sala(naziv, broj, klinika_id) values ('O', 1, 3);
-insert into sala(naziv, broj, klinika_id) values ('O', 2, 3);
-insert into sala(naziv, broj, klinika_id) values ('P', 1, 3);
-insert into sala(naziv, broj, klinika_id) values ('P', 2, 3);
-insert into sala(naziv, broj, klinika_id) values ('O', 1, 2);
+insert into sala(naziv, broj, klinika_id) values ('Oper', 123, 3);
+insert into sala(naziv, broj, klinika_id) values ('Oper', 22, 3);
+insert into sala(naziv, broj, klinika_id) values ('P-Dermatoloski', 111, 3);
+insert into sala(naziv, broj, klinika_id) values ('P-Stomatoloski', 96, 3);
+insert into sala(naziv, broj, klinika_id) values ('Oper', 19, 2);
 insert into sala(naziv, broj, klinika_id) values ('O', 2, 2);
 insert into sala(naziv, broj, klinika_id) values ('P', 1, 2);
 insert into sala(naziv, broj, klinika_id) values ('P', 2, 2);

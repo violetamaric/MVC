@@ -64,6 +64,7 @@ public class SalaController {
 		return new ResponseEntity<>(salaDTO, HttpStatus.OK);
 	}
 
+
 	@GetMapping(value = "preuzmiSaleKlinike/{id}")
 	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
 	public ResponseEntity<List<SalaDTO>> getSaleKlinike(@PathVariable Long id) {
@@ -85,7 +86,7 @@ public class SalaController {
 
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
-
+	
 	// brisanje sale
 	@PostMapping(path = "/brisanjeSale", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
