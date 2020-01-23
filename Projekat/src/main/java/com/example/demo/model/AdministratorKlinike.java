@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -55,8 +56,7 @@ public class AdministratorKlinike implements UserDetails{
 			inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
 	private Set<Authority> authorities;
 	
-//	private Set<Pregled> listaPregleda;
-//	private Set<Operacija> listaOperacija; //?? proveriti
+	//	private Set<Operacija> listaOperacija; //?? proveriti
 //	
 	public String getIme() {
 		return ime;

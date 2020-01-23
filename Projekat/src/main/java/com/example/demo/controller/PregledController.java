@@ -70,6 +70,8 @@ public class PregledController {
 		pregled.setTipPregleda(tp);
 
 		pregled = pregledService.save(pregled);
+		klinika.getListaPregleda().add(pregled);
+		klinika = klinikaService.save(klinika);
 
 		return new ResponseEntity<>(new PregledDTO(pregled), HttpStatus.OK);
 	}
@@ -117,7 +119,10 @@ public class PregledController {
 			}
 
 		}
-
+		
+		klinika.getListaPregleda().add(pregled);
+		klinika = klinikaService.save(klinika);
+		
 		return new ResponseEntity<>(new PregledDTO(pregled), HttpStatus.OK);
 	}
 
@@ -187,6 +192,30 @@ public class PregledController {
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 
+	
+	@GetMapping(value = "preuzmiZahtevePregledaKlinike/{id}")
+	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
+	public ResponseEntity<List<PregledDTO>> getZahteviPreglediKlinike(@PathVariable Long id) {
+
+		Klinika klinika = klinikaService.findOne(id);
+		List<Pregled> pregledi = pregledService.findAll();
+		List<PregledDTO> lista = new ArrayList<PregledDTO>();
+		for (Pregled s : pregledi) {
+			if (s.getKlinika().getId() == klinika.getId() && s.getStatus()==0) {
+				PregledDTO pregledDTO = new PregledDTO(s);
+				lista.add(pregledDTO);
+			}
+		}
+
+		System.out.println("Lista  zahtjeva pregleda u klinici:" + klinika.getNaziv() + " ID: " + id);
+		for (PregledDTO ss : lista) {
+			System.out.println(ss.getCena());
+		}
+
+		return new ResponseEntity<>(lista, HttpStatus.OK);
+	}
+
+	
 	@PutMapping(path = "/potvrda/{id}")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('PACIJENT')")

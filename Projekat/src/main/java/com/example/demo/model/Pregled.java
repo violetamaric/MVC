@@ -38,8 +38,11 @@ public class Pregled {
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Sala sala;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER)
 	private Lekar lekar;
+	
+
+	
 
 //	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 //	private MedicinskaSestra medicinskaSestra;

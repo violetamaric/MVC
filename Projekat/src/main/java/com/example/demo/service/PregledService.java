@@ -2,6 +2,8 @@ package com.example.demo.service;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +33,16 @@ public class PregledService {
 	public Pregled save(Pregled Pregled) {
 		return pregledRepository.save(Pregled);
 	}
+	@Transactional
 	public void delete(Pregled pregled) {
 		pregledRepository.delete(pregled);
+	}
+	
+	public void deleteById(Long id) {
+		pregledRepository.deleteById(id);
+	}
+	
+	public void deleteAll() {
+		pregledRepository.deleteAll();
 	}
 }
