@@ -47,9 +47,8 @@ public class KlinikaController {
 
 
 	@GetMapping(value = "/{id}")
-	@PreAuthorize("hasAuthority( 'ADMIN_KLINIKE') or hasAuthority('ADMIN_KC')")
 	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('ADMIN_KLINIKE') or hasAuthority('LEKAR')")
+	@PreAuthorize("hasAuthority('ADMIN_KLINIKE') or hasAuthority('LEKAR') or hasAuthority('ADMIN_KC')")
 	public ResponseEntity<?> getKlinikaById(@PathVariable Long id) {
 		System.out.println("Metoda find by id klinika: ");
 		System.out.println(id);

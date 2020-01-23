@@ -87,9 +87,9 @@ public class AdministratorKlinikeController {
 	@GetMapping(value = "/getAdminKlinikeByEmail")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority( 'ADMIN_KLINIKE') or hasAuthority('ADMIN_KC')")
-	public ResponseEntity<AdministratorKlinikeDTO> findByEmail(@PathVariable String email) {
+	public ResponseEntity<AdministratorKlinikeDTO> findByEmail(Principal p) {
 
-		AdministratorKlinike adminiKlinike = administratorKlinikeService.findByEmail(email);
+		AdministratorKlinike adminiKlinike = administratorKlinikeService.findByEmail(p.getName());
 
 		if (adminiKlinike == null) {
 			System.out.println("admin klinike nije pronadjen");
