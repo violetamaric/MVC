@@ -40,6 +40,7 @@ public class AdministratorKlinikeController {
 	private KlinikaService klinikaService;
 
 	@GetMapping(value = "/{id}")
+	@PreAuthorize("hasAuthority( 'ADMIN_KLINIKE') or hasAuthority('ADMIN_KC')")
 	public ResponseEntity<AdministratorKlinikeDTO> getAdminKlinike(@PathVariable Long id) {
 
 		AdministratorKlinike ak = administratorKlinikeService.findOne(id);
@@ -85,11 +86,11 @@ public class AdministratorKlinikeController {
 
 	@GetMapping(value = "/getAdminKlinikeByEmail")
 	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
-	public ResponseEntity<?> findByEmail(Principal p) {
-		System.out.println("Metoda - find admin klinike .. ");
-		System.out.println(p.getName());
-		AdministratorKlinike adminiKlinike = administratorKlinikeService.findByEmail(p.getName());
+	@PreAuthorize("hasAuthority( 'ADMIN_KLINIKE') or hasAuthority('ADMIN_KC')")
+	public ResponseEntity<AdministratorKlinikeDTO> findByEmail(@PathVariable String email) {
+
+		AdministratorKlinike adminiKlinike = administratorKlinikeService.findByEmail(email);
+
 		if (adminiKlinike == null) {
 			System.out.println("admin klinike nije pronadjen");
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -102,7 +103,7 @@ public class AdministratorKlinikeController {
 	// izmjena podataka admina klinika
 	@PutMapping(path = "/update", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
+	@PreAuthorize("hasAuthority( 'ADMIN_KLINIKE') or hasAuthority('ADMIN_KC')")
 	public ResponseEntity<AdministratorKlinikeDTO> updateAdminKlinike(@RequestBody AdministratorKlinikeDTO administratorKlinikeDTO) {
 
 

@@ -45,7 +45,9 @@ public class KlinikaController {
 	private SlobodniTerminService STService;
 	
 
-	@GetMapping(value = "/finKlinikaById/{id}")
+
+	@GetMapping(value = "/{id}")
+	@PreAuthorize("hasAuthority( 'ADMIN_KLINIKE') or hasAuthority('ADMIN_KC')")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('ADMIN_KLINIKE') or hasAuthority('LEKAR')")
 	public ResponseEntity<?> getKlinikaById(@PathVariable Long id) {
@@ -125,7 +127,7 @@ public class KlinikaController {
 
 	@PutMapping(path = "/update", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
+	@PreAuthorize("hasAuthority( 'ADMIN_KLINIKE') or hasAuthority('ADMIN_KC')")
 	public ResponseEntity<KlinikaDTO> updateKliniku(@RequestBody KlinikaDTO klinikaDTO) {
 
 		// a student must exist

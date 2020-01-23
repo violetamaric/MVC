@@ -8,6 +8,9 @@ public class PregledDTO {
 	private Long id;
 
 	private Date datum;
+	//TODO 1: DODATI TRAJANJE I KRAJ PREGLEDA
+	
+	
 
 	private Long tipPregledaID;
 	private String nazivTP;
