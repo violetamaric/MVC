@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -25,9 +26,11 @@ import com.example.demo.model.Klinika;
 import com.example.demo.model.Lekar;
 import com.example.demo.model.Pacijent;
 import com.example.demo.model.Pregled;
+import com.example.demo.model.SlobodniTermin;
 import com.example.demo.service.KlinikaService;
 import com.example.demo.service.LekarService;
 import com.example.demo.service.PregledService;
+import com.example.demo.service.SlobodniTerminService;
 
 @RestController
 @RequestMapping(value = "/api/klinike", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -38,10 +41,17 @@ public class KlinikaController {
 	private LekarService lekarService;
 	@Autowired
 	private PregledService pregledService;
+	@Autowired
+	private SlobodniTerminService STService;
+	
+
 
 	@GetMapping(value = "/{id}")
 	@CrossOrigin(origins = "http://localhost:3000")
-	public ResponseEntity<KlinikaDTO> getKlinikaById(@PathVariable Long id) {
+	@PreAuthorize("hasAuthority('ADMIN_KLINIKE') or hasAuthority('LEKAR') or hasAuthority('ADMIN_KC')")
+	public ResponseEntity<?> getKlinikaById(@PathVariable Long id) {
+		System.out.println("Metoda find by id klinika: ");
+		System.out.println(id);
 
 		Klinika k = klinikaService.findOne(id);
 		System.out.println("Pretraga klinike po ID");
@@ -50,11 +60,28 @@ public class KlinikaController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		System.out.println(k.getNaziv() + " " + k.getId());
-		return new ResponseEntity<>(new KlinikaDTO(k), HttpStatus.OK);
+		return ResponseEntity.ok(new KlinikaDTO(k));
 	}
 
+//	@GetMapping(value = "/{id}")
+//	@CrossOrigin(origins = "http://localhost:3000")
+//	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
+//	public ResponseEntity<?> getKlinikaById(@PathVariable Long id) {
+//		System.out.println("Metoda find by id klinika: ");
+//		System.out.println(id);
+//		
+//		Klinika k = klinikaService.findOne(id);
+//		System.out.println("Pretraga klinike po ID");
+//		// studen must exist
+//		if (k == null) {
+//			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//		}
+//		System.out.println(k.getNaziv() + " " + k.getId());
+//		return ResponseEntity.ok(new KlinikaDTO(k));
+//	}
+
 	@GetMapping(value = "/all")
-	@PreAuthorize("hasAuthority('PACIJENT')")
+	@PreAuthorize("hasAuthority('PACIJENT') or hasAuthority('ADMIN_KLINIKE')")
 	public ResponseEntity<List<KlinikaDTO>> getAll() {
 
 		List<Klinika> klinike = klinikaService.findAll();
@@ -69,6 +96,8 @@ public class KlinikaController {
 	}
 
 	@GetMapping(value = "/findKlinikaByNaziv/{naziv}")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
 	public ResponseEntity<KlinikaDTO> getKlinikaByNaziv(@PathVariable String naziv) {
 		System.out.println("find klinika by naziv");
 		Klinika klinika = klinikaService.findByNaziv(naziv);
@@ -97,6 +126,7 @@ public class KlinikaController {
 
 	@PutMapping(path = "/update", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority( 'ADMIN_KLINIKE') or hasAuthority('ADMIN_KC')")
 	public ResponseEntity<KlinikaDTO> updateKliniku(@RequestBody KlinikaDTO klinikaDTO) {
 
 		// a student must exist
@@ -120,7 +150,7 @@ public class KlinikaController {
 
 	@GetMapping(value = "/listaLekaraKlinika/{id}")
 	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('PACIJENT')")
+	@PreAuthorize("hasAuthority('ADMIN_KLINIKE') or hasAuthority('PACIJENT')")
 	public ResponseEntity<List<LekarDTO>> getKlinikaLekari(@PathVariable Long id) {
 		System.out.println("//////////////////// KLINIKA LISTA LEKARA /////////////////////////		");
 		Klinika klinika = klinikaService.findById(id);
@@ -148,12 +178,13 @@ public class KlinikaController {
 	// brisanje lekara
 	@PostMapping(path = "/brisanjeLekara", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
 	public ResponseEntity<String> brisanjeLekara(@RequestBody LekarDTO lekarDTO) {
 		System.out.println("------------------------------------------------------");
 		System.out.println("pocinje");
 		// lekar koji se brise
 		Lekar lekar = lekarService.findByEmail(lekarDTO.getEmail());
-
+		System.out.println(lekar.getEmail());
 		List<Klinika> listaKlinika = klinikaService.findAll();
 		System.out.println("Id LEKAR KLINIKA: " + lekar.getKlinika().getId());
 
@@ -163,23 +194,103 @@ public class KlinikaController {
 		System.out.println("Klinika id ------------- : " + klinika.getId());
 
 		if (klinika.getListaLekara().contains(lekar)) {
-			System.out.println("LEKAR =============== " + lekar);
-			Set<Lekar> lista = klinika.getListaLekara();
-			lista.remove(lekar);
-			klinika.getListaLekara().clear();
-			klinika.setListaLekara(lista);
-
-			lekarService.delete(lekar);
-
-			klinika = klinikaService.save(klinika);
-			System.out.println("obrisano");
+			List<SlobodniTermin> listaST = STService.findAll();
+			List<SlobodniTermin> listaSTkopija = listaST;
+			for(SlobodniTermin s: listaSTkopija) {
+				System.out.println("Slobodni termin L: " + s.getLekar().getIme());
+				if(s.getLekar().equals(lekar)) {
+					listaST.remove(s);
+					STService.delete(s);
+					
+				}
+			}	
+			List<Pregled> listaP = pregledService.findAll();
+			List<Pregled> listaPkopija  = new ArrayList<Pregled>(listaP);
+			System.out.println(pregledService.findAll().size());
+			for(Pregled p: listaPkopija) {
+					System.out.println("Preled: " + p.getLekar().getIme());
+					if(p.getLekar().equals(lekar)) {
+						System.out.println(listaP.size());
+						
+					
+						Pregled pp = pregledService.findById(p.getId());
+						listaP.remove(pp);
+						System.out.println(listaP.size());
+						
+//						pregledService.delete(pp);
+						pregledService.deleteById(pp.getId());
+						
+						
+						
+					//	lekar = lekarService.save(lekar);
+						
+						System.out.println("aaaaaaaaaaaaaaaaaaaaa");
+					}
+			}
+			
+		//	pregledService.deleteAll();
+//			System.out.println(pregledService.findAll().size());
+//			for(Pregled preg : listaP) {
+//				pregledService.save(preg);
+//			}
+			System.out.println(pregledService.findAll().size());
+			System.out.println("dsadasdasdsadasads");
 		}
+			
+		System.out.println("--------------*-*-*-*-*-*-*-*-*");
+			Set<Lekar> lista = klinika.getListaLekara();
+			System.out.println("------> LISTA LEKARA KLINIKE:  -----" );
+			for(Lekar l: lista) {
+				System.out.println(l.getEmail());
+			}
+			System.out.println("---------------------------------------");
+			System.out.println("LEKAR kojeg brisem =============== " + lekar.getEmail());
+//			lista.remove(lekar);
+//			System.out.println("------> LISTA LEKARA KLINIKE NAKON BRISANJA:  -----" );
+//			for(Lekar l: lista) {
+//				System.out.println(l.getEmail());
+//			}
+//			System.out.println("---------------------------------------");
+//		//	klinika.getListaLekara().clear();
+			klinika.getListaLekara().remove(lekar);
+			System.out.println("------> LISTA LEKARA KLINIKE NAKON BRISANJA :  -----" );
+			for(Lekar l: klinika.getListaLekara()) {
+				System.out.println(l.getEmail());
+			}
+			System.out.println("---------------------------------------");
+			//klinika.setListaLekara(lista);
+//			System.out.println("------> LISTA LEKARA KLINIKE NAKON SETOVANJA:  -----" );
+//			for(Lekar l: klinika.getListaLekara()) {
+//				System.out.println(l.getEmail());
+//			}
+//			System.out.println("---------------------------------------");
+			System.out.println(lekar.getEmail());
+			
+			Lekar ll = lekarService.findByEmail(lekarDTO.getEmail());
+//			System.out.println(ll.getEmail());
+//			System.out.println(lekar.getEmail());
+			lekarService.delete(ll);
+			
+			System.out.println("/*****************   BAZA  *****************/");
+			
+			for(Lekar l: lekarService.findAll()) {
+				System.out.println(l.getEmail());
+			}
+			System.out.println("/**********************************/");
+			
+			
+			
+			
+		//	klinikaService.save(klinika);
+		//	System.out.println("obrisano" + lekarDTO.getEmail()); 
+		
 		System.out.println("------------------------------------------------------");
 		return new ResponseEntity<>("uspesno obrisan lekar !!!", HttpStatus.OK);
 	}
 
 	@GetMapping(value = "/pacijentiKlinike/{id}")
 	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('LEKAR')")
 	public ResponseEntity<List<PacijentDTO>> getPacijentiKlinike(@PathVariable Long id) {
 		System.out.println("//////////////////// Klinika i lista pacijenata /////////////////////////		");
 //		Klinika klinika = klinikaService.findById(id);
@@ -221,71 +332,5 @@ public class KlinikaController {
 
 		return new ResponseEntity<>(new KlinikaDTO(klinika), HttpStatus.OK);
 	}
-
-//	// brisanje lekara
-//	@PostMapping(path = "/brisanjeLekara", consumes = "application/json")
-//	@CrossOrigin(origins = "http://localhost:3000")
-//	public ResponseEntity<String> brisanjeLekara(@RequestBody LekarDTO lekarDTO) {
-//		System.out.println("------------------------------------------------------");
-//		System.out.println("pocinje");
-//		//lekar koji se brise
-//		Lekar lekar = lekarService.findByEmail(lekarDTO.getEmail());
-//		
-//		List<Klinika> listaKlinika = klinikaService.findAll();
-//		System.out.println("Id LEKAR KLINIKA: " + lekar.getKlinika().getId());
-//
-//		Long idLong = lekar.getKlinika().getId();
-//
-//		Klinika klinika = klinikaService.findById(idLong);
-//		System.out.println("Klinika id ------------- : " + klinika.getId());
-//
-//		if (klinika.getListaLekara().contains(lekar)) {
-//			System.out.println("LEKAR =============== " + lekar);
-//			Set<Lekar> lista = klinika.getListaLekara();
-//			lista.remove(lekar);
-//			klinika.getListaLekara().clear();
-//			klinika.setListaLekara(lista);	
-//			
-//			lekarService.delete(lekar);
-//
-//			klinika = klinikaService.save(klinika);
-//			System.out.println("obrisano");
-//		}
-//		System.out.println("------------------------------------------------------");
-//		return new ResponseEntity<>("uspesno obrisan lekar !!!", HttpStatus.OK);
-//	}
-
-//	// brisanje lekara
-//	@PostMapping(path = "/brisanjeLekara", consumes = "application/json")
-//	@CrossOrigin(origins = "http://localhost:3000")
-//	public ResponseEntity<String> brisanjeLekara(@RequestBody LekarDTO lekarDTO) {
-//		System.out.println("------------------------------------------------------");
-//		System.out.println("pocinje");
-//		//lekar koji se brise
-//		Lekar lekar = lekarService.findByEmail(lekarDTO.getEmail());
-//		
-//		List<Klinika> listaKlinika = klinikaService.findAll();
-//		System.out.println("Id LEKAR KLINIKA: " + lekar.getKlinika().getId());
-//
-//		Long idLong = lekar.getKlinika().getId();
-//
-//		Klinika klinika = klinikaService.findById(idLong);
-//		System.out.println("Klinika id ------------- : " + klinika.getId());
-//
-//		if (klinika.getListaLekara().contains(lekar)) {
-//			System.out.println("LEKAR =============== " + lekar);
-//			Set<Lekar> lista = klinika.getListaLekara();
-//			lista.remove(lekar);
-//			klinika.getListaLekara().clear();
-//			klinika.setListaLekara(lista);	
-//			
-//			lekarService.delete(lekar);
-//
-//			klinika = klinikaService.save(klinika);
-//			System.out.println("obrisano");
-//		}
-//		System.out.println("------------------------------------------------------");
-//		return new ResponseEntity<>("uspesno obrisan lekar !!!", HttpStatus.OK);
-//	}
 
 }

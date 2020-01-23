@@ -1,6 +1,5 @@
 package com.example.demo.model;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -17,7 +16,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -58,6 +56,9 @@ public class Lekar implements UserDetails{
 	
 	@OneToMany(mappedBy = "lekar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Pregled> listaPregleda = new HashSet<Pregled>();
+	
+	@OneToMany(mappedBy = "lekar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<OdmorOdsustvoLekar> listaOdmorOdsustvo = new HashSet<OdmorOdsustvoLekar>();
 	
 	@Column(name="ocena", nullable=false)
 	private int ocena; 

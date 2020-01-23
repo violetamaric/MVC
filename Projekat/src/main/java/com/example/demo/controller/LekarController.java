@@ -1,12 +1,15 @@
 package com.example.demo.controller;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.LekarDTO;
 import com.example.demo.dto.PacijentDTO;
+
+import com.example.demo.dto.PregledDTO;
+
 import com.example.demo.model.Lekar;
 import com.example.demo.model.Pacijent;
 import com.example.demo.model.Pregled;
@@ -49,19 +55,20 @@ public class LekarController {
 
 		return new ResponseEntity<>(new LekarDTO(lekar), HttpStatus.OK);
 	}
-
-	@GetMapping(value = "/getLekarByEmail/{email}")
+	
+	@GetMapping(value = "/getLekarByEmail")
 	@CrossOrigin(origins = "http://localhost:3000")
-	public ResponseEntity<LekarDTO> findByEmail(@PathVariable String email) {
-
-		Lekar lekar = lekarService.findByEmail(email);
+	@PreAuthorize("hasAuthority('ADMIN_KLINIKE') or hasAuthority('LEKAR')")
+	public ResponseEntity<?> findByEmail(Principal p){
+		
+		Lekar lekar = lekarService.findByEmail(p.getName());
 		if (lekar == null) {
 			System.out.println("Lekar nije pronadjen");
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		System.out.println("Lekar je pronadjen : " + lekar);
-
-		return new ResponseEntity<>(new LekarDTO(lekar), HttpStatus.OK);
+		System.out.println("Lekar je pronadjen : "+ lekar);
+		
+		return ResponseEntity.ok(new LekarDTO(lekar));
 	}
 
 	@GetMapping(value = "/all")
@@ -80,12 +87,12 @@ public class LekarController {
 
 	@PutMapping(path = "/update", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('LEKAR') or hasAuthority('ADMIN_KLINIKE')")
 	public ResponseEntity<LekarDTO> updateLekar(@RequestBody LekarDTO lekarDTO) {
 
 		// a student must exist
 		System.out.println("LEKAR UPDRATE");
 		Lekar lekar = lekarService.findByEmail(lekarDTO.getEmail());
-
 //		System.out.println("Lekar update: " + lekar.getEmail());
 //		if (lekar == null) {
 //			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -132,6 +139,31 @@ public class LekarController {
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 
+
+	//VRACA LISTU PREGLEDA, ODMORA I ODSUSTVA
+	@GetMapping(value = "/listaPregleda/{email}")
+	@CrossOrigin(origins = "http://localhost:3000")
+	public ResponseEntity<List<PregledDTO>> getListaPregleda(@PathVariable String email) {
+		System.out.println("*************");
+		Lekar lek = lekarService.findByEmail(email);
+		
+		Set<Pregled> listaRD = lek.getListaPregleda();
+		
+		List<PregledDTO> lista = new ArrayList<PregledDTO>();
+		for(Pregled rd: listaRD) {
+			System.out.println(rd.getDatum());
+			System.out.println(rd.getTrajanje());
+			lista.add(new PregledDTO(rd));
+		}
+		
+
+		System.out.println("*************");
+		return new ResponseEntity<>(lista, HttpStatus.OK);
+
+		
+	}
+	
+
 	@PutMapping(path = "/oceni/{id}/{ocena}/{pregled_id}", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 	public ResponseEntity<LekarDTO> oceniLekara(@PathVariable Long id, @PathVariable int ocena,
@@ -152,5 +184,6 @@ public class LekarController {
 
 		return new ResponseEntity<>(new LekarDTO(lekar), HttpStatus.OK);
 	}
+
 
 }

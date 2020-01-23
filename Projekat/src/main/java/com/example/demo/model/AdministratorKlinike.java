@@ -1,6 +1,7 @@
 package com.example.demo.model;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -14,7 +15,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+
 import javax.persistence.OneToOne;
+
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -49,18 +53,22 @@ public class AdministratorKlinike implements UserDetails{
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Klinika klinika; // samo id do klinike 
 	
+	
+	
 	@ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
 	@JoinTable(name = "administrator_klinike_authority",
 			joinColumns = @JoinColumn(name = "administrator_klinike_id", referencedColumnName = "id"),
 			inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
 	private Set<Authority> authorities;
 	
-//	private Set<Pregled> listaPregleda;
-//	private Set<Operacija> listaOperacija; //?? proveriti
+	//	private Set<Operacija> listaOperacija; //?? proveriti
 //	
+	
+	
 	public String getIme() {
 		return ime;
 	}
+	
 	public void setIme(String ime) {
 		this.ime = ime;
 	}

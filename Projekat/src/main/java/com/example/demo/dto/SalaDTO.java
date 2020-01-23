@@ -11,6 +11,11 @@ public class SalaDTO {
 
 	private Long klinikaID;
 
+	@Override
+	public String toString() {
+		return "SalaDTO [id=" + id + ", naziv=" + naziv + ", broj=" + broj + ", klinikaID=" + klinikaID + "]";
+	}
+
 	public SalaDTO() {
 	}
 

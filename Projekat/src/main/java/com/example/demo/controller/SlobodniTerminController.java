@@ -62,6 +62,7 @@ public class SlobodniTerminController {
 	
 
 	@GetMapping(value = "preuzmiSTKlinike/{id}")
+	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
 	public ResponseEntity<List<SlobodniTerminDTO>> getPreglediKlinike(@PathVariable Long id) {
 
 		Klinika klinika = klinikaService.findOne(id);

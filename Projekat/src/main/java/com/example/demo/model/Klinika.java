@@ -72,8 +72,39 @@ public class Klinika{
 	private int ocena; 
 	//ocena 1-10
 	
+	@OneToMany(mappedBy = "klinika", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<OdmorOdsustvoLekar> zahteviZaOdmorOdsustvoLekara = new HashSet<OdmorOdsustvoLekar>();
+	
+	@OneToMany(mappedBy = "klinika", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<OdmorOdsustvoMedicinskaSestra> zahteviZaOdmorOdsustvoMedestre = new HashSet<OdmorOdsustvoMedicinskaSestra>();
 	
 	
+	
+	
+	public Set<TipPregleda> getListaTipovaPregleda() {
+		return listaTipovaPregleda;
+	}
+
+	public void setListaTipovaPregleda(Set<TipPregleda> listaTipovaPregleda) {
+		this.listaTipovaPregleda = listaTipovaPregleda;
+	}
+
+	public Set<OdmorOdsustvoLekar> getZahteviZaOdmorOdsustvoLekara() {
+		return zahteviZaOdmorOdsustvoLekara;
+	}
+
+	public void setZahteviZaOdmorOdsustvoLekara(Set<OdmorOdsustvoLekar> zahteviZaOdmorOdsustvoLekara) {
+		this.zahteviZaOdmorOdsustvoLekara = zahteviZaOdmorOdsustvoLekara;
+	}
+
+	public Set<OdmorOdsustvoMedicinskaSestra> getZahteviZaOdmorOdsustvoMedestre() {
+		return zahteviZaOdmorOdsustvoMedestre;
+	}
+
+	public void setZahteviZaOdmorOdsustvoMedestre(Set<OdmorOdsustvoMedicinskaSestra> zahteviZaOdmorOdsustvoMedestre) {
+		this.zahteviZaOdmorOdsustvoMedestre = zahteviZaOdmorOdsustvoMedestre;
+	}
+
 	public String getNaziv() {
 		return naziv;
 	}
