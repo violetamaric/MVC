@@ -2,10 +2,10 @@ package com.example.demo.dto;
 
 import java.util.Date;
 
-import com.example.demo.model.OdmorOdsustvoMedicinskaSestra;
+import com.example.demo.model.OdmorOdsustvoLekar;
 import com.example.demo.model.TipOdmorOdsustvo;
 
-public class OdmorOdsustvoDTO {
+public class OdmorOdsustvoLDTO {
 
 	private Long id;
 	private Date datumOd;
@@ -13,6 +13,8 @@ public class OdmorOdsustvoDTO {
 	private String opis;
 	private boolean status; //odobren/odbijen zahtev
 	private TipOdmorOdsustvo tip;
+	private Long idLekara;
+	
 	public Long getId() {
 		return id;
 	}
@@ -49,7 +51,16 @@ public class OdmorOdsustvoDTO {
 	public void setTip(TipOdmorOdsustvo tip) {
 		this.tip = tip;
 	}
-	public OdmorOdsustvoDTO(Long id, Date datumOd, Date datumDo, String opis, boolean status, TipOdmorOdsustvo tip) {
+	
+	
+	public Long getIdLekara() {
+		return idLekara;
+	}
+	public void setIdLekara(Long idLekara) {
+		this.idLekara = idLekara;
+	}
+	
+	public OdmorOdsustvoLDTO(Long id, Date datumOd, Date datumDo, String opis, boolean status, TipOdmorOdsustvo tip, Long idLekara) {
 		super();
 		this.id = id;
 		this.datumOd = datumOd;
@@ -57,21 +68,22 @@ public class OdmorOdsustvoDTO {
 		this.opis = opis;
 		this.status = status;
 		this.tip = tip;
+		this.idLekara = idLekara;
 	}
-	public OdmorOdsustvoDTO(OdmorOdsustvoMedicinskaSestra ms) {
+	
+	
+	public OdmorOdsustvoLDTO(OdmorOdsustvoLekar l) {
 		super();
-		this.id = ms.getId();
-		this.datumOd = ms.getDatumOd();
-		this.datumDo = ms.getDatumDo();
-		this.opis = ms.getOpis();
-		this.status = ms.isStatus();
-		this.tip = ms.getTip();
+		this.id = l.getId();
+		this.datumOd = l.getDatumOd();
+		this.datumDo = l.getDatumDo();
+		this.opis = l.getOpis();
+		this.status = l.isStatus();
+		this.tip = l.getTip();
+		this.idLekara = l.getLekar().getId();
 	}
-	public OdmorOdsustvoDTO() {
+	public OdmorOdsustvoLDTO() {
 		super();
 	}
-	
-	
-	
 	
 }
