@@ -43,6 +43,9 @@ public class Pacijent implements UserDetails{
 
 	@Column(name = "lbo", nullable = false)
 	private String lbo;
+	
+	@Column(name = "jmbg", nullable = false)
+	private String jmbg;
 
 	@Column(name = "lozinka", nullable = false)
 	private String lozinka;
@@ -132,6 +135,15 @@ public class Pacijent implements UserDetails{
 
 	public void setLbo(String lbo) {
 		this.lbo = lbo;
+	}
+	
+
+	public String getJmbg() {
+		return jmbg;
+	}
+
+	public void setJmbg(String jmbg) {
+		this.jmbg = jmbg;
 	}
 
 	public String getLozinka() {

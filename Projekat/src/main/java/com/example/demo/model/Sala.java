@@ -33,6 +33,9 @@ public class Sala {
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Klinika klinika;
 	
+	@OneToMany(mappedBy = "sala", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Termin> zauzetiTermini = new HashSet<Termin>();
+	
 	public Long getId() {
 		return id;
 	}
@@ -83,6 +86,12 @@ public class Sala {
 	}
 	public void setKlinika(Klinika klinika) {
 		this.klinika = klinika;
+	}
+	public Set<Termin> getZauzetiTermini() {
+		return zauzetiTermini;
+	}
+	public void setZauzetiTermini(Set<Termin> zauzetiTermini) {
+		this.zauzetiTermini = zauzetiTermini;
 	}
 	
 	

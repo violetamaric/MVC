@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.MedicinskaSestraDTO;
-import com.example.demo.dto.OdmorOdsustvoDTO;
+import com.example.demo.dto.OdmorOdsustvoMSDTO;
 import com.example.demo.dto.PacijentDTO;
 import com.example.demo.model.MedicinskaSestra;
 import com.example.demo.model.OdmorOdsustvoMedicinskaSestra;
@@ -188,7 +188,7 @@ public class MedicinskaSestraController {
 	@GetMapping(value = "/listaOdmor")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('MED_SESTRA')")
-	public ResponseEntity<List<OdmorOdsustvoDTO>> getOdmor(Principal p) {
+	public ResponseEntity<List<OdmorOdsustvoMSDTO>> getOdmor(Principal p) {
 
 		System.out.println("ODMOR ");
 		MedicinskaSestra ms = medicinskaSestraService.findByEmail(p.getName());
@@ -197,12 +197,12 @@ public class MedicinskaSestraController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		
-		List<OdmorOdsustvoDTO> omsDTO = new ArrayList<>();
+		List<OdmorOdsustvoMSDTO> omsDTO = new ArrayList<>();
 		for(OdmorOdsustvoMedicinskaSestra oms : ms.getListaOdmorOdsustvo()) {
 			//if (oms.getTip() == TipOdmorOdsustvo.ODMOR) {
 				System.out.println("Jedan zahtev: " + oms.getTip()+ " " + oms.isStatus() );
 				System.out.println(oms.getDatumOd() + " " + oms.getDatumDo());
-				omsDTO.add(new OdmorOdsustvoDTO(oms));
+				omsDTO.add(new OdmorOdsustvoMSDTO(oms));
 			//}
 			
 		}

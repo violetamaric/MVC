@@ -27,8 +27,8 @@ public class RadniDan {
 	@Column(name = "datumKraja", nullable = false)
 	private Date datumKraja; //do 17
 	
-	@OneToMany(mappedBy = "radniDan", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<Termin> termini = new HashSet<Termin>();
+//	@OneToMany(mappedBy = "radniDan", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//	private Set<Termin> termini = new HashSet<Termin>();
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private MedicinskaSestra medicinskaSestra;
@@ -67,13 +67,13 @@ public class RadniDan {
 		this.medicinskaSestra = medicinskaSestra;
 	}
 
-	public Set<Termin> getTermini() {
-		return termini;
-	}
-
-	public void setTermini(Set<Termin> termini) {
-		this.termini = termini;
-	}
+//	public Set<Termin> getTermini() {
+//		return termini;
+//	}
+//
+//	public void setTermini(Set<Termin> termini) {
+//		this.termini = termini;
+//	}
 
 	public RadniDan() {
 		super();

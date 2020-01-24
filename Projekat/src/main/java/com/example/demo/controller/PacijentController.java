@@ -37,13 +37,12 @@ public class PacijentController {
 	@Autowired
 	private KlinickiCentarService KCService;
 
-	@Autowired
-	private EmailService emailService;
+//	@Autowired
+//	private EmailService emailService;
+//
+//	private Logger logger = LoggerFactory.getLogger(UserController.class);
 
-	private Logger logger = LoggerFactory.getLogger(UserController.class);
-
-	@GetMapping(value = "/all", produces = "application/json;charset=UTF-8")
-//	@PreAuthorize("hasAuthority('PACIJENT')") 
+	@GetMapping(value = "/all")
 	public ResponseEntity<List<PacijentDTO>> getAll() {
 
 		List<Pacijent> pacijenti = pacijentService.findAll();
@@ -169,6 +168,7 @@ public class PacijentController {
 		pacijent.setDrzava(pacijentDTO.getDrzava());
 		pacijent.setTelefon(pacijentDTO.getTelefon());
 		pacijent.setOdobrenaRegistracija(false);
+		pacijent.setJmbg(pacijentDTO.getJmbg());
 
 		List<KlinickiCentar> listaKC = KCService.find();
 		KlinickiCentar kc = listaKC.get(0);
@@ -222,7 +222,7 @@ public class PacijentController {
 		pacijent.setAdresa(pacijentDTO.getAdresa());
 		pacijent.setGrad(pacijentDTO.getGrad());
 		pacijent.setDrzava(pacijent.getDrzava());
-		pacijent.setLbo(pacijentDTO.getLbo());
+//		pacijent.setLbo(pacijentDTO.getLbo());
 
 		pacijent = pacijentService.save(pacijent);
 		return new ResponseEntity<>(new PacijentDTO(pacijent), HttpStatus.OK);
