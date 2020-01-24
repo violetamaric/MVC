@@ -37,10 +37,10 @@ public class PacijentController {
 	@Autowired
 	private KlinickiCentarService KCService;
 
-	@Autowired
-	private EmailService emailService;
-
-	private Logger logger = LoggerFactory.getLogger(UserController.class);
+//	@Autowired
+//	private EmailService emailService;
+//
+//	private Logger logger = LoggerFactory.getLogger(UserController.class);
 
 	@GetMapping(value = "/all")
 	public ResponseEntity<List<PacijentDTO>> getAll() {

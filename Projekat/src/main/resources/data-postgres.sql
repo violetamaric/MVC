@@ -190,7 +190,13 @@ insert into odmor_odsustvo_lekar (klinika_id,lekar_id, datum_od, datum_do, opis,
 
 insert into radni_dan(medicinska_sestra_id, datum_pocetka, datum_kraja) values (2,'2020-01-21 09:00:00', '2020-01-21 17:00:00' );
 
-insert into termin (radni_dan_id, datum_pocetka, datum_kraja, status) values (1,'2020-01-21 09:00:00', '2020-01-21 10:00:00', FALSE);
-insert into termin (radni_dan_id, datum_pocetka, datum_kraja, status) values(1,'2020-01-21 10:00:00', '2020-01-21 11:00:00', FALSE);
-insert into termin (radni_dan_id, datum_pocetka, datum_kraja, status) values(1,'2020-01-21 11:00:00', '2020-01-21 12:00:00', FALSE);
-insert into termin (radni_dan_id, datum_pocetka, datum_kraja, status) values(1,'2020-01-21 12:00:00', '2020-01-21 13:00:00', FALSE);
+--insert into termin (radni_dan_id, datum_pocetka, datum_kraja, status) values (1,'2020-01-21 09:00:00', '2020-01-21 10:00:00', FALSE);
+--insert into termin (radni_dan_id, datum_pocetka, datum_kraja, status) values(1,'2020-01-21 10:00:00', '2020-01-21 11:00:00', FALSE);
+--insert into termin (radni_dan_id, datum_pocetka, datum_kraja, status) values(1,'2020-01-21 11:00:00', '2020-01-21 12:00:00', FALSE);
+--insert into termin (radni_dan_id, datum_pocetka, datum_kraja, status) values(1,'2020-01-21 12:00:00', '2020-01-21 13:00:00', FALSE);
+
+
+insert into termin (datum_pocetka, termin, sala_id ) values('26-mar-2020', 9, 2);
+insert into termin (datum_pocetka, termin, sala_id ) values('26-mar-2020', 11, 3);
+insert into termin (datum_pocetka, termin, sala_id ) values('26-mar-2020', 15, 4);
+insert into termin (datum_pocetka, termin, sala_id ) values ('27-mar-2020', 17, 1);

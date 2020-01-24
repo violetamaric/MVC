@@ -19,8 +19,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.SalaDTO;
+import com.example.demo.dto.TerminDTO;
 import com.example.demo.model.Klinika;
 import com.example.demo.model.Sala;
+import com.example.demo.model.Termin;
 import com.example.demo.service.KlinikaService;
 import com.example.demo.service.SalaService;
 
@@ -173,4 +175,22 @@ public class SalaController {
 
 		return new ResponseEntity<>(new SalaDTO(sala), HttpStatus.CREATED);
 	}
+
+	@GetMapping(value = "preuzmiZauzeteTermine/{id}")
+	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
+	public ResponseEntity<List<TerminDTO>> getZauzeteTermineSale(@PathVariable Long id) {
+
+		Sala sala = salaService.findOne(id);
+		Set<Termin> zauzetiTermini = sala.getZauzetiTermini();
+		
+
+		List<TerminDTO>zauzetiTerminiDTO = new ArrayList<>();
+		System.out.println("Lista zauzetih termina sale:" + sala.getNaziv() + " ID: " + id);
+		for (Termin t : zauzetiTermini) {
+			zauzetiTerminiDTO.add(new TerminDTO(t));
+		}
+
+		return new ResponseEntity<>(zauzetiTerminiDTO, HttpStatus.OK);
+	}
+
 }
