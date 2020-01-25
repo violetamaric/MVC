@@ -63,11 +63,14 @@ public class PregledController {
 		pregled.setKlinika(klinika);
 		Lekar lekar = lekarService.findOne(pregledDTO.getLekarID());
 		pregled.setLekar(lekar);
+		pregled.setTermin(pregledDTO.getTermin());
 		Pacijent pacijent = pacijentService.findByEmail(pregledDTO.getPacijentEmail());
 		pregled.setPacijent(pacijent);
 		pregled.setStatus(0);
 		TipPregleda tp = tipPregledaService.findOne(pregledDTO.getTipPregledaID());
 		pregled.setTipPregleda(tp);
+		
+		
 
 		pregled = pregledService.save(pregled);
 		klinika.getListaPregleda().add(pregled);

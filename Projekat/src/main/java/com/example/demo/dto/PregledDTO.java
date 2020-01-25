@@ -34,6 +34,8 @@ public class PregledDTO {
 	private int salaBR;
 
 	private double cena;
+	
+	private int termin;
 
 	//0-nije ni potvrdjeno ni odbijeno
 	//1-potvrdjeno
@@ -57,7 +59,7 @@ public class PregledDTO {
 	}
 
 	public PregledDTO(Long id, Date datum, Long tipPregledaID, Long lekarID, String pacijentEmail, Long klinikaID,
-			double cena, int status, Long sala) {
+			double cena, int status, Long sala, int termin) {
 		this.id = id;
 		this.datum = datum;
 		this.tipPregledaID = tipPregledaID;
@@ -67,6 +69,7 @@ public class PregledDTO {
 		this.cena = cena;
 		this.status = status;
 		this.salaID = sala;
+		this.termin = termin;
 	}
 
 	public PregledDTO(Pregled pregled) {
@@ -84,12 +87,21 @@ public class PregledDTO {
 		this.nazivTP = pregled.getTipPregleda().getNaziv();
 		this.prezimeL = pregled.getLekar().getPrezime();
 		this.prezimeP = pregled.getPacijent().getPrezime();
+		this.termin = pregled.getTermin();
 		if (pregled.getSala() != null) {
 
 			this.salaID = pregled.getSala().getId();
 			this.salaN = pregled.getSala().getNaziv();
 			this.salaBR = pregled.getSala().getBroj();
 		}
+	}
+
+	public int getTermin() {
+		return termin;
+	}
+
+	public void setTermin(int termin) {
+		this.termin = termin;
 	}
 
 	public String getPrezimeL() {
