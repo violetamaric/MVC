@@ -1,6 +1,7 @@
 package com.example.demo.model;
 
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -33,6 +34,12 @@ public class Termin {
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Sala sala;
+	
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private Lekar lekar;
+	
+//	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//	private Klinika klinika;
 
 //	@Column(name = "datumKraja", nullable = false)
 //	private Date datumKraja;
@@ -68,6 +75,14 @@ public class Termin {
 //	public void setDatumKraja(Date datumKraja) {
 //		this.datumKraja = datumKraja;
 //	}
+
+	public Lekar getLekar() {
+		return lekar;
+	}
+
+	public void setLekar(Lekar lekar) {
+		this.lekar = lekar;
+	}
 
 	public Date getDatumPocetka() {
 		return datumPocetka;
@@ -109,9 +124,18 @@ public class Termin {
 //		this.radniDan = radniDan;
 //	}
 
+	
 	public Termin() {
 		super();
 	}
+
+//	public Klinika getKlinika() {
+//		return klinika;
+//	}
+//
+//	public void setKlinika(Klinika klinika) {
+//		this.klinika = klinika;
+//	}
 
 	@Override
 	public boolean equals(Object obj) {
@@ -130,6 +154,7 @@ public class Termin {
 		return "Termin [id=" + id + ", datumPocetka=" + datumPocetka + ", termin=" + termin + ", sala=" + sala
 				+ "]";
 	}
+
 
 
 

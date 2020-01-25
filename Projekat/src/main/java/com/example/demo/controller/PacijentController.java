@@ -186,7 +186,6 @@ public class PacijentController {
 		return new ResponseEntity<>(new PacijentDTO(pacijent), HttpStatus.CREATED);
 	}
 
-
 	@GetMapping(value = "/findByID/{id}")
 	public ResponseEntity<?> getPacijentByID(@PathVariable Long id) {
 		Pacijent pacijent = pacijentService.findByID(id);
@@ -206,7 +205,6 @@ public class PacijentController {
 //
 //		return "success";
 //	}
-
 
 	@PutMapping(path = "/update", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")

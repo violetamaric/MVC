@@ -26,8 +26,13 @@ public class Pregled {
 	private Long id;
 
 	@Column(name = "datum", nullable = false)
-	@JsonFormat(pattern = "yyyy-MM-dd")
+//	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date datum;
+	
+	@Column(name = "termin", nullable = false)
+	private int termin;
+	
+	
 
 	//treba false ali kasnije promjeniti
 	@Column(name = "trajanje", nullable = true)
@@ -41,6 +46,7 @@ public class Pregled {
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Lekar lekar;
+	
 	
 
 	
@@ -105,6 +111,14 @@ public class Pregled {
 
 	public void setSala(Sala sala) {
 		this.sala = sala;
+	}
+
+	public int getTermin() {
+		return termin;
+	}
+
+	public void setTermin(int termin) {
+		this.termin = termin;
 	}
 
 	public Lekar getLekar() {

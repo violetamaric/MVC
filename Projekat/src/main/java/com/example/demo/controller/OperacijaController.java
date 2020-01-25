@@ -42,10 +42,12 @@ public class OperacijaController {
 	public ResponseEntity<List<OperacijaDTO>> preuzimanjeOperacijaPacijenta(Principal pr) {
 
 		List<Operacija> operacije = operacijaService.findAll();
-
+		
 		// convert students to DTOs
 		List<OperacijaDTO> operacijeDTO = new ArrayList<>();
 		for (Operacija o : operacije) {
+			System.out.println("======");
+			System.out.println(o.getListaLekara().size());
 			if (o.getPacijent().getEmail().equals(pr.getName())) {
 				operacijeDTO.add(new OperacijaDTO(o));
 			}

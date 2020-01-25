@@ -25,6 +25,7 @@ import com.example.demo.model.Sala;
 import com.example.demo.model.Termin;
 import com.example.demo.service.KlinikaService;
 import com.example.demo.service.SalaService;
+import com.example.demo.service.TerminService;
 
 @RestController
 @RequestMapping(value = "/api/sale", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -33,6 +34,9 @@ public class SalaController {
 	@Autowired
 	private SalaService salaService;
 
+	@Autowired
+	private TerminService terminService;
+	
 	@Autowired
 	private KlinikaService klinikaService;
 
@@ -192,5 +196,22 @@ public class SalaController {
 
 		return new ResponseEntity<>(zauzetiTerminiDTO, HttpStatus.OK);
 	}
+
+	@GetMapping(value = "/allTermini")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
+	public ResponseEntity<List<TerminDTO>> getAllTermini() {
+
+		List<Termin> termini = terminService.findAll();
+
+		// convert students to DTOs
+		List<TerminDTO> terminDTO = new ArrayList<>();
+		for (Termin t : termini) {
+			terminDTO.add(new TerminDTO(t));
+		}
+
+		return new ResponseEntity<>(terminDTO, HttpStatus.OK);
+	}
+
 
 }

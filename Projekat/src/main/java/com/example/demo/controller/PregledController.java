@@ -18,20 +18,23 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.dto.PacijentDTO;
 import com.example.demo.dto.PregledDTO;
 import com.example.demo.dto.SlobodniTerminDTO;
 import com.example.demo.model.Klinika;
 import com.example.demo.model.Lekar;
 import com.example.demo.model.Pacijent;
 import com.example.demo.model.Pregled;
+import com.example.demo.model.Sala;
 import com.example.demo.model.SlobodniTermin;
+import com.example.demo.model.Termin;
 import com.example.demo.model.TipPregleda;
 import com.example.demo.service.KlinikaService;
 import com.example.demo.service.LekarService;
 import com.example.demo.service.PacijentService;
 import com.example.demo.service.PregledService;
+import com.example.demo.service.SalaService;
 import com.example.demo.service.SlobodniTerminService;
+import com.example.demo.service.TerminService;
 import com.example.demo.service.TipPregledaService;
 
 @RestController
@@ -49,6 +52,12 @@ public class PregledController {
 	private TipPregledaService tipPregledaService;
 	@Autowired
 	private SlobodniTerminService STService;
+	
+	@Autowired
+	private SalaService salaService;
+	
+	@Autowired
+	private TerminService terminService;
 
 	@PostMapping(path = "/new", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
@@ -63,11 +72,14 @@ public class PregledController {
 		pregled.setKlinika(klinika);
 		Lekar lekar = lekarService.findOne(pregledDTO.getLekarID());
 		pregled.setLekar(lekar);
+		pregled.setTermin(pregledDTO.getTermin());
 		Pacijent pacijent = pacijentService.findByEmail(pregledDTO.getPacijentEmail());
 		pregled.setPacijent(pacijent);
 		pregled.setStatus(0);
 		TipPregleda tp = tipPregledaService.findOne(pregledDTO.getTipPregledaID());
 		pregled.setTipPregleda(tp);
+		
+		
 
 		pregled = pregledService.save(pregled);
 		klinika.getListaPregleda().add(pregled);
@@ -90,6 +102,7 @@ public class PregledController {
 		pregled.setKlinika(klinika);
 		Lekar lekar = lekarService.findOne(pregledDTO.getLekarID());
 		pregled.setLekar(lekar);
+		pregled.setTermin(pregledDTO.getTermin());
 		Pacijent pacijent = pacijentService.findByEmail(pregledDTO.getPacijentEmail());
 		pregled.setPacijent(pacijent);
 		pregled.setStatus(0);
@@ -226,7 +239,19 @@ public class PregledController {
 		System.out.println(new PregledDTO(pregled));
 		pregled.setStatus(1);
 		System.out.println(new PregledDTO(pregled));
+		Termin termin = new Termin();
+		termin.setDatumPocetka(pregled.getDatum());
+		termin.setTermin(pregled.getTermin());
+		termin.setLekar(pregled.getLekar());
+		termin.setSala(pregled.getSala());
+		terminService.save(termin);
+		Lekar lekar = lekarService.findOne(pregled.getLekar().getId());
+		Sala sala  = salaService.findOne(pregled.getSala().getId());
 		pregledService.save(pregled);
+		lekar.getListaZauzetihTermina().add(termin);
+		sala.getZauzetiTermini().add(termin);
+		lekarService.save(lekar);
+		salaService.save(sala);
 		return new ResponseEntity<>(new PregledDTO(pregled), HttpStatus.OK);
 	}
 	
