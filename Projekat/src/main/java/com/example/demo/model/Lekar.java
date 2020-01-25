@@ -191,6 +191,12 @@ public class Lekar implements UserDetails{
 	public void setAuthorities(Set<Authority> authorities) {
 		this.authorities = authorities;
 	}
+	public Set<OdmorOdsustvoLekar> getListaOdmorOdsustvo() {
+		return listaOdmorOdsustvo;
+	}
+	public void setListaOdmorOdsustvo(Set<OdmorOdsustvoLekar> listaOdmorOdsustvo) {
+		this.listaOdmorOdsustvo = listaOdmorOdsustvo;
+	}
 
 	
 	

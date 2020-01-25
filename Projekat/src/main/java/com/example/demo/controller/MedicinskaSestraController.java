@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -61,6 +62,21 @@ public class MedicinskaSestraController {
 	public ResponseEntity<MedicinskaSestraDTO> getMedicinskaSestraByEmail(Principal p){
 		
 		MedicinskaSestra ms = medicinskaSestraService.findByEmail(p.getName());
+		if (ms == null) {
+			System.out.println("NIJE PRONADJENA");
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		System.out.println("PRONADJENA: "+ ms.getEmail());
+		
+		return new ResponseEntity<>(new MedicinskaSestraDTO(ms), HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/medSestra/{id}")
+	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
+	@CrossOrigin(origins = "http://localhost:3000")
+	public ResponseEntity<MedicinskaSestraDTO> getMedicinskaSestraById(@PathVariable Long id){
+		
+		MedicinskaSestra ms = medicinskaSestraService.findById(id);
 		if (ms == null) {
 			System.out.println("NIJE PRONADJENA");
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);

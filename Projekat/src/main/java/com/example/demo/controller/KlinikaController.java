@@ -185,7 +185,7 @@ public class KlinikaController {
 		// lekar koji se brise
 		Lekar lekar = lekarService.findByEmail(lekarDTO.getEmail());
 		System.out.println(lekar.getEmail());
-		List<Klinika> listaKlinika = klinikaService.findAll();
+		//List<Klinika> listaKlinika = klinikaService.findAll();
 		System.out.println("Id LEKAR KLINIKA: " + lekar.getKlinika().getId());
 
 		Long idLong = lekar.getKlinika().getId();
@@ -194,8 +194,10 @@ public class KlinikaController {
 		System.out.println("Klinika id ------------- : " + klinika.getId());
 
 		if (klinika.getListaLekara().contains(lekar)) {
+			//brisanje njegove liste slobodnih termina
 			List<SlobodniTermin> listaST = STService.findAll();
 			List<SlobodniTermin> listaSTkopija = listaST;
+			
 			for(SlobodniTermin s: listaSTkopija) {
 				System.out.println("Slobodni termin L: " + s.getLekar().getIme());
 				if(s.getLekar().equals(lekar)) {
@@ -204,6 +206,7 @@ public class KlinikaController {
 					
 				}
 			}	
+			//brisanje liste pregleda
 			List<Pregled> listaP = pregledService.findAll();
 			List<Pregled> listaPkopija  = new ArrayList<Pregled>(listaP);
 			System.out.println(pregledService.findAll().size());
@@ -228,11 +231,7 @@ public class KlinikaController {
 					}
 			}
 			
-		//	pregledService.deleteAll();
-//			System.out.println(pregledService.findAll().size());
-//			for(Pregled preg : listaP) {
-//				pregledService.save(preg);
-//			}
+
 			System.out.println(pregledService.findAll().size());
 			System.out.println("dsadasdasdsadasads");
 		}
@@ -245,25 +244,14 @@ public class KlinikaController {
 			}
 			System.out.println("---------------------------------------");
 			System.out.println("LEKAR kojeg brisem =============== " + lekar.getEmail());
-//			lista.remove(lekar);
-//			System.out.println("------> LISTA LEKARA KLINIKE NAKON BRISANJA:  -----" );
-//			for(Lekar l: lista) {
-//				System.out.println(l.getEmail());
-//			}
-//			System.out.println("---------------------------------------");
-//		//	klinika.getListaLekara().clear();
+
 			klinika.getListaLekara().remove(lekar);
 			System.out.println("------> LISTA LEKARA KLINIKE NAKON BRISANJA :  -----" );
 			for(Lekar l: klinika.getListaLekara()) {
 				System.out.println(l.getEmail());
 			}
 			System.out.println("---------------------------------------");
-			//klinika.setListaLekara(lista);
-//			System.out.println("------> LISTA LEKARA KLINIKE NAKON SETOVANJA:  -----" );
-//			for(Lekar l: klinika.getListaLekara()) {
-//				System.out.println(l.getEmail());
-//			}
-//			System.out.println("---------------------------------------");
+			
 			System.out.println(lekar.getEmail());
 			
 			Lekar ll = lekarService.findByEmail(lekarDTO.getEmail());
@@ -277,12 +265,7 @@ public class KlinikaController {
 				System.out.println(l.getEmail());
 			}
 			System.out.println("/**********************************/");
-			
-			
-			
-			
-		//	klinikaService.save(klinika);
-		//	System.out.println("obrisano" + lekarDTO.getEmail()); 
+
 		
 		System.out.println("------------------------------------------------------");
 		return new ResponseEntity<>("uspesno obrisan lekar !!!", HttpStatus.OK);

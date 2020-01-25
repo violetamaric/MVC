@@ -12,9 +12,30 @@ public class OdmorOdsustvoMSDTO {
 	private Date datumDo;
 	private String opis;
 	private boolean status; //odobren/odbijen zahtev
-	private TipOdmorOdsustvo tip;
+	private String tip;
 	private Long idMedSestre;
+	private String emailMS;
+	private String imeMS;
+	private String prezimeMS;
 	
+	public String getEmailMS() {
+		return emailMS;
+	}
+	public void setEmailMS(String emailMS) {
+		this.emailMS = emailMS;
+	}
+	public String getImeMS() {
+		return imeMS;
+	}
+	public void setImeMS(String imeMS) {
+		this.imeMS = imeMS;
+	}
+	public String getPrezimeMS() {
+		return prezimeMS;
+	}
+	public void setPrezimeMS(String prezimeMS) {
+		this.prezimeMS = prezimeMS;
+	}
 	public Long getId() {
 		return id;
 	}
@@ -45,10 +66,10 @@ public class OdmorOdsustvoMSDTO {
 	public void setStatus(boolean status) {
 		this.status = status;
 	}
-	public TipOdmorOdsustvo getTip() {
+	public String getTip() {
 		return tip;
 	}
-	public void setTip(TipOdmorOdsustvo tip) {
+	public void setTip(String tip) {
 		this.tip = tip;
 	}
 	
@@ -60,7 +81,8 @@ public class OdmorOdsustvoMSDTO {
 		this.idMedSestre = idMedSestre;
 	}
 	
-	public OdmorOdsustvoMSDTO(Long id, Date datumOd, Date datumDo, String opis, boolean status, TipOdmorOdsustvo tip, Long idMedSestre) {
+	public OdmorOdsustvoMSDTO(Long id, Date datumOd, Date datumDo, String opis, boolean status, String tip, Long idMedSestre, 
+			String imeMS, String prezimeMS, String emailMS) {
 		super();
 		this.id = id;
 		this.datumOd = datumOd;
@@ -69,6 +91,9 @@ public class OdmorOdsustvoMSDTO {
 		this.status = status;
 		this.tip = tip;
 		this.idMedSestre = idMedSestre;
+		this.imeMS = imeMS;
+		this.prezimeMS = prezimeMS;
+		this.emailMS = emailMS;
 	}
 	
 	
@@ -79,8 +104,15 @@ public class OdmorOdsustvoMSDTO {
 		this.datumDo = ms.getDatumDo();
 		this.opis = ms.getOpis();
 		this.status = ms.isStatus();
-		this.tip = ms.getTip();
+		if(ms.getTip() == TipOdmorOdsustvo.ODMOR) {
+			this.tip = "ODMOR";
+		}else {
+			this.tip = "ODSUSTVO";
+		}
 		this.idMedSestre = ms.getMedicinskaSestra().getId();
+		this.emailMS = ms.getMedicinskaSestra().getEmail();
+		this.imeMS = ms.getMedicinskaSestra().getIme();
+		this.prezimeMS = ms.getMedicinskaSestra().getPrezime();
 	}
 	public OdmorOdsustvoMSDTO() {
 		super();

@@ -8,6 +8,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.dto.LekarDTO;
+import com.example.demo.dto.MedicinskaSestraDTO;
 import com.example.demo.dto.PacijentDTO;
 import com.example.demo.dto.UserDTO;
 
@@ -46,6 +48,42 @@ public class EmailService {
 
 		SimpleMailMessage mail = new SimpleMailMessage();
 		mail.setTo(pacijentDTO.getEmail());
+		
+		//UNIVERZALNI MAIL
+		mail.setFrom(env.getProperty("spring.mail.username"));
+		
+		mail.setSubject(subject);
+		mail.setText(text);
+		javaMailSender.send(mail);
+
+		System.out.println("Email poslat!");
+	}
+	
+	@Async
+	public void poslatiOdgovorMedSestri(MedicinskaSestraDTO medSestraDTO, String subject, String text) throws MailException, InterruptedException {
+
+		System.out.println("Slanje emaila..." + medSestraDTO.getEmail());
+
+		SimpleMailMessage mail = new SimpleMailMessage();
+		mail.setTo(medSestraDTO.getEmail());
+		
+		//UNIVERZALNI MAIL
+		mail.setFrom(env.getProperty("spring.mail.username"));
+		
+		mail.setSubject(subject);
+		mail.setText(text);
+		javaMailSender.send(mail);
+
+		System.out.println("Email poslat!");
+	}
+	
+	@Async
+	public void poslatiOdgovorLekaru(LekarDTO lekarDTO, String subject, String text) throws MailException, InterruptedException {
+
+		System.out.println("Slanje emaila..." + lekarDTO.getEmail());
+
+		SimpleMailMessage mail = new SimpleMailMessage();
+		mail.setTo(lekarDTO.getEmail());
 		
 		//UNIVERZALNI MAIL
 		mail.setFrom(env.getProperty("spring.mail.username"));

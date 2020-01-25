@@ -35,7 +35,7 @@ insert into lekar (ime, prezime, email, lozinka,klinika_id, ocena, telefon) valu
 
 
 insert into medicinska_sestra (ime, prezime, email, br_telefona, lozinka,klinika_id) values ('Jelena','Jelenovic', 'jeca@gmail.com', '066/222-665', '$2y$12$ckUemsooeJoZ8mWv0h83G.pENxUrVVIMr2jgclhFFVepHGRPwpAtG', 1);
-insert into medicinska_sestra (ime, prezime, email, br_telefona, lozinka,klinika_id) values ('Olgica','Olganovic', 'olgaolgaa@gmail.com','063/222-765', '$2y$12$a.k4FY.bo4SmCenCbJZxEOxrWKtaOaLX2ubDV4/0aAmMX98K6onmu', 2);
+insert into medicinska_sestra (ime, prezime, email, br_telefona, lozinka,klinika_id) values ('Olgica','Olganovic', 'olgaolgaa@gmail.com','063/222-765', '$2y$12$a.k4FY.bo4SmCenCbJZxEOxrWKtaOaLX2ubDV4/0aAmMX98K6onmu', 3);
 insert into medicinska_sestra (ime, prezime, email, br_telefona, lozinka,klinika_id) values ('Gordana','Gordanovic', 'gocagordana@gmail.com', '066/963-785', '$2y$12$RWNCcUWoAu9Ez5EUZCrDheKlhAAdWpKKcs3NoSlenGYmNrzBkCVlK', 3);
 
 insert into zdravstveni_karton (visina, tezina, krvna_grupa) values (180,80, 'AB');
@@ -186,6 +186,7 @@ insert into odmor_odsustvo_medicinska_sestra (klinika_id,medicinska_sestra_id, d
 insert into odmor_odsustvo_medicinska_sestra (klinika_id,medicinska_sestra_id, datum_od, datum_do, opis, tip, status) values (3,3, '2020-01-06', '2020-01-10', 'odmor ili odsustvo', 0, TRUE);
 
 insert into odmor_odsustvo_lekar (klinika_id,lekar_id, datum_od, datum_do, opis, tip, status) values (3,2, '2019-11-21', '2019-12-01', 'odmor ili odsustvo', 0, FALSE);
+insert into odmor_odsustvo_lekar (klinika_id,lekar_id, datum_od, datum_do, opis, tip, status) values (3,3, '2019-11-21', '2019-12-01', 'odmor ili odsustvo', 0, FALSE);
 
 
 insert into radni_dan(medicinska_sestra_id, datum_pocetka, datum_kraja) values (2,'2020-01-21 09:00:00', '2020-01-21 17:00:00' );
@@ -200,3 +201,5 @@ insert into termin (datum_pocetka, termin, sala_id ) values('26-mar-2020', 9, 2)
 insert into termin (datum_pocetka, termin, sala_id ) values('26-mar-2020', 11, 3);
 insert into termin (datum_pocetka, termin, sala_id ) values('26-mar-2020', 15, 4);
 insert into termin (datum_pocetka, termin, sala_id ) values ('27-mar-2020', 17, 1);
+
+

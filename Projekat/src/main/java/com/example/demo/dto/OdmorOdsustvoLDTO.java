@@ -12,9 +12,31 @@ public class OdmorOdsustvoLDTO {
 	private Date datumDo;
 	private String opis;
 	private boolean status; //odobren/odbijen zahtev
-	private TipOdmorOdsustvo tip;
+	private String tip;
 	private Long idLekara;
+	private String imeL;
+	private String prezimeL;
+	private String emailL;
 	
+	
+	public String getImeL() {
+		return imeL;
+	}
+	public void setImeL(String imeL) {
+		this.imeL = imeL;
+	}
+	public String getPrezimeL() {
+		return prezimeL;
+	}
+	public void setPrezimeL(String prezimeL) {
+		this.prezimeL = prezimeL;
+	}
+	public String getEmailL() {
+		return emailL;
+	}
+	public void setEmailL(String emailL) {
+		this.emailL = emailL;
+	}
 	public Long getId() {
 		return id;
 	}
@@ -45,10 +67,10 @@ public class OdmorOdsustvoLDTO {
 	public void setStatus(boolean status) {
 		this.status = status;
 	}
-	public TipOdmorOdsustvo getTip() {
+	public String getTip() {
 		return tip;
 	}
-	public void setTip(TipOdmorOdsustvo tip) {
+	public void setTip(String tip) {
 		this.tip = tip;
 	}
 	
@@ -60,7 +82,8 @@ public class OdmorOdsustvoLDTO {
 		this.idLekara = idLekara;
 	}
 	
-	public OdmorOdsustvoLDTO(Long id, Date datumOd, Date datumDo, String opis, boolean status, TipOdmorOdsustvo tip, Long idLekara) {
+	public OdmorOdsustvoLDTO(Long id, Date datumOd, Date datumDo, String opis, boolean status, String tip, Long idLekara,
+			String imeL, String prezimeL, String emailL) {
 		super();
 		this.id = id;
 		this.datumOd = datumOd;
@@ -69,6 +92,9 @@ public class OdmorOdsustvoLDTO {
 		this.status = status;
 		this.tip = tip;
 		this.idLekara = idLekara;
+		this.imeL = imeL;
+		this.prezimeL = prezimeL;
+		this.emailL = emailL;
 	}
 	
 	
@@ -79,8 +105,16 @@ public class OdmorOdsustvoLDTO {
 		this.datumDo = l.getDatumDo();
 		this.opis = l.getOpis();
 		this.status = l.isStatus();
-		this.tip = l.getTip();
+		if(l.getTip() == TipOdmorOdsustvo.ODMOR) {
+			this.tip = "ODMOR";
+		}else {
+			this.tip = "ODSUSTVO";
+		}
+		
 		this.idLekara = l.getLekar().getId();
+		this.imeL = l.getLekar().getIme();
+		this.prezimeL = l.getLekar().getPrezime();
+		this.emailL = l.getLekar().getEmail();
 	}
 	public OdmorOdsustvoLDTO() {
 		super();
