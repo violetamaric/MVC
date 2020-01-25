@@ -45,7 +45,7 @@ public class Lekar implements UserDetails{
 	private String telefon;
 	
 	@ManyToMany
-	@JoinTable(name = "lekar_pacijent", joinColumns = @JoinColumn(name = "pacijent_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "lekar_id", referencedColumnName = "id"))
+	@JoinTable(name = "lekar_pacijent", joinColumns = @JoinColumn(name = "lekar_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "pacijent_id", referencedColumnName = "id"))
 	private Set<Pacijent> listaPacijenata = new HashSet<Pacijent>();
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -53,7 +53,8 @@ public class Lekar implements UserDetails{
 	
 	//dodati za kalendar 
 	
-	@OneToMany(mappedBy = "lekar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToMany
+	@JoinTable(name = "lekar_operacija", joinColumns = @JoinColumn(name = "lekar_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "operacija_id", referencedColumnName = "id"))
 	private Set<Operacija> listaOperacija = new HashSet<Operacija>();
 	
 	@OneToMany(mappedBy = "lekar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -92,6 +93,7 @@ public class Lekar implements UserDetails{
 	public void setOcena(int ocena) {
 		this.ocena = ocena;
 	}
+
 	public Set<Operacija> getListaOperacija() {
 		return listaOperacija;
 	}

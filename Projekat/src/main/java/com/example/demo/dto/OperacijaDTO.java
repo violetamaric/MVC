@@ -1,7 +1,10 @@
 package com.example.demo.dto;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
+import com.example.demo.model.Lekar;
 import com.example.demo.model.Operacija;
 
 public class OperacijaDTO {
@@ -12,9 +15,9 @@ public class OperacijaDTO {
 
 	private String tipOperacije;
 
-	private Long lekarID;
-	private String imeL;
-	private String prezimeL;
+//	private Long lekarID;
+//	private String imeL;
+//	private String prezimeL;
 
 	private String pacijentEmail;
 
@@ -31,6 +34,7 @@ public class OperacijaDTO {
 	private int salaBR;
 
 	private double cena;
+	private Set<LekarDTO> listaLekara = new HashSet<LekarDTO>();
 	
 	
 
@@ -40,17 +44,20 @@ public class OperacijaDTO {
 		this.pacijentEmail = operacija.getPacijent().getEmail();
 		this.cena = operacija.getCena();
 		this.pacijentID = operacija.getPacijent().getId();
-		this.imeL = operacija.getLekar().getIme();
-		this.prezimeL = operacija.getLekar().getPrezime();
+//		this.imeL = operacija.getLekar().getIme();
+//		this.prezimeL = operacija.getLekar().getPrezime();
 		this.prezimeP = operacija.getPacijent().getPrezime();
 		this.imeP = operacija.getPacijent().getIme();
 		this.klinikaID = operacija.getKlinika().getId();
 		this.nazivKl = operacija.getKlinika().getNaziv();
-		this.lekarID = operacija.getLekar().getId();
+//		this.lekarID = operacija.getLekar().getId();
 		this.tipOperacije = operacija.getTipOperacije();
 		this.salaBR = operacija.getSala().getBroj();
 		this.salaID = operacija.getSala().getId();
 		this.salaN = operacija.getSala().getNaziv();
+		for(Lekar l:operacija.getListaLekara()) {
+			this.listaLekara.add(new LekarDTO(l));
+		}
 		
 	}
 
@@ -63,14 +70,14 @@ public class OperacijaDTO {
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		result = prime * result + ((datum == null) ? 0 : datum.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((imeL == null) ? 0 : imeL.hashCode());
+//		result = prime * result + ((imeL == null) ? 0 : imeL.hashCode());
 		result = prime * result + ((imeP == null) ? 0 : imeP.hashCode());
 		result = prime * result + ((klinikaID == null) ? 0 : klinikaID.hashCode());
-		result = prime * result + ((lekarID == null) ? 0 : lekarID.hashCode());
+//		result = prime * result + ((lekarID == null) ? 0 : lekarID.hashCode());
 		result = prime * result + ((nazivKl == null) ? 0 : nazivKl.hashCode());
 		result = prime * result + ((pacijentEmail == null) ? 0 : pacijentEmail.hashCode());
 		result = prime * result + ((pacijentID == null) ? 0 : pacijentID.hashCode());
-		result = prime * result + ((prezimeL == null) ? 0 : prezimeL.hashCode());
+//		result = prime * result + ((prezimeL == null) ? 0 : prezimeL.hashCode());
 		result = prime * result + ((prezimeP == null) ? 0 : prezimeP.hashCode());
 		result = prime * result + salaBR;
 		result = prime * result + ((salaID == null) ? 0 : salaID.hashCode());
@@ -100,11 +107,11 @@ public class OperacijaDTO {
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (imeL == null) {
-			if (other.imeL != null)
-				return false;
-		} else if (!imeL.equals(other.imeL))
-			return false;
+//		if (imeL == null) {
+//			if (other.imeL != null)
+//				return false;
+//		} else if (!imeL.equals(other.imeL))
+//			return false;
 		if (imeP == null) {
 			if (other.imeP != null)
 				return false;
@@ -115,11 +122,11 @@ public class OperacijaDTO {
 				return false;
 		} else if (!klinikaID.equals(other.klinikaID))
 			return false;
-		if (lekarID == null) {
-			if (other.lekarID != null)
-				return false;
-		} else if (!lekarID.equals(other.lekarID))
-			return false;
+//		if (lekarID == null) {
+//			if (other.lekarID != null)
+//				return false;
+//		} else if (!lekarID.equals(other.lekarID))
+//			return false;
 		if (nazivKl == null) {
 			if (other.nazivKl != null)
 				return false;
@@ -135,11 +142,11 @@ public class OperacijaDTO {
 				return false;
 		} else if (!pacijentID.equals(other.pacijentID))
 			return false;
-		if (prezimeL == null) {
-			if (other.prezimeL != null)
-				return false;
-		} else if (!prezimeL.equals(other.prezimeL))
-			return false;
+//		if (prezimeL == null) {
+//			if (other.prezimeL != null)
+//				return false;
+//		} else if (!prezimeL.equals(other.prezimeL))
+//			return false;
 		if (prezimeP == null) {
 			if (other.prezimeP != null)
 				return false;
@@ -172,9 +179,9 @@ public class OperacijaDTO {
 		this.id = id;
 		this.datum = datum;
 		this.tipOperacije = tipOperacije;
-		this.lekarID = lekarID;
-		this.imeL = imeL;
-		this.prezimeL = prezimeL;
+//		this.lekarID = lekarID;
+//		this.imeL = imeL;
+//		this.prezimeL = prezimeL;
 		this.pacijentEmail = pacijentEmail;
 		this.klinikaID = klinikaID;
 		this.pacijentID = pacijentID;
@@ -185,6 +192,14 @@ public class OperacijaDTO {
 		this.salaN = salaN;
 		this.salaBR = salaBR;
 		this.cena = cena;
+	}
+
+	public Set<LekarDTO> getListaLekara() {
+		return listaLekara;
+	}
+
+	public void setListaLekara(Set<LekarDTO> listaLekara) {
+		this.listaLekara = listaLekara;
 	}
 
 	public Long getId() {
@@ -211,29 +226,29 @@ public class OperacijaDTO {
 		this.tipOperacije = tipOperacije;
 	}
 
-	public Long getLekarID() {
-		return lekarID;
-	}
-
-	public void setLekarID(Long lekarID) {
-		this.lekarID = lekarID;
-	}
-
-	public String getImeL() {
-		return imeL;
-	}
-
-	public void setImeL(String imeL) {
-		this.imeL = imeL;
-	}
-
-	public String getPrezimeL() {
-		return prezimeL;
-	}
-
-	public void setPrezimeL(String prezimeL) {
-		this.prezimeL = prezimeL;
-	}
+//	public Long getLekarID() {
+//		return lekarID;
+//	}
+//
+//	public void setLekarID(Long lekarID) {
+//		this.lekarID = lekarID;
+//	}
+//
+//	public String getImeL() {
+//		return imeL;
+//	}
+//
+//	public void setImeL(String imeL) {
+//		this.imeL = imeL;
+//	}
+//
+//	public String getPrezimeL() {
+//		return prezimeL;
+//	}
+//
+//	public void setPrezimeL(String prezimeL) {
+//		this.prezimeL = prezimeL;
+//	}
 
 	public String getPacijentEmail() {
 		return pacijentEmail;

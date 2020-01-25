@@ -2,6 +2,8 @@ package com.example.demo.model;
 
 import java.sql.Time;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -10,6 +12,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 @Entity
 public class Operacija {
@@ -31,8 +34,8 @@ public class Operacija {
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Sala sala;
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private Lekar lekar;
+	@ManyToMany(mappedBy = "listaOperacija")
+	private Set<Lekar> listaLekara = new HashSet<Lekar>();
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Pacijent pacijent;
@@ -70,11 +73,12 @@ public class Operacija {
 	public void setSala(Sala sala) {
 		this.sala = sala;
 	}
-	public Lekar getLekar() {
-		return lekar;
+
+	public Set<Lekar> getListaLekara() {
+		return listaLekara;
 	}
-	public void setLekar(Lekar lekar) {
-		this.lekar = lekar;
+	public void setListaLekara(Set<Lekar> listaLekara) {
+		this.listaLekara = listaLekara;
 	}
 	public double getCena() {
 		return cena;
