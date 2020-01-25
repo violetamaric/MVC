@@ -186,7 +186,7 @@ public class KlinikaController {
 		// lekar koji se brise
 		Lekar lekar = lekarService.findByEmail(lekarDTO.getEmail());
 		System.out.println(lekar.getEmail());
-		List<Klinika> listaKlinika = klinikaService.findAll();
+		//List<Klinika> listaKlinika = klinikaService.findAll();
 		System.out.println("Id LEKAR KLINIKA: " + lekar.getKlinika().getId());
 
 		Long idLong = lekar.getKlinika().getId();
@@ -195,16 +195,21 @@ public class KlinikaController {
 		System.out.println("Klinika id ------------- : " + klinika.getId());
 
 		if (klinika.getListaLekara().contains(lekar)) {
+			//brisanje njegove liste slobodnih termina
 			List<SlobodniTermin> listaST = STService.findAll();
 			List<SlobodniTermin> listaSTkopija = listaST;
+
 			for (SlobodniTermin s : listaSTkopija) {
+
 				System.out.println("Slobodni termin L: " + s.getLekar().getIme());
 				if (s.getLekar().equals(lekar)) {
 					listaST.remove(s);
 					STService.delete(s);
 
 				}
+
 			}
+
 			List<Pregled> listaP = pregledService.findAll();
 			List<Pregled> listaPkopija = new ArrayList<Pregled>(listaP);
 			System.out.println(pregledService.findAll().size());
@@ -226,16 +231,19 @@ public class KlinikaController {
 				}
 			}
 
+
 			// pregledService.deleteAll();
 //			System.out.println(pregledService.findAll().size());
 //			for(Pregled preg : listaP) {
 //				pregledService.save(preg);
 //			}
+
 			System.out.println(pregledService.findAll().size());
 			System.out.println("dsadasdasdsadasads");
 		}
 
 		System.out.println("--------------*-*-*-*-*-*-*-*-*");
+
 		Set<Lekar> lista = klinika.getListaLekara();
 		System.out.println("------> LISTA LEKARA KLINIKE:  -----");
 		for (Lekar l : lista) {
@@ -278,6 +286,7 @@ public class KlinikaController {
 
 		// klinikaService.save(klinika);
 		// System.out.println("obrisano" + lekarDTO.getEmail());
+
 
 		System.out.println("------------------------------------------------------");
 		return new ResponseEntity<>("uspesno obrisan lekar !!!", HttpStatus.OK);

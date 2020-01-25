@@ -211,6 +211,7 @@ public class Lekar implements UserDetails{
 	public void setAuthorities(Set<Authority> authorities) {
 		this.authorities = authorities;
 	}
+
 	public boolean sadrziTermin(Set<Termin> listaTermina, int termin){
 	    return listaTermina.stream().filter(o -> o.getTermin() == termin).findFirst().isPresent();
 	}
@@ -238,6 +239,7 @@ public class Lekar implements UserDetails{
 		}
 		return true;
 //	    return listaTermina.stream().filter(o -> o.getTermin() == termin).findFirst().isPresent();
+
 	}
 
 	
