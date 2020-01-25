@@ -16,6 +16,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.example.demo.dto.TerminDTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
@@ -75,10 +76,12 @@ public class Klinika{
 	@OneToMany(mappedBy = "klinika", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<OdmorOdsustvoLekar> zahteviZaOdmorOdsustvoLekara = new HashSet<OdmorOdsustvoLekar>();
 	
+	
 	@OneToMany(mappedBy = "klinika", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<OdmorOdsustvoMedicinskaSestra> zahteviZaOdmorOdsustvoMedestre = new HashSet<OdmorOdsustvoMedicinskaSestra>();
 	
-	
+//	@OneToMany(mappedBy = "klinika", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//	private Set<Termin> listaZauzetihTermina = new HashSet<Termin>();
 	
 	
 	public Set<TipPregleda> getListaTipovaPregleda() {
@@ -174,6 +177,16 @@ public class Klinika{
 	public void setListaAdminKlinike(Set<AdministratorKlinike> listaAdminKlinike) {
 		this.listaAdminKlinike = listaAdminKlinike;
 	}
+	
+//	public Set<Termin> getListaZauzetihTermina() {
+//		return listaZauzetihTermina;
+//	}
+//
+//
+//	public void setListaZauzetihTermina(Set<Termin> listaZauzetihTermina) {
+//		this.listaZauzetihTermina = listaZauzetihTermina;
+//	}
+
 	public Klinika() {
 		super();
 	}

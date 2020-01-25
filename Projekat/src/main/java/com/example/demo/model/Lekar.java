@@ -1,6 +1,8 @@
 package com.example.demo.model;
 
+
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -58,6 +60,9 @@ public class Lekar implements UserDetails{
 	private Set<Pregled> listaPregleda = new HashSet<Pregled>();
 	
 	@OneToMany(mappedBy = "lekar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Termin> listaZauzetihTermina = new HashSet<Termin>();
+	
+	@OneToMany(mappedBy = "lekar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<OdmorOdsustvoLekar> listaOdmorOdsustvo = new HashSet<OdmorOdsustvoLekar>();
 	
 	@Column(name="ocena", nullable=false)
@@ -98,6 +103,19 @@ public class Lekar implements UserDetails{
 	}
 	public void setListaPregleda(Set<Pregled> listaPregleda) {
 		this.listaPregleda = listaPregleda;
+	}
+	
+	public Set<Termin> getListaZauzetihTermina() {
+		return listaZauzetihTermina;
+	}
+	public void setListaZauzetihTermina(Set<Termin> listaZauzetihTermina) {
+		this.listaZauzetihTermina = listaZauzetihTermina;
+	}
+	public Set<OdmorOdsustvoLekar> getListaOdmorOdsustvo() {
+		return listaOdmorOdsustvo;
+	}
+	public void setListaOdmorOdsustvo(Set<OdmorOdsustvoLekar> listaOdmorOdsustvo) {
+		this.listaOdmorOdsustvo = listaOdmorOdsustvo;
 	}
 	public String getIme() {
 		return ime;
@@ -190,6 +208,34 @@ public class Lekar implements UserDetails{
 	}
 	public void setAuthorities(Set<Authority> authorities) {
 		this.authorities = authorities;
+	}
+	public boolean sadrziTermin(Set<Termin> listaTermina, int termin){
+	    return listaTermina.stream().filter(o -> o.getTermin() == termin).findFirst().isPresent();
+	}
+	@SuppressWarnings("deprecation")
+	public boolean sadrziSlobodanTermin(Set<Termin> listaTermina, Date datum){
+		int flag = 4;
+		for(Termin t:listaZauzetihTermina) {
+			if(t.getDatumPocetka().getDate() == datum.getDate() &&
+					t.getDatumPocetka().getMonth() == datum.getMonth() &&
+					t.getDatumPocetka().getYear() == datum.getYear()) {
+				if(t.getTermin() == 9) {
+					flag -=1;
+				}else if(t.getTermin() == 11) {
+					flag -=1;
+				}else if(t.getTermin() == 13) {
+					flag -=1;
+				}else if(t.getTermin() == 15) {
+					flag -=1;
+				}
+				if(flag == 0) {
+					return false;
+				}
+				
+			}
+		}
+		return true;
+//	    return listaTermina.stream().filter(o -> o.getTermin() == termin).findFirst().isPresent();
 	}
 
 	

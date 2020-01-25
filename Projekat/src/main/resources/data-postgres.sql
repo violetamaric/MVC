@@ -196,7 +196,8 @@ insert into radni_dan(medicinska_sestra_id, datum_pocetka, datum_kraja) values (
 --insert into termin (radni_dan_id, datum_pocetka, datum_kraja, status) values(1,'2020-01-21 12:00:00', '2020-01-21 13:00:00', FALSE);
 
 
-insert into termin (datum_pocetka, termin, sala_id ) values('26-mar-2020', 9, 2);
-insert into termin (datum_pocetka, termin, sala_id ) values('26-mar-2020', 11, 3);
-insert into termin (datum_pocetka, termin, sala_id ) values('26-mar-2020', 15, 4);
-insert into termin (datum_pocetka, termin, sala_id ) values ('27-mar-2020', 17, 1);
+insert into termin (datum_pocetka, termin, sala_id, lekar_id ) values('26-mar-2020', 9, 2, 1);
+insert into termin (datum_pocetka, termin, sala_id, lekar_id ) values('26-mar-2020', 11, 3, 1);
+insert into termin (datum_pocetka, termin, sala_id, lekar_id ) values('26-mar-2020', 13, 3, 1);
+insert into termin (datum_pocetka, termin, sala_id, lekar_id ) values('26-mar-2020', 15, 4, 1);
+insert into termin (datum_pocetka, termin, sala_id, lekar_id ) values ('27-mar-2020', 17, 1, 1);

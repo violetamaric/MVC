@@ -17,7 +17,10 @@ public class TerminDTO {
 	private Long salaID;
 
 	private String salaN;
-	
+
+//	private Long klinikaID;
+//	
+//	private String nazivKl;
 
 	public TerminDTO(Termin termin) {
 		this.id = termin.getId();
@@ -26,6 +29,8 @@ public class TerminDTO {
 		this.salaBR = termin.getSala().getBroj();
 		this.salaID = termin.getSala().getId();
 		this.salaN = termin.getSala().getNaziv();
+//		this.klinikaID = termin.getKlinika().getId();
+//		this.nazivKl = termin.getKlinika().getNaziv();
 	}
 
 	public TerminDTO(Long id, Date datumPocetka, Integer termin, int salaBR, Long salaID, String salaN) {
@@ -36,6 +41,8 @@ public class TerminDTO {
 		this.salaBR = salaBR;
 		this.salaID = salaID;
 		this.salaN = salaN;
+//		this.klinikaID = klinikaID;
+//		this.nazivKl = nazivKl;
 	}
 
 	public Long getId() {
@@ -85,7 +92,21 @@ public class TerminDTO {
 	public void setSalaN(String salaN) {
 		this.salaN = salaN;
 	}
-	
-	
+
+//	public Long getKlinikaID() {
+//		return klinikaID;
+//	}
+//
+//	public void setKlinikaID(Long klinikaID) {
+//		this.klinikaID = klinikaID;
+//	}
+//
+//	public String getNazivKl() {
+//		return nazivKl;
+//	}
+//
+//	public void setNazivKl(String nazivKl) {
+//		this.nazivKl = nazivKl;
+//	}
 
 }

@@ -20,12 +20,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.LekarDTO;
 import com.example.demo.dto.PacijentDTO;
-
 import com.example.demo.dto.PregledDTO;
-
+import com.example.demo.dto.TerminDTO;
 import com.example.demo.model.Lekar;
 import com.example.demo.model.Pacijent;
 import com.example.demo.model.Pregled;
+import com.example.demo.model.Termin;
 import com.example.demo.service.LekarService;
 import com.example.demo.service.PacijentService;
 import com.example.demo.service.PregledService;
@@ -159,6 +159,29 @@ public class LekarController {
 
 		System.out.println("*************");
 		return new ResponseEntity<>(lista, HttpStatus.OK);
+
+		
+	}
+	
+	@GetMapping(value = "/listaZauzetihTermina/{id}")
+	@CrossOrigin(origins = "http://localhost:3000")
+	public ResponseEntity<List<TerminDTO>> getListaZauzetihTermina(@PathVariable Long id) {
+		System.out.println("*************");
+
+		Lekar lekar = lekarService.findOne(id);
+		System.out.println(lekar.getIme());
+		
+		Set<Termin> listaTermina = lekar.getListaZauzetihTermina();
+		System.out.println(listaTermina.size());
+		
+		List<TerminDTO> listaTerminaDTO = new ArrayList<TerminDTO>();
+		for(Termin rd: listaTermina) {
+			listaTerminaDTO.add(new TerminDTO(rd));
+		}
+		
+
+		System.out.println("*************");
+		return new ResponseEntity<>(listaTerminaDTO, HttpStatus.OK);
 
 		
 	}
