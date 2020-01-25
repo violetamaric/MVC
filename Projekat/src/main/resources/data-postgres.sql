@@ -98,9 +98,9 @@ insert into medicinska_sestra_pacijent (pacijent_id, medicinska_sestra_id) value
 --insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status) values ('19-dec-2019 08:00', 2, 2, 2, 2, 3000, false);
 
 
-insert into slobodni_termin(datum, tip_pregleda_id, lekar_id, klinika_id, cena, status, popust) values ('15-dec-2019 08:00', 3, 2, 3, 1500, false, 50.0);
-insert into slobodni_termin(datum, tip_pregleda_id, lekar_id, klinika_id, cena, status, popust) values ('18-dec-2019 14:00', 4, 1, 3, 2000, true, 25.0);
-insert into slobodni_termin(datum, tip_pregleda_id, lekar_id, klinika_id, cena, status, popust) values ('19-dec-2019 08:00', 2, 2, 2, 3000, false, 10.0);
+insert into slobodni_termin(datum, tip_pregleda_id, lekar_id, klinika_id, cena, status, popust) values ('15-dec-2019 09:00', 3, 2, 3, 1500, false, 50.0);
+insert into slobodni_termin(datum, tip_pregleda_id, lekar_id, klinika_id, cena, status, popust) values ('18-dec-2019 11:00', 4, 1, 3, 2000, true, 25.0);
+insert into slobodni_termin(datum, tip_pregleda_id, lekar_id, klinika_id, cena, status, popust) values ('19-dec-2019 13:00', 2, 2, 2, 3000, false, 10.0);
 
 
 insert into sala(naziv, broj, klinika_id) values ('Oper', 123, 3);
