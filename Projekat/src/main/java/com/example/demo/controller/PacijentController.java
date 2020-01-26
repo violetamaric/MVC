@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.PacijentDTO;
+import com.example.demo.dto.ZdravstveniKartonDTO;
 import com.example.demo.model.KlinickiCentar;
 import com.example.demo.model.Pacijent;
 import com.example.demo.model.ZdravstveniKarton;
@@ -86,23 +86,27 @@ public class PacijentController {
 	@GetMapping(value = "/findZK")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('PACIJENT')")
-	public ResponseEntity<ZdravstveniKarton> getZK(Principal pr) {
+	public ResponseEntity<ZdravstveniKartonDTO> getZK(Principal pr) {
 
 		System.out.println("find pacijent");
 		System.out.println("zk");
 
 		Pacijent pacijent = pacijentService.findByEmail(pr.getName());
-		System.out.println("Pacijent: " + pacijent);
+		System.out.println("Pacijent: " + pacijent.getZdravstveniKarton().getId());
 		if (pacijent == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 
 		ZdravstveniKarton zk = pacijent.getZdravstveniKarton();
+		System.out.println("____");
+		System.out.println(zk);
+//		zk.setPacijent(pacijent);
+		System.out.println(zk);
 		System.out.println(pacijent.getEmail() + "++++");
-		Pacijent p = new Pacijent();
-		p.setEmail(pacijent.getEmail());
-		zk.setPacijent(p);
-		return new ResponseEntity<>(new ZdravstveniKarton(zk), HttpStatus.OK);
+//		Pacijent p = new Pacijent();
+//		p.setEmail(pacijent.getEmail());
+//		zk.setPacijent(p);
+		return new ResponseEntity<>(new ZdravstveniKartonDTO(zk), HttpStatus.OK);
 	}	
 
 	//metoda za vracanje pacijenta- za med sestru

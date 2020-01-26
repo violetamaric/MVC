@@ -31,6 +31,7 @@ import com.example.demo.model.KlinickiCentar;
 import com.example.demo.model.Klinika;
 import com.example.demo.model.Lek;
 import com.example.demo.model.Pacijent;
+import com.example.demo.model.ZdravstveniKarton;
 import com.example.demo.service.AdministratorKCService;
 import com.example.demo.service.AdministratorKlinikeService;
 import com.example.demo.service.EmailService;
@@ -172,6 +173,7 @@ public class AdministratorKCController {
 		KlinickiCentar kc = listaKC.get(0);	
 		
 		Pacijent p = pacijentService.findByEmail(paDTO.getEmail());
+		p.setZdravstveniKarton(new ZdravstveniKarton());
 		PacijentDTO pDTO = new PacijentDTO(p);
 		
 //		Set<Pacijent> listaz = kc.getZahteviZaRegistraciju();

@@ -9,7 +9,7 @@ public class PacijentDTO {
 
 	private Long id;
 
-	private ZdravstveniKarton zdravstveniKarton;
+	private ZdravstveniKartonDTO zkDTO;
 
 	private String ime;
 
@@ -42,7 +42,10 @@ public class PacijentDTO {
 		super();
 		// TODO Auto-generated constructor stub
 		this.id = pacijent.getId();
-		this.zdravstveniKarton = pacijent.getZdravstveniKarton();
+		if(pacijent.getZdravstveniKarton() != null) {
+			this.zkDTO = new ZdravstveniKartonDTO(pacijent.getZdravstveniKarton());
+		}
+		
 		this.ime = pacijent.getIme();
 		this.prezime = pacijent.getPrezime();
 		this.lbo = pacijent.getLbo();
@@ -57,11 +60,11 @@ public class PacijentDTO {
 
 	}
 
-	public PacijentDTO(Long id, ZdravstveniKarton zdravstveniKarton, String ime, String prezime, String lbo,
+	public PacijentDTO(Long id, ZdravstveniKartonDTO zdravstveniKarton, String ime, String prezime, String lbo,
 			String lozinka, String email, Boolean odobrenaRegistracija, String jmbg) {
 		super();
 		this.id = id;
-		this.zdravstveniKarton = zdravstveniKarton;
+		this.zkDTO = zdravstveniKarton;
 		this.ime = ime;
 		this.prezime = prezime;
 		this.lbo = lbo;
@@ -79,12 +82,14 @@ public class PacijentDTO {
 		this.id = id;
 	}
 
-	public ZdravstveniKarton getZdravstveniKarton() {
-		return zdravstveniKarton;
+	
+
+	public ZdravstveniKartonDTO getZkDTO() {
+		return zkDTO;
 	}
 
-	public void setZdravstveniKarton(ZdravstveniKarton zdravstveniKarton) {
-		this.zdravstveniKarton = zdravstveniKarton;
+	public void setZkDTO(ZdravstveniKartonDTO zkDTO) {
+		this.zkDTO = zkDTO;
 	}
 
 	public String getIme() {
@@ -178,7 +183,7 @@ public class PacijentDTO {
 
 	@Override
 	public String toString() {
-		return "PacijentDTO [id=" + id + ", zdravstveniKarton=" + zdravstveniKarton + ", ime=" + ime + ", prezime="
+		return "PacijentDTO [id=" + id + ", zdravstveniKarton=" + zkDTO + ", ime=" + ime + ", prezime="
 				+ prezime + ", lbo=" + lbo + ", lozinka=" + lozinka + ", email=" + email + ", adresa=" + adresa
 				+ ", grad=" + grad + ", drzava=" + drzava + ", telefon=" + telefon + "]";
 	}

@@ -214,8 +214,8 @@ insert into termin(datum_pocetka, termin, lekar_id, sala_id) values ('13-mar-202
 --insert into termin(datum_pocetka, termin, lekar_id, sala_id) values ('25-mar-2020 14:00', 3, 4, 3);
 --insert into termin(datum_pocetka, termin, lekar_id, sala_id) values ('26-mar-2020 15:00', 4, 5, 1);
 
-insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status, sala_id, termin) values('26-mar-2020', 1, 1, 1, 1, 1500, 1, 2, 9);
-insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status, sala_id, termin) values('26-mar-2020', 1, 1, 1, 1, 1500, 1, 3, 11);
+insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status, sala_id, termin) values('26-mar-2020', 1, 1, 1, 1, 1500, 3, 2, 9);
+insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status, sala_id, termin) values('26-mar-2020', 1, 1, 1, 1, 1500, 3, 3, 11);
 insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status, sala_id, termin) values('26-mar-2020', 3, 1, 2, 1, 3000, 1, 3, 13);
 insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status, sala_id, termin) values('26-mar-2020', 5, 1, 3, 1, 2000, 1, 4, 15);
 insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status, sala_id, termin) values('27-mar-2020', 5, 1, 4, 1, 1500, 1, 1, 15);
@@ -240,3 +240,6 @@ insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, c
 insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status, sala_id, termin) values ('25-mar-2020 14:00', 3, 1, 3, 1, 6000, 5, 3, 9);
 insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status, sala_id, termin) values ('26-mar-2020 15:00', 4, 5, 2, 3, 4500, 4, 1, 9);
 
+insert into izvestajopregledu (sadrzaj, dijagnoza_id, pregled_id, zdravstveni_karton_id) values ('Pacijent se zalio na tegobe u delu grudnog kosa. Potrebno odraditi dodatne analize radi odredjivanja preciznije dijagnoze', 2, 1, 1);
+--insert into izvestajopregledu (sadrzaj, dijagnoza_id, pregled_id, zdravstveni_karton_id) values ('Pacijent se zalio na tegobe u delu grudnog kosa. Potrebno odraditi dodatne analize radi odredjivanja preciznije dijagnoze', 2, 1, 1)
+insert into izvestajopregledu (sadrzaj, dijagnoza_id, pregled_id, zdravstveni_karton_id) values ('Pacijent je dobio velike boginje', 5, 2, 1);

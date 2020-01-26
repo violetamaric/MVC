@@ -171,6 +171,11 @@ public class ZdravstveniKarton {
 	public void setListaIzvestajaOPregledu(Set<IzvestajOPregledu> listaIzvestajaOPregledu) {
 		this.listaIzvestajaOPregledu = listaIzvestajaOPregledu;
 	}
+	@Override
+	public String toString() {
+		return "ZdravstveniKarton [id=" + id + ", visina=" + visina + ", tezina=" + tezina + ", krvnaGrupa="
+				+ krvnaGrupa + ", pacijent=" + pacijent + "]";
+	}
 	
 	
 	
