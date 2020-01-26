@@ -175,6 +175,59 @@ public class OdmorOdsustvoController {
 //		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 	
+	//posalji zahtev lekar
+	@PostMapping(path = "/posaljiZahtevLekar", consumes = "application/json")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('LEKAR')")
+	public ResponseEntity<OdmorOdsustvoLDTO> slanjeZahtevaLekar(@RequestBody OdmorOdsustvoLDTO ooDTO) {
+		System.out.println("------------------------------------------------------");
+			
+		//TODO 1: treba proveriti da li je medicinska sestra ima operacije ili preglede u tom periodu
+		//ako nema onda moze da se posalje zahtev adminu klinike.. 
+		//ako ima onda mora da se obavesti da je taj datum zauzet
+		//na frontu uraditi proveru da li je datum slobodan..
+		//tako sto uzmem datum pocetka i kraja i proverim za sve dane izmedju koristeci neku metodu
+		//iz backa za slobodne dane... ako nema pregled tad 
+		
+		
+		//ili proveriti samo posto je med sestra zaposlena od 9-17 pa da li je u tom vremenu 
+	
+		Lekar ms = lekarService.findByEmail(ooDTO.getEmailL());
+//		if(ms != null) {
+			Klinika k = klinikaService.findById(ms.getKlinika().getId());
+			
+//			if(k != null) {
+				OdmorOdsustvoLekar ooms = new OdmorOdsustvoLekar();
+				ooms.setDatumOd(ooDTO.getDatumOd());
+				ooms.setDatumDo(ooDTO.getDatumDo());
+				ooms.setOpis(ooDTO.getOpis());
+				System.out.println(ooDTO.getTip());
+				if(ooDTO.getTip().equals("ODMOR")) {
+					System.out.println("ispis odmora");
+					ooms.setTip(TipOdmorOdsustvo.ODMOR);
+				}else {
+					ooms.setTip(TipOdmorOdsustvo.ODSUSTVO);
+				}
+				
+				ooms.setStatus(false);
+				ooms.setLekar(ms);
+				ooms.setKlinika(k);
+				
+				ooms = oolService.save(ooms);
+				
+				k.getZahteviZaOdmorOdsustvoLekara().add(ooms);
+				k = klinikaService.save(k);
+				
+				ms.getListaOdmorOdsustvo().add(ooms);
+				ms = lekarService.save(ms);
+				
+				System.out.println("------------------------------------------------------");
+				return new ResponseEntity<>(new OdmorOdsustvoLDTO(ooms), HttpStatus.CREATED);
+//			}
+//		}
+//		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	}
+	
 	
 	//ODOBRI zahtev med sestri
 	@PostMapping(path = "/potvrdaMS", consumes = "application/json")

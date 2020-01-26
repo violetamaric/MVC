@@ -107,11 +107,12 @@ public class LekarController {
 	}
 
 	// vrati mi listu svih paicjenata od prijavljenog lekara
-	@GetMapping(value = "/listaPacijenataLekara/{email}")
+	@GetMapping(value = "/listaPacijenataLekara")
 	@CrossOrigin(origins = "http://localhost:3000")
-	public ResponseEntity<List<PacijentDTO>> getPacijenataLekara(@PathVariable String email) {
+	@PreAuthorize("hasAuthority('LEKAR')")
+	public ResponseEntity<List<PacijentDTO>> getPacijenataLekara(Principal pa) {
 		System.out.println("//////////////////// LEKAR LISTA PACIJENATA /////////////////////////		");
-		Lekar lekar = lekarService.findByEmail(email);
+		Lekar lekar = lekarService.findByEmail(pa.getName());
 
 		List<Pacijent> listaSvihP = pacijentiSevice.findAll();
 		for (Pacijent pp : listaSvihP) {
