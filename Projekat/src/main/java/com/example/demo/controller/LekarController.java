@@ -140,6 +140,25 @@ public class LekarController {
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 
+	@GetMapping(value = "/listaPregledaPacijenta")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('LEKAR')")
+	public ResponseEntity<List<PregledDTO>> getListaPregledaPacijenta(@RequestBody PacijentDTO pacijentDTO) {
+		
+		Pacijent pacijent = pacijentiSevice.findByEmail(pacijentDTO.getEmail());
+		
+		Set<Pregled> listaPregleda = pacijent.getListaPregleda();
+		
+		
+		for (Pregled pp : listaPregleda) {
+			System.out.println("Status pregleda " + pp.getStatus());
+		}
+		
+
+		List<PregledDTO> lista = new ArrayList<>();
+		
+		return new ResponseEntity<>(lista, HttpStatus.OK);
+	}
 
 	//VRACA LISTU PREGLEDA, ODMORA I ODSUSTVA
 	@GetMapping(value = "/listaPregleda/{email}")

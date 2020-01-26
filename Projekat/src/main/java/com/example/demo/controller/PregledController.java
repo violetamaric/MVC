@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.PacijentDTO;
 import com.example.demo.dto.PregledDTO;
 import com.example.demo.dto.SlobodniTerminDTO;
 import com.example.demo.model.Klinika;
@@ -58,6 +60,7 @@ public class PregledController {
 	
 	@Autowired
 	private TerminService terminService;
+	
 
 	@PostMapping(path = "/new", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
@@ -175,6 +178,26 @@ public class PregledController {
 		List<PregledDTO> pregledDTO = new ArrayList<>();
 		for (Pregled p : pregledi) {
 			if (p.getPacijent().getEmail().equals(pr.getName())) {
+				pregledDTO.add(new PregledDTO(p));
+			}
+
+		}
+
+		return new ResponseEntity<>(pregledDTO, HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/pregledPacijenta" , consumes = "application/json")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('MED_SESTRA') or hasAuthority('LEKAR')")
+	public ResponseEntity<List<PregledDTO>> getPregledPacijenta(@RequestBody PacijentDTO pacijentDTO) {
+		Pacijent pacijent = pacijentService.findByEmail(pacijentDTO.getEmail());
+		Set<Pregled> pregledi = pacijent.getListaPregleda();
+		
+		List<PregledDTO> pregledDTO = new ArrayList<>();
+		for (Pregled p : pregledi) {
+			System.out.println("Status pregleda pacijenta " + pacijent.getIme() + " : " + p.getStatus());
+			if (p.getStatus() == 1) {
+				
 				pregledDTO.add(new PregledDTO(p));
 			}
 

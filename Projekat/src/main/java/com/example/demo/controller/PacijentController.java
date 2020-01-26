@@ -28,7 +28,6 @@ import com.example.demo.service.PacijentService;
 @RestController
 //@RequestMapping(value = "/api/pacijenti", produces=MediaType.APPLICATION_JSON_VALUE)
 @RequestMapping(value = "/api/pacijenti")
-
 public class PacijentController {
 
 	@Autowired
@@ -82,6 +81,8 @@ public class PacijentController {
 		System.out.println(pacijent.getEmail() + "++++");
 		return ResponseEntity.ok(new PacijentDTO(pacijent));
 	}
+	
+	
 
 	@GetMapping(value = "/findZK")
 	@CrossOrigin(origins = "http://localhost:3000")
@@ -109,10 +110,10 @@ public class PacijentController {
 		return new ResponseEntity<>(new ZdravstveniKartonDTO(zk), HttpStatus.OK);
 	}	
 
-	//metoda za vracanje pacijenta- za med sestru
+	//metoda za vracanje pacijenta- za med sestru I LEKARA
 	@GetMapping(value = "/findPacijentEmailMS" , consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('MED_SESTRA')")
+	@PreAuthorize("hasAuthority('MED_SESTRA') or hasAuthority('LEKAR')")
 	public ResponseEntity<PacijentDTO> getPacijentByEmailMS(@RequestBody PacijentDTO pacijentDTO) {
 		System.out.println("find pacijent");
 		System.out.println(pacijentDTO.getEmail());
@@ -124,6 +125,8 @@ public class PacijentController {
 		System.out.println(pacijent.getEmail() + "++++");
 		return ResponseEntity.ok(new PacijentDTO(pacijent));
 	}
+	
+	
 
 	//metoda za vracanje zdravstvenog kartona- za med sestru
 	@GetMapping(value = "/findZKMS" , consumes = "application/json")
@@ -195,20 +198,7 @@ public class PacijentController {
 		Pacijent pacijent = pacijentService.findByID(id);
 		return ResponseEntity.ok(new PacijentDTO(pacijent));
 	}
-//	@PostMapping(path = "/signup", consumes = "application/json")
-//	@CrossOrigin(origins = "http://localhost:3000")
-//	public String signUpAsync(@RequestBody UserDTO userDTO){
-//
-//		
-//		//slanje emaila
-//		try {
-//			emailService.sendNotificaitionAsync(userDTO);
-//		}catch( Exception e ){
-//			logger.info("Greska prilikom slanja emaila: " + e.getMessage());
-//		}
-//
-//		return "success";
-//	}
+
 
 	@PutMapping(path = "/update", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
