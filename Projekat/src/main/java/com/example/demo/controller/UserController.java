@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,15 +19,18 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.PacijentDTO;
 import com.example.demo.dto.UserDTO;
 import com.example.demo.model.AdministratorKC;
 import com.example.demo.model.AdministratorKlinike;
 import com.example.demo.model.Authority;
+import com.example.demo.model.KlinickiCentar;
 import com.example.demo.model.Lekar;
 import com.example.demo.model.MedicinskaSestra;
 import com.example.demo.model.Pacijent;
@@ -35,6 +39,7 @@ import com.example.demo.security.TokenUtils;
 import com.example.demo.service.AdministratorKCService;
 import com.example.demo.service.AdministratorKlinikeService;
 import com.example.demo.service.CustomUserDetailsService;
+import com.example.demo.service.KlinickiCentarService;
 import com.example.demo.service.LekarService;
 import com.example.demo.service.MedicinskaSestraService;
 import com.example.demo.service.PacijentService;
@@ -66,6 +71,9 @@ public class UserController {
 
 	@Autowired
 	private AdministratorKlinikeService administratorKlinikeService;
+
+	@Autowired
+	private KlinickiCentarService KCService;
 
 
 	
@@ -155,6 +163,48 @@ public class UserController {
 //		System.out.println(auth.getAuthorities());
 //		return new ResponseEntity<>(userDTO, HttpStatus.OK);
 //	}
+	
+	@PostMapping(path = "/register", consumes = "application/json")
+	@CrossOrigin(origins = "http://localhost:3000")
+	public ResponseEntity<PacijentDTO> registerPacijent(@RequestBody PacijentDTO pacijentDTO) {
+
+		Pacijent pacijent = new Pacijent();
+		
+		List<Pacijent> pacijenti = pacijentService.findAll();
+		for (Pacijent p :pacijenti) {
+			if(p.getLbo().equals(pacijentDTO.getLbo())) {
+				return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+			}
+		}
+
+		pacijent.setLbo(pacijentDTO.getLbo());
+		pacijent.setIme(pacijentDTO.getIme());
+		pacijent.setPrezime(pacijentDTO.getPrezime());
+		pacijent.setEmail(pacijentDTO.getEmail());
+		pacijent.setLozinka(pacijentDTO.getLozinka());
+		pacijent.setAdresa(pacijentDTO.getAdresa());
+		pacijent.setGrad(pacijentDTO.getGrad());
+		pacijent.setDrzava(pacijentDTO.getDrzava());
+		pacijent.setTelefon(pacijentDTO.getTelefon());
+		pacijent.setOdobrenaRegistracija(false);
+		pacijent.setJmbg(pacijentDTO.getJmbg());
+
+		List<KlinickiCentar> listaKC = KCService.find();
+		KlinickiCentar kc = listaKC.get(0);
+		pacijent.setKlinickiCentar(kc);
+
+		pacijent = pacijentService.save(pacijent);
+		kc.getZahteviZaRegistraciju().add(pacijent);
+		kc = KCService.save(kc);
+
+//		KlinickiCentar kc = pacijent.getKlinickiCentar();
+//		
+//		System.out.println("dodat u zahteve za registraciju");
+//		kc.getZahteviZaRegistraciju().add(pacijent);
+
+		return new ResponseEntity<>(new PacijentDTO(pacijent), HttpStatus.CREATED);
+	}
+
 	
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	@CrossOrigin(origins = "http://localhost:3000")

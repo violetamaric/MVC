@@ -86,10 +86,10 @@ public class AdministratorKCController {
 	//vrati mi trenutnog admnistratora kc
 	@PreAuthorize("hasAuthority('ADMIN_KC')")
 	@CrossOrigin(origins = "http://localhost:3000")
-	@GetMapping(value = "/pronadjenAdministratorKC/{email}")
-	public ResponseEntity<AdministratorKCDTO> getAdministratorKCByEmail(@PathVariable String email){
-		System.out.println(email);
-		AdministratorKC administratorKC = administratorKCService.findByEmail(email);
+	@GetMapping(value = "/pronadjenAdministratorKC")
+	public ResponseEntity<AdministratorKCDTO> getAdministratorKCByEmail(Principal pr){
+//		System.out.println(email);
+		AdministratorKC administratorKC = administratorKCService.findByEmail(pr.getName());
 		if (administratorKC == null) {
 			System.out.println("NIJE PRONADJEN");
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);

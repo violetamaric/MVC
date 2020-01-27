@@ -26,16 +26,16 @@ public class ZdravstveniKarton {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(name="visina", nullable=false)
+	@Column(name="visina", nullable=true)
 	private double visina;
 	
-	@Column(name="tezina", nullable=false)
+	@Column(name="tezina", nullable=true)
 	private double tezina;
 	
-	@Column(name="krvnaGrupa", nullable=false)
+	@Column(name="krvnaGrupa", nullable=true)
 	private String krvnaGrupa;
 	
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	private Pacijent pacijent;
 	
 	@OneToMany(mappedBy = "zdravstveniKarton", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
