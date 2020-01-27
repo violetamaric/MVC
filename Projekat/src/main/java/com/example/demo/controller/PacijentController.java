@@ -94,9 +94,10 @@ public class PacijentController {
 
 		Pacijent pacijent = pacijentService.findByEmail(pr.getName());
 		System.out.println("Pacijent: " + pacijent.getZdravstveniKarton().getId());
-		if (pacijent == null) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
+//		if (pacijent == null) {
+//			
+//			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//		}
 
 		ZdravstveniKarton zk = pacijent.getZdravstveniKarton();
 		System.out.println("____");
@@ -110,11 +111,28 @@ public class PacijentController {
 		return new ResponseEntity<>(new ZdravstveniKartonDTO(zk), HttpStatus.OK);
 	}	
 
+	@GetMapping(value = "/findPacijentLekar/{id}")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('LEKAR')")
+	public ResponseEntity<PacijentDTO> getPacijentByIdLekar(@PathVariable Long id) {
+		
+		System.out.println("find pacijent");
+		System.out.println(id);
+		Pacijent pacijent = pacijentService.findByID(id);
+		System.out.println("pacijent " + pacijent);
+		if (pacijent == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		System.out.println(pacijent.getEmail() + "++++");
+		return new ResponseEntity<>(new PacijentDTO(pacijent), HttpStatus.OK);
+	}
+	
 	//metoda za vracanje pacijenta- za med sestru I LEKARA
-	@GetMapping(value = "/findPacijentEmailMS" , consumes = "application/json")
+	@GetMapping(value = "/findPacijentEmailMS")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('MED_SESTRA') or hasAuthority('LEKAR')")
 	public ResponseEntity<PacijentDTO> getPacijentByEmailMS(@RequestBody PacijentDTO pacijentDTO) {
+		
 		System.out.println("find pacijent");
 		System.out.println(pacijentDTO.getEmail());
 		Pacijent pacijent = pacijentService.findByEmail(pacijentDTO.getEmail());
@@ -127,11 +145,13 @@ public class PacijentController {
 	}
 	
 	
+	
+	
 
 	//metoda za vracanje zdravstvenog kartona- za med sestru
 	@GetMapping(value = "/findZKMS" , consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('MED_SESTRA')")
+	@PreAuthorize("hasAuthority('MED_SESTRA') ")
 	public ResponseEntity<ZdravstveniKarton> getZKMS(@RequestBody PacijentDTO pacijentDTO) {
 
 

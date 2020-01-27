@@ -186,22 +186,29 @@ public class PregledController {
 		return new ResponseEntity<>(pregledDTO, HttpStatus.OK);
 	}
 	
-	@GetMapping(value = "/pregledPacijenta" , consumes = "application/json")
+	@GetMapping(value = "/pregledPacijenta/{id}" )
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('MED_SESTRA') or hasAuthority('LEKAR')")
-	public ResponseEntity<List<PregledDTO>> getPregledPacijenta(@RequestBody PacijentDTO pacijentDTO) {
-		Pacijent pacijent = pacijentService.findByEmail(pacijentDTO.getEmail());
-		Set<Pregled> pregledi = pacijent.getListaPregleda();
+	public ResponseEntity<List<PregledDTO>> getPregledPacijenta(@PathVariable Long id, Principal pr) {
+		Lekar lekar = lekarService.findByEmail(pr.getName());
+		Pacijent pacijent = pacijentService.findByID(id);
 		
 		List<PregledDTO> pregledDTO = new ArrayList<>();
-		for (Pregled p : pregledi) {
-			System.out.println("Status pregleda pacijenta " + pacijent.getIme() + " : " + p.getStatus());
-			if (p.getStatus() == 1) {
-				
-				pregledDTO.add(new PregledDTO(p));
-			}
+		//ako je pacijent od naseg lekara 
+		if(lekar.getListaPacijenata().contains(pacijent)) {
+			Set<Pregled> pregledi = pacijent.getListaPregleda();
+			
+			
+			for (Pregled p : pregledi) {
+				System.out.println("Status pregleda pacijenta " + pacijent.getIme() + " : " + p.getStatus());
+				if (p.getStatus() == 1) {
+					
+					pregledDTO.add(new PregledDTO(p));
+				}
 
+			}
 		}
+		
 
 		return new ResponseEntity<>(pregledDTO, HttpStatus.OK);
 	}

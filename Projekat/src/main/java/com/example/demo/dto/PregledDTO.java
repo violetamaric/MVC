@@ -8,7 +8,7 @@ public class PregledDTO {
 	private Long id;
 
 	private Date datum;
-	//TODO 1: DODATI TRAJANJE I KRAJ PREGLEDA
+	
 	
 	
 
