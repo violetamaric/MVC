@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.dto.PacijentDTO;
 import com.example.demo.dto.PregledDTO;
 import com.example.demo.dto.SlobodniTerminDTO;
+import com.example.demo.model.KlinickiCentar;
 import com.example.demo.model.Klinika;
 import com.example.demo.model.Lekar;
 import com.example.demo.model.Pacijent;
@@ -126,7 +127,8 @@ public class PregledController {
 		return new ResponseEntity<>(new PregledDTO(pregled), HttpStatus.OK);
 	}
 
-	@GetMapping(value = "/{id}")
+	@GetMapping(value = "/{id}")	
+	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
 	public ResponseEntity<PregledDTO> getLekar(@PathVariable Long id) {
 
 		Pregled pregled = pregledService.findOne(id);
@@ -241,5 +243,53 @@ public class PregledController {
 		System.out.println(new PregledDTO(pregled));
 		pregledService.save(pregled);
 		return new ResponseEntity<>(new PregledDTO(pregled), HttpStatus.OK);
+	}
+
+	//postupak rezervisanja sale za p
+	@PostMapping(path = "/rezervisanje", consumes = "application/json")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
+	public ResponseEntity<String> rezervisanjeSale(@RequestBody PregledDTO pDTO){
+		System.out.println("-----   REZERVISANJEEE -------------------------------");
+		System.out.println(pDTO);
+		Klinika klinika = klinikaService.findById(pDTO.getKlinikaID());
+//		KlinickiCentar kc = listaKC.get(0);	
+		
+//		Pacijent p = pacijentService.findByEmail(paDTO.getEmail());
+//		PacijentDTO pDTO = new PacijentDTO(p);
+//		
+////		Set<Pacijent> listaz = kc.getZahteviZaRegistraciju();
+//		
+//		if(kc.getZahteviZaRegistraciju().isEmpty()) {
+//			System.out.println("prazna listaaa");
+//			return new ResponseEntity<>("U listi ne postoji pacijent", HttpStatus.BAD_REQUEST);
+//		}else {
+//			
+//			p.setOdobrenaRegistracija(true);
+//			p = pacijentService.save(p);
+//			System.out.println(p.getOdobrenaRegistracija());
+//			
+//			kc.getZahteviZaRegistraciju().remove(p);
+//			kc.setZahteviZaRegistraciju(kc.getZahteviZaRegistraciju());
+//			kc = KCService.save(kc);
+//			System.out.println(kc.getZahteviZaRegistraciju().toString());
+//		}
+//
+//			
+//		String subject ="Odobrena registracija";
+//		String text = "Postovani " + pDTO.getIme() + " " + pDTO.getPrezime() 
+//					+ ",\n\nMolimo Vas da potvrdite vasu registraciju klikom na sledeci link: http://localhost:3000 .";
+//
+//		System.out.println(text);
+//		
+//		//slanje emaila
+//		try {
+//			emailService.poslatiOdgovorPacijentu(pDTO, subject, text);
+//		}catch( Exception e ){
+//			logger.info("Greska prilikom slanja emaila: " + e.getMessage());
+//			return new ResponseEntity<>("Mail nije poslat", HttpStatus.BAD_REQUEST);
+//		}
+
+		return new ResponseEntity<>("Odobreno", HttpStatus.OK);
 	}
 }
