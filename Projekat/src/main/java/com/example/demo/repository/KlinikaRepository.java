@@ -15,6 +15,8 @@ public interface KlinikaRepository extends JpaRepository<Klinika, Long>{
 	Klinika findByNaziv(String naziv);
 	Klinika findByAdresa(String adresa);
 	Page<Klinika> findAll(Pageable pageable);
+	@Query("select sum(p.cena) from Pregled p where p.status in (3,4,5,6) and p.klinika.id =?1")
+	float nedeljniPrihod(Long id);
 	
 
 }

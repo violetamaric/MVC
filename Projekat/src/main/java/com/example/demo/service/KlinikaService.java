@@ -48,6 +48,10 @@ public class KlinikaService {
 	public List<Pacijent>findByIdKlinike(Long id){
 		return pacijentRepository.findByIdKlinike(id);
 	}
+
+	public float nedeljniPrihod(Long id) {
+		return klinikaRepository.nedeljniPrihod(id);
+	}
 }
 
 

@@ -2,7 +2,6 @@ package com.example.demo.controller;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.dto.KlinikaDTO;
 import com.example.demo.dto.LekarDTO;
 import com.example.demo.dto.PacijentDTO;
-import com.example.demo.dto.TerminDTO;
 import com.example.demo.model.Klinika;
 import com.example.demo.model.Lekar;
 import com.example.demo.model.Pacijent;
@@ -384,5 +382,14 @@ public class KlinikaController {
 		return new ResponseEntity<>(klinikaDTO, HttpStatus.OK);
 	}
 
+	@GetMapping(value = "/nedeljniPrihodi/{id}")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority( 'ADMIN_KLINIKE')")
+	public float nedeljniPrihodiKlinike(@PathVariable Long id) {
+		float ukupno = klinikaService.nedeljniPrihod(id);
+		System.out.println("UKUPNO " + ukupno);
+		return ukupno;
+		
+	}
 
 }
