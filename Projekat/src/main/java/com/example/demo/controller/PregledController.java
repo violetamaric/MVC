@@ -185,7 +185,7 @@ public class PregledController {
 
 		return new ResponseEntity<>(pregledDTO, HttpStatus.OK);
 	}
-	
+	//vrati pregled pacijenta kod odredjenog lekara
 	@GetMapping(value = "/pregledPacijenta/{id}" )
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('MED_SESTRA') or hasAuthority('LEKAR')")
@@ -200,8 +200,10 @@ public class PregledController {
 			
 			
 			for (Pregled p : pregledi) {
+			
 				System.out.println("Status pregleda pacijenta " + pacijent.getIme() + " : " + p.getStatus());
-				if (p.getStatus() == 1) {
+				System.out.println("Lekar tog pregleda je : " + p.getLekar().getIme());
+				if (p.getStatus() == 1 && p.getLekar().getId().equals(lekar.getId())) {
 					
 					pregledDTO.add(new PregledDTO(p));
 				}

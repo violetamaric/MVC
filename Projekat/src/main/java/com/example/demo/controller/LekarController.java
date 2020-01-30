@@ -140,34 +140,41 @@ public class LekarController {
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 
+	//vrati mi listu zakazanih pregleda od pacijenta kod tog lekara koji je prijavljen
 	@GetMapping(value = "/listaPregledaPacijenta")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('LEKAR')")
-	public ResponseEntity<List<PregledDTO>> getListaPregledaPacijenta(@RequestBody PacijentDTO pacijentDTO) {
+	public ResponseEntity<List<PregledDTO>> getListaPregledaPacijenta(Principal pa, @RequestBody PacijentDTO pacijentDTO) {
 		
+		Lekar lekar = lekarService.findByEmail(pa.getName());
 		Pacijent pacijent = pacijentiSevice.findByEmail(pacijentDTO.getEmail());
 		
 		Set<Pregled> listaPregleda = pacijent.getListaPregleda();
-		
+		List<PregledDTO> lista = new ArrayList<>();
 		
 		for (Pregled pp : listaPregleda) {
-			System.out.println("Status pregleda " + pp.getStatus());
+			if(pp.getLekar().getId().equals(lekar.getId())) {
+				System.out.println("ima zakazan pregled kod lekara ovog");
+				System.out.println("Status pregleda " + pp.getStatus());
+				lista.add(new PregledDTO(pp));
+			}
+			//System.out.println("Status pregleda " + pp.getStatus());
 		}
 		
 
-		List<PregledDTO> lista = new ArrayList<>();
+		
 		
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 
-	//VRACA LISTU PREGLEDA, ODMORA I ODSUSTVA
+	//vraca listu pregleda jednog lekara
 	@GetMapping(value = "/listaPregleda/{email}")
 	@CrossOrigin(origins = "http://localhost:3000")
 	public ResponseEntity<List<PregledDTO>> getListaPregleda(@PathVariable String email) {
 		System.out.println("*************");
-		Lekar lek = lekarService.findByEmail(email);
+		Lekar lekar = lekarService.findByEmail(email);
 		
-		Set<Pregled> listaRD = lek.getListaPregleda();
+		Set<Pregled> listaRD = lekar.getListaPregleda();
 		
 		List<PregledDTO> lista = new ArrayList<PregledDTO>();
 		for(Pregled rd: listaRD) {
@@ -183,6 +190,8 @@ public class LekarController {
 		
 	}
 	
+	
+	//vraca listu zauzetih termina lekara
 	@GetMapping(value = "/listaZauzetihTermina/{id}")
 	@CrossOrigin(origins = "http://localhost:3000")
 	public ResponseEntity<List<TerminDTO>> getListaZauzetihTermina(@PathVariable Long id) {
