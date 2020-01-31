@@ -44,11 +44,13 @@ public class DijagnozaController {
 	//vrati mi listu dijagnoza u klinickom centru
 	@GetMapping(value = "/listaDijagnoza")
 	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('ADMIN_KC')")
-	public ResponseEntity<List<DijagnozaDTO>> getListaDijagnoza(Principal p) {
+	@PreAuthorize("hasAuthority('ADMIN_KC') or hasAuthority('LEKAR')")
+	public ResponseEntity<List<DijagnozaDTO>> getListaDijagnoza() {
 
-		AdministratorKC administratorKC = administratorKCService.findByEmail(p.getName());			
-		KlinickiCentar klinickiCentar = administratorKC.getKlinickiCentar();			
+//		AdministratorKC administratorKC = administratorKCService.findByEmail(p.getName());	
+		List<KlinickiCentar> listaKC = KCService.find();
+		KlinickiCentar klinickiCentar = listaKC.get(0);
+		
 		List<DijagnozaDTO> lista = new ArrayList<>();
 			
 		for (Dijagnoza k : klinickiCentar.getListaDijagnoza()) {
@@ -58,6 +60,8 @@ public class DijagnozaController {
 
 		return new ResponseEntity<>(lista, HttpStatus.OK);	
 	}
+	
+	
 
 	
 	//dodavanje nove dijagnoze

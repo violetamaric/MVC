@@ -19,9 +19,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.DijagnozaDTO;
 import com.example.demo.dto.PacijentDTO;
 import com.example.demo.dto.PregledDTO;
 import com.example.demo.dto.SlobodniTerminDTO;
+import com.example.demo.model.Dijagnoza;
+import com.example.demo.model.KlinickiCentar;
 import com.example.demo.model.Klinika;
 import com.example.demo.model.Lekar;
 import com.example.demo.model.Pacijent;
@@ -299,4 +302,6 @@ public class PregledController {
 		pregledService.save(pregled);
 		return new ResponseEntity<>(new PregledDTO(pregled), HttpStatus.OK);
 	}
+
+	
 }

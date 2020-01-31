@@ -16,6 +16,14 @@ public class IzvestajOPregleduDTO {
 	private Long lekarID;
 	private String imeL;
 	private String prezimeL;
+	private Long pregledID;
+	
+	public Long getPregledID() {
+		return pregledID;
+	}
+	public void setPregledID(Long pregledID) {
+		this.pregledID = pregledID;
+	}
 	public Long getId() {
 		return id;
 	}
@@ -87,9 +95,10 @@ public class IzvestajOPregleduDTO {
 		this.lekarID = IOP.getPregled().getLekar().getId();
 		this.imeL = IOP.getPregled().getLekar().getIme();
 		this.prezimeL = IOP.getPregled().getLekar().getPrezime();
+		this.pregledID = IOP.getPregled().getId();
 	}
 	public IzvestajOPregleduDTO(Long id, Long zkID, String dijagnozaN, String dijagnozaO, Long dijagnozaID, Date datum,
-			String sadrzaj, Long lekarID, String imeL, String prezimeL) {
+			String sadrzaj, Long lekarID, String imeL, String prezimeL, Long pregledID) {
 		super();
 		this.id = id;
 		this.zkID = zkID;
@@ -101,6 +110,7 @@ public class IzvestajOPregleduDTO {
 		this.lekarID = lekarID;
 		this.imeL = imeL;
 		this.prezimeL = prezimeL;
+		this.pregledID = pregledID;
 	}
 	
 	

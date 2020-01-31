@@ -43,11 +43,12 @@ public class LekController {
 	//vrati mi listu lekova u klinickom centru
 	@GetMapping(value = "/listaLekova")
 	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('ADMIN_KC')")
-	public ResponseEntity<List<LekDTO>> getListaLekova(Principal p) {
+	@PreAuthorize("hasAuthority('ADMIN_KC') or hasAuthority('LEKAR')")
+	public ResponseEntity<List<LekDTO>> getListaLekova() {
 
-		AdministratorKC administratorKC = administratorKCService.findByEmail(p.getName());	
-		KlinickiCentar klinickiCentar = administratorKC.getKlinickiCentar();	
+//		AdministratorKC administratorKC = administratorKCService.findByEmail(p.getName());	
+		List<KlinickiCentar> listaKC = KCService.find();
+		KlinickiCentar klinickiCentar = listaKC.get(0);
 		List<LekDTO> lista = new ArrayList<>();
 		
 		for (Lek k : klinickiCentar.getListaLekova()) {
