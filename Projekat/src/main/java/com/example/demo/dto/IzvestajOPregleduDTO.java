@@ -1,8 +1,10 @@
 package com.example.demo.dto;
 
 import java.util.Date;
+import java.util.List;
 
 import com.example.demo.model.IzvestajOPregledu;
+import com.example.demo.model.Recept;
 
 public class IzvestajOPregleduDTO {
 
@@ -17,6 +19,7 @@ public class IzvestajOPregleduDTO {
 	private String imeL;
 	private String prezimeL;
 	private Long pregledID;
+	private List<ReceptDTO> recepti;
 	
 	public Long getPregledID() {
 		return pregledID;
@@ -84,6 +87,14 @@ public class IzvestajOPregleduDTO {
 	public void setPrezimeL(String prezimeL) {
 		this.prezimeL = prezimeL;
 	}
+	
+	
+	public List<ReceptDTO> getRecepti() {
+		return recepti;
+	}
+	public void setRecepti(List<ReceptDTO> recepti) {
+		this.recepti = recepti;
+	}
 	public IzvestajOPregleduDTO(IzvestajOPregledu IOP) {
 		this.id = IOP.getId();
 		this.zkID = IOP.getZdravstveniKarton().getId();
@@ -96,9 +107,12 @@ public class IzvestajOPregleduDTO {
 		this.imeL = IOP.getPregled().getLekar().getIme();
 		this.prezimeL = IOP.getPregled().getLekar().getPrezime();
 		this.pregledID = IOP.getPregled().getId();
+		for(Recept r : IOP.getListaRecepata()) {
+			this.recepti.add(new ReceptDTO(r));
+		}
 	}
 	public IzvestajOPregleduDTO(Long id, Long zkID, String dijagnozaN, String dijagnozaO, Long dijagnozaID, Date datum,
-			String sadrzaj, Long lekarID, String imeL, String prezimeL, Long pregledID) {
+			String sadrzaj, Long lekarID, String imeL, String prezimeL, Long pregledID, List<ReceptDTO> recepti) {
 		super();
 		this.id = id;
 		this.zkID = zkID;
@@ -111,6 +125,7 @@ public class IzvestajOPregleduDTO {
 		this.imeL = imeL;
 		this.prezimeL = prezimeL;
 		this.pregledID = pregledID;
+		this.recepti = recepti;
 	}
 	
 	
