@@ -1,7 +1,10 @@
 package com.example.demo.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -184,7 +187,7 @@ public class KlinikaController {
 		// lekar koji se brise
 		Lekar lekar = lekarService.findByEmail(lekarDTO.getEmail());
 		System.out.println(lekar.getEmail());
-		//List<Klinika> listaKlinika = klinikaService.findAll();
+		// List<Klinika> listaKlinika = klinikaService.findAll();
 		System.out.println("Id LEKAR KLINIKA: " + lekar.getKlinika().getId());
 
 		Long idLong = lekar.getKlinika().getId();
@@ -193,7 +196,7 @@ public class KlinikaController {
 		System.out.println("Klinika id ------------- : " + klinika.getId());
 
 		if (klinika.getListaLekara().contains(lekar)) {
-			//brisanje njegove liste slobodnih termina
+			// brisanje njegove liste slobodnih termina
 			List<SlobodniTermin> listaST = STService.findAll();
 			List<SlobodniTermin> listaSTkopija = listaST;
 
@@ -228,7 +231,6 @@ public class KlinikaController {
 					System.out.println("aaaaaaaaaaaaaaaaaaaaa");
 				}
 			}
-
 
 			// pregledService.deleteAll();
 //			System.out.println(pregledService.findAll().size());
@@ -284,7 +286,6 @@ public class KlinikaController {
 
 		// klinikaService.save(klinika);
 		// System.out.println("obrisano" + lekarDTO.getEmail());
-
 
 		System.out.println("------------------------------------------------------");
 		return new ResponseEntity<>("uspesno obrisan lekar !!!", HttpStatus.OK);
@@ -386,10 +387,230 @@ public class KlinikaController {
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority( 'ADMIN_KLINIKE')")
 	public float nedeljniPrihodiKlinike(@PathVariable Long id) {
-		float ukupno = klinikaService.nedeljniPrihod(id);
+
+		Date date = new Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		String format = formatter.format(date);
+		System.out.println(format);
+
+//		Date date = new Date();
+//		String krajDatum = new SimpleDateFormat("yyyy-MM-dd").format(date);
+
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DATE, -7);
+		Date todate1 = cal.getTime();
+		String pocDatum = new SimpleDateFormat("yyyy-MM-dd").format(todate1);
+		float ukupno = 0;
+		try {
+			ukupno = klinikaService.nedeljniPrihod(id, todate1, date);
+		} catch (Exception e) {
+			System.out.println("NEMA PRIHODA");
+		}
+
 		System.out.println("UKUPNO " + ukupno);
+		System.out.println("DATUM " + date.toString());
+		System.out.println(new SimpleDateFormat("yyyy-MM-dd").format(date));
 		return ukupno;
-		
+
 	}
 
+	@GetMapping(value = "/mesecniPrihodi/{id}")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority( 'ADMIN_KLINIKE')")
+	public float mesecniPrihodiKlinike(@PathVariable Long id) {
+
+		Date date = new Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		String format = formatter.format(date);
+		System.out.println(format);
+
+//		Date date = new Date();
+//		String krajDatum = new SimpleDateFormat("yyyy-MM-dd").format(date);
+
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DATE, -30);
+		Date todate1 = cal.getTime();
+		String pocDatum = new SimpleDateFormat("yyyy-MM-dd").format(todate1);
+		float ukupno = 0;
+		try {
+			ukupno = klinikaService.nedeljniPrihod(id, todate1, date);
+		} catch (Exception e) {
+			System.out.println("NEMA PRIHODA");
+		}
+
+		System.out.println("UKUPNO " + ukupno);
+		System.out.println("DATUM " + date.toString());
+		System.out.println(new SimpleDateFormat("yyyy-MM-dd").format(date));
+		return ukupno;
+
+	}
+
+	@GetMapping(value = "/godisnjiPrihodi/{id}")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority( 'ADMIN_KLINIKE')")
+	public float godisnjiPrihodiKlinike(@PathVariable Long id) {
+
+		Date date = new Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		String format = formatter.format(date);
+		System.out.println(format);
+
+//		Date date = new Date();
+//		String krajDatum = new SimpleDateFormat("yyyy-MM-dd").format(date);
+
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DATE, -365);
+		Date todate1 = cal.getTime();
+		String pocDatum = new SimpleDateFormat("yyyy-MM-dd").format(todate1);
+		float ukupno = 0;
+		try {
+			ukupno = klinikaService.nedeljniPrihod(id, todate1, date);
+		} catch (Exception e) {
+			System.out.println("NEMA PRIHODA");
+		}
+
+		System.out.println("UKUPNO " + ukupno);
+		System.out.println("DATUM " + date.toString());
+		System.out.println(new SimpleDateFormat("yyyy-MM-dd").format(date));
+		return ukupno;
+
+	}
+
+	@GetMapping(value = "/dnevniNivo/{id}")
+	public ResponseEntity<?> dnevniNivo(@PathVariable Long id) {
+
+		Date date = new Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		String format = formatter.format(date);
+		System.out.println(format);
+		date.setHours(0);
+		date.setMinutes(0);
+		date.setSeconds(0);
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DATE, -1);
+		Date date2 = cal.getTime();
+		date2.setHours(0);
+		date2.setMinutes(0);
+		date2.setSeconds(0);
+		HashMap<Integer, Integer> pregledi = new HashMap<Integer, Integer>();
+		try {
+			int u9 = 0;
+			u9 = klinikaService.dnevniNivo(id, 9, date2, date);
+			System.out.println(u9);
+			pregledi.put(9, u9);
+			int u11 = 0;
+			u11 = klinikaService.dnevniNivo(id, 11, date2, date);
+			System.out.println(u11);
+			pregledi.put(11, u11);
+			int u13 = 0;
+			u13 = klinikaService.dnevniNivo(id, 13, date2, date);
+			System.out.println(u13);
+			pregledi.put(13, u13);
+			int u15 = 0;
+			u15 = klinikaService.dnevniNivo(id, 15, date2, date);
+			System.out.println(u15);
+			pregledi.put(15, u15);
+
+			System.out.println(pregledi.get(9));
+			System.out.println(pregledi.get(11));
+			System.out.println(pregledi.get(13));
+			System.out.println(pregledi.get(15));
+
+		} catch (Exception e) {
+			System.out.println("NEMA TERMINA");
+		}
+
+		return new ResponseEntity<>(pregledi, HttpStatus.OK);
+	}
+
+	@SuppressWarnings("deprecation")
+	@GetMapping(value = "/nedeljniNivo/{id}")
+	public ResponseEntity<?> nedeljniNivo(@PathVariable Long id) {
+
+		Date date = new Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		String format = formatter.format(date);
+		System.out.println(format);
+
+		HashMap<Date, Integer> pregledi = new HashMap<Date, Integer>();
+
+		Date pomocni = date;
+		for (int i = 0; i < 6; i++) {
+			System.out.println("===================================");
+
+			date = pomocni;
+			date.setHours(0);
+			date.setMinutes(0);
+			date.setSeconds(0);
+			Calendar cal = Calendar.getInstance();
+			cal.add(Calendar.DATE, - i-1);
+
+
+			SimpleDateFormat dateOnly = new SimpleDateFormat("yyyy-MM-dd");
+			System.out.println(dateOnly.format(cal.getTime()));
+			Date todate1 = cal.getTime();
+			todate1.setHours(0);
+			todate1.setMinutes(0);
+			todate1.setSeconds(0);
+			pomocni = todate1;
+
+			System.out.println(date.toString());
+			String pocDatum = new SimpleDateFormat("yyyy-MM-dd").format(todate1);
+			int nedeljno = 0;
+
+			try {
+				System.out.println("TRY month " + date.getMonth());
+				nedeljno = klinikaService.nedeljniNivo(id, todate1, date);
+				System.out.println("NEDELJNO: " + nedeljno);
+				pregledi.put(date, nedeljno);
+
+			} catch (Exception e) {
+				System.out.println("NEMA TERMINA");
+			}
+			System.out.println("=======================");
+
+		}
+
+		return new ResponseEntity<>(pregledi, HttpStatus.OK);
+	}
+
+	@GetMapping(value = "/mesecniNivo/{id}")
+	public ResponseEntity<?> mesecniNivo(@PathVariable Long id) {
+
+		Date date = new Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		String format = formatter.format(date);
+		System.out.println(format);
+
+		HashMap<Date, Integer> pregledi = new HashMap<Date, Integer>();
+
+		Date pomocni = date;
+		for (int i = 0; i < 3; i++) {
+
+			date = pomocni;
+			Calendar cal = Calendar.getInstance();
+			cal.add(Calendar.MONTH, -1 - i);
+
+			Date todate1 = cal.getTime();
+
+			pomocni = todate1;
+			System.out.println(todate1.toString());
+			System.out.println(date.toString());
+			String pocDatum = new SimpleDateFormat("yyyy-MM-dd").format(todate1);
+			int mesecno = 0;
+
+			try {
+				System.out.println("TRY month " + date.getMonth());
+				mesecno = klinikaService.mesecniNivo(id, todate1, date);
+				System.out.println("GODISNJE: " + mesecno);
+				pregledi.put(date, mesecno);
+
+			} catch (Exception e) {
+				System.out.println("NEMA TERMINA");
+			}
+			System.out.println("=======================");
+		}
+
+		return new ResponseEntity<>(pregledi, HttpStatus.OK);
+	}
 }
