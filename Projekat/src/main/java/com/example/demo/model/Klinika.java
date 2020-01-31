@@ -18,6 +18,7 @@ import javax.persistence.OneToMany;
 
 import com.example.demo.dto.TerminDTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import javax.persistence.Version;
 
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -73,6 +74,29 @@ public class Klinika{
 	private int ocena; 
 	//ocena 1-10
 	
+	@Version
+	private Long version;
+	
+	
+	public Klinika(String naziv, String adresa, String opis, int ocena) {
+		super();
+		this.id = id;
+		this.naziv = naziv;
+		this.adresa = adresa;
+		this.opis = opis;
+		this.ocena = ocena;
+	}
+
+	public Klinika(String naziv, String adresa, String opis, KlinickiCentar klinickiCentar, int ocena) {
+		super();
+		this.id = id;
+		this.naziv = naziv;
+		this.adresa = adresa;
+		this.opis = opis;
+		this.klinickiCentar = klinickiCentar;
+		this.ocena = ocena;
+	}
+
 	@OneToMany(mappedBy = "klinika", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<OdmorOdsustvoLekar> zahteviZaOdmorOdsustvoLekara = new HashSet<OdmorOdsustvoLekar>();
 	
@@ -223,6 +247,15 @@ public class Klinika{
 	public void setKlinickiCentar(KlinickiCentar klinickiCentar) {
 		this.klinickiCentar = klinickiCentar;
 	}
+
+	public Long getVersion() {
+		return version;
+	}
+
+	public void setVersion(Long version) {
+		this.version = version;
+	}
+	
 	
 	
 	

@@ -19,9 +19,9 @@ public class ZdravstveniKartonDTO {
 
 	public ZdravstveniKartonDTO(ZdravstveniKarton zk) {
 		this.id = zk.getId();
-		this.visina = zk.getVisina();
-		this.tezina = zk.getTezina();
-		this.krvnaGrupa = zk.getKrvnaGrupa();
+//		this.visina = zk.getVisina();
+//		this.tezina = zk.getTezina();
+//		this.krvnaGrupa = zk.getKrvnaGrupa();
 		if(zk.getPacijent() != null) {
 			this.pacijentID = zk.getPacijent().getId();
 			this.imeP = zk.getPacijent().getIme();

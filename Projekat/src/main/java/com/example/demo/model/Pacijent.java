@@ -24,7 +24,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+//@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Pacijent implements UserDetails{
 
 	@Id
@@ -168,12 +168,7 @@ public class Pacijent implements UserDetails{
 		return super.hashCode();
 	}
 
-	@Override
-	public String toString() {
-		return "Pacijent [id=" + id + ", zdravstveniKarton=" + zdravstveniKarton + ", ime=" + ime + ", prezime="
-				+ prezime + ", lbo=" + lbo + ", lozinka=" + lozinka + ", email=" + email + ", adresa=" + adresa
-				+ ", grad=" + grad + ", drzava=" + drzava + ", telefon=" + telefon + "]";
-	}
+
 
 	@Override
 	public boolean equals(Object arg0) {

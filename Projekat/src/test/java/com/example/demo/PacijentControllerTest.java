@@ -9,16 +9,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.nio.charset.Charset;
-import java.util.List;
 
 import javax.annotation.PostConstruct;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.MediaType;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -34,12 +35,12 @@ import org.springframework.web.context.WebApplicationContext;
 import com.example.demo.controller.PacijentController;
 import com.example.demo.dto.PacijentDTO;
 import com.example.demo.model.Authority;
+import com.example.demo.model.Klinika;
 import com.example.demo.model.Pacijent;
 import com.example.demo.security.TokenUtils;
+import com.example.demo.service.KlinikaService;
 import com.example.demo.service.PacijentService;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
+import static org.junit.Assert.assertEquals;
 //import static com.example.demo.PacijentKonstante.DB_ID;
 //import static com.example.demo.PacijentKonstante.DB_IME;
 //import static com.example.demo.PacijentKonstante.DB_PREZIME;
@@ -63,6 +64,9 @@ public class PacijentControllerTest {
 	@Autowired
 	private PacijentService pacijentService;
 	
+	
+	@Autowired
+	private KlinikaService klinikaService;
 
 	
 	public static final Long DB_ID = 1L;
@@ -78,6 +82,7 @@ public class PacijentControllerTest {
 			MediaType.APPLICATION_JSON.getSubtype(), Charset.forName("utf8"));
 
 	private MockMvc mockMvc;
+	
 
 	@Autowired
 	private WebApplicationContext webApplicationContext;
@@ -86,9 +91,35 @@ public class PacijentControllerTest {
 	public void setup() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 	}
+//
+//	@Before
+//	public void setUp() throws Exception {
+//		klinikaService.save(new Klinika("P1", "O1", "GG",1));
+//		klinikaService.save(new Klinika("P2","O2", "CC",2));
+//		klinikaService.save(new Klinika("P3","O3", "FF",3));
+//		klinikaService.save(new Klinika("P4","O4", "DD",4));
+//		klinikaService.save(new Klinika("P5","O4", "HH",5));
+//	}
+	@Test(expected = ObjectOptimisticLockingFailureException.class)
+	public void testOptimisticLockingScenario() {
 
-	
-	
+		Klinika klinikaForUserOne = klinikaService.findById(1L);
+		Klinika klinikaForUserTwo = klinikaService.findById(1L);
+
+		//modifikovanje istog objekta
+		klinikaForUserOne.setOcena(10);
+		klinikaForUserTwo.setOcena(9);
+
+		//verzija oba objekta je 0
+		assertEquals(0, klinikaForUserOne.getVersion().intValue());
+		assertEquals(0, klinikaForUserTwo.getVersion().intValue());
+
+		//pokusaj cuvanja prvog objekta
+		klinikaService.save(klinikaForUserOne);
+
+		//pokusaj cuvanja drugog objekta - Exception!
+		klinikaService.save(klinikaForUserTwo);
+	}
 	@Test
     @Transactional
     @Rollback(true)

@@ -43,6 +43,7 @@ public class PacijentDTO {
 		// TODO Auto-generated constructor stub
 		this.id = pacijent.getId();
 		if(pacijent.getZdravstveniKarton() != null) {
+			System.out.println("***********************************");
 			this.zkDTO = new ZdravstveniKartonDTO(pacijent.getZdravstveniKarton());
 		}
 		

@@ -2,11 +2,12 @@ package com.example.demo.controller;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,8 +17,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,6 +36,7 @@ import com.example.demo.model.Lekar;
 import com.example.demo.model.MedicinskaSestra;
 import com.example.demo.model.Pacijent;
 import com.example.demo.model.UserTokenState;
+import com.example.demo.repository.AuthorityRepository;
 import com.example.demo.security.TokenUtils;
 import com.example.demo.service.AdministratorKCService;
 import com.example.demo.service.AdministratorKlinikeService;
@@ -58,6 +60,9 @@ public class UserController {
 	private CustomUserDetailsService userDetailsService;
 
 	@Autowired
+	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
 	private PacijentService pacijentService;
 
 	@Autowired
@@ -75,8 +80,8 @@ public class UserController {
 	@Autowired
 	private KlinickiCentarService KCService;
 
-
-	
+	@Autowired
+	private AuthorityRepository authorityRepository;
     
 
 //	@Autowired
@@ -181,13 +186,16 @@ public class UserController {
 		pacijent.setIme(pacijentDTO.getIme());
 		pacijent.setPrezime(pacijentDTO.getPrezime());
 		pacijent.setEmail(pacijentDTO.getEmail());
-		pacijent.setLozinka(pacijentDTO.getLozinka());
+		pacijent.setLozinka(passwordEncoder.encode(pacijentDTO.getLozinka()));
 		pacijent.setAdresa(pacijentDTO.getAdresa());
 		pacijent.setGrad(pacijentDTO.getGrad());
 		pacijent.setDrzava(pacijentDTO.getDrzava());
 		pacijent.setTelefon(pacijentDTO.getTelefon());
 		pacijent.setOdobrenaRegistracija(false);
 		pacijent.setJmbg(pacijentDTO.getJmbg());
+		Set<Authority> authorities = new HashSet<Authority>();
+		authorities.add(authorityRepository.findByUloga("PACIJENT"));
+		pacijent.setAuthorities(authorities);
 
 		List<KlinickiCentar> listaKC = KCService.find();
 		KlinickiCentar kc = listaKC.get(0);

@@ -131,6 +131,7 @@ public class PacijentControllerJUnit {
 		pacijent.setGrad("Novi Sad");
 		pacijent.setDrzava("Srbija");
 		pacijent.setTelefon("060789654");
+		pacijent.setJmbg("0303966811711");
 		pacijent.setOdobrenaRegistracija(false);
 //		
 //		Authority a = new Authority();

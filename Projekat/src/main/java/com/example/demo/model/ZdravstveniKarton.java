@@ -19,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Transactional
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+//@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class ZdravstveniKarton {
 	
 	@Id
@@ -171,11 +171,7 @@ public class ZdravstveniKarton {
 	public void setListaIzvestajaOPregledu(Set<IzvestajOPregledu> listaIzvestajaOPregledu) {
 		this.listaIzvestajaOPregledu = listaIzvestajaOPregledu;
 	}
-	@Override
-	public String toString() {
-		return "ZdravstveniKarton [id=" + id + ", visina=" + visina + ", tezina=" + tezina + ", krvnaGrupa="
-				+ krvnaGrupa + ", pacijent=" + pacijent + "]";
-	}
+
 	
 	
 	
