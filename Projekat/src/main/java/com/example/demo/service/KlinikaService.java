@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,19 @@ public class KlinikaService {
 	
 	public List<Pacijent>findByIdKlinike(Long id){
 		return pacijentRepository.findByIdKlinike(id);
+	}
+
+	public float nedeljniPrihod(Long id, Date pocDatum, Date krajDatum) {
+		return klinikaRepository.nedeljniPrihod(id, pocDatum, krajDatum);
+	}
+	public Integer dnevniNivo(Long id, Integer termin, Date pocDatum, Date krajDatum ) {
+		return klinikaRepository.dnevniNivo(id, termin, pocDatum, krajDatum);
+	}
+	public Integer nedeljniNivo(Long id, Date pocDatum, Date krajDatum ) {
+		return klinikaRepository.nedeljniNivo(id, pocDatum, krajDatum);
+	}
+	public Integer mesecniNivo(Long id, Date pocDatum, Date krajDatum ) {
+		return klinikaRepository.mesecniNivo(id, pocDatum, krajDatum);
 	}
 }
 

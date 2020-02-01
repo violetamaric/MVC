@@ -31,7 +31,7 @@ public class Pacijent implements UserDetails{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
 	@JoinColumn(name = "zdravstveniKarton_id")
 	private ZdravstveniKarton zdravstveniKarton;
 

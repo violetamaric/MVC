@@ -172,47 +172,7 @@ public class PacijentController {
 		return new ResponseEntity<>(new ZdravstveniKarton(zk), HttpStatus.OK);
 	}
 
-	@PostMapping(path = "/register", consumes = "application/json")
-	@CrossOrigin(origins = "http://localhost:3000")
-	public ResponseEntity<PacijentDTO> registerPacijent(@RequestBody PacijentDTO pacijentDTO) {
-
-		Pacijent pacijent = new Pacijent();
-		
-		List<Pacijent> pacijenti = pacijentService.findAll();
-		for (Pacijent p :pacijenti) {
-			if(p.getLbo().equals(pacijentDTO.getLbo())) {
-				return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
-			}
-		}
-
-		pacijent.setLbo(pacijentDTO.getLbo());
-		pacijent.setIme(pacijentDTO.getIme());
-		pacijent.setPrezime(pacijentDTO.getPrezime());
-		pacijent.setEmail(pacijentDTO.getEmail());
-		pacijent.setLozinka(pacijentDTO.getLozinka());
-		pacijent.setAdresa(pacijentDTO.getAdresa());
-		pacijent.setGrad(pacijentDTO.getGrad());
-		pacijent.setDrzava(pacijentDTO.getDrzava());
-		pacijent.setTelefon(pacijentDTO.getTelefon());
-		pacijent.setOdobrenaRegistracija(false);
-		pacijent.setJmbg(pacijentDTO.getJmbg());
-
-		List<KlinickiCentar> listaKC = KCService.find();
-		KlinickiCentar kc = listaKC.get(0);
-		pacijent.setKlinickiCentar(kc);
-
-		pacijent = pacijentService.save(pacijent);
-		kc.getZahteviZaRegistraciju().add(pacijent);
-		kc = KCService.save(kc);
-
-//		KlinickiCentar kc = pacijent.getKlinickiCentar();
-//		
-//		System.out.println("dodat u zahteve za registraciju");
-//		kc.getZahteviZaRegistraciju().add(pacijent);
-
-		return new ResponseEntity<>(new PacijentDTO(pacijent), HttpStatus.CREATED);
-	}
-
+	
 	@GetMapping(value = "/findByID/{id}")
 	public ResponseEntity<?> getPacijentByID(@PathVariable Long id) {
 		Pacijent pacijent = pacijentService.findByID(id);
