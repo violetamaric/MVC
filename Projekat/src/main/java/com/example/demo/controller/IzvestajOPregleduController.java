@@ -77,6 +77,7 @@ public class IzvestajOPregleduController {
 		IzvestajOPregledu iz = new IzvestajOPregledu();
 		
 		//PREGLED
+		System.out.println();
 		Pregled pregled = pregledService.findById(izDTO.getPregledID());
 		pregled.setStatus(3); //zavrsen pregled
 		

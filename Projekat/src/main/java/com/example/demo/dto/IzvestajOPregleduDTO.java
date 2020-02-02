@@ -1,5 +1,6 @@
 package com.example.demo.dto;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -107,6 +108,7 @@ public class IzvestajOPregleduDTO {
 		this.imeL = IOP.getPregled().getLekar().getIme();
 		this.prezimeL = IOP.getPregled().getLekar().getPrezime();
 		this.pregledID = IOP.getPregled().getId();
+		this.recepti = new ArrayList<>();
 		for(Recept r : IOP.getListaRecepata()) {
 			this.recepti.add(new ReceptDTO(r));
 		}
@@ -125,6 +127,7 @@ public class IzvestajOPregleduDTO {
 		this.imeL = imeL;
 		this.prezimeL = prezimeL;
 		this.pregledID = pregledID;
+		this.recepti = new ArrayList<>();
 		this.recepti = recepti;
 	}
 	
