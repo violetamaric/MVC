@@ -2,6 +2,7 @@ package com.example.demo;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Date;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -16,10 +17,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.controller.PacijentController;
+import com.example.demo.controller.PregledController;
 import com.example.demo.dto.PacijentDTO;
+import com.example.demo.dto.PregledDTO;
 import com.example.demo.model.Pacijent;
+import com.example.demo.model.Pregled;
 import com.example.demo.security.TokenUtils;
 import com.example.demo.service.PacijentService;
+import com.example.demo.service.PregledService;
 
 //import static com.example.demo.PacijentKonstante.DB_ID;
 //import static com.example.demo.PacijentKonstante.DB_IME;
@@ -38,11 +43,16 @@ public class PacijentControllerJUnit {
 	private AuthenticationManager authenticationManager;
 	
 	@Autowired
-	PacijentController pacijentController;
+	private PacijentController pacijentController;
 	
-
+	@Autowired
+	private PregledController pregledController;
+	
 	@Autowired
 	private PacijentService pacijentService;
+	
+	@Autowired
+	private PregledService pregledService;
 		
 	public static final Long DB_ID = 1L;
 	public static final String DB_IME = "Pera";
@@ -120,7 +130,7 @@ public class PacijentControllerJUnit {
 	@Test
     @Transactional
     @Rollback(true) //it can be omitted because it is true by default
-	public void testAdd() {
+	public void testAddPacijent() {
 		Pacijent pacijent = new Pacijent();
 		pacijent.setIme(DB_NOVO_IME);
 		pacijent.setPrezime(DB_NOVO_PREZIME);
@@ -167,5 +177,48 @@ public class PacijentControllerJUnit {
         assertThat(pDTO.getPrezime()).isEqualTo(DB_NOVO_PREZIME);        
 	}
 	
-
+	@Test
+    @Transactional
+    @Rollback(true) //it can be omitted because it is true by default
+	public void testAddPregled() {
+		Pregled pregled = new Pregled();
+		pregled.setDatum(new Date());
+		pregled.setCena(1500);
+		pregled.setStatus(5);
+		pregled.setTermin(9);
+//		
+//		Authority a = new Authority();
+//		a.setId(new Long(1L));
+//		a.setName(new String("PACIJENT"));
+//
+//		System.out.println("????????????????????auth" + a);
+//		
+//		String jwt = tokenUtils.tokenPacijent(pacijent, a);
+//		assertNotNull(jwt);
+//		
+//		System.out.println("1111111");
+//	    final Authentication authentication = authenticationManager
+//
+//				.authenticate(new UsernamePasswordAuthenticationToken(pacijent2.getEmail(),
+//
+//						pacijent2.getLozinka()));
+//		System.out.println("1111111");
+//		SecurityContextHolder.getContext().setAuthentication(authentication);
+//
+//		
+		int dbSizeBeforeAdd = (pregledController.getAll()).getBody().size();
+		
+		Pregled dbPregled = pregledService.save(pregled);
+		assertThat(dbPregled).isNotNull();
+				
+		// Validate that new student is in the database
+        List<PregledDTO> pregledi = (pregledController.getAll()).getBody();
+        assertThat(pregledi).hasSize(dbSizeBeforeAdd + 1);
+        PregledDTO pDTO = new PregledDTO(dbPregled);
+        pDTO = pregledi.get(pregledi.size() - 1); //get last student
+        assertThat(pDTO.getCena()).isEqualTo(1500);
+        assertThat(pDTO.getStatus()).isEqualTo(5);        
+        assertThat(pDTO.getTermin()).isEqualTo(9); 
+	}
+	
 }

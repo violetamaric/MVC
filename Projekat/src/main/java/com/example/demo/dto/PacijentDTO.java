@@ -9,28 +9,28 @@ public class PacijentDTO {
 
 	private Long id;
 
-	private ZdravstveniKartonDTO zkDTO;
+	private Long zkID;
 
 	private String ime;
 
 	private String prezime;
 
 	private String lbo;
-	
+
 	private String jmbg;
 
 	private String lozinka;
 
 	private String email;
-	
+
 	private String adresa;
-	
+
 	private String grad;
-	
+
 	private String drzava;
 
 	private String telefon;
-	
+
 	private Boolean odobrenaRegistracija;
 
 	public PacijentDTO() {
@@ -42,11 +42,10 @@ public class PacijentDTO {
 		super();
 		// TODO Auto-generated constructor stub
 		this.id = pacijent.getId();
-		if(pacijent.getZdravstveniKarton() != null) {
-			System.out.println("***********************************");
-			this.zkDTO = new ZdravstveniKartonDTO(pacijent.getZdravstveniKarton());
+		if (pacijent.getZdravstveniKarton() != null) {
+			this.zkID = pacijent.getZdravstveniKarton().getId();
 		}
-		
+
 		this.ime = pacijent.getIme();
 		this.prezime = pacijent.getPrezime();
 		this.lbo = pacijent.getLbo();
@@ -61,11 +60,11 @@ public class PacijentDTO {
 
 	}
 
-	public PacijentDTO(Long id, ZdravstveniKartonDTO zdravstveniKarton, String ime, String prezime, String lbo,
-			String lozinka, String email, Boolean odobrenaRegistracija, String jmbg) {
+	public PacijentDTO(Long id, Long zkID, String ime, String prezime, String lbo, String lozinka, String email,
+			Boolean odobrenaRegistracija, String jmbg) {
 		super();
 		this.id = id;
-		this.zkDTO = zdravstveniKarton;
+		this.zkID = zkID;
 		this.ime = ime;
 		this.prezime = prezime;
 		this.lbo = lbo;
@@ -83,14 +82,12 @@ public class PacijentDTO {
 		this.id = id;
 	}
 
-	
-
-	public ZdravstveniKartonDTO getZkDTO() {
-		return zkDTO;
+	public Long getZkID() {
+		return zkID;
 	}
 
-	public void setZkDTO(ZdravstveniKartonDTO zkDTO) {
-		this.zkDTO = zkDTO;
+	public void setZkID(Long zkID) {
+		this.zkID = zkID;
 	}
 
 	public String getIme() {
@@ -172,7 +169,6 @@ public class PacijentDTO {
 	public void setTelefon(String telefon) {
 		this.telefon = telefon;
 	}
-	
 
 	public Boolean getOdobrenaRegistracija() {
 		return odobrenaRegistracija;
@@ -184,10 +180,9 @@ public class PacijentDTO {
 
 	@Override
 	public String toString() {
-		return "PacijentDTO [id=" + id + ", zdravstveniKarton=" + zkDTO + ", ime=" + ime + ", prezime="
-				+ prezime + ", lbo=" + lbo + ", lozinka=" + lozinka + ", email=" + email + ", adresa=" + adresa
-				+ ", grad=" + grad + ", drzava=" + drzava + ", telefon=" + telefon + "]";
+		return "PacijentDTO [id=" + id + ", zdravstveniKarton=" + zkID + ", ime=" + ime + ", prezime=" + prezime
+				+ ", lbo=" + lbo + ", lozinka=" + lozinka + ", email=" + email + ", adresa=" + adresa + ", grad=" + grad
+				+ ", drzava=" + drzava + ", telefon=" + telefon + "]";
 	}
-	
 
 }
