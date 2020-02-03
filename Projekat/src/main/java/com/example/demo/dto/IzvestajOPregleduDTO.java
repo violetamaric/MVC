@@ -20,7 +20,7 @@ public class IzvestajOPregleduDTO {
 	private String imeL;
 	private String prezimeL;
 	private Long pregledID;
-	private List<ReceptDTO> recepti = new ArrayList<>();
+	private List<Long> recepti = new ArrayList<>();
 	
 	public Long getPregledID() {
 		return pregledID;
@@ -90,11 +90,16 @@ public class IzvestajOPregleduDTO {
 	}
 	
 	
-	public List<ReceptDTO> getRecepti() {
+	
+	public List<Long> getRecepti() {
 		return recepti;
 	}
-	public void setRecepti(List<ReceptDTO> recepti) {
+	public void setRecepti(List<Long> recepti) {
 		this.recepti = recepti;
+	}
+	
+	public IzvestajOPregleduDTO() {
+		super();
 	}
 	public IzvestajOPregleduDTO(IzvestajOPregledu IOP) {
 		this.id = IOP.getId();
@@ -110,26 +115,27 @@ public class IzvestajOPregleduDTO {
 		this.pregledID = IOP.getPregled().getId();
 		this.recepti = new ArrayList<>();
 		for(Recept r : IOP.getListaRecepata()) {
-			this.recepti.add(new ReceptDTO(r));
+			
+			this.recepti.add(r.getId());
 		}
 	}
-	public IzvestajOPregleduDTO(Long id, Long zkID, String dijagnozaN, String dijagnozaO, Long dijagnozaID, Date datum,
-			String sadrzaj, Long lekarID, String imeL, String prezimeL, Long pregledID, List<ReceptDTO> recepti) {
-		super();
-		this.id = id;
-		this.zkID = zkID;
-		this.dijagnozaN = dijagnozaN;
-		this.dijagnozaO = dijagnozaO;
-		this.dijagnozaID = dijagnozaID;
-		this.datum = datum;
-		this.sadrzaj = sadrzaj;
-		this.lekarID = lekarID;
-		this.imeL = imeL;
-		this.prezimeL = prezimeL;
-		this.pregledID = pregledID;
-		this.recepti = new ArrayList<>();
-		this.recepti = recepti;
-	}
+//	public IzvestajOPregleduDTO(Long id, Long zkID, String dijagnozaN, String dijagnozaO, Long dijagnozaID, Date datum,
+//			String sadrzaj, Long lekarID, String imeL, String prezimeL, Long pregledID, List<Long> recepti) {
+//		super();
+//		this.id = id;
+//		this.zkID = zkID;
+//		this.dijagnozaN = dijagnozaN;
+//		this.dijagnozaO = dijagnozaO;
+//		this.dijagnozaID = dijagnozaID;
+//		this.datum = datum;
+//		this.sadrzaj = sadrzaj;
+//		this.lekarID = lekarID;
+//		this.imeL = imeL;
+//		this.prezimeL = prezimeL;
+//		this.pregledID = pregledID;
+//		this.recepti = new ArrayList<>();
+//		this.recepti = recepti;
+//	}
 	
 	
 }
