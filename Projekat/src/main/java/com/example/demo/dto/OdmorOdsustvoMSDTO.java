@@ -11,7 +11,7 @@ public class OdmorOdsustvoMSDTO {
 	private Date datumOd;
 	private Date datumDo;
 	private String opis;
-	private boolean status; //odobren/odbijen zahtev
+	private int status; //odobren/odbijen zahtev
 	private String tip;
 	private Long idMedSestre;
 	private String emailMS;
@@ -60,10 +60,11 @@ public class OdmorOdsustvoMSDTO {
 	public void setOpis(String opis) {
 		this.opis = opis;
 	}
-	public boolean isStatus() {
+	
+	public int getStatus() {
 		return status;
 	}
-	public void setStatus(boolean status) {
+	public void setStatus(int status) {
 		this.status = status;
 	}
 	public String getTip() {
@@ -81,7 +82,7 @@ public class OdmorOdsustvoMSDTO {
 		this.idMedSestre = idMedSestre;
 	}
 	
-	public OdmorOdsustvoMSDTO(Long id, Date datumOd, Date datumDo, String opis, boolean status, String tip, Long idMedSestre, 
+	public OdmorOdsustvoMSDTO(Long id, Date datumOd, Date datumDo, String opis, int status, String tip, Long idMedSestre, 
 			String imeMS, String prezimeMS, String emailMS) {
 		super();
 		this.id = id;
@@ -103,7 +104,7 @@ public class OdmorOdsustvoMSDTO {
 		this.datumOd = ms.getDatumOd();
 		this.datumDo = ms.getDatumDo();
 		this.opis = ms.getOpis();
-		this.status = ms.isStatus();
+		this.status = ms.getStatus();
 		if(ms.getTip() == TipOdmorOdsustvo.ODMOR) {
 			this.tip = "ODMOR";
 		}else {

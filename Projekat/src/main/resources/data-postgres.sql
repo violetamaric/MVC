@@ -167,17 +167,19 @@ insert into administrator_klinike_authority (administrator_klinike_id, authority
 insert into administrator_klinike_authority (administrator_klinike_id, authority_id) values (2,5);
 insert into administrator_klinike_authority (administrator_klinike_id, authority_id) values (3,5);
 
-insert into odmor_odsustvo_medicinska_sestra (klinika_id,medicinska_sestra_id, datum_od, datum_do, opis, tip, status) values (3,2, '2019-11-21 00:00:01', '2019-12-01 23:59:59', 'odmor ili odsustvo', 1, FALSE);
-insert into odmor_odsustvo_medicinska_sestra (klinika_id,medicinska_sestra_id, datum_od, datum_do, opis, tip, status) values (3,2, '2020-01-01', '2020-01-05', 'odmor ili odsustvo', 0, TRUE);
-insert into odmor_odsustvo_medicinska_sestra (klinika_id,medicinska_sestra_id, datum_od, datum_do, opis, tip, status) values (3,2, '2019-12-02 00:00:01', '2019-12-05 23:59:59', 'odmor ili odsustvo', 1, FALSE);
-insert into odmor_odsustvo_medicinska_sestra (klinika_id,medicinska_sestra_id, datum_od, datum_do, opis, tip, status) values (3,2, '2020-01-06', '2020-01-10', 'odmor ili odsustvo', 0, TRUE);
-insert into odmor_odsustvo_medicinska_sestra (klinika_id,medicinska_sestra_id, datum_od, datum_do, opis, tip, status) values (3,3, '2019-11-21 00:00:01', '2019-12-01 23:59:59', 'odmor ili odsustvo', 1, FALSE);
-insert into odmor_odsustvo_medicinska_sestra (klinika_id,medicinska_sestra_id, datum_od, datum_do, opis, tip, status) values (3,3, '2020-01-01', '2020-01-05', 'odmor ili odsustvo', 0, TRUE);
-insert into odmor_odsustvo_medicinska_sestra (klinika_id,medicinska_sestra_id, datum_od, datum_do, opis, tip, status) values (3,3, '2019-12-02 00:00:01', '2019-12-05 23:59:59', 'odmor ili odsustvo', 1, FALSE);
-insert into odmor_odsustvo_medicinska_sestra (klinika_id,medicinska_sestra_id, datum_od, datum_do, opis, tip, status) values (3,3, '2020-01-06', '2020-01-10', 'odmor ili odsustvo', 0, TRUE);
+insert into odmor_odsustvo_medicinska_sestra (klinika_id,medicinska_sestra_id, datum_od, datum_do, opis, tip, status) values (3,2, '2019-11-21 00:00:01', '2019-12-01 23:59:59', 'odmor ili odsustvo', 1, 0);
+insert into odmor_odsustvo_medicinska_sestra (klinika_id,medicinska_sestra_id, datum_od, datum_do, opis, tip, status) values (3,2, '2020-01-01', '2020-01-05', 'odmor ili odsustvo', 0, 0);
+insert into odmor_odsustvo_medicinska_sestra (klinika_id,medicinska_sestra_id, datum_od, datum_do, opis, tip, status) values (3,2, '2019-12-02 00:00:01', '2019-12-05 23:59:59', 'odmor ili odsustvo', 1, 1);
+insert into odmor_odsustvo_medicinska_sestra (klinika_id,medicinska_sestra_id, datum_od, datum_do, opis, tip, status) values (3,2, '2020-01-06', '2020-01-10', 'odmor ili odsustvo', 0, 2);
+insert into odmor_odsustvo_medicinska_sestra (klinika_id,medicinska_sestra_id, datum_od, datum_do, opis, tip, status) values (3,3, '2019-11-21 00:00:01', '2019-12-01 23:59:59', 'odmor ili odsustvo', 1, 1);
+insert into odmor_odsustvo_medicinska_sestra (klinika_id,medicinska_sestra_id, datum_od, datum_do, opis, tip, status) values (3,3, '2020-01-01', '2020-01-05', 'odmor ili odsustvo', 0, 0);
+insert into odmor_odsustvo_medicinska_sestra (klinika_id,medicinska_sestra_id, datum_od, datum_do, opis, tip, status) values (3,3, '2019-12-02 00:00:01', '2019-12-05 23:59:59', 'odmor ili odsustvo', 1, 0);
+insert into odmor_odsustvo_medicinska_sestra (klinika_id,medicinska_sestra_id, datum_od, datum_do, opis, tip, status) values (3,3, '2020-01-06', '2020-01-10', 'odmor ili odsustvo', 0, 1);
 
-insert into odmor_odsustvo_lekar (klinika_id,lekar_id, datum_od, datum_do, opis, tip, status) values (3,2, '2019-11-21', '2019-12-01', 'odmor ili odsustvo', 0, FALSE);
-insert into odmor_odsustvo_lekar (klinika_id,lekar_id, datum_od, datum_do, opis, tip, status) values (3,3, '2019-11-21', '2019-12-01', 'odmor ili odsustvo', 0, FALSE);
+insert into odmor_odsustvo_lekar (klinika_id,lekar_id, datum_od, datum_do, opis, tip, status) values (3,2, '2020-01-21', '2020-01-23', 'odmor ', 0, 0);
+insert into odmor_odsustvo_lekar (klinika_id,lekar_id, datum_od, datum_do, opis, tip, status) values (3,3, '2020-02-20', '2020-02-22', 'odsustvo', 0, 1);
+insert into odmor_odsustvo_lekar (klinika_id,lekar_id, datum_od, datum_do, opis, tip, status) values (3,2, '2020-02-18', '2020-02-20', 'odmor ili odsustvo', 0, 1);
+insert into odmor_odsustvo_lekar (klinika_id,lekar_id, datum_od, datum_do, opis, tip, status) values (3,3, '2020-03-05', '2020-03-06', 'odmor ili odsustvo', 0, 0);
 
 
 insert into radni_dan(medicinska_sestra_id, datum_pocetka, datum_kraja) values (2,'2020-01-21 09:00:00', '2020-01-21 17:00:00' );

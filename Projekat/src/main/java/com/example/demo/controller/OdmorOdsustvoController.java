@@ -66,7 +66,7 @@ public class OdmorOdsustvoController {
 
 		List<OdmorOdsustvoMSDTO> oomsDTO = new ArrayList<>();
 		for (OdmorOdsustvoMedicinskaSestra o : ooms) {
-			if(!o.isStatus()) {
+			if(o.getStatus() == 0) {
 				oomsDTO.add(new OdmorOdsustvoMSDTO(o) );
 			}
 			
@@ -85,7 +85,7 @@ public class OdmorOdsustvoController {
 
 		List<OdmorOdsustvoLDTO> oolDTO = new ArrayList<>();
 		for (OdmorOdsustvoLekar o : oolService.findAll()) {
-			if(!o.isStatus()) {
+			if(o.getStatus() == 0) {
 				oolDTO.add(new OdmorOdsustvoLDTO(o) );
 			}
 		}
@@ -156,7 +156,7 @@ public class OdmorOdsustvoController {
 					ooms.setTip(TipOdmorOdsustvo.ODSUSTVO);
 				}
 				
-				ooms.setStatus(false);
+				ooms.setStatus(0);
 				ooms.setMedicinskaSestra(ms);
 				ooms.setKlinika(k);
 				
@@ -209,7 +209,7 @@ public class OdmorOdsustvoController {
 					ooms.setTip(TipOdmorOdsustvo.ODSUSTVO);
 				}
 				
-				ooms.setStatus(false);
+				ooms.setStatus(0);
 				ooms.setLekar(ms);
 				ooms.setKlinika(k);
 				
@@ -264,14 +264,11 @@ public class OdmorOdsustvoController {
 			return new ResponseEntity<>("Mail nije poslat", HttpStatus.BAD_REQUEST);
 		}
 		
-		System.out.println("status pre: "+ooms.isStatus());
-		ooms.setStatus(true);
+		System.out.println("status pre: "+ooms.getStatus());
+		ooms.setStatus(1);
 		ooms = oomsService.save(ooms);
-		System.out.println("status posle: "+ooms.isStatus());
+		System.out.println("status posle: "+ooms.getStatus());
 		
-		//nisam sigurna da treba da se brise ? 
-//		k.getZahteviZaOdmorOdsustvoMedestre().remove(ooms);
-//		k = klinikaService.save(k);
 	
 		return new ResponseEntity<>("odobreno", HttpStatus.CREATED);
 
@@ -289,10 +286,10 @@ public class OdmorOdsustvoController {
 		MedicinskaSestraDTO msDTO = new MedicinskaSestraDTO(ms);
 		
 		Klinika k = klinikaService.findById(ms.getKlinika().getId());
-		KlinikaDTO kDTO = new KlinikaDTO(k);
+//		KlinikaDTO kDTO = new KlinikaDTO(k);
 		
 		OdmorOdsustvoMedicinskaSestra ooms = oomsService.findById(ooDTO.getId());
-		OdmorOdsustvoMSDTO oomsDTO = new OdmorOdsustvoMSDTO(ooms);
+//		OdmorOdsustvoMSDTO oomsDTO = new OdmorOdsustvoMSDTO(ooms);
 			
 		String subject ="Odbijen zahtev za odmor/odsustvo";
 		String text = "Postovani " + ms.getIme() + " " + ms.getPrezime() 
@@ -311,13 +308,16 @@ public class OdmorOdsustvoController {
 			return new ResponseEntity<>("Mail nije poslat", HttpStatus.BAD_REQUEST);
 		}
 		
-		k.getZahteviZaOdmorOdsustvoMedestre().remove(ooms);
+		
+		ooms.setStatus(2);
+		ooms = oomsService.save(ooms);
+		
+//		k.getZahteviZaOdmorOdsustvoMedestre().remove(ooms);
 		k = klinikaService.save(k);
 		
-		ms.getListaOdmorOdsustvo().remove(ooms);
+//		ms.getListaOdmorOdsustvo().remove(ooms);
 		ms = medicinskaSestraService.save(ms);
 		
-		oomsService.delete(ooms);
 		
 		
 		System.out.println("------------------------------------------------------");
@@ -360,14 +360,11 @@ public class OdmorOdsustvoController {
 			return new ResponseEntity<>("Mail nije poslat", HttpStatus.BAD_REQUEST);
 		}
 		
-		System.out.println("status pre: "+ooms.isStatus());
-		ooms.setStatus(true);
+		System.out.println("status pre: "+ooms.getStatus());
+		ooms.setStatus(2);
 		ooms = oolService.save(ooms);
-		System.out.println("status posle: "+ooms.isStatus());
+		System.out.println("status posle: "+ooms.getStatus());
 		
-		//nisam sigurna da treba da se brise ? 
-//		k.getZahteviZaOdmorOdsustvoMedestre().remove(ooms);
-//		k = klinikaService.save(k);
 	
 		return new ResponseEntity<>("odobreno", HttpStatus.CREATED);
 
@@ -408,14 +405,15 @@ public class OdmorOdsustvoController {
 			return new ResponseEntity<>("Mail nije poslat", HttpStatus.BAD_REQUEST);
 		}
 		
+		ooms.setStatus(2);
+		ooms = oolService.save(ooms);
 		
-		k.getZahteviZaOdmorOdsustvoLekara().remove(ooms);
+//		k.getZahteviZaOdmorOdsustvoLekara().remove(ooms);
 		k = klinikaService.save(k);
 		
-		l.getListaOdmorOdsustvo().remove(ooms);
+//		l.getListaOdmorOdsustvo().remove(ooms);
 		l = lekarService.save(l);
 		
-		oolService.delete(ooms);
 		
 		
 		System.out.println("------------------------------------------------------");

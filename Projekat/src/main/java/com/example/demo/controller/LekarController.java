@@ -19,10 +19,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.LekarDTO;
+import com.example.demo.dto.OdmorOdsustvoLDTO;
+import com.example.demo.dto.OdmorOdsustvoMSDTO;
 import com.example.demo.dto.PacijentDTO;
 import com.example.demo.dto.PregledDTO;
 import com.example.demo.dto.TerminDTO;
 import com.example.demo.model.Lekar;
+import com.example.demo.model.OdmorOdsustvoLekar;
 import com.example.demo.model.Pacijent;
 import com.example.demo.model.Pregled;
 import com.example.demo.model.Termin;
@@ -237,5 +240,30 @@ public class LekarController {
 		return new ResponseEntity<>(new LekarDTO(lekar), HttpStatus.OK);
 	}
 
+	//vraca listu odmora i odsustva kod lekara
+	@GetMapping(value = "/listaOdmorOdsustvo")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('LEKAR')")
+	public ResponseEntity<List<OdmorOdsustvoLDTO>> getListaOdmorOdsustvo(Principal p) {
 
+		System.out.println("ODMOR ");
+		Lekar lekar = lekarService.findByEmail(p.getName());
+		
+		if (lekar == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		List<OdmorOdsustvoLDTO> oolDTO = new ArrayList<>();
+		for(OdmorOdsustvoLekar ool : lekar.getListaOdmorOdsustvo()) {
+			System.out.println("Jedan zahtev: " + ool.getTip()+ " " + ool.getStatus() );
+			if (ool.getStatus() == 1) {
+				System.out.println("Jedan zahtev: " + ool.getTip()+ " " + ool.getStatus() );
+				System.out.println(ool.getDatumOd() + " " + ool.getDatumDo());
+				oolDTO.add(new OdmorOdsustvoLDTO(ool));
+			}
+			
+		}
+		
+		return new ResponseEntity<>(oolDTO, HttpStatus.OK);
+	}
 }
