@@ -20,7 +20,7 @@ public class IzvestajOPregleduDTO {
 	private String imeL;
 	private String prezimeL;
 	private Long pregledID;
-	private List<ReceptDTO> recepti;
+	private List<ReceptDTO> recepti = new ArrayList<>();
 	
 	public Long getPregledID() {
 		return pregledID;
