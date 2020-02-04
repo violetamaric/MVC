@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,7 @@ import com.example.demo.model.Lekar;
 import com.example.demo.model.MedicinskaSestra;
 import com.example.demo.model.OdmorOdsustvoLekar;
 import com.example.demo.model.OdmorOdsustvoMedicinskaSestra;
+import com.example.demo.model.Termin;
 import com.example.demo.model.TipOdmorOdsustvo;
 import com.example.demo.service.EmailService;
 import com.example.demo.service.KlinikaService;
@@ -42,7 +44,7 @@ public class OdmorOdsustvoController {
 	@Autowired
 	private MedicinskaSestraService medicinskaSestraService;
 	@Autowired
-	private LekarService lekarService;
+	private LekarService lekarService; 
 	
 	@Autowired
 	private KlinikaService klinikaService;
@@ -66,7 +68,7 @@ public class OdmorOdsustvoController {
 
 		List<OdmorOdsustvoMSDTO> oomsDTO = new ArrayList<>();
 		for (OdmorOdsustvoMedicinskaSestra o : ooms) {
-			if(!o.isStatus()) {
+			if(o.getStatus() == 0) {
 				oomsDTO.add(new OdmorOdsustvoMSDTO(o) );
 			}
 			
@@ -85,7 +87,7 @@ public class OdmorOdsustvoController {
 
 		List<OdmorOdsustvoLDTO> oolDTO = new ArrayList<>();
 		for (OdmorOdsustvoLekar o : oolService.findAll()) {
-			if(!o.isStatus()) {
+			if(o.getStatus() == 0) {
 				oolDTO.add(new OdmorOdsustvoLDTO(o) );
 			}
 		}
@@ -108,38 +110,34 @@ public class OdmorOdsustvoController {
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 	
-	//zahtev lekara
-	@GetMapping(value = "/zahtevL/{id}")
-	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
-	@CrossOrigin(origins = "http://localhost:3000")
-	public ResponseEntity<OdmorOdsustvoLDTO> getZahtevLekara(@PathVariable Long id) {
-
-		OdmorOdsustvoLekar ool = oolService.findById(id);
-		if(ool != null) {
-			return new ResponseEntity<>(new OdmorOdsustvoLDTO(ool), HttpStatus.OK);
-		}
-		
-		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-	}
 	
-	//posalji zahtev za odmor odsustvo
+	//posalji zahtev med sestra
 	@PostMapping(path = "/posaljiZahtev", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('MED_SESTRA')")
-	public ResponseEntity<OdmorOdsustvoMSDTO> slanjeZahteva(@RequestBody OdmorOdsustvoMSDTO ooDTO) {
+	public ResponseEntity<?> slanjeZahteva(@RequestBody OdmorOdsustvoMSDTO ooDTO) {
 		System.out.println("------------------------------------------------------");
-			
-		//TODO 1: treba proveriti da li je medicinska sestra ima operacije ili preglede u tom periodu
-		//ako nema onda moze da se posalje zahtev adminu klinike.. 
-		//ako ima onda mora da se obavesti da je taj datum zauzet
-		//na frontu uraditi proveru da li je datum slobodan..
-		//tako sto uzmem datum pocetka i kraja i proverim za sve dane izmedju koristeci neku metodu
-		//iz backa za slobodne dane... ako nema pregled tad 
 		
-		
-		//ili proveriti samo posto je med sestra zaposlena od 9-17 pa da li je u tom vremenu 
 	
 		MedicinskaSestra ms = medicinskaSestraService.findByEmail(ooDTO.getEmailMS());
+		
+		Set<OdmorOdsustvoMedicinskaSestra> listaool = ms.getListaOdmorOdsustvo();
+		for(OdmorOdsustvoMedicinskaSestra ool: listaool) {
+			if(ool.getStatus() ==  1) {
+				if( ooDTO.getDatumOd().compareTo(ool.getDatumOd()) * ool.getDatumOd().compareTo(ooDTO.getDatumDo()) >= 0) {
+					System.out.println("-------------nalazi se odsustvo i odmor-------------");
+					return new ResponseEntity<>("Datum je zauzet.", HttpStatus.OK);
+				}
+				if( ooDTO.getDatumOd().compareTo(ool.getDatumDo()) * ool.getDatumDo().compareTo(ooDTO.getDatumDo()) >= 0) {
+					System.out.println("-------------nalazi se odsustvo i odmor-------------");
+					return new ResponseEntity<>("Datum je zauzet.", HttpStatus.OK);
+				}
+				
+			}
+		}
+		
+		//TODO 2 : I ZA OPERACIJE DODATI
+		
 //		if(ms != null) {
 			Klinika k = klinikaService.findById(ms.getKlinika().getId());
 			
@@ -156,7 +154,7 @@ public class OdmorOdsustvoController {
 					ooms.setTip(TipOdmorOdsustvo.ODSUSTVO);
 				}
 				
-				ooms.setStatus(false);
+				ooms.setStatus(0);
 				ooms.setMedicinskaSestra(ms);
 				ooms.setKlinika(k);
 				
@@ -173,6 +171,76 @@ public class OdmorOdsustvoController {
 //			}
 //		}
 //		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	}
+	
+	//posalji zahtev lekar
+	@PostMapping(path = "/posaljiZahtevLekar", consumes = "application/json")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('LEKAR')")
+	public ResponseEntity<?> slanjeZahtevaLekar(@RequestBody OdmorOdsustvoLDTO ooDTO) {
+		System.out.println("------------------------------------------------------");
+		
+		Lekar lekar = lekarService.findByEmail(ooDTO.getEmailL());
+		
+		Set<Termin> pregledi = lekar.getListaZauzetihTermina();
+		for(Termin p : pregledi) {
+			if(ooDTO.getDatumOd().compareTo(p.getDatumPocetka()) * p.getDatumPocetka().compareTo(ooDTO.getDatumDo()) >= 0) {
+				System.out.println("----------------nalazi se pregled---------------");
+				return new ResponseEntity<>("Datum je zauzet.", HttpStatus.OK);
+			}
+		}
+		
+		Set<OdmorOdsustvoLekar> listaool = lekar.getListaOdmorOdsustvo();
+		for(OdmorOdsustvoLekar ool: listaool) {
+			if(ool.getStatus() ==  1) {
+				if( ooDTO.getDatumOd().compareTo(ool.getDatumOd()) * ool.getDatumOd().compareTo(ooDTO.getDatumDo()) >= 0) {
+					System.out.println("-------------nalazi se odsustvo i odmor-------------");
+					return new ResponseEntity<>("Datum je zauzet.", HttpStatus.OK);
+				}
+				if( ooDTO.getDatumOd().compareTo(ool.getDatumDo()) * ool.getDatumDo().compareTo(ooDTO.getDatumDo()) >= 0) {
+					System.out.println("-------------nalazi se odsustvo i odmor-------------");
+					return new ResponseEntity<>("Datum je zauzet.", HttpStatus.OK);
+				}
+				
+			}
+		}
+		
+		//TODO 1 : I ZA OPERACIJE DODATI
+		
+		
+			
+
+			Klinika k = klinikaService.findById(lekar.getKlinika().getId());
+			
+
+				OdmorOdsustvoLekar ooms = new OdmorOdsustvoLekar();
+				ooms.setDatumOd(ooDTO.getDatumOd());
+				ooms.setDatumDo(ooDTO.getDatumDo());
+				ooms.setOpis(ooDTO.getOpis());
+				System.out.println(ooDTO.getTip());
+				if(ooDTO.getTip().equals("ODMOR")) {
+					System.out.println("ispis odmora");
+					ooms.setTip(TipOdmorOdsustvo.ODMOR);
+				}else {
+					ooms.setTip(TipOdmorOdsustvo.ODSUSTVO);
+				}
+				
+				ooms.setStatus(0);
+				ooms.setLekar(lekar);
+				ooms.setKlinika(k);
+				
+				ooms = oolService.save(ooms);
+				
+				k.getZahteviZaOdmorOdsustvoLekara().add(ooms);
+				k = klinikaService.save(k);
+				
+				lekar.getListaOdmorOdsustvo().add(ooms);
+				lekar = lekarService.save(lekar);
+				
+				System.out.println("------------------------------------------------------");
+				return new ResponseEntity<>(new OdmorOdsustvoLDTO(ooms), HttpStatus.CREATED);
+
+
 	}
 	
 	
@@ -211,14 +279,11 @@ public class OdmorOdsustvoController {
 			return new ResponseEntity<>("Mail nije poslat", HttpStatus.BAD_REQUEST);
 		}
 		
-		System.out.println("status pre: "+ooms.isStatus());
-		ooms.setStatus(true);
+		System.out.println("status pre: "+ooms.getStatus());
+		ooms.setStatus(1);
 		ooms = oomsService.save(ooms);
-		System.out.println("status posle: "+ooms.isStatus());
+		System.out.println("status posle: "+ooms.getStatus());
 		
-		//nisam sigurna da treba da se brise ? 
-//		k.getZahteviZaOdmorOdsustvoMedestre().remove(ooms);
-//		k = klinikaService.save(k);
 	
 		return new ResponseEntity<>("odobreno", HttpStatus.CREATED);
 
@@ -236,10 +301,10 @@ public class OdmorOdsustvoController {
 		MedicinskaSestraDTO msDTO = new MedicinskaSestraDTO(ms);
 		
 		Klinika k = klinikaService.findById(ms.getKlinika().getId());
-		KlinikaDTO kDTO = new KlinikaDTO(k);
+//		KlinikaDTO kDTO = new KlinikaDTO(k);
 		
 		OdmorOdsustvoMedicinskaSestra ooms = oomsService.findById(ooDTO.getId());
-		OdmorOdsustvoMSDTO oomsDTO = new OdmorOdsustvoMSDTO(ooms);
+//		OdmorOdsustvoMSDTO oomsDTO = new OdmorOdsustvoMSDTO(ooms);
 			
 		String subject ="Odbijen zahtev za odmor/odsustvo";
 		String text = "Postovani " + ms.getIme() + " " + ms.getPrezime() 
@@ -258,13 +323,16 @@ public class OdmorOdsustvoController {
 			return new ResponseEntity<>("Mail nije poslat", HttpStatus.BAD_REQUEST);
 		}
 		
-		k.getZahteviZaOdmorOdsustvoMedestre().remove(ooms);
+		
+		ooms.setStatus(2);
+		ooms = oomsService.save(ooms);
+		
+//		k.getZahteviZaOdmorOdsustvoMedestre().remove(ooms);
 		k = klinikaService.save(k);
 		
-		ms.getListaOdmorOdsustvo().remove(ooms);
+//		ms.getListaOdmorOdsustvo().remove(ooms);
 		ms = medicinskaSestraService.save(ms);
 		
-		oomsService.delete(ooms);
 		
 		
 		System.out.println("------------------------------------------------------");
@@ -307,14 +375,11 @@ public class OdmorOdsustvoController {
 			return new ResponseEntity<>("Mail nije poslat", HttpStatus.BAD_REQUEST);
 		}
 		
-		System.out.println("status pre: "+ooms.isStatus());
-		ooms.setStatus(true);
+		System.out.println("status pre: "+ooms.getStatus());
+		ooms.setStatus(1);
 		ooms = oolService.save(ooms);
-		System.out.println("status posle: "+ooms.isStatus());
+		System.out.println("status posle: "+ooms.getStatus());
 		
-		//nisam sigurna da treba da se brise ? 
-//		k.getZahteviZaOdmorOdsustvoMedestre().remove(ooms);
-//		k = klinikaService.save(k);
 	
 		return new ResponseEntity<>("odobreno", HttpStatus.CREATED);
 
@@ -355,14 +420,15 @@ public class OdmorOdsustvoController {
 			return new ResponseEntity<>("Mail nije poslat", HttpStatus.BAD_REQUEST);
 		}
 		
+		ooms.setStatus(2);
+		ooms = oolService.save(ooms);
 		
-		k.getZahteviZaOdmorOdsustvoLekara().remove(ooms);
+//		k.getZahteviZaOdmorOdsustvoLekara().remove(ooms);
 		k = klinikaService.save(k);
 		
-		l.getListaOdmorOdsustvo().remove(ooms);
+//		l.getListaOdmorOdsustvo().remove(ooms);
 		l = lekarService.save(l);
 		
-		oolService.delete(ooms);
 		
 		
 		System.out.println("------------------------------------------------------");

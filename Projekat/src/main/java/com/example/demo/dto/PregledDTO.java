@@ -47,14 +47,20 @@ public class PregledDTO {
 	public PregledDTO() {
 	}
 
+
+
+
 	@Override
 	public String toString() {
 		return "PregledDTO [id=" + id + ", datum=" + datum + ", tipPregledaID=" + tipPregledaID + ", nazivTP=" + nazivTP
 				+ ", lekarID=" + lekarID + ", imeL=" + imeL + ", prezimeL=" + prezimeL + ", pacijentEmail="
 				+ pacijentEmail + ", klinikaID=" + klinikaID + ", pacijentID=" + pacijentID + ", imeP=" + imeP
 				+ ", prezimeP=" + prezimeP + ", nazivKl=" + nazivKl + ", salaID=" + salaID + ", salaN=" + salaN
-				+ ", cena=" + cena + ", status=" + status + "]";
+				+ ", salaBR=" + salaBR + ", cena=" + cena + ", termin=" + termin + ", status=" + status + "]";
 	}
+
+
+
 
 	public PregledDTO(Long id, Date datum, Long tipPregledaID, Long lekarID, String pacijentEmail, Long klinikaID,
 			double cena, int status, Long sala, int termin) {

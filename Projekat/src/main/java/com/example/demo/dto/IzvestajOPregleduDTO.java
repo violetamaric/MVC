@@ -1,8 +1,11 @@
 package com.example.demo.dto;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import com.example.demo.model.IzvestajOPregledu;
+import com.example.demo.model.Recept;
 
 public class IzvestajOPregleduDTO {
 
@@ -16,6 +19,15 @@ public class IzvestajOPregleduDTO {
 	private Long lekarID;
 	private String imeL;
 	private String prezimeL;
+	private Long pregledID;
+	private List<Long> recepti = new ArrayList<>();
+	
+	public Long getPregledID() {
+		return pregledID;
+	}
+	public void setPregledID(Long pregledID) {
+		this.pregledID = pregledID;
+	}
 	public Long getId() {
 		return id;
 	}
@@ -76,6 +88,19 @@ public class IzvestajOPregleduDTO {
 	public void setPrezimeL(String prezimeL) {
 		this.prezimeL = prezimeL;
 	}
+	
+	
+	
+	public List<Long> getRecepti() {
+		return recepti;
+	}
+	public void setRecepti(List<Long> recepti) {
+		this.recepti = recepti;
+	}
+	
+	public IzvestajOPregleduDTO() {
+		super();
+	}
 	public IzvestajOPregleduDTO(IzvestajOPregledu IOP) {
 		this.id = IOP.getId();
 		this.zkID = IOP.getZdravstveniKarton().getId();
@@ -87,21 +112,30 @@ public class IzvestajOPregleduDTO {
 		this.lekarID = IOP.getPregled().getLekar().getId();
 		this.imeL = IOP.getPregled().getLekar().getIme();
 		this.prezimeL = IOP.getPregled().getLekar().getPrezime();
+		this.pregledID = IOP.getPregled().getId();
+		this.recepti = new ArrayList<>();
+		for(Recept r : IOP.getListaRecepata()) {
+			
+			this.recepti.add(r.getId());
+		}
 	}
-	public IzvestajOPregleduDTO(Long id, Long zkID, String dijagnozaN, String dijagnozaO, Long dijagnozaID, Date datum,
-			String sadrzaj, Long lekarID, String imeL, String prezimeL) {
-		super();
-		this.id = id;
-		this.zkID = zkID;
-		this.dijagnozaN = dijagnozaN;
-		this.dijagnozaO = dijagnozaO;
-		this.dijagnozaID = dijagnozaID;
-		this.datum = datum;
-		this.sadrzaj = sadrzaj;
-		this.lekarID = lekarID;
-		this.imeL = imeL;
-		this.prezimeL = prezimeL;
-	}
+//	public IzvestajOPregleduDTO(Long id, Long zkID, String dijagnozaN, String dijagnozaO, Long dijagnozaID, Date datum,
+//			String sadrzaj, Long lekarID, String imeL, String prezimeL, Long pregledID, List<Long> recepti) {
+//		super();
+//		this.id = id;
+//		this.zkID = zkID;
+//		this.dijagnozaN = dijagnozaN;
+//		this.dijagnozaO = dijagnozaO;
+//		this.dijagnozaID = dijagnozaID;
+//		this.datum = datum;
+//		this.sadrzaj = sadrzaj;
+//		this.lekarID = lekarID;
+//		this.imeL = imeL;
+//		this.prezimeL = prezimeL;
+//		this.pregledID = pregledID;
+//		this.recepti = new ArrayList<>();
+//		this.recepti = recepti;
+//	}
 	
 	
 }

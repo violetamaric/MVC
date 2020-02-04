@@ -17,6 +17,7 @@ public class Recept {
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Lek lek;
 	
+	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private MedicinskaSestra medicinskaSestra;
 	
@@ -58,13 +59,7 @@ public class Recept {
 		this.overen = overen;
 	}
 
-	public IzvestajOPregledu getMedicinskiIzvestaj() {
-		return izvestajOPregledu;
-	}
-
-	public void setMedicinskiIzvestaj(IzvestajOPregledu medicinskiIzvestaj) {
-		this.izvestajOPregledu = izvestajOPregledu;
-	}
+	
 
 	public Recept() {
 		super();

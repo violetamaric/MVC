@@ -8,11 +8,18 @@ import com.example.demo.repository.IzvestajOPregleduRepository;
 
 @Service
 public class IzvestajOPregleduService {
+	
 	@Autowired
 	private IzvestajOPregleduRepository izvestajOPregleduRepository;
-
-	public IzvestajOPregledu findOne(Long id) {
+	
+	
+	public IzvestajOPregledu save(IzvestajOPregledu lek) {
+		return izvestajOPregleduRepository.save(lek);
+	}
+	public void delete(IzvestajOPregledu lek) {
+		izvestajOPregleduRepository.delete(lek);
+	}
+	public IzvestajOPregledu findById(Long id) {
 		return izvestajOPregleduRepository.findById(id).orElseGet(null);
 	}
-	
 }

@@ -11,7 +11,7 @@ public class OdmorOdsustvoLDTO {
 	private Date datumOd;
 	private Date datumDo;
 	private String opis;
-	private boolean status; //odobren/odbijen zahtev
+	private int status; 
 	private String tip;
 	private Long idLekara;
 	private String imeL;
@@ -61,10 +61,11 @@ public class OdmorOdsustvoLDTO {
 	public void setOpis(String opis) {
 		this.opis = opis;
 	}
-	public boolean isStatus() {
+	
+	public int getStatus() {
 		return status;
 	}
-	public void setStatus(boolean status) {
+	public void setStatus(int status) {
 		this.status = status;
 	}
 	public String getTip() {
@@ -82,7 +83,7 @@ public class OdmorOdsustvoLDTO {
 		this.idLekara = idLekara;
 	}
 	
-	public OdmorOdsustvoLDTO(Long id, Date datumOd, Date datumDo, String opis, boolean status, String tip, Long idLekara,
+	public OdmorOdsustvoLDTO(Long id, Date datumOd, Date datumDo, String opis, int status, String tip, Long idLekara,
 			String imeL, String prezimeL, String emailL) {
 		super();
 		this.id = id;
@@ -104,7 +105,7 @@ public class OdmorOdsustvoLDTO {
 		this.datumOd = l.getDatumOd();
 		this.datumDo = l.getDatumDo();
 		this.opis = l.getOpis();
-		this.status = l.isStatus();
+		this.status = l.getStatus();
 		if(l.getTip() == TipOdmorOdsustvo.ODMOR) {
 			this.tip = "ODMOR";
 		}else {

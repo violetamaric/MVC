@@ -14,8 +14,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 @Entity
 public class Pregled {
 
@@ -31,8 +29,6 @@ public class Pregled {
 	
 	@Column(name = "termin", nullable = false)
 	private int termin;
-	
-	
 
 	//treba false ali kasnije promjeniti
 	@Column(name = "trajanje", nullable = true)
@@ -41,15 +37,11 @@ public class Pregled {
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private TipPregleda tipPregleda;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER )
 	private Sala sala;
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Lekar lekar;
-	
-	
-
-	
 
 //	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 //	private MedicinskaSestra medicinskaSestra;
@@ -79,6 +71,38 @@ public class Pregled {
 
 	public Pregled() {
 		super();
+	}
+
+	public Pregled(Long id, Date datum, int termin, Time trajanje, TipPregleda tipPregleda, Sala sala, Lekar lekar,
+			Pacijent pacijent, Klinika klinika, double cena, int status, IzvestajOPregledu izvestajOPregledu) {
+		this.id = id;
+		this.datum = datum;
+		this.termin = termin;
+		this.trajanje = trajanje;
+		this.tipPregleda = tipPregleda;
+		this.sala = sala;
+		this.lekar = lekar;
+		this.pacijent = pacijent;
+		this.klinika = klinika;
+		this.cena = cena;
+		this.status = status;
+		this.izvestajOPregledu = izvestajOPregledu;
+	}
+
+	public Pregled(Pregled p) {
+		// TODO Auto-generated constructor stub
+		this.id = p.getId();
+		this.datum = p.getDatum();
+		this.termin = p.getTermin();
+		this.trajanje = p.getTrajanje();
+		this.tipPregleda = p.getTipPregleda();
+		this.sala = p.getSala();
+		this.lekar = p.getLekar();
+		this.pacijent = p.getPacijent();
+		this.klinika = p.getKlinika();
+		this.cena = p.getCena();
+		this.status = p.getStatus();
+		this.izvestajOPregledu = p.getIzvestajOPregledu();
 	}
 
 	public Date getDatum() {

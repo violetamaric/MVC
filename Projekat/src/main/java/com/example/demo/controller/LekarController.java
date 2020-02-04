@@ -19,10 +19,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.LekarDTO;
+import com.example.demo.dto.OdmorOdsustvoLDTO;
+import com.example.demo.dto.OdmorOdsustvoMSDTO;
 import com.example.demo.dto.PacijentDTO;
 import com.example.demo.dto.PregledDTO;
 import com.example.demo.dto.TerminDTO;
 import com.example.demo.model.Lekar;
+import com.example.demo.model.OdmorOdsustvoLekar;
 import com.example.demo.model.Pacijent;
 import com.example.demo.model.Pregled;
 import com.example.demo.model.Termin;
@@ -107,11 +110,12 @@ public class LekarController {
 	}
 
 	// vrati mi listu svih paicjenata od prijavljenog lekara
-	@GetMapping(value = "/listaPacijenataLekara/{email}")
+	@GetMapping(value = "/listaPacijenataLekara")
 	@CrossOrigin(origins = "http://localhost:3000")
-	public ResponseEntity<List<PacijentDTO>> getPacijenataLekara(@PathVariable String email) {
+	@PreAuthorize("hasAuthority('LEKAR')")
+	public ResponseEntity<List<PacijentDTO>> getPacijenataLekara(Principal pa) {
 		System.out.println("//////////////////// LEKAR LISTA PACIJENATA /////////////////////////		");
-		Lekar lekar = lekarService.findByEmail(email);
+		Lekar lekar = lekarService.findByEmail(pa.getName());
 
 		List<Pacijent> listaSvihP = pacijentiSevice.findAll();
 		for (Pacijent pp : listaSvihP) {
@@ -139,15 +143,41 @@ public class LekarController {
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 
+	//vrati mi listu zakazanih pregleda od pacijenta kod tog lekara koji je prijavljen
+	@GetMapping(value = "/listaPregledaPacijenta")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('LEKAR')")
+	public ResponseEntity<List<PregledDTO>> getListaPregledaPacijenta(Principal pa, @RequestBody PacijentDTO pacijentDTO) {
+		
+		Lekar lekar = lekarService.findByEmail(pa.getName());
+		Pacijent pacijent = pacijentiSevice.findByEmail(pacijentDTO.getEmail());
+		
+		Set<Pregled> listaPregleda = pacijent.getListaPregleda();
+		List<PregledDTO> lista = new ArrayList<>();
+		
+		for (Pregled pp : listaPregleda) {
+			if(pp.getLekar().getId().equals(lekar.getId())) {
+				System.out.println("ima zakazan pregled kod lekara ovog");
+				System.out.println("Status pregleda " + pp.getStatus());
+				lista.add(new PregledDTO(pp));
+			}
+			//System.out.println("Status pregleda " + pp.getStatus());
+		}
+		
 
-	//VRACA LISTU PREGLEDA, ODMORA I ODSUSTVA
+		
+		
+		return new ResponseEntity<>(lista, HttpStatus.OK);
+	}
+
+	//vraca listu pregleda jednog lekara
 	@GetMapping(value = "/listaPregleda/{email}")
 	@CrossOrigin(origins = "http://localhost:3000")
 	public ResponseEntity<List<PregledDTO>> getListaPregleda(@PathVariable String email) {
 		System.out.println("*************");
-		Lekar lek = lekarService.findByEmail(email);
+		Lekar lekar = lekarService.findByEmail(email);
 		
-		Set<Pregled> listaRD = lek.getListaPregleda();
+		Set<Pregled> listaRD = lekar.getListaPregleda();
 		
 		List<PregledDTO> lista = new ArrayList<PregledDTO>();
 		for(Pregled rd: listaRD) {
@@ -163,6 +193,8 @@ public class LekarController {
 		
 	}
 	
+	
+	//vraca listu zauzetih termina lekara
 	@GetMapping(value = "/listaZauzetihTermina/{id}")
 	@CrossOrigin(origins = "http://localhost:3000")
 	public ResponseEntity<List<TerminDTO>> getListaZauzetihTermina(@PathVariable Long id) {
@@ -208,5 +240,30 @@ public class LekarController {
 		return new ResponseEntity<>(new LekarDTO(lekar), HttpStatus.OK);
 	}
 
+	//vraca listu odmora i odsustva kod lekara
+	@GetMapping(value = "/listaOdmorOdsustvo")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('LEKAR')")
+	public ResponseEntity<List<OdmorOdsustvoLDTO>> getListaOdmorOdsustvo(Principal p) {
 
+		System.out.println("ODMOR ");
+		Lekar lekar = lekarService.findByEmail(p.getName());
+		
+		if (lekar == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		List<OdmorOdsustvoLDTO> oolDTO = new ArrayList<>();
+		for(OdmorOdsustvoLekar ool : lekar.getListaOdmorOdsustvo()) {
+			System.out.println("Jedan zahtev: " + ool.getTip()+ " " + ool.getStatus() );
+			if (ool.getStatus() == 1) {
+				System.out.println("Jedan zahtev: " + ool.getTip()+ " " + ool.getStatus() );
+				System.out.println(ool.getDatumOd() + " " + ool.getDatumDo());
+				oolDTO.add(new OdmorOdsustvoLDTO(ool));
+			}
+			
+		}
+		
+		return new ResponseEntity<>(oolDTO, HttpStatus.OK);
+	}
 }

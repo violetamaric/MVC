@@ -70,6 +70,7 @@ public class PregledController {
 
 	@Autowired
 	private TerminService terminService;
+	
 
 	@PostMapping(path = "/new", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
@@ -202,7 +203,8 @@ public class PregledController {
 		return new ResponseEntity<>(new PregledDTO(pregled), HttpStatus.OK);
 	}
 
-	@GetMapping(value = "/{id}")
+	@GetMapping(value = "/{id}")	
+	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
 	public ResponseEntity<PregledDTO> getLekar(@PathVariable Long id) {
 
 		Pregled pregled = pregledService.findOne(id);
@@ -245,7 +247,60 @@ public class PregledController {
 
 		return new ResponseEntity<>(pregledDTO, HttpStatus.OK);
 	}
+	
+	//vrati pregled pacijenta kod odredjenog lekara
+	@GetMapping(value = "/pregledPacijenta/{id}" )
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('LEKAR')")
+	public ResponseEntity<List<PregledDTO>> getPregledPacijenta(@PathVariable Long id, Principal pr) {
+		Lekar lekar = lekarService.findByEmail(pr.getName());
+		Pacijent pacijent = pacijentService.findByID(id);
+		
+		List<PregledDTO> pregledDTO = new ArrayList<>();
+		//ako je pacijent od naseg lekara 
+		if(lekar.getListaPacijenata().contains(pacijent)) {
+			Set<Pregled> pregledi = pacijent.getListaPregleda();
+			
+			
+			for (Pregled p : pregledi) {
+			
+				System.out.println("Status pregleda pacijenta " + pacijent.getIme() + " : " + p.getStatus());
+				System.out.println("Lekar tog pregleda je : " + p.getLekar().getIme());
+				if (p.getStatus() == 1 && p.getLekar().getId().equals(lekar.getId())) {
+					
+					pregledDTO.add(new PregledDTO(p));
+				}
 
+			}
+		}
+		
+
+		return new ResponseEntity<>(pregledDTO, HttpStatus.OK);
+	}
+
+	//vrati mi preglede koji nisu pregledani od lekara
+	@GetMapping(value = "/getPreglediLekara")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('LEKAR')")
+	public ResponseEntity<List<PregledDTO>> getPreglediLekara(Principal p) {
+
+		Lekar lekar = lekarService.findByEmail(p.getName());
+		
+		Set<Pregled> pregledi = lekar.getListaPregleda();
+		
+		List<PregledDTO> lista = new ArrayList<PregledDTO>();
+		for (Pregled pre : pregledi) {
+			System.out.println(pre.getStatus());
+			if (pre.getStatus() == 1) {
+				System.out.println("dodat");
+				PregledDTO pregledDTO = new PregledDTO(pre);
+				lista.add(pregledDTO);
+			}
+		}
+
+		return new ResponseEntity<>(lista, HttpStatus.OK);
+	}
+	
 	@GetMapping(value = "preuzmiPregledeKlinike/{id}")
 	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
 	public ResponseEntity<List<PregledDTO>> getPreglediKlinike(@PathVariable Long id) {
@@ -284,7 +339,7 @@ public class PregledController {
 
 		System.out.println("Lista  zahtjeva pregleda u klinici:" + klinika.getNaziv() + " ID: " + id);
 		for (PregledDTO ss : lista) {
-			System.out.println(ss.getCena());
+			System.out.println(ss);
 		}
 
 		return new ResponseEntity<>(lista, HttpStatus.OK);
@@ -327,5 +382,54 @@ public class PregledController {
 		System.out.println(new PregledDTO(pregled));
 		pregledService.save(pregled);
 		return new ResponseEntity<>(new PregledDTO(pregled), HttpStatus.OK);
+	}
+
+	
+	//postupak rezervisanja sale za p
+	@PostMapping(path = "/rezervisanje", consumes = "application/json")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
+	public ResponseEntity<String> rezervisanjeSale(@RequestBody PregledDTO pDTO){
+		System.out.println("-----   REZERVISANJEEE -------------------------------");
+		System.out.println(pDTO);
+		Klinika klinika = klinikaService.findById(pDTO.getKlinikaID());
+//		KlinickiCentar kc = listaKC.get(0);	
+		
+//		Pacijent p = pacijentService.findByEmail(paDTO.getEmail());
+//		PacijentDTO pDTO = new PacijentDTO(p);
+//		
+////		Set<Pacijent> listaz = kc.getZahteviZaRegistraciju();
+//		
+//		if(kc.getZahteviZaRegistraciju().isEmpty()) {
+//			System.out.println("prazna listaaa");
+//			return new ResponseEntity<>("U listi ne postoji pacijent", HttpStatus.BAD_REQUEST);
+//		}else {
+//			
+//			p.setOdobrenaRegistracija(true);
+//			p = pacijentService.save(p);
+//			System.out.println(p.getOdobrenaRegistracija());
+//			
+//			kc.getZahteviZaRegistraciju().remove(p);
+//			kc.setZahteviZaRegistraciju(kc.getZahteviZaRegistraciju());
+//			kc = KCService.save(kc);
+//			System.out.println(kc.getZahteviZaRegistraciju().toString());
+//		}
+//
+//			
+//		String subject ="Odobrena registracija";
+//		String text = "Postovani " + pDTO.getIme() + " " + pDTO.getPrezime() 
+//					+ ",\n\nMolimo Vas da potvrdite vasu registraciju klikom na sledeci link: http://localhost:3000 .";
+//
+//		System.out.println(text);
+//		
+//		//slanje emaila
+//		try {
+//			emailService.poslatiOdgovorPacijentu(pDTO, subject, text);
+//		}catch( Exception e ){
+//			logger.info("Greska prilikom slanja emaila: " + e.getMessage());
+//			return new ResponseEntity<>("Mail nije poslat", HttpStatus.BAD_REQUEST);
+//		}
+
+		return new ResponseEntity<>("Odobreno", HttpStatus.OK);
 	}
 }
