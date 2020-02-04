@@ -30,7 +30,7 @@ public class Termin {
 	private Date datumPocetka;
 
 	@Column(name = "termin", nullable = false)
-	private Integer termin;
+	private int termin;
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Sala sala;
@@ -59,22 +59,6 @@ public class Termin {
 	}
 	
 	
-
-//	public Date getDatumPocetka() {
-//		return datumPocetka;
-//	}
-//
-//	public void setDatumPocetka(Date datumPocetka) {
-//		this.datumPocetka = datumPocetka;
-//	}
-//
-//	public Date getDatumKraja() {
-//		return datumKraja;
-//	}
-//
-//	public void setDatumKraja(Date datumKraja) {
-//		this.datumKraja = datumKraja;
-//	}
 
 	public Lekar getLekar() {
 		return lekar;
@@ -108,34 +92,13 @@ public class Termin {
 		this.sala = sala;
 	}
 
-//	public boolean isStatus() {
-//		return status;
-//	}
-//
-//	public void setStatus(boolean status) {
-//		this.status = status;
-//	}
 
-//	public RadniDan getRadniDan() {
-//		return radniDan;
-//	}
-//
-//	public void setRadniDan(RadniDan radniDan) {
-//		this.radniDan = radniDan;
-//	}
 
 	
 	public Termin() {
 		super();
 	}
 
-//	public Klinika getKlinika() {
-//		return klinika;
-//	}
-//
-//	public void setKlinika(Klinika klinika) {
-//		this.klinika = klinika;
-//	}
 
 	@Override
 	public boolean equals(Object obj) {
@@ -151,9 +114,10 @@ public class Termin {
 
 	@Override
 	public String toString() {
-		return "Termin [id=" + id + ", datumPocetka=" + datumPocetka + ", termin=" + termin + ", sala=" + sala
-				+ "]";
+		return "Termin [id=" + id + ", datumPocetka=" + datumPocetka + ", termin=" + termin+ "]";
 	}
+
+
 
 
 

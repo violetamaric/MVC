@@ -22,6 +22,8 @@ public class TerminDTO {
 //	
 //	private String nazivKl;
 
+	
+	
 	public TerminDTO(Termin termin) {
 		this.id = termin.getId();
 		this.datumPocetka = termin.getDatumPocetka();
@@ -32,6 +34,9 @@ public class TerminDTO {
 //		this.klinikaID = termin.getKlinika().getId();
 //		this.nazivKl = termin.getKlinika().getNaziv();
 	}
+
+	public TerminDTO() {
+}
 
 	public TerminDTO(Long id, Date datumPocetka, Integer termin, int salaBR, Long salaID, String salaN) {
 		super();

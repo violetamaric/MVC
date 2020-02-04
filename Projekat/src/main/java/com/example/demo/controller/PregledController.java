@@ -258,7 +258,7 @@ public class PregledController {
 
 		System.out.println("Lista  zahtjeva pregleda u klinici:" + klinika.getNaziv() + " ID: " + id);
 		for (PregledDTO ss : lista) {
-			System.out.println(ss.getCena());
+			System.out.println(ss);
 		}
 
 		return new ResponseEntity<>(lista, HttpStatus.OK);
