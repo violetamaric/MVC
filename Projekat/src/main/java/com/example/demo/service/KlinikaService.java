@@ -3,8 +3,12 @@ package com.example.demo.service;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.model.Klinika;
 import com.example.demo.model.Pacijent;
@@ -12,6 +16,7 @@ import com.example.demo.repository.KlinikaRepository;
 import com.example.demo.repository.PacijentRepository;
 
 @Service
+@Transactional(readOnly = true)
 public class KlinikaService {
 	@Autowired
 	private KlinikaRepository klinikaRepository;
@@ -19,6 +24,7 @@ public class KlinikaService {
 	@Autowired
 	private PacijentRepository pacijentRepository;
 	
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 
 	public Klinika findOne(Long id) {
@@ -36,9 +42,14 @@ public class KlinikaService {
 	public List<Klinika> findAll() {
 		return klinikaRepository.findAll();
 	}
+	@Transactional(readOnly = false)
 	public Klinika save(Klinika klinika) {
-		return klinikaRepository.save(klinika);
+		logger.info("> create");
+		Klinika k = klinikaRepository.save(klinika);
+		logger.info("< create");
+		return k;
 	}
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 	public void delete(Klinika klinika) {
 		klinikaRepository.delete(klinika);
 	}

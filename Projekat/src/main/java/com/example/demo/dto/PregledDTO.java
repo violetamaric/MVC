@@ -8,7 +8,8 @@ public class PregledDTO {
 	private Long id;
 
 	private Date datum;
-	
+	// TODO 1: DODATI TRAJANJE I KRAJ PREGLEDA
+
 	private Long tipPregledaID;
 	private String nazivTP;
 
@@ -31,16 +32,16 @@ public class PregledDTO {
 	private int salaBR;
 
 	private double cena;
-	
+
 	private int termin;
 
-	//0-nije ni potvrdjeno ni odbijeno
-	//1-potvrdjeno
-	//2-odbijeno
-	//3-zavrsen pregled
-	//4-ocenjena samo klinika
-	//5-ocenjen samo lekar
-	//6-ocenjen i lekar i klinika
+	// 0-nije ni potvrdjeno ni odbijeno
+	// 1-potvrdjeno
+	// 2-odbijeno
+	// 3-zavrsen pregled
+	// 4-ocenjena samo klinika
+	// 5-ocenjen samo lekar
+	// 6-ocenjen i lekar i klinika
 	private int status;
 
 	public PregledDTO() {
@@ -78,18 +79,28 @@ public class PregledDTO {
 	public PregledDTO(Pregled pregled) {
 		this.id = pregled.getId();
 		this.datum = pregled.getDatum();
-		this.tipPregledaID = pregled.getTipPregleda().getId();
-		this.lekarID = pregled.getLekar().getId();
-		this.pacijentEmail = pregled.getPacijent().getEmail();
-		this.klinikaID = pregled.getKlinika().getId();
+		if (pregled.getTipPregleda() != null) {
+			this.tipPregledaID = pregled.getTipPregleda().getId();
+			this.nazivTP = pregled.getTipPregleda().getNaziv();
+		}
+		if (pregled.getLekar() != null) {
+			this.lekarID = pregled.getLekar().getId();
+			this.imeL = pregled.getLekar().getIme();
+			this.prezimeL = pregled.getLekar().getPrezime();
+		}
+		if (pregled.getPacijent() != null) {
+			this.pacijentEmail = pregled.getPacijent().getEmail();
+			this.prezimeP = pregled.getPacijent().getPrezime();
+			this.imeP = pregled.getPacijent().getIme();
+		}
+		if (pregled.getKlinika() != null) {
+			this.nazivKl = pregled.getKlinika().getNaziv();
+			this.klinikaID = pregled.getKlinika().getId();
+		}
+
 		this.cena = pregled.getCena();
 		this.status = pregled.getStatus();
-		this.nazivKl = pregled.getKlinika().getNaziv();
-		this.imeL = pregled.getLekar().getIme();
-		this.imeP = pregled.getPacijent().getIme();
-		this.nazivTP = pregled.getTipPregleda().getNaziv();
-		this.prezimeL = pregled.getLekar().getPrezime();
-		this.prezimeP = pregled.getPacijent().getPrezime();
+
 		this.termin = pregled.getTermin();
 		if (pregled.getSala() != null) {
 
@@ -211,8 +222,6 @@ public class PregledDTO {
 		this.cena = cena;
 	}
 
-
-
 	public int getStatus() {
 		return status;
 	}
@@ -252,6 +261,5 @@ public class PregledDTO {
 	public void setSalaBR(int salaBR) {
 		this.salaBR = salaBR;
 	}
-	
 
 }

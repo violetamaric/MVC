@@ -29,6 +29,16 @@ public class Authority implements GrantedAuthority {
         return uloga;
     }
     
+	public Authority() {
+
+	}
+
+
+	public Authority(String uloga) {
+		super();
+		this.uloga = uloga;
+	}
+
 
 
 

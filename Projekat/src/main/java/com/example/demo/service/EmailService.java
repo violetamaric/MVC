@@ -8,6 +8,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.dto.AdministratorKlinikeDTO;
 import com.example.demo.dto.LekarDTO;
 import com.example.demo.dto.MedicinskaSestraDTO;
 import com.example.demo.dto.PacijentDTO;
@@ -48,6 +49,23 @@ public class EmailService {
 
 		SimpleMailMessage mail = new SimpleMailMessage();
 		mail.setTo(pacijentDTO.getEmail());
+		
+		//UNIVERZALNI MAIL
+		mail.setFrom(env.getProperty("spring.mail.username"));
+		
+		mail.setSubject(subject);
+		mail.setText(text);
+		javaMailSender.send(mail);
+
+		System.out.println("Email poslat!");
+	}
+	@Async
+	public void poslatiOdgovorAdminuK(AdministratorKlinikeDTO akDTO, String subject, String text) throws MailException, InterruptedException {
+
+		System.out.println("Slanje emaila..." + akDTO.getEmail());
+
+		SimpleMailMessage mail = new SimpleMailMessage();
+		mail.setTo(akDTO.getEmail());
 		
 		//UNIVERZALNI MAIL
 		mail.setFrom(env.getProperty("spring.mail.username"));

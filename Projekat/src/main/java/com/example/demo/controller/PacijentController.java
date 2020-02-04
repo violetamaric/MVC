@@ -41,7 +41,7 @@ public class PacijentController {
 //
 //	private Logger logger = LoggerFactory.getLogger(UserController.class);
 
-	@GetMapping(value = "/all")
+	@GetMapping(value = "/all", produces = "application/json;charset=UTF-8")
 	public ResponseEntity<List<PacijentDTO>> getAll() {
 
 		List<Pacijent> pacijenti = pacijentService.findAll();

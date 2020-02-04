@@ -22,16 +22,16 @@ public class ZdravstveniKartonDTO {
 		this.visina = zk.getVisina();
 		this.tezina = zk.getTezina();
 		this.krvnaGrupa = zk.getKrvnaGrupa();
-		if(zk.getPacijent() != null) {
-			this.pacijentID = zk.getPacijent().getId();
-			this.imeP = zk.getPacijent().getIme();
-			this.prezimeP = zk.getPacijent().getPrezime();
-		}
-		
-		for(IzvestajOPregledu IOP:zk.getListaIzvestajaOPregledu()) {
+//		if(zk.getPacijent() != null) {
+		this.pacijentID = zk.getPacijent().getId();
+		this.imeP = zk.getPacijent().getIme();
+		this.prezimeP = zk.getPacijent().getPrezime();
+//		}
+
+		for (IzvestajOPregledu IOP : zk.getListaIzvestajaOPregledu()) {
 			this.listaIzvestaja.add(new IzvestajOPregleduDTO(IOP));
 		}
-				
+
 	}
 
 	public ZdravstveniKartonDTO(Long id, double visina, double tezina, String krvnaGrupa, Long pacijentID, String imeP,

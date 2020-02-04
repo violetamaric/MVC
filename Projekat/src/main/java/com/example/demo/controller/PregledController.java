@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,12 +21,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.dto.DijagnozaDTO;
+import com.example.demo.dto.AdministratorKlinikeDTO;
 import com.example.demo.dto.PacijentDTO;
 import com.example.demo.dto.PregledDTO;
 import com.example.demo.dto.SlobodniTerminDTO;
-import com.example.demo.model.Dijagnoza;
-import com.example.demo.model.KlinickiCentar;
+import com.example.demo.model.AdministratorKlinike;
 import com.example.demo.model.Klinika;
 import com.example.demo.model.Lekar;
 import com.example.demo.model.Pacijent;
@@ -33,6 +34,7 @@ import com.example.demo.model.Sala;
 import com.example.demo.model.SlobodniTermin;
 import com.example.demo.model.Termin;
 import com.example.demo.model.TipPregleda;
+import com.example.demo.service.EmailService;
 import com.example.demo.service.KlinikaService;
 import com.example.demo.service.LekarService;
 import com.example.demo.service.PacijentService;
@@ -57,10 +59,13 @@ public class PregledController {
 	private TipPregledaService tipPregledaService;
 	@Autowired
 	private SlobodniTerminService STService;
-	
+	@Autowired
+	private EmailService emailService;
+	private Logger logger = LoggerFactory.getLogger(UserController.class);
+
 	@Autowired
 	private SalaService salaService;
-	
+
 	@Autowired
 	private TerminService terminService;
 	
@@ -68,7 +73,7 @@ public class PregledController {
 	@PostMapping(path = "/new", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('PACIJENT')")
-	public ResponseEntity<PregledDTO> noviPregled(@RequestBody PregledDTO pregledDTO) {
+	public ResponseEntity<?> noviPregled(@RequestBody PregledDTO pregledDTO) {
 		System.out.println("dodavanje novog pregleda");
 		System.out.println(pregledDTO);
 		Pregled pregled = new Pregled();
@@ -84,12 +89,28 @@ public class PregledController {
 		pregled.setStatus(0);
 		TipPregleda tp = tipPregledaService.findOne(pregledDTO.getTipPregledaID());
 		pregled.setTipPregleda(tp);
-		
-		
 
 		pregled = pregledService.save(pregled);
 		klinika.getListaPregleda().add(pregled);
 		klinika = klinikaService.save(klinika);
+
+		Set<AdministratorKlinike> ak = klinika.getListaAdminKlinike();
+
+		for (AdministratorKlinike AK : ak) {
+			AdministratorKlinikeDTO akDTO = new AdministratorKlinikeDTO(AK);
+			String subject = "Zahtev za pregled";
+			String text = "Postovani " + AK.getIme() + " " + AK.getPrezime() + ",\n\n imate novi zahtev za pregled.";
+
+			System.out.println(text);
+
+			// slanje emaila
+			try {
+				emailService.poslatiOdgovorAdminuK(akDTO, subject, text);
+			} catch (Exception e) {
+				logger.info("Greska prilikom slanja emaila: " + e.getMessage());
+				return new ResponseEntity<>("Mail nije poslat", HttpStatus.BAD_REQUEST);
+			}
+		}
 
 		return new ResponseEntity<>(new PregledDTO(pregled), HttpStatus.OK);
 	}
@@ -97,7 +118,7 @@ public class PregledController {
 	@PostMapping(path = "/newST", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('PACIJENT')")
-	public ResponseEntity<PregledDTO> noviPregledST(@RequestBody PregledDTO pregledDTO) {
+	public ResponseEntity<?> noviPregledST(@RequestBody PregledDTO pregledDTO) {
 		System.out.println("dodavanje novog pregleda ST");
 		System.out.println(pregledDTO);
 		System.out.println(pregledDTO);
@@ -119,7 +140,6 @@ public class PregledController {
 
 		List<SlobodniTermin> st = STService.findAll();
 
-		// convert students to DTOs
 		System.out.println();
 		List<SlobodniTerminDTO> stDTO = new ArrayList<>();
 		for (SlobodniTermin sstt : st) {
@@ -138,10 +158,24 @@ public class PregledController {
 			}
 
 		}
-		
+
 		klinika.getListaPregleda().add(pregled);
 		klinika = klinikaService.save(klinika);
+		PacijentDTO pDTO = new PacijentDTO(pacijent);
+		String subject ="Odobrena registracija";
+		String text = "Postovani " + pDTO.getIme() + " " + pDTO.getPrezime() 
+					+ ",\n\nMolimo Vas da potvrdite vasu registraciju klikom na sledeci link: http://localhost:3000 .";
+
+		System.out.println(text);
 		
+		//slanje emaila
+		try {
+			emailService.poslatiOdgovorPacijentu(pDTO, subject, text);
+		}catch( Exception e ){
+			logger.info("Greska prilikom slanja emaila: " + e.getMessage());
+			return new ResponseEntity<>("Mail nije poslat", HttpStatus.BAD_REQUEST);
+		}
+
 		return new ResponseEntity<>(new PregledDTO(pregled), HttpStatus.OK);
 	}
 
@@ -164,7 +198,7 @@ public class PregledController {
 
 		List<Pregled> pregledi = pregledService.findAll();
 
-		// convert students to DTOs
+
 		List<PregledDTO> pregledDTO = new ArrayList<>();
 		for (Pregled p : pregledi) {
 			pregledDTO.add(new PregledDTO(p));
@@ -241,7 +275,6 @@ public class PregledController {
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 
-	
 	@GetMapping(value = "preuzmiZahtevePregledaKlinike/{id}")
 	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
 	public ResponseEntity<List<PregledDTO>> getZahteviPreglediKlinike(@PathVariable Long id) {
@@ -250,7 +283,7 @@ public class PregledController {
 		List<Pregled> pregledi = pregledService.findAll();
 		List<PregledDTO> lista = new ArrayList<PregledDTO>();
 		for (Pregled s : pregledi) {
-			if (s.getKlinika().getId() == klinika.getId() && s.getStatus()==0) {
+			if (s.getKlinika().getId() == klinika.getId() && s.getStatus() == 0) {
 				PregledDTO pregledDTO = new PregledDTO(s);
 				lista.add(pregledDTO);
 			}
@@ -264,13 +297,12 @@ public class PregledController {
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 
-	
 	@PutMapping(path = "/potvrda/{id}")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('PACIJENT')")
 	public ResponseEntity<PregledDTO> potvrdiPregled(@PathVariable Long id) {
 		System.out.println("POTVRDA PREGLEDA");
-		
+
 		Pregled pregled = pregledService.findById(id);
 		System.out.println(new PregledDTO(pregled));
 		pregled.setStatus(1);
@@ -282,7 +314,7 @@ public class PregledController {
 		termin.setSala(pregled.getSala());
 		terminService.save(termin);
 		Lekar lekar = lekarService.findOne(pregled.getLekar().getId());
-		Sala sala  = salaService.findOne(pregled.getSala().getId());
+		Sala sala = salaService.findOne(pregled.getSala().getId());
 		pregledService.save(pregled);
 		lekar.getListaZauzetihTermina().add(termin);
 		sala.getZauzetiTermini().add(termin);
@@ -290,7 +322,7 @@ public class PregledController {
 		salaService.save(sala);
 		return new ResponseEntity<>(new PregledDTO(pregled), HttpStatus.OK);
 	}
-	
+
 	@PutMapping(path = "/odbijanje/{id}")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('PACIJENT')")

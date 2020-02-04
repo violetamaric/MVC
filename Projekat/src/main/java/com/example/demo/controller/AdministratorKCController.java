@@ -29,7 +29,6 @@ import com.example.demo.model.AdministratorKC;
 import com.example.demo.model.AdministratorKlinike;
 import com.example.demo.model.KlinickiCentar;
 import com.example.demo.model.Klinika;
-import com.example.demo.model.Lek;
 import com.example.demo.model.Pacijent;
 import com.example.demo.model.ZdravstveniKarton;
 import com.example.demo.service.AdministratorKCService;
@@ -38,6 +37,7 @@ import com.example.demo.service.EmailService;
 import com.example.demo.service.KlinickiCentarService;
 import com.example.demo.service.KlinikaService;
 import com.example.demo.service.PacijentService;
+import com.example.demo.service.ZdravstveniKartonService;
 
 
 @CrossOrigin
@@ -63,6 +63,8 @@ public class AdministratorKCController {
 	@Autowired
 	private EmailService emailService;
 	
+	@Autowired
+	private ZdravstveniKartonService zkService;
 	
 	private Logger logger = LoggerFactory.getLogger(UserController.class);
 	
@@ -173,7 +175,11 @@ public class AdministratorKCController {
 		KlinickiCentar kc = listaKC.get(0);	
 		
 		Pacijent p = pacijentService.findByEmail(paDTO.getEmail());
-		p.setZdravstveniKarton(new ZdravstveniKarton());
+		ZdravstveniKarton zk = new ZdravstveniKarton();
+		zk.setPacijent(p);
+		zk = zkService.save(zk);
+		
+		p.setZdravstveniKarton(zk);
 		PacijentDTO pDTO = new PacijentDTO(p);
 		
 //		Set<Pacijent> listaz = kc.getZahteviZaRegistraciju();
