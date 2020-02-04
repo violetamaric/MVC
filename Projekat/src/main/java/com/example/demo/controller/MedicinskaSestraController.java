@@ -200,7 +200,7 @@ public class MedicinskaSestraController {
 //	
 	
 	
-	//ovo je lista i odmora i odsustva 
+	//vraca listu odmora i odsustva
 	@GetMapping(value = "/listaOdmor")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('MED_SESTRA')")
@@ -215,11 +215,13 @@ public class MedicinskaSestraController {
 		
 		List<OdmorOdsustvoMSDTO> omsDTO = new ArrayList<>();
 		for(OdmorOdsustvoMedicinskaSestra oms : ms.getListaOdmorOdsustvo()) {
-			//if (oms.getTip() == TipOdmorOdsustvo.ODMOR) {
-				System.out.println("Jedan zahtev: " + oms.getTip()+ " " + oms.isStatus() );
+			System.out.println("Jedan zahtev: " + oms.getTip()+ " " + oms.getStatus() );
+			if(oms.getStatus() == 1) {
+				System.out.println("Jedan zahtev: " + oms.getTip()+ " " + oms.getStatus() );
 				System.out.println(oms.getDatumOd() + " " + oms.getDatumDo());
 				omsDTO.add(new OdmorOdsustvoMSDTO(oms));
-			//}
+			}
+			
 			
 		}
 		
@@ -248,23 +250,5 @@ public class MedicinskaSestraController {
 //		
 //	}
 	
-//	@GetMapping(value = "/listaRadnihDana/{email}")
-//	@CrossOrigin(origins = "http://localhost:3000")
-//	public ResponseEntity<List<RadniDanDTO>> getListaRadnihDana(@PathVariable String email) {
-//		System.out.println("//////////////////// MED SESTRA LISTA Radnih dana ////////////////////////");
-//		
-//		MedicinskaSestra ms = medicinskaSestraService.findByEmail(email);
-//		Set<RadniDan> listaRD = ms.getListaRadnihDana();
-//		List<RadniDanDTO> lista = new ArrayList<RadniDanDTO>();
-//		for(RadniDan rd: listaRD) {
-//			System.out.println(rd.getDatumPocetka());
-//			lista.add(new RadniDanDTO(rd));
-//		}
-//		
-//
-//		System.out.println("*************");
-//		return new ResponseEntity<>(lista, HttpStatus.OK);
-//
-//		
-//	}
+
 }

@@ -38,8 +38,12 @@ public class OdmorOdsustvoMedicinskaSestra {
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private MedicinskaSestra medicinskaSestra;
 	
+	
+	//0-ni odobreno ni odbijeno
+	//1-odobreno
+	//2-odbijeno
 	@Column(name="status", nullable=false)
-	private boolean status; //odobreno-1, odbijeno-0
+	private int status; 
 	
 	@Column(name="tip", nullable=false)
 	private TipOdmorOdsustvo tip;
@@ -90,15 +94,22 @@ public class OdmorOdsustvoMedicinskaSestra {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public boolean isStatus() {
+	
+	
+	
+	
+	public int getStatus() {
 		return status;
 	}
-	public void setStatus(boolean status) {
+
+
+
+	public void setStatus(int status) {
 		this.status = status;
 	}
-	
-	
-	
+
+
+
 	public Date getDatumOd() {
 		return datumOd;
 	}

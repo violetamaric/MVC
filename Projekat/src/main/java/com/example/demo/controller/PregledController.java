@@ -223,10 +223,11 @@ public class PregledController {
 
 		return new ResponseEntity<>(pregledDTO, HttpStatus.OK);
 	}
+	
 	//vrati pregled pacijenta kod odredjenog lekara
 	@GetMapping(value = "/pregledPacijenta/{id}" )
 	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('MED_SESTRA') or hasAuthority('LEKAR')")
+	@PreAuthorize("hasAuthority('LEKAR')")
 	public ResponseEntity<List<PregledDTO>> getPregledPacijenta(@PathVariable Long id, Principal pr) {
 		Lekar lekar = lekarService.findByEmail(pr.getName());
 		Pacijent pacijent = pacijentService.findByID(id);
@@ -253,6 +254,29 @@ public class PregledController {
 		return new ResponseEntity<>(pregledDTO, HttpStatus.OK);
 	}
 
+	//vrati mi preglede koji nisu pregledani od lekara
+	@GetMapping(value = "/getPreglediLekara")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('LEKAR')")
+	public ResponseEntity<List<PregledDTO>> getPreglediLekara(Principal p) {
+
+		Lekar lekar = lekarService.findByEmail(p.getName());
+		
+		Set<Pregled> pregledi = lekar.getListaPregleda();
+		
+		List<PregledDTO> lista = new ArrayList<PregledDTO>();
+		for (Pregled pre : pregledi) {
+			System.out.println(pre.getStatus());
+			if (pre.getStatus() == 1) {
+				System.out.println("dodat");
+				PregledDTO pregledDTO = new PregledDTO(pre);
+				lista.add(pregledDTO);
+			}
+		}
+
+		return new ResponseEntity<>(lista, HttpStatus.OK);
+	}
+	
 	@GetMapping(value = "preuzmiPregledeKlinike/{id}")
 	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
 	public ResponseEntity<List<PregledDTO>> getPreglediKlinike(@PathVariable Long id) {
