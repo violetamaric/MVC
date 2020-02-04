@@ -176,10 +176,10 @@ insert into odmor_odsustvo_medicinska_sestra (klinika_id,medicinska_sestra_id, d
 insert into odmor_odsustvo_medicinska_sestra (klinika_id,medicinska_sestra_id, datum_od, datum_do, opis, tip, status) values (3,3, '2019-12-02 00:00:01', '2019-12-05 23:59:59', 'odmor ili odsustvo', 1, 0);
 insert into odmor_odsustvo_medicinska_sestra (klinika_id,medicinska_sestra_id, datum_od, datum_do, opis, tip, status) values (3,3, '2020-01-06', '2020-01-10', 'odmor ili odsustvo', 0, 1);
 
-insert into odmor_odsustvo_lekar (klinika_id,lekar_id, datum_od, datum_do, opis, tip, status) values (3,2, '2020-01-21', '2020-01-23', 'odmor ', 0, 0);
-insert into odmor_odsustvo_lekar (klinika_id,lekar_id, datum_od, datum_do, opis, tip, status) values (3,3, '2020-02-20', '2020-02-22', 'odsustvo', 0, 1);
+insert into odmor_odsustvo_lekar (klinika_id,lekar_id, datum_od, datum_do, opis, tip, status) values (3,2, '2020-01-21', '2020-01-23', 'odmor ', 0, 1);
+insert into odmor_odsustvo_lekar (klinika_id,lekar_id, datum_od, datum_do, opis, tip, status) values (3,2, '2020-02-20', '2020-02-22', 'odsustvo', 0, 1);
 insert into odmor_odsustvo_lekar (klinika_id,lekar_id, datum_od, datum_do, opis, tip, status) values (3,2, '2020-02-18', '2020-02-20', 'odmor ili odsustvo', 0, 1);
-insert into odmor_odsustvo_lekar (klinika_id,lekar_id, datum_od, datum_do, opis, tip, status) values (3,3, '2020-03-05', '2020-03-06', 'odmor ili odsustvo', 0, 0);
+insert into odmor_odsustvo_lekar (klinika_id,lekar_id, datum_od, datum_do, opis, tip, status) values (3,2, '2020-03-05', '2020-03-06', 'odmor ili odsustvo', 0, 0);
 
 
 insert into radni_dan(medicinska_sestra_id, datum_pocetka, datum_kraja) values (2,'2020-01-21 09:00:00', '2020-01-21 17:00:00' );
@@ -246,6 +246,13 @@ insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, c
 insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status, sala_id, termin) values ('29-dec-2019', 4, 5, 2, 3, 4500, 4, 1, 11);
 insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status, sala_id, termin) values ('29-dec-2019', 4, 5, 2, 3, 4500, 4, 1, 13);
 insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status, sala_id, termin) values ('29-dec-2019', 4, 5, 2, 3, 4500, 4, 1, 15);
+insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status, sala_id, termin) values ('10-mar-2020', 3, 2, 1, 3, 3000, 1, 1, 13);
+insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status, sala_id, termin) values ('10-mar-2020', 4, 2, 1, 3, 3000, 1, 1, 15);
+insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status, sala_id, termin) values ('10-mar-2020', 2, 2, 1, 3, 3000, 1, 1, 9);
+insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status, sala_id, termin) values ('10-mar-2020', 1, 2, 1, 3, 3000, 1, 1, 11);
+
+
+
 
 insert into izvestajopregledu (sadrzaj, dijagnoza_id, pregled_id, zdravstveni_karton_id) values ('Pacijent se zalio na tegobe u delu grudnog kosa. Potrebno odraditi dodatne analize radi odredjivanja preciznije dijagnoze', 2, 1, 1);
 --insert into izvestajopregledu (sadrzaj, dijagnoza_id, pregled_id, zdravstveni_karton_id) values ('Pacijent se zalio na tegobe u delu grudnog kosa. Potrebno odraditi dodatne analize radi odredjivanja preciznije dijagnoze', 2, 1, 1)
