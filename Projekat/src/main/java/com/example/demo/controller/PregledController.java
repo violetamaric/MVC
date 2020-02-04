@@ -61,10 +61,12 @@ public class PregledController {
 	private SlobodniTerminService STService;
 	@Autowired
 	private EmailService emailService;
-	private Logger logger = LoggerFactory.getLogger(UserController.class);
-
+	
 	@Autowired
 	private SalaService salaService;
+	
+	private Logger logger = LoggerFactory.getLogger(UserController.class);
+
 
 	@Autowired
 	private TerminService terminService;
@@ -126,14 +128,16 @@ public class PregledController {
 		pregled.setDatum(pregledDTO.getDatum());
 		Klinika klinika = klinikaService.findById(pregledDTO.getKlinikaID());
 		pregled.setKlinika(klinika);
+		System.out.println("Klinika: " + klinika.getId());
 		Lekar lekar = lekarService.findOne(pregledDTO.getLekarID());
 		pregled.setLekar(lekar);
 		pregled.setTermin(pregledDTO.getTermin());
 		Pacijent pacijent = pacijentService.findByEmail(pregledDTO.getPacijentEmail());
 		pregled.setPacijent(pacijent);
-		pregled.setStatus(0);
+		pregled.setStatus(1);
 		TipPregleda tp = tipPregledaService.findOne(pregledDTO.getTipPregledaID());
 		pregled.setTipPregleda(tp);
+		pregled.setSala(salaService.findById(pregledDTO.getSalaID()));
 
 		pregled = pregledService.save(pregled);
 
@@ -150,9 +154,9 @@ public class PregledController {
 					&& sstt.getTipPregleda().getId() == pregledDTO.getTipPregledaID()
 					&& sstt.getCena() == pregled.getCena()) {
 //					sstt.getDatum() == pregled.getDatum()) {
-				System.out.println("brise se");
-				st.remove(sstt);
-				STService.delete(sstt);
+				System.out.println("menja se status");
+				sstt.setStatus(true);
+				STService.save(sstt);
 				break;
 			}
 
@@ -160,10 +164,30 @@ public class PregledController {
 
 		klinika.getListaPregleda().add(pregled);
 		klinika = klinikaService.save(klinika);
+		System.out.println("Sacuvana klinika");
+		Termin termin = new Termin();
+		termin.setDatumPocetka(pregled.getDatum());
+		termin.setTermin(pregled.getTermin());
+		termin.setLekar(pregled.getLekar());
+		termin.setSala(pregled.getSala());
+		terminService.save(termin);
+		System.out.println("Sacuvan termin: " + termin.getId());
+		
+		Lekar lekar2 = lekarService.findOne(pregled.getLekar().getId());
+		System.out.println("Lekar: "+ lekar2.getId());
+		Sala sala = salaService.findOne(pregled.getSala().getId());
+		System.out.println("Sala: " + sala.getId());
+		lekar.getListaZauzetihTermina().add(termin);
+		sala.getZauzetiTermini().add(termin);
+		lekarService.save(lekar2);
+		System.out.println("Sacuvan lekar");
+		salaService.save(sala);
+		System.out.println("Sacuvana sala");
+		
 		PacijentDTO pDTO = new PacijentDTO(pacijent);
-		String subject ="Odobrena registracija";
+		String subject ="Pregled je zakazan";
 		String text = "Postovani " + pDTO.getIme() + " " + pDTO.getPrezime() 
-					+ ",\n\nMolimo Vas da potvrdite vasu registraciju klikom na sledeci link: http://localhost:3000 .";
+					+ ",\n\nObavestavamo Vas da je Vas pregled uspesno prihvacen i zakazan.";
 
 		System.out.println(text);
 		

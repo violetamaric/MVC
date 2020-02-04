@@ -27,6 +27,13 @@ public class PregledService {
 	}
 	
 	public List<Pregled> findAll() {
+		System.out.println("find all preglede");
+		System.out.println(pregledRepository.findAll());
+		for(Pregled p:pregledRepository.findAll()) {
+			System.out.println("-----------------------------------");
+			System.out.println(p.getId());
+			System.out.println("-----------------------------------");
+		}
 		return pregledRepository.findAll();
 	}
 	

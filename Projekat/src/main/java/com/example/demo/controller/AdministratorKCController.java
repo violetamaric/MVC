@@ -283,18 +283,26 @@ public class AdministratorKCController {
 	@PreAuthorize("hasAuthority('ADMIN_KC')")
 	public ResponseEntity<KlinikaDTO> dodavanjeKlinike(@RequestBody KlinikaDTO klinikaDTO) {
 		System.out.println("------------------------------------------------------");
-		Klinika klinika = new Klinika();
+		List<KlinickiCentar> listaKC = KCService.find();
+		KlinickiCentar kc = listaKC.get(0);
 		if(klinikaDTO.getNaziv() != "" && klinikaDTO.getNaziv() != null) {
 			
-			klinika.setNaziv(klinikaDTO.getNaziv());
-			klinika.setOpis(klinikaDTO.getOpis());
-			klinika.setAdresa(klinikaDTO.getAdresa());
-			klinika.setOcena(klinikaDTO.getOcena());
+			Klinika klinika = Klinika.builder()
+					.naziv(klinikaDTO.getNaziv())
+					.opis(klinikaDTO.getOpis())
+					.adresa(klinikaDTO.getAdresa())
+					.ocena(klinikaDTO.getOcena())
+					.klinickiCentar(kc)
+					.build();
 			
-			List<KlinickiCentar> listaKC = KCService.find();
-			KlinickiCentar kc = listaKC.get(0);
+//			klinika.setNaziv(klinikaDTO.getNaziv());
+//			klinika.setOpis(klinikaDTO.getOpis());
+//			klinika.setAdresa(klinikaDTO.getAdresa());
+//			klinika.setOcena(klinikaDTO.getOcena());
 			
-			klinika.setKlinickiCentar(kc);
+
+			
+//			klinika.setKlinickiCentar(kc);
 			klinika = klinikaService.save(klinika);
 			
 			kc.getListaKlinika().add(klinika);
@@ -302,7 +310,7 @@ public class AdministratorKCController {
 			System.out.println("------------------------------------------------------");
 		}
 		
-		return new ResponseEntity<>(new KlinikaDTO(klinika), HttpStatus.CREATED);
+		return new ResponseEntity<>(klinikaDTO, HttpStatus.CREATED);
 	}
 	
 	//dodavanje novog administratora klinike

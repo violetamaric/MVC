@@ -12,8 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.model.Klinika;
 import com.example.demo.model.Pacijent;
+import com.example.demo.model.Pregled;
 import com.example.demo.repository.KlinikaRepository;
 import com.example.demo.repository.PacijentRepository;
+import com.example.demo.repository.PregledRepository;
 
 @Service
 @Transactional(readOnly = true)
@@ -26,7 +28,9 @@ public class KlinikaService {
 	
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
-
+	@Autowired
+	private PregledRepository pregledRepository;
+	
 	public Klinika findOne(Long id) {
 		return klinikaRepository.findById(id).orElseGet(null);
 	}
@@ -72,6 +76,10 @@ public class KlinikaService {
 	}
 	public Integer mesecniNivo(Long id, Date pocDatum, Date krajDatum ) {
 		return klinikaRepository.mesecniNivo(id, pocDatum, krajDatum);
+	}
+
+	public List<Pregled> listaPregledaKlinike(Long id){
+		return pregledRepository.findByIdKlinike(id);
 	}
 }
 

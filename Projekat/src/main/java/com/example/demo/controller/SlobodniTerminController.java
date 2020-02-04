@@ -35,13 +35,13 @@ public class SlobodniTerminController {
 
 	@Autowired
 	private SlobodniTerminService STService;
-	@Autowired 
+	@Autowired
 	private KlinikaService klinikaService;
-	@Autowired  
+	@Autowired
 	private LekarService lekarSrvice;
 	@Autowired
 	private TipPregledaService tipPregledaService;
-	
+
 	@GetMapping(value = "/unapredDef")
 	@PreAuthorize("hasAuthority('PACIJENT')")
 	public ResponseEntity<List<SlobodniTerminDTO>> getAllUnapredDef() {
@@ -51,15 +51,15 @@ public class SlobodniTerminController {
 		// convert students to DTOs
 		List<SlobodniTerminDTO> stDTO = new ArrayList<>();
 		for (SlobodniTermin sstt : st) {
-			stDTO.add(new SlobodniTerminDTO(sstt));
-			System.out.println(new SlobodniTerminDTO(sstt));
-			
-			
+			if (!sstt.isStatus()) {
+				stDTO.add(new SlobodniTerminDTO(sstt));
+				System.out.println(new SlobodniTerminDTO(sstt));
+			}
+
 		}
 
 		return new ResponseEntity<>(stDTO, HttpStatus.OK);
 	}
-	
 
 	@GetMapping(value = "preuzmiSTKlinike/{id}")
 	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
@@ -68,22 +68,22 @@ public class SlobodniTerminController {
 		Klinika klinika = klinikaService.findOne(id);
 		List<SlobodniTermin> st = STService.findAll();
 		List<SlobodniTerminDTO> lista = new ArrayList<SlobodniTerminDTO>();
-		for(SlobodniTermin s : st) {
-			if(s.getKlinika().getId()==klinika.getId()) {
+		for (SlobodniTermin s : st) {
+			if (s.getKlinika().getId() == klinika.getId()) {
 				SlobodniTerminDTO sDTO = new SlobodniTerminDTO(s);
 				lista.add(sDTO);
 			}
 		}
-		
+
 		System.out.println("Lista pregleda u klinici:" + klinika.getNaziv() + " ID: " + id);
-		for(SlobodniTerminDTO ss: lista) {
+		for (SlobodniTerminDTO ss : lista) {
 			System.out.println(ss.getCena());
 		}
-		
+
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
-	
-	@PostMapping(path="/dodajNoviST", consumes = "application/json")
+
+	@PostMapping(path = "/dodajNoviST", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 	public ResponseEntity<SlobodniTerminDTO> noviST(@RequestBody SlobodniTerminDTO stDTO) {
 		System.out.println("dodavanje novog st");
@@ -100,12 +100,10 @@ public class SlobodniTerminController {
 		st.setStatus(false);
 		TipPregleda tp = tipPregledaService.findOne(stDTO.getTipPregledaID());
 		st.setTipPregleda(tp);
-		
 
 		st = STService.save(st);
-		
 
 		return new ResponseEntity<>(new SlobodniTerminDTO(st), HttpStatus.OK);
 	}
-	
+
 }

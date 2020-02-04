@@ -27,6 +27,7 @@ import com.example.demo.dto.LekarDTO;
 import com.example.demo.dto.PacijentDTO;
 import com.example.demo.model.Klinika;
 import com.example.demo.model.Lekar;
+import com.example.demo.model.OdmorOdsustvoLekar;
 import com.example.demo.model.Pacijent;
 import com.example.demo.model.Pregled;
 import com.example.demo.model.SlobodniTermin;
@@ -139,11 +140,16 @@ public class KlinikaController {
 //		if (lekar == null) {
 //			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 //		}
-
-		klinika.setNaziv(klinikaDTO.getNaziv());
-		klinika.setAdresa(klinikaDTO.getAdresa());
-		klinika.setOpis(klinikaDTO.getOpis());
-		klinika.setOcena(klinikaDTO.getOcena());
+		klinika.builder()
+		.naziv(klinikaDTO.getNaziv())
+		.adresa(klinikaDTO.getAdresa())
+		.opis(klinikaDTO.getOpis())
+		.ocena(klinikaDTO.getOcena())
+		.build();
+//		klinika.setNaziv(klinikaDTO.getNaziv());
+//		klinika.setAdresa(klinikaDTO.getAdresa());
+//		klinika.setOpis(klinikaDTO.getOpis());
+//		klinika.setOcena(klinikaDTO.getOcena());
 
 		klinika = klinikaService.save(klinika);
 		System.out.println("Izmjenjena k: " + klinika);
@@ -322,7 +328,10 @@ public class KlinikaController {
 
 		Klinika klinika = klinikaService.findById(id);
 		int temp = klinika.getOcena();
-		klinika.setOcena((temp + ocena) / 2);
+		klinika.builder()
+		.ocena((temp + ocena) / 2)
+		.build();
+//		klinika.setOcena((temp + ocena) / 2);
 		klinikaService.save(klinika);
 		Pregled pregled = pregledService.findById(pregled_id);
 		if (pregled.getStatus() == 3) {
@@ -353,8 +362,13 @@ public class KlinikaController {
 					Set<Termin> terminiLekara = l.getListaZauzetihTermina();
 
 					if (l.sadrziSlobodanTermin(terminiLekara, datum) == false) {
+						System.out.println("svi termini su zauzeti");
 						System.out.println("FALSE");
 					} else {
+						Set<OdmorOdsustvoLekar> listaool = l.getListaOdmorOdsustvo();
+						for(OdmorOdsustvoLekar ool:listaool ) {
+//							if(ool.getStatus())
+						}
 						System.out.println("TRUE");
 						klinikaDTO.add(new KlinikaDTO(k));
 						break petlja;
