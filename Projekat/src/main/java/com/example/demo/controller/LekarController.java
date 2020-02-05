@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -33,6 +34,7 @@ import com.example.demo.model.Termin;
 import com.example.demo.service.LekarService;
 import com.example.demo.service.PacijentService;
 import com.example.demo.service.PregledService;
+import com.example.demo.service.TerminService;
 
 @RestController
 @RequestMapping(value = "/api/lekari", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -47,6 +49,9 @@ public class LekarController {
 	@Autowired
 	private PregledService pregledService;
 
+	@Autowired
+	private TerminService terminService;
+
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<LekarDTO> getLekar(@PathVariable Long id) {
 
@@ -59,19 +64,19 @@ public class LekarController {
 
 		return new ResponseEntity<>(new LekarDTO(lekar), HttpStatus.OK);
 	}
-	
+
 	@GetMapping(value = "/getLekarByEmail")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('ADMIN_KLINIKE') or hasAuthority('LEKAR')")
-	public ResponseEntity<?> findByEmail(Principal p){
-		
+	public ResponseEntity<?> findByEmail(Principal p) {
+
 		Lekar lekar = lekarService.findByEmail(p.getName());
 		if (lekar == null) {
 			System.out.println("Lekar nije pronadjen");
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		System.out.println("Lekar je pronadjen : "+ lekar);
-		
+		System.out.println("Lekar je pronadjen : " + lekar);
+
 		return ResponseEntity.ok(new LekarDTO(lekar));
 	}
 
@@ -144,58 +149,54 @@ public class LekarController {
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 
-	//vrati mi listu zakazanih pregleda od pacijenta kod tog lekara koji je prijavljen
+	// vrati mi listu zakazanih pregleda od pacijenta kod tog lekara koji je
+	// prijavljen
 	@GetMapping(value = "/listaPregledaPacijenta")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('LEKAR')")
-	public ResponseEntity<List<PregledDTO>> getListaPregledaPacijenta(Principal pa, @RequestBody PacijentDTO pacijentDTO) {
-		
+	public ResponseEntity<List<PregledDTO>> getListaPregledaPacijenta(Principal pa,
+			@RequestBody PacijentDTO pacijentDTO) {
+
 		Lekar lekar = lekarService.findByEmail(pa.getName());
 		Pacijent pacijent = pacijentiSevice.findByEmail(pacijentDTO.getEmail());
-		
+
 		Set<Pregled> listaPregleda = pacijent.getListaPregleda();
 		List<PregledDTO> lista = new ArrayList<>();
-		
+
 		for (Pregled pp : listaPregleda) {
-			if(pp.getLekar().getId().equals(lekar.getId())) {
+			if (pp.getLekar().getId().equals(lekar.getId())) {
 				System.out.println("ima zakazan pregled kod lekara ovog");
 				System.out.println("Status pregleda " + pp.getStatus());
 				lista.add(new PregledDTO(pp));
 			}
-			//System.out.println("Status pregleda " + pp.getStatus());
+			// System.out.println("Status pregleda " + pp.getStatus());
 		}
-		
 
-		
-		
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 
-	//vraca listu pregleda jednog lekara
+	// vraca listu pregleda jednog lekara
 	@GetMapping(value = "/listaPregleda/{email}")
 	@CrossOrigin(origins = "http://localhost:3000")
 	public ResponseEntity<List<PregledDTO>> getListaPregleda(@PathVariable String email) {
 		System.out.println("*************");
 		Lekar lekar = lekarService.findByEmail(email);
-		
+
 		Set<Pregled> listaRD = lekar.getListaPregleda();
-		
+
 		List<PregledDTO> lista = new ArrayList<PregledDTO>();
-		for(Pregled rd: listaRD) {
+		for (Pregled rd : listaRD) {
 			System.out.println(rd.getDatum());
 			System.out.println(rd.getTrajanje());
 			lista.add(new PregledDTO(rd));
 		}
-		
 
 		System.out.println("*************");
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 
-		
 	}
-	
-	
-	//vraca listu zauzetih termina lekara
+
+	// vraca listu zauzetih termina lekara
 	@GetMapping(value = "/listaZauzetihTermina/{id}")
 	@CrossOrigin(origins = "http://localhost:3000")
 	public ResponseEntity<List<TerminDTO>> getListaZauzetihTermina(@PathVariable Long id) {
@@ -203,83 +204,99 @@ public class LekarController {
 
 		Lekar lekar = lekarService.findOne(id);
 		System.out.println(lekar.getIme());
-		
+
 		Set<Termin> listaTermina = lekar.getListaZauzetihTermina();
 		System.out.println(listaTermina.size());
-		
+
 		List<TerminDTO> listaTerminaDTO = new ArrayList<TerminDTO>();
-		for(Termin rd: listaTermina) {
+		for (Termin rd : listaTermina) {
 			listaTerminaDTO.add(new TerminDTO(rd));
 		}
-		
 
 		System.out.println("*************");
 		return new ResponseEntity<>(listaTerminaDTO, HttpStatus.OK);
 
-		
 	}
-	@GetMapping(value = "/listaZauzetostiLekara/{id}")
+
+	@GetMapping(value = "/listaZauzetostiLekara/{id}/{datum}")
 	@CrossOrigin(origins = "http://localhost:3000")
-	public ResponseEntity<List<TerminDTO>> getListaZauzetostiLekara(@PathVariable Long id) {
+	public ResponseEntity<List<TerminDTO>> getListaZauzetostiLekara(@PathVariable Long id, @PathVariable Date datum) {
 		System.out.println("*************");
 
 		Lekar lekar = lekarService.findOne(id);
 		System.out.println(lekar.getIme());
+		System.out.println(datum);
+		datum.setHours(0);
+		datum.setMinutes(0);
+		datum.setSeconds(0);
 		
-		Set<Termin> listaTermina = lekar.getListaZauzetihTermina();
+		Date date = new Date();
+		Calendar c = Calendar.getInstance(); 
+		c.setTime(datum); 
+		date = c.getTime();
+		date.setHours(0);
+		date.setMinutes(0);
+		date.setSeconds(0);
+
+		System.out.println(date);
+		Date date2 = new Date();
+		c = Calendar.getInstance(); 
+		c.setTime(datum); 
+		c.add(Calendar.DATE, 1);
+		date2 = c.getTime();
+		System.out.println(date2);
+		date2.setHours(0);
+		date2.setMinutes(0);
+		date2.setSeconds(0);
+		System.out.println();
+		System.out.println(date);
+		System.out.println(date2);
+		System.out.println();
+		List<Termin> listaTermina = terminService.zauzetiTerminiLekara(id, date, date2);
 		System.out.println(listaTermina.size());
-		
+
 		List<TerminDTO> listaTerminaDTO = new ArrayList<TerminDTO>();
-		for(Termin rd: listaTermina) {
+		for (Termin rd : listaTermina) {
+			System.out.println(new TerminDTO(rd));
 			listaTerminaDTO.add(new TerminDTO(rd));
 		}
-		Set<OdmorOdsustvoLekar>listaool = lekar.getListaOdmorOdsustvo();
-		for(OdmorOdsustvoLekar ool:listaool) {
-			Date datOd = new Date();
-			datOd.setDate(ool.getDatumOd().getDate());
-			
-			Date datDo = new Date();
-			datDo.setDate(ool.getDatumDo().getDate());
-			
-			Date trenutni = datOd;
-			while(trenutni.before(datDo)) {
-								
-				TerminDTO tdto = new TerminDTO();
-				tdto.setDatumPocetka(trenutni);
-				tdto.setTermin(9);
-				listaTerminaDTO.add(tdto);
-				
-				TerminDTO tdto2 = new TerminDTO();
-				tdto.setDatumPocetka(trenutni);
-				tdto.setTermin(11);
-				listaTerminaDTO.add(tdto2);
-				
-				TerminDTO tdto3 = new TerminDTO();
-				tdto.setDatumPocetka(trenutni);
-				tdto.setTermin(13);
-				listaTerminaDTO.add(tdto3);
-				
-				TerminDTO tdto4 = new TerminDTO();
-				tdto.setDatumPocetka(trenutni);
-				tdto.setTermin(15);
-				listaTerminaDTO.add(tdto4);
-				
-			    trenutni.setDate(trenutni.getDate() + 1);
-			    System.out.println("trenutni: " + trenutni);
-			    System.out.println("-*-*-*-*-*-*-*");
-			    System.out.println();
-				
+		Set<OdmorOdsustvoLekar> listaool = lekar.getListaOdmorOdsustvo();
+		int flag = 0;
+		for (OdmorOdsustvoLekar ool : listaool) {
+			if (ool.getDatumOd().compareTo(datum) * datum.compareTo(ool.getDatumDo()) >= 0) {
+				flag = 1;
+				break;
 			}
-			
 
-			
 		}
-		
+		if (flag == 1) {
+			TerminDTO t = new TerminDTO();
+			t.setDatumPocetka(datum);
+			t.setTermin(9);
+			listaTerminaDTO.add(t);
 
+			t = new TerminDTO();
+			t.setDatumPocetka(datum);
+			t.setTermin(11);
+			listaTerminaDTO.add(t);
+
+			t = new TerminDTO();
+			t.setDatumPocetka(datum);
+			t.setTermin(13);
+			listaTerminaDTO.add(t);
+
+			t = new TerminDTO();
+			t.setDatumPocetka(datum);
+			t.setTermin(15);
+			listaTerminaDTO.add(t);
+		}
+		for (TerminDTO t : listaTerminaDTO) {
+			System.out.println(t.getDatumPocetka());
+			System.out.println(t.getTermin());
+		}
 		System.out.println("*************");
 		return new ResponseEntity<>(listaTerminaDTO, HttpStatus.OK);
 
-		
 	}
 
 	@PutMapping(path = "/oceni/{id}/{ocena}/{pregled_id}", consumes = "application/json")
@@ -303,7 +320,7 @@ public class LekarController {
 		return new ResponseEntity<>(new LekarDTO(lekar), HttpStatus.OK);
 	}
 
-	//vraca listu odmora i odsustva kod lekara
+	// vraca listu odmora i odsustva kod lekara
 	@GetMapping(value = "/listaOdmorOdsustvo")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('LEKAR')")
@@ -311,47 +328,46 @@ public class LekarController {
 
 		System.out.println("ODMOR ");
 		Lekar lekar = lekarService.findByEmail(p.getName());
-		
+
 		if (lekar == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		
+
 		List<OdmorOdsustvoLDTO> oolDTO = new ArrayList<>();
-		for(OdmorOdsustvoLekar ool : lekar.getListaOdmorOdsustvo()) {
-			System.out.println("Jedan zahtev: " + ool.getTip()+ " " + ool.getStatus() );
+		for (OdmorOdsustvoLekar ool : lekar.getListaOdmorOdsustvo()) {
+			System.out.println("Jedan zahtev: " + ool.getTip() + " " + ool.getStatus());
 			if (ool.getStatus() == 1) {
-				System.out.println("Jedan zahtev: " + ool.getTip()+ " " + ool.getStatus() );
+				System.out.println("Jedan zahtev: " + ool.getTip() + " " + ool.getStatus());
 				System.out.println(ool.getDatumOd() + " " + ool.getDatumDo());
 				oolDTO.add(new OdmorOdsustvoLDTO(ool));
 			}
-			
+
 		}
-		
+
 		return new ResponseEntity<>(oolDTO, HttpStatus.OK);
 	}
 
-	//VRACA MOZE ILI NE MOZE U ZAVISNOSTI DA LI MU JE DOSTUPAN ZK PACIJENTA
+	// VRACA MOZE ILI NE MOZE U ZAVISNOSTI DA LI MU JE DOSTUPAN ZK PACIJENTA
 	@PostMapping(value = "/mogucPrikazZKPacijenta")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('LEKAR')")
 	public ResponseEntity<?> getMogucPrikazZKPacijenta(@RequestBody PacijentDTO pacijentDTO, Principal p) {
 		System.out.println("*************");
-		
+
 		Lekar lekar = lekarService.findByEmail(p.getName());
 		Pacijent pacijent = pacijentiSevice.findByEmail(pacijentDTO.getEmail());
-		
+
 		Set<Pacijent> listaPacijenta = lekar.getListaPacijenata();
-		//dodeli pacijente lekaru
-		
-		for(Pacijent pac : listaPacijenta) {
-			if(pac.getId().equals(pacijent.getId())) {
+		// dodeli pacijente lekaru
+
+		for (Pacijent pac : listaPacijenta) {
+			if (pac.getId().equals(pacijent.getId())) {
 				return new ResponseEntity<>("MOZE", HttpStatus.OK);
 			}
 		}
-		
+
 		return new ResponseEntity<>("NE MOZE", HttpStatus.OK);
 
-		
 	}
-	
+
 }

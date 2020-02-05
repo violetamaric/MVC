@@ -2,12 +2,18 @@ package com.example.demo.controller;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,7 +24,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.PacijentDTO;
 import com.example.demo.dto.ZdravstveniKartonDTO;
+import com.example.demo.model.Authority;
 import com.example.demo.model.Pacijent;
+import com.example.demo.model.UserTokenState;
 import com.example.demo.model.ZdravstveniKarton;
 import com.example.demo.service.KlinickiCentarService;
 import com.example.demo.service.PacijentService;
@@ -38,6 +46,12 @@ public class PacijentController {
 	@Autowired
 	private ZdravstveniKartonService ZKService;
 
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private AuthenticationManager authenticationManager;
+	
 //	@Autowired
 //	private EmailService emailService;
 //
@@ -197,6 +211,48 @@ public class PacijentController {
 		return new ResponseEntity<>(new PacijentDTO(pacijent), HttpStatus.OK);
 	}
 
+	@PutMapping(path = "/promeniLozinku", consumes = "application/json")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('PACIJENT')")
+	public ResponseEntity<?> promeniLozinku(@RequestBody PasswordChanger passCh, Principal pr) {
+
+		// a student must exist
+		System.out.println("Pacijent UPDRATE LOZINKA");
+		Pacijent pacijent = pacijentService.findByEmail(pr.getName());
+		System.out.println("LOZINKA: "+ pacijent.getLozinka());
+		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+		String username = currentUser.getName();
+		System.out.println(username);
+		if (authenticationManager != null) {
+			System.out.println("PROMENJENA LOZINKA");
+
+			final Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, passCh.oldPassword));
+//			Collection<?> roles = pacijent.getAuthorities();
+//
+//			String jwt = tokenUtils.tokenPacijent(pacijent, (Authority) roles.iterator().next());
+//
+//			int expiresIn = tokenUtils.getExpiredIn();
+//
+//			return ResponseEntity.ok(new UserTokenState(jwt, expiresIn, ((Authority) roles.iterator().next()).getUloga(),((Pacijent)authentication.getPrincipal()).getEmail()));
+			System.err.println("-----");
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+			System.out.println("-----");
+		} else {
+			System.out.println("NE MOZE SE PROMENITI LOZINKA");
+
+			return new ResponseEntity<>(new PacijentDTO(pacijent), HttpStatus.OK);
+		}
+
+		pacijent.setLozinka(passwordEncoder.encode(passCh.newPassword));
+//		pacijent.setLbo(pacijentDTO.getLbo());
+
+		pacijent = pacijentService.save(pacijent);
+		return new ResponseEntity<>(new PacijentDTO(pacijent), HttpStatus.OK);
+	}
+	static class PasswordChanger {
+		public String oldPassword;
+		public String newPassword;
+	}
 
 
 }
