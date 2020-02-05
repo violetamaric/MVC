@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,17 +21,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.LekarDTO;
+import com.example.demo.dto.PacijentDTO;
 import com.example.demo.dto.PregledDTO;
 import com.example.demo.dto.SalaDTO;
 import com.example.demo.dto.TerminDTO;
 import com.example.demo.model.Klinika;
 import com.example.demo.model.Lekar;
 import com.example.demo.model.OdmorOdsustvoLekar;
+import com.example.demo.model.Pacijent;
 import com.example.demo.model.Pregled;
 import com.example.demo.model.Sala;
 import com.example.demo.model.Termin;
+import com.example.demo.service.EmailService;
 import com.example.demo.service.KlinikaService;
 import com.example.demo.service.LekarService;
+import com.example.demo.service.PacijentService;
 import com.example.demo.service.PregledService;
 import com.example.demo.service.SalaService;
 import com.example.demo.service.TerminService;
@@ -42,7 +48,11 @@ public class SalaController {
 	private SalaService salaService;
 
 	@Autowired
+	private EmailService emailService;
+	@Autowired
 	private TerminService terminService;
+	@Autowired
+	private PacijentService pacijentService;
 
 	@Autowired
 	private KlinikaService klinikaService;
@@ -51,6 +61,8 @@ public class SalaController {
 	@Autowired
 	private LekarService lekarService;
 
+	private Logger logger = LoggerFactory.getLogger(UserController.class);
+	
 	@GetMapping(value = "/{id}")
 	@CrossOrigin(origins = "http://localhost:3000")
 	public ResponseEntity<SalaDTO> findById(@PathVariable Long id) {
@@ -330,6 +342,7 @@ public class SalaController {
 
 				
 				listaSalaSlob.add(sdt);
+				
 			}
 			
 			
@@ -337,7 +350,7 @@ public class SalaController {
 		return new ResponseEntity<>(listaSalaSlob, HttpStatus.OK);
 	}
 
-	// rezervisanje sale
+	// rezervisanje sale i slanje mejla pacijentu i lekaru
 	@PostMapping(path = "/rezervisanjeSale", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
@@ -346,20 +359,26 @@ public class SalaController {
 		System.out.println("......... Rezervisanje sale ..... ");
 		System.out.println(pDTO);
 		System.out.println();
+		
+		
+		
 		List<Pregled> listaPregleda = pregledService.findAll();
-
+		Pacijent pacijent = null;
+		Lekar l = null;
 		for (Pregled p : listaPregleda) {
 			if (p.getId().equals(pDTO.getId())) {
 				p.setStatus(1);
 				Sala s = salaService.findById(pDTO.getSalaID());
 				p.setSala(s);
-				Lekar l = lekarService.findById(pDTO.getLekarID());
+				pacijent = pacijentService.findByID(pDTO.getPacijentID());
+				
+				l = lekarService.findById(pDTO.getLekarID());
 				p.setLekar(l);
 				p.setTermin(pDTO.getTermin());
 				p.setDatum(pDTO.getDatum());
-				System.out.println(pregledService.findAll().size());
+//				System.out.println(pregledService.findAll().size());
 				pregledService.save(p);
-				System.out.println(pregledService.findAll().size());
+//				System.out.println(pregledService.findAll().size());
 				Termin t = new Termin();
 				t.setTermin(pDTO.getTermin());
 				int idT = terminService.findAll().size() + 1;
@@ -368,23 +387,56 @@ public class SalaController {
 				t.setDatumPocetka(pDTO.getDatum());
 				t.setSala(s);
 				t.setLekar(l);
-				System.out.println(" TERMINI: " + terminService.findAll().size());
+//				System.out.println(" TERMINI: " + terminService.findAll().size());
 				terminService.save(t);
-				System.out.println();
-				
-				System.out.println(t);
-				
-				System.out.println();
-
-				System.out.println(" TERMINI222: " + terminService.findAll().size());
+//				System.out.println();
+//				
+//				System.out.println(t);
+//				
+//				System.out.println();
+//
+//				System.out.println(" TERMINI222: " + terminService.findAll().size());
 			}
 		}
 
 		System.out.println("REZERVISANOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
 
+		
+		String subject ="Rezervisana sala";
+		String text = "Postovani " + pacijent.getIme() + " " + pacijent.getPrezime() 
+					+ ",\n\nMolimo Vas da potvrdite vas pregled klikom na sledeci link: http://localhost:3000 .";
+
+		System.out.println(text);
+		
+		PacijentDTO pd = new PacijentDTO(pacijent);
+		LekarDTO ld = new LekarDTO(l);
+		//slanje emaila
+		try {
+			emailService.poslatiOdgovorPacijentu(pd, subject, text);
+		}catch( Exception e ){
+			logger.info("Greska prilikom slanja emaila: " + e.getMessage());
+			return new ResponseEntity<>("Mail nije poslat", HttpStatus.BAD_REQUEST);
+		}
+		
+		
+		String subject2 ="Rezervisana sala";
+		String text2 = "Postovani " + l.getIme() + " " + l.getPrezime() 
+					+ ",\n\nRezervisana je sala za Vas pregled! ";
+
+		System.out.println(text);
+		
+		//slanje emaila
+		try {
+			emailService.poslatiOdgovorLekaru(ld, subject2, text2);
+		}catch( Exception e ){
+			logger.info("Greska prilikom slanja emaila: " + e.getMessage());
+			return new ResponseEntity<>("Mail nije poslat2", HttpStatus.BAD_REQUEST);
+		}
+		
 		return new ResponseEntity<>("uspesno rezervisana sala1", HttpStatus.OK);
 	}
-
+	
+	//metoda koja vraca listu slobodnih lekara za taj datum i termin
 	@PostMapping(path = "/pronadjiLekaraZaPregled", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")

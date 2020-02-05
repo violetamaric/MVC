@@ -217,9 +217,10 @@ public class PregledController {
 
 	@GetMapping(value = "/{id}")	
 	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
-	public ResponseEntity<PregledDTO> getLekar(@PathVariable Long id) {
+	public ResponseEntity<PregledDTO> getPregled(@PathVariable Long id) {
 
 		Pregled pregled = pregledService.findOne(id);
+		System.out.println(pregled);
 
 		// studen must exist
 		if (pregled == null) {
