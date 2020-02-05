@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -28,7 +29,6 @@ import com.example.demo.model.Lekar;
 import com.example.demo.model.OdmorOdsustvoLekar;
 import com.example.demo.model.Pacijent;
 import com.example.demo.model.Pregled;
-import com.example.demo.model.SlobodniTermin;
 import com.example.demo.model.Termin;
 import com.example.demo.service.LekarService;
 import com.example.demo.service.PacijentService;
@@ -218,36 +218,69 @@ public class LekarController {
 
 		
 	}
-//	@GetMapping(value = "/listaZauzetostiLekara/{id}")
-//	@CrossOrigin(origins = "http://localhost:3000")
-//	public ResponseEntity<List<TerminDTO>> getListaZauzetostiLekara(@PathVariable Long id) {
-//		System.out.println("*************");
-//
-//		Lekar lekar = lekarService.findOne(id);
-//		System.out.println(lekar.getIme());
-//		
-//		Set<Termin> listaTermina = lekar.getListaZauzetihTermina();
-//		System.out.println(listaTermina.size());
-//		
-//		List<TerminDTO> listaTerminaDTO = new ArrayList<TerminDTO>();
-//		for(Termin rd: listaTermina) {
-//			listaTerminaDTO.add(new TerminDTO(rd));
-//		}
-//		Set<SlobodniTermin>listast = lekar.getListaSlobodnihTermina();
-//		for(SlobodniTermin st:listast) {
-//			TerminDTO tdto = new TerminDTO();
-//			tdto.setDatumPocetka(st.getDatum());
-//			tdto.setSalaBR(st.getSala().getBroj());
-//			tdto.setSalaID(st.getSala().getId());
-//			
-//		}
-//		
-//
-//		System.out.println("*************");
-//		return new ResponseEntity<>(listaTerminaDTO, HttpStatus.OK);
-//
-//		
-//	}
+	@GetMapping(value = "/listaZauzetostiLekara/{id}")
+	@CrossOrigin(origins = "http://localhost:3000")
+	public ResponseEntity<List<TerminDTO>> getListaZauzetostiLekara(@PathVariable Long id) {
+		System.out.println("*************");
+
+		Lekar lekar = lekarService.findOne(id);
+		System.out.println(lekar.getIme());
+		
+		Set<Termin> listaTermina = lekar.getListaZauzetihTermina();
+		System.out.println(listaTermina.size());
+		
+		List<TerminDTO> listaTerminaDTO = new ArrayList<TerminDTO>();
+		for(Termin rd: listaTermina) {
+			listaTerminaDTO.add(new TerminDTO(rd));
+		}
+		Set<OdmorOdsustvoLekar>listaool = lekar.getListaOdmorOdsustvo();
+		for(OdmorOdsustvoLekar ool:listaool) {
+			Date datOd = new Date();
+			datOd.setDate(ool.getDatumOd().getDate());
+			
+			Date datDo = new Date();
+			datDo.setDate(ool.getDatumDo().getDate());
+			
+			Date trenutni = datOd;
+			while(trenutni.before(datDo)) {
+								
+				TerminDTO tdto = new TerminDTO();
+				tdto.setDatumPocetka(trenutni);
+				tdto.setTermin(9);
+				listaTerminaDTO.add(tdto);
+				
+				TerminDTO tdto2 = new TerminDTO();
+				tdto.setDatumPocetka(trenutni);
+				tdto.setTermin(11);
+				listaTerminaDTO.add(tdto2);
+				
+				TerminDTO tdto3 = new TerminDTO();
+				tdto.setDatumPocetka(trenutni);
+				tdto.setTermin(13);
+				listaTerminaDTO.add(tdto3);
+				
+				TerminDTO tdto4 = new TerminDTO();
+				tdto.setDatumPocetka(trenutni);
+				tdto.setTermin(15);
+				listaTerminaDTO.add(tdto4);
+				
+			    trenutni.setDate(trenutni.getDate() + 1);
+			    System.out.println("trenutni: " + trenutni);
+			    System.out.println("-*-*-*-*-*-*-*");
+			    System.out.println();
+				
+			}
+			
+
+			
+		}
+		
+
+		System.out.println("*************");
+		return new ResponseEntity<>(listaTerminaDTO, HttpStatus.OK);
+
+		
+	}
 
 	@PutMapping(path = "/oceni/{id}/{ocena}/{pregled_id}", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
