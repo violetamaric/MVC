@@ -166,24 +166,24 @@ public class PregledController {
 		klinika.getListaPregleda().add(pregled);
 		klinika = klinikaService.save(klinika);
 		System.out.println("Sacuvana klinika");
-		Termin termin = new Termin();
-		termin.setDatumPocetka(pregled.getDatum());
-		termin.setTermin(pregled.getTermin());
-		termin.setLekar(pregled.getLekar());
-		termin.setSala(pregled.getSala());
-		terminService.save(termin);
-		System.out.println("Sacuvan termin: " + termin.getId());
-		
-		Lekar lekar2 = lekarService.findOne(pregled.getLekar().getId());
-		System.out.println("Lekar: "+ lekar2.getId());
-		Sala sala = salaService.findOne(pregled.getSala().getId());
-		System.out.println("Sala: " + sala.getId());
-		lekar.getListaZauzetihTermina().add(termin);
-		sala.getZauzetiTermini().add(termin);
-		lekarService.save(lekar2);
-		System.out.println("Sacuvan lekar");
-		salaService.save(sala);
-		System.out.println("Sacuvana sala");
+//		Termin termin = new Termin();
+//		termin.setDatumPocetka(pregled.getDatum());
+//		termin.setTermin(pregled.getTermin());
+//		termin.setLekar(pregled.getLekar());
+//		termin.setSala(pregled.getSala());
+//		terminService.save(termin);
+//		System.out.println("Sacuvan termin: " + termin.getId());
+//		
+//		Lekar lekar2 = lekarService.findOne(pregled.getLekar().getId());
+//		System.out.println("Lekar: "+ lekar2.getId());
+//		Sala sala = salaService.findOne(pregled.getSala().getId());
+//		System.out.println("Sala: " + sala.getId());
+//		lekar.getListaZauzetihTermina().add(termin);
+//		sala.getZauzetiTermini().add(termin);
+//		lekarService.save(lekar2);
+//		System.out.println("Sacuvan lekar");
+//		salaService.save(sala);
+//		System.out.println("Sacuvana sala");
 		
 		PacijentDTO pDTO = new PacijentDTO(pacijent);
 		String subject ="Pregled je zakazan";

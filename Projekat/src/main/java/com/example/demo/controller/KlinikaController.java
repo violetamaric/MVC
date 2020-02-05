@@ -365,13 +365,26 @@ public class KlinikaController {
 						System.out.println("svi termini su zauzeti");
 						System.out.println("FALSE");
 					} else {
-						Set<OdmorOdsustvoLekar> listaool = l.getListaOdmorOdsustvo();
-						for(OdmorOdsustvoLekar ool:listaool ) {
-//							if(ool.getStatus())
+						boolean flag = false;
+						petlja2:{
+							Set<OdmorOdsustvoLekar> listaool = l.getListaOdmorOdsustvo();
+							for(OdmorOdsustvoLekar ool:listaool ) {
+								if(ool.getStatus() == 1) {
+									if(ool.getDatumOd().compareTo(datum)*datum.compareTo(ool.getDatumDo())>=0) {
+										System.out.println("Lekar na odmoru.");
+										flag = true;
+										break petlja2;
+									}
+								}
+							}
 						}
-						System.out.println("TRUE");
-						klinikaDTO.add(new KlinikaDTO(k));
-						break petlja;
+
+						if(flag == false) {
+							System.out.println("TRUE");
+							klinikaDTO.add(new KlinikaDTO(k));
+							break petlja;
+						}
+
 					}
 
 //					for (Termin tl : terminiLekara) {

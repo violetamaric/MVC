@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,17 +17,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.dto.PregledDTO;
 import com.example.demo.dto.SlobodniTerminDTO;
 import com.example.demo.model.Klinika;
 import com.example.demo.model.Lekar;
-import com.example.demo.model.Pacijent;
-import com.example.demo.model.Pregled;
+import com.example.demo.model.Sala;
 import com.example.demo.model.SlobodniTermin;
+import com.example.demo.model.Termin;
 import com.example.demo.model.TipPregleda;
 import com.example.demo.service.KlinikaService;
 import com.example.demo.service.LekarService;
+import com.example.demo.service.SalaService;
 import com.example.demo.service.SlobodniTerminService;
+import com.example.demo.service.TerminService;
 import com.example.demo.service.TipPregledaService;
 
 @RestController
@@ -38,10 +40,16 @@ public class SlobodniTerminController {
 	@Autowired
 	private KlinikaService klinikaService;
 	@Autowired
-	private LekarService lekarSrvice;
+	private LekarService lekarService;
 	@Autowired
 	private TipPregledaService tipPregledaService;
 
+	@Autowired
+	private SalaService salaService;
+	
+	@Autowired
+	private TerminService terminService;
+	
 	@GetMapping(value = "/unapredDef")
 	@PreAuthorize("hasAuthority('PACIJENT')")
 	public ResponseEntity<List<SlobodniTerminDTO>> getAllUnapredDef() {
@@ -94,14 +102,32 @@ public class SlobodniTerminController {
 		st.setDatum(stDTO.getDatum());
 		Klinika klinika = klinikaService.findById(stDTO.getKlinikaID());
 		st.setKlinika(klinika);
-		Lekar lekar = lekarSrvice.findById(stDTO.getLekarID());
+		Lekar lekar = lekarService.findById(stDTO.getLekarID());
 		st.setLekar(lekar);
 
 		st.setStatus(false);
 		TipPregleda tp = tipPregledaService.findOne(stDTO.getTipPregledaID());
 		st.setTipPregleda(tp);
+		Sala sala = salaService.findOne(stDTO.getSalaID());
+		st.setSala(sala);
+		
+		Termin t = new Termin();
+		t.setDatumPocetka(stDTO.getDatum());
+		t.setLekar(lekar);
+		t.setSala(sala);
+		t.setTermin(stDTO.getTermin());
+		terminService.save(t);
 
 		st = STService.save(st);
+		
+		Set<Termin>lzt = lekar.getListaZauzetihTermina();
+		lzt.add(t);
+		lekarService.save(lekar);
+		Set<Termin>lzts = sala.getZauzetiTermini();
+		lzts.add(t);
+		salaService.save(sala);
+		
+		
 
 		return new ResponseEntity<>(new SlobodniTerminDTO(st), HttpStatus.OK);
 	}

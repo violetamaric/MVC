@@ -31,6 +31,9 @@ public class SlobodniTermin {
 	@Column(name="popust", nullable=false)
 	private double popust;
 	
+	@Column(name="termin", nullable=false)
+	private int termin;
+	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private TipPregleda tipPregleda;
 
@@ -39,6 +42,7 @@ public class SlobodniTermin {
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Lekar lekar;
+	
 	
 
 
@@ -189,6 +193,14 @@ public class SlobodniTermin {
 
 	public void setVersion(Long version) {
 		this.version = version;
+	}
+
+	public int getTermin() {
+		return termin;
+	}
+
+	public void setTermin(int termin) {
+		this.termin = termin;
 	}
 	
 	

@@ -252,11 +252,11 @@ public class PacijentControllerJUnit {
 
 		pregled.setLekar(lekarService.findOne(1L));
 
-		IzvestajOPregledu izvestajOPregledu = IOPService.findOne(1L);
+		IzvestajOPregledu izvestajOPregledu = IOPService.findById(1L);
 		pregled.setKlinika(klinikaService.findOne(1L));
 		pregled.setPacijent(pacijent);
 		pregled.setSala(salaService.findOne(1L));
-		pregled.setIzvestajOPregledu(IOPService.findOne(1L));
+		pregled.setIzvestajOPregledu(IOPService.findById(1L));
 		pregled.setTipPregleda(TPService.findOne(1L));
 		
 		Authority a = authRepository.findByUloga("PACIJENT");
@@ -375,7 +375,7 @@ public class PacijentControllerJUnit {
 		pregled.setTermin(9);
 		pregled.setLekar(lekar);
 
-		IzvestajOPregledu izvestajOPregledu = IOPService.findOne(1L);
+		IzvestajOPregledu izvestajOPregledu = IOPService.findById(1L);
 		pregled.setKlinika(klinika);
 		pregled.setPacijent(pacijent2);
 		pregled.setSala(sala);
