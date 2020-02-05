@@ -23,14 +23,9 @@ import com.example.demo.model.Recept;
 import com.example.demo.model.ZdravstveniKarton;
 import com.example.demo.service.DijagnozaService;
 import com.example.demo.service.IzvestajOPregleduService;
-import com.example.demo.service.KlinikaService;
 import com.example.demo.service.LekService;
-import com.example.demo.service.LekarService;
-import com.example.demo.service.PacijentService;
 import com.example.demo.service.PregledService;
 import com.example.demo.service.ReceptService;
-import com.example.demo.service.SalaService;
-import com.example.demo.service.TipPregledaService;
 import com.example.demo.service.ZdravstveniKartonService;
 
 @RestController

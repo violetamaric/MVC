@@ -10,31 +10,23 @@ import com.example.demo.model.Operacija;
 public class OperacijaDTO {
 
 	private Long id;
-
 	private Date datum;
-
 	private String tipOperacije;
-
-//	private Long lekarID;
-//	private String imeL;
-//	private String prezimeL;
-
 	private String pacijentEmail;
-
-	private Long klinikaID;
-
-	private Long pacijentID;
 	private String imeP;
 	private String prezimeP;
-
+	private Long pacijentID;
+	private Long klinikaID;
 	private String nazivKl;
-
 	private Long salaID;
 	private String salaN;
 	private int salaBR;
-
 	private double cena;
+	private int status;
+	private int termin;
+	
 	private Set<LekarDTO> listaLekara = new HashSet<LekarDTO>();
+//	private List<Long> lekariID = new ArrayList<>();
 	
 	
 
@@ -44,21 +36,36 @@ public class OperacijaDTO {
 		this.pacijentEmail = operacija.getPacijent().getEmail();
 		this.cena = operacija.getCena();
 		this.pacijentID = operacija.getPacijent().getId();
-//		this.imeL = operacija.getLekar().getIme();
-//		this.prezimeL = operacija.getLekar().getPrezime();
 		this.prezimeP = operacija.getPacijent().getPrezime();
 		this.imeP = operacija.getPacijent().getIme();
 		this.klinikaID = operacija.getKlinika().getId();
 		this.nazivKl = operacija.getKlinika().getNaziv();
-//		this.lekarID = operacija.getLekar().getId();
 		this.tipOperacije = operacija.getTipOperacije();
 		this.salaBR = operacija.getSala().getBroj();
 		this.salaID = operacija.getSala().getId();
 		this.salaN = operacija.getSala().getNaziv();
+		this.status = operacija.getStatus();
+		this.termin = operacija.getTermin();
 		for(Lekar l:operacija.getListaLekara()) {
 			this.listaLekara.add(new LekarDTO(l));
 		}
 		
+	}
+
+	public int getTermin() {
+		return termin;
+	}
+
+	public void setTermin(int termin) {
+		this.termin = termin;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
 	}
 
 	@Override
@@ -174,14 +181,11 @@ public class OperacijaDTO {
 
 	public OperacijaDTO(Long id, Date datum, String tipOperacije, Long lekarID, String imeL, String prezimeL,
 			String pacijentEmail, Long klinikaID, Long pacijentID, String imeP, String prezimeP, String nazivKl,
-			Long salaID, String salaN, int salaBR, double cena) {
+			Long salaID, String salaN, int salaBR, double cena, int status, int termin) {
 		super();
 		this.id = id;
 		this.datum = datum;
 		this.tipOperacije = tipOperacije;
-//		this.lekarID = lekarID;
-//		this.imeL = imeL;
-//		this.prezimeL = prezimeL;
 		this.pacijentEmail = pacijentEmail;
 		this.klinikaID = klinikaID;
 		this.pacijentID = pacijentID;
@@ -192,6 +196,8 @@ public class OperacijaDTO {
 		this.salaN = salaN;
 		this.salaBR = salaBR;
 		this.cena = cena;
+		this.status = status;
+		this.termin = termin;
 	}
 
 	public Set<LekarDTO> getListaLekara() {
@@ -226,29 +232,6 @@ public class OperacijaDTO {
 		this.tipOperacije = tipOperacije;
 	}
 
-//	public Long getLekarID() {
-//		return lekarID;
-//	}
-//
-//	public void setLekarID(Long lekarID) {
-//		this.lekarID = lekarID;
-//	}
-//
-//	public String getImeL() {
-//		return imeL;
-//	}
-//
-//	public void setImeL(String imeL) {
-//		this.imeL = imeL;
-//	}
-//
-//	public String getPrezimeL() {
-//		return prezimeL;
-//	}
-//
-//	public void setPrezimeL(String prezimeL) {
-//		this.prezimeL = prezimeL;
-//	}
 
 	public String getPacijentEmail() {
 		return pacijentEmail;

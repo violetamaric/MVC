@@ -13,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -266,4 +267,29 @@ public class LekarController {
 		
 		return new ResponseEntity<>(oolDTO, HttpStatus.OK);
 	}
+
+	//VRACA MOZE ILI NE MOZE U ZAVISNOSTI DA LI MU JE DOSTUPAN ZK PACIJENTA
+	@PostMapping(value = "/mogucPrikazZKPacijenta")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('LEKAR')")
+	public ResponseEntity<?> getMogucPrikazZKPacijenta(@RequestBody PacijentDTO pacijentDTO, Principal p) {
+		System.out.println("*************");
+		
+		Lekar lekar = lekarService.findByEmail(p.getName());
+		Pacijent pacijent = pacijentiSevice.findByEmail(pacijentDTO.getEmail());
+		
+		Set<Pacijent> listaPacijenta = lekar.getListaPacijenata();
+		//dodeli pacijente lekaru
+		
+		for(Pacijent pac : listaPacijenta) {
+			if(pac.getId().equals(pacijent.getId())) {
+				return new ResponseEntity<>("MOZE", HttpStatus.OK);
+			}
+		}
+		
+		return new ResponseEntity<>("NE MOZE", HttpStatus.OK);
+
+		
+	}
+	
 }

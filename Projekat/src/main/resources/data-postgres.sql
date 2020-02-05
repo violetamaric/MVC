@@ -64,6 +64,7 @@ insert into lekar_pacijent (pacijent_id, lekar_id) values (1,2);
 insert into lekar_pacijent (pacijent_id, lekar_id) values (2,2);
 insert into lekar_pacijent (pacijent_id, lekar_id) values (5,2);
 
+
 insert into tip_pregleda_klinika (tip_pregleda_id, klinika_id) values (1,1);
 insert into tip_pregleda_klinika (tip_pregleda_id, klinika_id) values (1,2);
 insert into tip_pregleda_klinika (tip_pregleda_id, klinika_id) values (1,3);
@@ -137,17 +138,17 @@ insert into sala(naziv, broj, klinika_id, tip_sale) values ('P', 2, 1, 1);
 --insert into radni_dan (datum_pocetka, datum_kraja,  medicinska_sestra_id) values ('13-dec-2019 06:00:00+01:00', '13-dec-2019 13:59:00+01:00', 1);
 --insert into radni_dan (datum_pocetka, datum_kraja,  medicinska_sestra_id) values ('16-dec-2019 06:00:00+01:00', '16-dec-2019 13:59:00+01:00', 1);
 
-insert into operacija (datum, tip_operacije, sala_id, pacijent_id, cena, klinika_id) values ('12-mar-2020 08:00', 'mala hiruska intervencija', 1, 1, 10000, 1);
-insert into operacija (datum, tip_operacije, sala_id, pacijent_id, cena, klinika_id) values ('13-mar-2020 08:00', 'velika hiruska intervencija', 3, 2, 15000, 3);
-insert into operacija (datum, tip_operacije, sala_id, pacijent_id, cena, klinika_id) values ('14-mar-2020 08:00', 'mala hiruska intervencija', 2, 3, 10000, 3);
-insert into operacija (datum, tip_operacije, sala_id, pacijent_id, cena, klinika_id) values ('15-mar-2020 08:00', 'velika hiruska intervencija', 3, 1, 20000, 2);
+insert into operacija (status, datum, termin, tip_operacije, sala_id, pacijent_id, cena, klinika_id) values (0, '17-mar-2020', 9, 'mala hiruska intervencija', 1, 1, 10000, 1);
+insert into operacija (status, datum, termin, tip_operacije, sala_id, pacijent_id, cena, klinika_id) values (1, '13-mar-2020', 11, 'velika hiruska intervencija', 3, 2, 15000, 3);
+insert into operacija (status, datum, termin, tip_operacije, sala_id, pacijent_id, cena, klinika_id) values (1, '14-mar-2020', 11, 'mala hiruska intervencija', 2, 3, 10000, 3);
+insert into operacija (status, datum, termin, tip_operacije, sala_id, pacijent_id, cena, klinika_id) values (1, '15-mar-2020', 15, 'velika hiruska intervencija', 3, 1, 20000, 2);
 
-insert into lekar_operacija (operacija_id, lekar_id) values (1, 1);
+insert into lekar_operacija (operacija_id, lekar_id) values (1, 2);
 insert into lekar_operacija (operacija_id, lekar_id) values (2, 2);
 insert into lekar_operacija (operacija_id, lekar_id) values (2, 3);
 insert into lekar_operacija (operacija_id, lekar_id) values (3, 3);
-insert into lekar_operacija (operacija_id, lekar_id) values (3, 4);
-insert into lekar_operacija (operacija_id, lekar_id) values (4, 7);
+insert into lekar_operacija (operacija_id, lekar_id) values (3, 2);
+insert into lekar_operacija (operacija_id, lekar_id) values (4, 2);
 insert into lekar_operacija (operacija_id, lekar_id) values (4, 8);
 insert into lekar_operacija (operacija_id, lekar_id) values (4, 9);
 

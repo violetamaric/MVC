@@ -29,6 +29,7 @@ import com.example.demo.model.Lekar;
 import com.example.demo.model.MedicinskaSestra;
 import com.example.demo.model.OdmorOdsustvoLekar;
 import com.example.demo.model.OdmorOdsustvoMedicinskaSestra;
+import com.example.demo.model.Operacija;
 import com.example.demo.model.Termin;
 import com.example.demo.model.TipOdmorOdsustvo;
 import com.example.demo.service.EmailService;
@@ -189,6 +190,18 @@ public class OdmorOdsustvoController {
 				return new ResponseEntity<>("Datum je zauzet.", HttpStatus.OK);
 			}
 		}
+		//ali i operacija se nalazi u listi zauzetih termina lekara
+//		Set<Operacija> operacije = lekar.getListaOperacija();
+//		for(Operacija o : operacije) {
+//			if(o.getStatus() == 1) {
+//				if(ooDTO.getDatumOd().compareTo(o.getDatum()) * o.getDatum().compareTo(ooDTO.getDatumDo()) >= 0) {
+//					System.out.println("----------------nalazi se pregled---------------");
+//					return new ResponseEntity<>("Datum je zauzet.", HttpStatus.OK);
+//				}
+//			}
+//			
+//		}
+		
 		
 		Set<OdmorOdsustvoLekar> listaool = lekar.getListaOdmorOdsustvo();
 		for(OdmorOdsustvoLekar ool: listaool) {

@@ -74,6 +74,8 @@ public class PregledController {
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('PACIJENT')")
 	public ResponseEntity<?> noviPregled(@RequestBody PregledDTO pregledDTO) {
+		
+		//TODO 1: PROVERITI DA LI UOPSTE MOZE TOG DATUMA DA ZAKAZE
 		System.out.println("dodavanje novog pregleda");
 		System.out.println(pregledDTO);
 		Pregled pregled = new Pregled();
@@ -91,6 +93,10 @@ public class PregledController {
 		pregled.setTipPregleda(tp);
 
 		pregled = pregledService.save(pregled);
+		
+//		pacijent.getListaPregleda().add(pregled);
+//		pacijent = pacijentService.save(pacijent);
+		
 		klinika.getListaPregleda().add(pregled);
 		klinika = klinikaService.save(klinika);
 
@@ -137,6 +143,12 @@ public class PregledController {
 		pregled.setTipPregleda(tp);
 
 		pregled = pregledService.save(pregled);
+		
+//		pacijent.getListaPregleda().add(pregled);
+//		pacijent = pacijentService.save(pacijent);
+//		
+//		lekar.getListaPregleda().add(pregled);
+		
 
 		List<SlobodniTermin> st = STService.findAll();
 
