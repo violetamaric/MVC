@@ -52,6 +52,12 @@ public class LekarDTO {
 
 	
 	
+	@Override
+	public String toString() {
+		return "LekarDTO [id=" + id + ", ime=" + ime + ", prezime=" + prezime + ", lozinka=" + lozinka + ", email="
+				+ email + ", telefon=" + telefon + ", klinikaID=" + klinikaID + ", ocena=" + ocena + "]";
+	}
+
 	public int getOcena() {
 		return ocena;
 	}
