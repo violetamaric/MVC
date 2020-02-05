@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,9 +21,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.dto.MedicinskaSestraDTO;
 import com.example.demo.dto.OdmorOdsustvoMSDTO;
 import com.example.demo.dto.PacijentDTO;
+import com.example.demo.dto.ReceptDTO;
+import com.example.demo.model.IzvestajOPregledu;
+import com.example.demo.model.Klinika;
 import com.example.demo.model.MedicinskaSestra;
 import com.example.demo.model.OdmorOdsustvoMedicinskaSestra;
 import com.example.demo.model.Pacijent;
+import com.example.demo.model.Pregled;
+import com.example.demo.model.Recept;
 import com.example.demo.service.KlinikaService;
 import com.example.demo.service.MedicinskaSestraService;
 
@@ -159,45 +165,6 @@ public class MedicinskaSestraController {
 		return new ResponseEntity<>(new MedicinskaSestraDTO(ms), HttpStatus.OK);
 	}
 
-//	//vrati odredjenog pacijenta
-////	@GetMapping(value = "/findPacijentEmail/{email:.+}")
-//	@GetMapping(value = "/findPacijentEmail/{email}")
-//	@CrossOrigin(origins = "http://localhost:3000")
-//	@PreAuthorize("hasAuthority('MED_SESTRA')")
-//	public ResponseEntity<?> getPacijentByEmail(@PathVariable String email) {
-//		System.out.println("find pacijent");
-//		Pacijent pacijent = pacijentService.findByEmail(email);
-//		System.out.println("pacijent " + pacijent);
-//		if (pacijent == null) {
-//			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//		}
-//		System.out.println(pacijent.getEmail() + "++++");
-//		return ResponseEntity.ok(new PacijentDTO(pacijent));
-//	}
-
-//	//zdravstveni karton
-//	@GetMapping(value = "/findZK/{email}")
-//	@CrossOrigin(origins = "http://localhost:3000")
-//	@PreAuthorize("hasAuthority('MED_SESTRA')")
-//	public ResponseEntity<ZdravstveniKarton> getZK(@PathVariable String email) {
-//
-//		System.out.println("find pacijent");
-//		System.out.println("zk");
-//
-//		Pacijent pacijent = pacijentService.findByEmail(email);
-//		System.out.println("Pacijent: " + pacijent);
-//		if (pacijent == null) {
-//			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//		}
-//
-//		ZdravstveniKarton zk = pacijent.getZdravstveniKarton();
-//		System.out.println(pacijent.getEmail() + "++++");
-//		Pacijent p = new Pacijent();
-//		p.setEmail(pacijent.getEmail());
-//		zk.setPacijent(p);
-//		return new ResponseEntity<>(new ZdravstveniKarton(zk), HttpStatus.OK);
-//	}
-//	
 	
 	
 	//vraca listu odmora i odsustva
@@ -229,26 +196,34 @@ public class MedicinskaSestraController {
 	}
 	
 	
-//	//vraca listu pregleda
-//	@GetMapping(value = "/listaPregleda/{email}")
-//	@CrossOrigin(origins = "http://localhost:3000")
-//	public ResponseEntity<List<PregledDTO>> getListaPregleda(@PathVariable String email) {
-//		System.out.println("//////////////////// MED SESTRA LISTA Radnih dana ////////////////////////");
-//		
-//		MedicinskaSestra ms = medicinskaSestraService.findByEmail(email);
-////		Set<Pregled> listaRD = ms.getListaPregleda();
-//		List<PregledDTO> lista = new ArrayList<PregledDTO>();
-////		for(Pregled rd: listaRD) {
-////			System.out.println(rd.getDatumPocetka());
-////			lista.add(new PregledDTO(rd));
-////		}
-//		
-//
-//		System.out.println("*************");
-//		return new ResponseEntity<>(lista, HttpStatus.OK);
-//
-//		
-//	}
+	//vraca listu pregleda
+	@GetMapping(value = "/listaRecepata")
+	@CrossOrigin(origins = "http://localhost:3000")
+	public ResponseEntity<List<ReceptDTO>> getlistaRecepata(Principal p) {
+		System.out.println("//////////////////// MED SESTRA LISTA Recepata ////////////////////////");
+		
+		MedicinskaSestra ms = medicinskaSestraService.findByEmail(p.getName());
+
+		List<ReceptDTO> lista = new ArrayList<ReceptDTO>();
+		
+		Klinika klinika = ms.getKlinika();
+		Set<Pregled> preglediKlinike = klinika.getListaPregleda();
+		
+		for(Pregled pregled: preglediKlinike) {
+			IzvestajOPregledu iop = pregled.getIzvestajOPregledu();
+			Set<Recept> recepti = iop.getListaRecepata();
+			for(Recept rec : recepti) {
+				System.out.println("RECEPT : "+ rec.getLek().getNaziv());
+				lista.add(new ReceptDTO(rec));
+			}
+		}
+		
+
+		System.out.println("//////////////////// MED SESTRA LISTA Recepata ////////////////////////");
+		return new ResponseEntity<>(lista, HttpStatus.OK);
+
+		
+	}
 	
 
 }

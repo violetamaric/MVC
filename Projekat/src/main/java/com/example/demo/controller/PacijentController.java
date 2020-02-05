@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -25,8 +26,8 @@ import com.example.demo.service.PacijentService;
 import com.example.demo.service.ZdravstveniKartonService;
 
 @RestController
-//@RequestMapping(value = "/api/pacijenti", produces=MediaType.APPLICATION_JSON_VALUE)
-@RequestMapping(value = "/api/pacijenti")
+@RequestMapping(value = "/api/pacijenti", produces=MediaType.APPLICATION_JSON_VALUE)
+//@RequestMapping(value = "/api/pacijenti")
 public class PacijentController {
 
 	@Autowired
@@ -149,34 +150,55 @@ public class PacijentController {
 		return ResponseEntity.ok(new PacijentDTO(pacijent));
 	}
 	
-	
-	
-	
 
-	//metoda za vracanje zdravstvenog kartona- za med sestru
-	@GetMapping(value = "/findZKMS" , consumes = "application/json")
+	//metoda za vracanje zdravstvenog kartona- za med sestru i lekara 
+	@GetMapping(value = "/findZKMS/{id}" )
 	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('MED_SESTRA') ")
-	public ResponseEntity<ZdravstveniKarton> getZKMS(@RequestBody PacijentDTO pacijentDTO) {
+	@PreAuthorize("hasAuthority('MED_SESTRA') or hasAuthority('LEKAR') ")
+	public ResponseEntity<ZdravstveniKartonDTO> getZKMS(@PathVariable Long id) {
 
 
 		System.out.println("find pacijent");
 		System.out.println("zk");
 
-		Pacijent pacijent = pacijentService.findByEmail(pacijentDTO.getEmail());
+		Pacijent pacijent = pacijentService.findByID(id);
 		System.out.println("Pacijent: " + pacijent);
 		if (pacijent == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 
 		ZdravstveniKarton zk = pacijent.getZdravstveniKarton();
-		System.out.println(pacijent.getEmail() + "++++");
-		Pacijent p = new Pacijent();
-		p.setEmail(pacijent.getEmail());
-		zk.setPacijent(p);
-		return new ResponseEntity<>(new ZdravstveniKarton(zk), HttpStatus.OK);
+		zk.setPacijent(pacijent);
+		ZKService.save(zk);
+		System.out.println("zdravstveni karton: " + zk.getKrvnaGrupa());
+		
+		
+		return new ResponseEntity<>(new ZdravstveniKartonDTO(zk), HttpStatus.OK);
 	}
 
+	//metoda za izmenu zdravstvenog kartona lekar
+	@PutMapping(path = "/izmenaZK", consumes = "application/json")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('LEKAR')")
+	public ResponseEntity<?> izmenaZK(@RequestBody ZdravstveniKartonDTO zkDTO) {
+		System.out.println("-------------ZK--------------");
+		Pacijent p = pacijentService.findByID(zkDTO.getPacijentID());
+		ZdravstveniKarton zk = ZKService.findById(zkDTO.getId());
+		
+		zk.setPacijent(p);
+		zk.setKrvnaGrupa(zkDTO.getKrvnaGrupa());
+		zk.setTezina(zkDTO.getTezina());
+		zk.setVisina(zkDTO.getVisina());
+		
+		zk = ZKService.save(zk);
+		p.setZdravstveniKarton(zk);
+		p = pacijentService.save(p);
+		
+		System.out.println("-------------ZK--------------");
+		return new ResponseEntity<>("Uspesno", HttpStatus.OK);
+	}
+
+	
 	
 	@GetMapping(value = "/findByID/{id}")
 	public ResponseEntity<?> getPacijentByID(@PathVariable Long id) {
