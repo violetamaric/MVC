@@ -18,11 +18,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.LekarDTO;
 import com.example.demo.dto.PregledDTO;
 import com.example.demo.dto.SalaDTO;
 import com.example.demo.dto.TerminDTO;
 import com.example.demo.model.Klinika;
 import com.example.demo.model.Lekar;
+import com.example.demo.model.OdmorOdsustvoLekar;
 import com.example.demo.model.Pregled;
 import com.example.demo.model.Sala;
 import com.example.demo.model.Termin;
@@ -207,6 +209,7 @@ public class SalaController {
 		return new ResponseEntity<>(terminDTO, HttpStatus.OK);
 	}
 
+	//pronalazak sala slobodnih za taj teremin i datum
 	@GetMapping(value = "/pronadjiSaleZaTajTermin/{idP}")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
@@ -239,7 +242,7 @@ public class SalaController {
 				if (t.getSala().getId() == sD.getId()) {
 					System.out.println(t.getSala().getId() + " " + t.getTermin() + " " + t.getDatumPocetka());
 					if (t.getDatumPocetka().equals(pregled.getDatum()) && t.getTermin().equals(pregled.getTermin())) {
-//						System.out.println("Istiiii termin i njega preskoci");
+						System.out.println("Istiiii termin i njega preskoci");
 							sD.getZauzetiTermini().add(t);
 							listaZauzete.add(sD);
 
@@ -247,13 +250,13 @@ public class SalaController {
 						break;
 
 					} else if (t.getDatumPocetka().equals(pregled.getDatum())) {
-//						System.out.println("||||||||||||||||||||||||||||||||||||||||||||");
+						System.out.println("||||||||||||||||||||||||||||||||||||||||||||");
 						if (!t.getTermin().equals(pregled.getTermin())) {
 							sD.getZauzetiTermini().add(t);
-//							System.out.println();
+							System.out.println();
 							salaService.save(sD);
 							listaSalaTest.add(sD);
-//							System.out.println("********************aaaa " + sD.getId() + sD.getBroj() + " " + t.getTermin());
+							System.out.println("********************aaaa " + sD.getId() + sD.getBroj() + " " + t.getTermin());
 
 							TerminDTO terminDTO = new TerminDTO(t);
 
@@ -275,9 +278,9 @@ public class SalaController {
 			sdt.setId(sD.getId());
 			sdt.setKlinikaID(sD.getKlinika().getId());
 
-//			System.out.println();
-//			System.out.println("DUZINAAAAAAAAAAAAAAAAAAAA : " + listaSalaTest.size());
-//			listaSalaSlob.add(sdt);
+			System.out.println();
+			System.out.println("DUZINAAAAAAAAAAAAAAAAAAAA : " + listaSalaTest.size());
+			listaSalaSlob.add(sdt);
 //			
 			
 		}
@@ -340,6 +343,9 @@ public class SalaController {
 	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
 	public ResponseEntity<String> rezervisanjeSale(@RequestBody PregledDTO pDTO) {
 		System.out.println();
+		System.out.println("......... Rezervisanje sale ..... ");
+		System.out.println(pDTO);
+		System.out.println();
 		List<Pregled> listaPregleda = pregledService.findAll();
 
 		for (Pregled p : listaPregleda) {
@@ -364,6 +370,11 @@ public class SalaController {
 				t.setLekar(l);
 				System.out.println(" TERMINI: " + terminService.findAll().size());
 				terminService.save(t);
+				System.out.println();
+				
+				System.out.println(t);
+				
+				System.out.println();
 
 				System.out.println(" TERMINI222: " + terminService.findAll().size());
 			}
@@ -374,4 +385,90 @@ public class SalaController {
 		return new ResponseEntity<>("uspesno rezervisana sala1", HttpStatus.OK);
 	}
 
+	@PostMapping(path = "/pronadjiLekaraZaPregled", consumes = "application/json")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
+	public ResponseEntity<List<LekarDTO>> slobodanLekar(@RequestBody PregledDTO pDTO) {
+		
+		List<LekarDTO> listaSlobodnihLekara = new ArrayList<LekarDTO>();
+		Klinika klinika = klinikaService.findById(pDTO.getKlinikaID());
+		
+		System.out.println(pDTO);
+		List<Lekar> listaSvihLekaraKlinike = new ArrayList<Lekar>();
+		List<Lekar> listaSvihLekara = lekarService.findAll();
+		for(Lekar l: listaSvihLekara ) {
+			if(l.getKlinika().equals(klinika)){
+				listaSvihLekaraKlinike.add(l);
+			}
+			
+		}
+		System.out.println();
+		System.out.println(" SVI LEKARI KLINIKE *************** " + listaSvihLekaraKlinike.size());
+		System.out.println(listaSvihLekaraKlinike.size());
+		
+		
+		
+		//Lekar lekar = lekarService.findByEmail(ooDTO.getEmailL());
+		for(Lekar lekar: listaSvihLekaraKlinike) {
+			System.out.println("-----> "  + lekar.getId() + " " + lekar.getIme() + " " + lekar.getPrezime());
+			boolean flag = false;
+//			Set<Termin> pregledi = lekar.getListaZauzetihTermina();
+			for(Pregled t : pregledService.findAll()) {
+				if(t.getStatus()==1) {
+					if(t.getLekar().getId()==lekar.getId()) {
+						System.out.println("LEKAR ISTI");
+						if(t.getTermin()==pDTO.getTermin()) {
+							System.out.println("TERMIN ISTI");
+							if(t.getDatum().compareTo(pDTO.getDatum())==0) {
+								System.out.println("Zauzet lekar :");
+								System.out.println(lekar.getId() + " " + lekar.getIme() + " " + lekar.getPrezime());
+								System.out.println();
+								flag = true;
+								break;
+							
+							
+							}
+						
+							
+						}
+					}
+				}
+				
+				
+				
+			}
+			
+			Set<OdmorOdsustvoLekar> listaool = lekar.getListaOdmorOdsustvo();
+			
+			for(OdmorOdsustvoLekar ool: listaool) {
+				if(ool.getStatus() ==  1) {
+					if(ool.getDatumOd().compareTo(pDTO.getDatum()) * pDTO.getDatum().compareTo(ool.getDatumDo()) >= 0) {
+						System.out.println();
+						System.out.println("Lekar na odmoru");
+						System.out.println(lekar.getId() + " " + lekar.getIme() + " " + lekar.getPrezime());
+						System.out.println();
+						flag = true;
+						break;
+					}
+					
+			
+				}
+			}
+			
+			if(!flag) {
+				LekarDTO l = new LekarDTO(lekar);
+				listaSlobodnihLekara.add(l);
+			}
+			
+		}
+		
+		for(LekarDTO l: listaSlobodnihLekara) {
+			System.out.println(l);
+		}
+		
+		System.out.println("*************** " + listaSlobodnihLekara.size());
+		
+		return new ResponseEntity<>(listaSlobodnihLekara, HttpStatus.OK);
+	}
+	
 }
