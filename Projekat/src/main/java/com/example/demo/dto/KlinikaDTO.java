@@ -1,10 +1,24 @@
 package com.example.demo.dto;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 import com.example.demo.model.AdministratorKlinike;
+import com.example.demo.model.KlinickiCentar;
 import com.example.demo.model.Klinika;
+import com.example.demo.model.Lekar;
+import com.example.demo.model.MedicinskaSestra;
+import com.example.demo.model.OdmorOdsustvoLekar;
+import com.example.demo.model.OdmorOdsustvoMedicinskaSestra;
+import com.example.demo.model.Operacija;
+import com.example.demo.model.Pacijent;
+import com.example.demo.model.Pregled;
+import com.example.demo.model.Sala;
+import com.example.demo.model.TipPregleda;
+import com.example.demo.model.Klinika.KlinikaBuilder;
 
+import lombok.Builder;
+//@Builder
 public class KlinikaDTO {
 
 	private Long id;

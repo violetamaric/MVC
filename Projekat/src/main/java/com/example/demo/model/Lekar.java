@@ -1,7 +1,8 @@
 package com.example.demo.model;
 
-import java.util.ArrayList;
+
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,7 +18,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.Version;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -45,7 +46,7 @@ public class Lekar implements UserDetails{
 	private String telefon;
 	
 	@ManyToMany
-	@JoinTable(name = "lekar_pacijent", joinColumns = @JoinColumn(name = "pacijent_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "lekar_id", referencedColumnName = "id"))
+	@JoinTable(name = "lekar_pacijent", joinColumns = @JoinColumn(name = "lekar_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "pacijent_id", referencedColumnName = "id"))
 	private Set<Pacijent> listaPacijenata = new HashSet<Pacijent>();
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -53,14 +54,27 @@ public class Lekar implements UserDetails{
 	
 	//dodati za kalendar 
 	
-	@OneToMany(mappedBy = "lekar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToMany
+	@JoinTable(name = "lekar_operacija", joinColumns = @JoinColumn(name = "lekar_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "operacija_id", referencedColumnName = "id"))
 	private Set<Operacija> listaOperacija = new HashSet<Operacija>();
 	
 	@OneToMany(mappedBy = "lekar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Pregled> listaPregleda = new HashSet<Pregled>();
 	
+	@OneToMany(mappedBy = "lekar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Termin> listaZauzetihTermina = new HashSet<Termin>();
+	
+	@OneToMany(mappedBy = "lekar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<OdmorOdsustvoLekar> listaOdmorOdsustvo = new HashSet<OdmorOdsustvoLekar>();
+	
+//	@OneToMany(mappedBy = "lekar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//	private Set<SlobodniTermin> listaSlobodnihTermina = new HashSet<SlobodniTermin>();
+	
 	@Column(name="ocena", nullable=false)
 	private int ocena; 
+	
+	@Version
+	private Long version;
 
 	@ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
 	@JoinTable(name = "lekar_authority",
@@ -86,6 +100,7 @@ public class Lekar implements UserDetails{
 	public void setOcena(int ocena) {
 		this.ocena = ocena;
 	}
+
 	public Set<Operacija> getListaOperacija() {
 		return listaOperacija;
 	}
@@ -97,6 +112,19 @@ public class Lekar implements UserDetails{
 	}
 	public void setListaPregleda(Set<Pregled> listaPregleda) {
 		this.listaPregleda = listaPregleda;
+	}
+	
+	public Set<Termin> getListaZauzetihTermina() {
+		return listaZauzetihTermina;
+	}
+	public void setListaZauzetihTermina(Set<Termin> listaZauzetihTermina) {
+		this.listaZauzetihTermina = listaZauzetihTermina;
+	}
+	public Set<OdmorOdsustvoLekar> getListaOdmorOdsustvo() {
+		return listaOdmorOdsustvo;
+	}
+	public void setListaOdmorOdsustvo(Set<OdmorOdsustvoLekar> listaOdmorOdsustvo) {
+		this.listaOdmorOdsustvo = listaOdmorOdsustvo;
 	}
 	public String getIme() {
 		return ime;
@@ -191,6 +219,67 @@ public class Lekar implements UserDetails{
 		this.authorities = authorities;
 	}
 
+	public boolean sadrziTermin(Set<Termin> listaTermina, int termin){
+	    return listaTermina.stream().filter(o -> o.getTermin() == termin).findFirst().isPresent();
+	}
+	@SuppressWarnings("deprecation")
+	public boolean sadrziSlobodanTermin(Set<Termin> listaTermina, Date datum){
+		int flag = 4;
+		for(Termin t:listaZauzetihTermina) {
+			if(t.getDatumPocetka().getDate() == datum.getDate() &&
+					t.getDatumPocetka().getMonth() == datum.getMonth() &&
+					t.getDatumPocetka().getYear() == datum.getYear()) {
+				if(t.getTermin() == 9) {
+					flag -=1;
+				}else if(t.getTermin() == 11) {
+					flag -=1;
+				}else if(t.getTermin() == 13) {
+					flag -=1;
+				}else if(t.getTermin() == 15) {
+					flag -=1;
+				}
+				if(flag == 0) {
+					return false;
+				}
+				
+			}
+		}
+//		for(SlobodniTermin st:listaSlobodnihTermina) {
+//			if(st.getDatum().getDate() == datum.getDate() &&
+//					st.getDatum().getMonth() == datum.getMonth() &&
+//							st.getDatum().getYear() == datum.getYear()) {
+//				if(st.getTermin() == 9) {
+//					flag -=1;
+//				}else if(st.getTermin() == 11) {
+//					flag -=1;
+//				}else if(st.getTermin() == 13) {
+//					flag -=1;
+//				}else if(st.getTermin() == 15) {
+//					flag -=1;
+//				}
+//				if(flag == 0) {
+//					return false;
+//				}
+//				
+//			}
+//		}
+		return true;
+//	    return listaTermina.stream().filter(o -> o.getTermin() == termin).findFirst().isPresent();
+
+	}
+	public Long getVersion() {
+		return version;
+	}
+	public void setVersion(Long version) {
+		this.version = version;
+	}
+//	public Set<SlobodniTermin> getListaSlobodnihTermina() {
+//		return listaSlobodnihTermina;
+//	}
+//	public void setListaSlobodnihTermina(Set<SlobodniTermin> listaSlobodnihTermina) {
+//		this.listaSlobodnihTermina = listaSlobodnihTermina;
+//	}
+	
 	
 	
 }

@@ -1,6 +1,10 @@
 package com.example.demo.dto;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.example.demo.model.Sala;
+import com.example.demo.model.Termin;
 
 public class SalaDTO {
 	private Long id;
@@ -10,6 +14,16 @@ public class SalaDTO {
 	private int broj;
 
 	private Long klinikaID;
+
+	private Set<TerminDTO> zauzetiTermini = new HashSet<TerminDTO>();
+	
+	
+
+	@Override
+	public String toString() {
+		return "SalaDTO [id=" + id + ", naziv=" + naziv + ", broj=" + broj + ", klinikaID=" + klinikaID
+				+ ", zauzetiTermini=" + zauzetiTermini + "]";
+	}
 
 	public SalaDTO() {
 	}
@@ -26,6 +40,7 @@ public class SalaDTO {
 		this.naziv = s.getNaziv();
 		this.broj = s.getBroj();
 		this.klinikaID = s.getKlinika().getId();
+		
 	}
 
 	public Long getId() {
@@ -59,6 +74,15 @@ public class SalaDTO {
 	public void setKlinikaID(Long klinikaID) {
 		this.klinikaID = klinikaID;
 	}
-	
+
+	public Set<TerminDTO> getZauzetiTermini() {
+		return zauzetiTermini;
+	}
+
+	public void setZauzetiTermini(Set<TerminDTO> zauzetiTermini) {
+		this.zauzetiTermini = zauzetiTermini;
+	}
+
+
 	
 }

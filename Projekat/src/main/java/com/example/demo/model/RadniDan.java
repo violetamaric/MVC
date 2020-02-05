@@ -1,6 +1,8 @@
 package com.example.demo.model;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -10,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class RadniDan {
@@ -19,10 +22,13 @@ public class RadniDan {
 	private Long id;
 	
 	@Column(name = "datumPocetka", nullable = false)
-	private Date datumPocetka; 
+	private Date datumPocetka; //od 9
 	
 	@Column(name = "datumKraja", nullable = false)
-	private Date datumKraja;
+	private Date datumKraja; //do 17
+	
+//	@OneToMany(mappedBy = "radniDan", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//	private Set<Termin> termini = new HashSet<Termin>();
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private MedicinskaSestra medicinskaSestra;
@@ -60,6 +66,14 @@ public class RadniDan {
 	public void setMedicinskaSestra(MedicinskaSestra medicinskaSestra) {
 		this.medicinskaSestra = medicinskaSestra;
 	}
+
+//	public Set<Termin> getTermini() {
+//		return termini;
+//	}
+//
+//	public void setTermini(Set<Termin> termini) {
+//		this.termini = termini;
+//	}
 
 	public RadniDan() {
 		super();

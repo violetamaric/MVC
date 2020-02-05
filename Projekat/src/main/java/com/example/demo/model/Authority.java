@@ -28,8 +28,21 @@ public class Authority implements GrantedAuthority {
     public String getAuthority() {
         return uloga;
     }
+    
+	public Authority() {
 
-    public void setName(String uloga) {
+	}
+
+
+	public Authority(String uloga) {
+		super();
+		this.uloga = uloga;
+	}
+
+
+
+
+	public void setName(String uloga) {
         this.uloga = uloga;
     }
 

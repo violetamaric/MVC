@@ -9,7 +9,7 @@ public class PacijentDTO {
 
 	private Long id;
 
-	private ZdravstveniKarton zdravstveniKarton;
+	private Long zkID;
 
 	private String ime;
 
@@ -17,18 +17,20 @@ public class PacijentDTO {
 
 	private String lbo;
 
+	private String jmbg;
+
 	private String lozinka;
 
 	private String email;
-	
+
 	private String adresa;
-	
+
 	private String grad;
-	
+
 	private String drzava;
 
 	private String telefon;
-	
+
 	private Boolean odobrenaRegistracija;
 
 	public PacijentDTO() {
@@ -40,7 +42,10 @@ public class PacijentDTO {
 		super();
 		// TODO Auto-generated constructor stub
 		this.id = pacijent.getId();
-		this.zdravstveniKarton = pacijent.getZdravstveniKarton();
+		if (pacijent.getZdravstveniKarton() != null) {
+			this.zkID = pacijent.getZdravstveniKarton().getId();
+		}
+
 		this.ime = pacijent.getIme();
 		this.prezime = pacijent.getPrezime();
 		this.lbo = pacijent.getLbo();
@@ -51,20 +56,22 @@ public class PacijentDTO {
 		this.grad = pacijent.getGrad();
 		this.drzava = pacijent.getDrzava();
 		this.telefon = pacijent.getTelefon();
+		this.jmbg = pacijent.getJmbg();
 
 	}
 
-	public PacijentDTO(Long id, ZdravstveniKarton zdravstveniKarton, String ime, String prezime, String lbo,
-			String lozinka, String email, Boolean odobrenaRegistracija) {
+	public PacijentDTO(Long id, Long zkID, String ime, String prezime, String lbo, String lozinka, String email,
+			Boolean odobrenaRegistracija, String jmbg) {
 		super();
 		this.id = id;
-		this.zdravstveniKarton = zdravstveniKarton;
+		this.zkID = zkID;
 		this.ime = ime;
 		this.prezime = prezime;
 		this.lbo = lbo;
 		this.lozinka = lozinka;
 		this.email = email;
 		this.odobrenaRegistracija = odobrenaRegistracija;
+		this.jmbg = jmbg;
 	}
 
 	public Long getId() {
@@ -75,12 +82,12 @@ public class PacijentDTO {
 		this.id = id;
 	}
 
-	public ZdravstveniKarton getZdravstveniKarton() {
-		return zdravstveniKarton;
+	public Long getZkID() {
+		return zkID;
 	}
 
-	public void setZdravstveniKarton(ZdravstveniKarton zdravstveniKarton) {
-		this.zdravstveniKarton = zdravstveniKarton;
+	public void setZkID(Long zkID) {
+		this.zkID = zkID;
 	}
 
 	public String getIme() {
@@ -105,6 +112,14 @@ public class PacijentDTO {
 
 	public void setLbo(String lbo) {
 		this.lbo = lbo;
+	}
+
+	public String getJmbg() {
+		return jmbg;
+	}
+
+	public void setJmbg(String jmbg) {
+		this.jmbg = jmbg;
 	}
 
 	public String getLozinka() {
@@ -154,7 +169,6 @@ public class PacijentDTO {
 	public void setTelefon(String telefon) {
 		this.telefon = telefon;
 	}
-	
 
 	public Boolean getOdobrenaRegistracija() {
 		return odobrenaRegistracija;
@@ -166,10 +180,9 @@ public class PacijentDTO {
 
 	@Override
 	public String toString() {
-		return "PacijentDTO [id=" + id + ", zdravstveniKarton=" + zdravstveniKarton + ", ime=" + ime + ", prezime="
-				+ prezime + ", lbo=" + lbo + ", lozinka=" + lozinka + ", email=" + email + ", adresa=" + adresa
-				+ ", grad=" + grad + ", drzava=" + drzava + ", telefon=" + telefon + "]";
+		return "PacijentDTO [id=" + id + ", zdravstveniKarton=" + zkID + ", ime=" + ime + ", prezime=" + prezime
+				+ ", lbo=" + lbo + ", lozinka=" + lozinka + ", email=" + email + ", adresa=" + adresa + ", grad=" + grad
+				+ ", drzava=" + drzava + ", telefon=" + telefon + "]";
 	}
-	
 
 }

@@ -19,30 +19,30 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Transactional
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+//@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class ZdravstveniKarton {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(name="visina", nullable=false)
+	@Column(name="visina", nullable=true)
 	private double visina;
 	
-	@Column(name="tezina", nullable=false)
+	@Column(name="tezina", nullable=true)
 	private double tezina;
 	
-	@Column(name="krvnaGrupa", nullable=false)
+	@Column(name="krvnaGrupa", nullable=true)
 	private String krvnaGrupa;
 	
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	private Pacijent pacijent;
 	
 	@OneToMany(mappedBy = "zdravstveniKarton", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<IzvestajOPregledu> listaIzvestajaOPregledu = new HashSet<IzvestajOPregledu>();
 	
-	@OneToMany(mappedBy = "zdravstveniKarton", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<Operacija> listaOperacija = new HashSet<Operacija>();
+//	@OneToMany(mappedBy = "zdravstveniKarton", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//	private Set<Operacija> listaOperacija = new HashSet<Operacija>();
 	
 	public ZdravstveniKarton() {
 		super();
@@ -62,15 +62,20 @@ public class ZdravstveniKarton {
 	public void setKrvnaGrupa(String krvnaGrupa) {
 		this.krvnaGrupa = krvnaGrupa;
 	}
-	public Set<Operacija> getListaOperacija() {
-		return listaOperacija;
+//	public Set<Operacija> getListaOperacija() {
+//		return listaOperacija;
+//	}
+//
+//	public void setListaOperacija(Set<Operacija> listaOperacija) {
+//		this.listaOperacija = listaOperacija;
+//	}
+
+
+
+
+	public Long getId() {
+		return id;
 	}
-
-	public void setListaOperacija(Set<Operacija> listaOperacija) {
-		this.listaOperacija = listaOperacija;
-	}
-
-
 
 
 	@Override
@@ -80,7 +85,6 @@ public class ZdravstveniKarton {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((krvnaGrupa == null) ? 0 : krvnaGrupa.hashCode());
 		result = prime * result + ((listaIzvestajaOPregledu == null) ? 0 : listaIzvestajaOPregledu.hashCode());
-		result = prime * result + ((listaOperacija == null) ? 0 : listaOperacija.hashCode());
 		result = prime * result + ((pacijent == null) ? 0 : pacijent.hashCode());
 		long temp;
 		temp = Double.doubleToLongBits(tezina);
@@ -113,11 +117,6 @@ public class ZdravstveniKarton {
 				return false;
 		} else if (!listaIzvestajaOPregledu.equals(other.listaIzvestajaOPregledu))
 			return false;
-		if (listaOperacija == null) {
-			if (other.listaOperacija != null)
-				return false;
-		} else if (!listaOperacija.equals(other.listaOperacija))
-			return false;
 		if (pacijent == null) {
 			if (other.pacijent != null)
 				return false;
@@ -129,17 +128,6 @@ public class ZdravstveniKarton {
 			return false;
 		return true;
 	}
-	@Override
-	public String toString() {
-		return "ZdravstveniKarton [id=" + id + ", visina=" + visina + ", tezina=" + tezina + ", krvnaGrupa="
-				+ krvnaGrupa + ", pacijent=" + pacijent + ", listaIzvestajaOPregledu=" + listaIzvestajaOPregledu
-				+ ", listaOperacija=" + listaOperacija + "]";
-	}
-	public Long getId() {
-		return id;
-	}
-
-
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -183,6 +171,7 @@ public class ZdravstveniKarton {
 	public void setListaIzvestajaOPregledu(Set<IzvestajOPregledu> listaIzvestajaOPregledu) {
 		this.listaIzvestajaOPregledu = listaIzvestajaOPregledu;
 	}
+
 	
 	
 	

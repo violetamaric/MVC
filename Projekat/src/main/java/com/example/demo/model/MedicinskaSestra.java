@@ -20,9 +20,9 @@ import javax.persistence.OneToMany;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+
 @Entity
 public class MedicinskaSestra implements UserDetails{
-	
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,12 +50,16 @@ public class MedicinskaSestra implements UserDetails{
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Klinika klinika;
-	//kalendar
 	
 	@OneToMany(mappedBy = "medicinskaSestra", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Recept> recepti = new HashSet<Recept>();
 	
+	//kalendar
+	@OneToMany(mappedBy = "medicinskaSestra", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<OdmorOdsustvoMedicinskaSestra> listaOdmorOdsustvo = new HashSet<OdmorOdsustvoMedicinskaSestra>();
 
+	@OneToMany(mappedBy = "medicinskaSestra", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<RadniDan> listaRadnihDana = new HashSet<RadniDan>();
 
 	@ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
 	@JoinTable(name = "medicinska_sestra_authority",
@@ -63,18 +67,6 @@ public class MedicinskaSestra implements UserDetails{
 			inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
 	private Set<Authority> authorities;
 	
-
-//	@OneToMany(mappedBy = "medicinskaSestra", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//	private Set<RadniDan> listaRadnihDana = new HashSet<RadniDan>();
-//	
-//	
-//
-//	public Set<RadniDan> getListaRadnihDana() {
-//		return listaRadnihDana;
-//	}
-//	public void setListaRadnihDana(Set<RadniDan> listaRadnihDana) {
-//		this.listaRadnihDana = listaRadnihDana;
-//	}
 
 	public String getIme() {
 		return ime;
@@ -192,7 +184,22 @@ public class MedicinskaSestra implements UserDetails{
 	public void setAuthorities(Set<Authority> authorities) {
 		this.authorities = authorities;
 	}
+	public Set<OdmorOdsustvoMedicinskaSestra> getListaOdmorOdsustvo() {
+		return listaOdmorOdsustvo;
+	}
+	public void setListaOdmorOdsustvo(Set<OdmorOdsustvoMedicinskaSestra> listaOdmorOdsustvo) {
+		this.listaOdmorOdsustvo = listaOdmorOdsustvo;
+	}
+	public Set<RadniDan> getListaRadnihDana() {
+		return listaRadnihDana;
+	}
+	public void setListaRadnihDana(Set<RadniDan> listaRadnihDana) {
+		this.listaRadnihDana = listaRadnihDana;
+	}
 	
+	
+	
+
 	
 	
 }

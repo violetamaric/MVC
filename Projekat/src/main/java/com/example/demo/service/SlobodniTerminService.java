@@ -5,8 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.model.Pacijent;
-import com.example.demo.model.Pregled;
 import com.example.demo.model.SlobodniTermin;
 import com.example.demo.repository.SlobodniTerminRepository;
 
@@ -24,5 +22,8 @@ public class SlobodniTerminService {
 	}
 	public void delete(SlobodniTermin s) {
 		STRepository.delete(s);
+	}
+	public SlobodniTermin findOne(Long id) {
+		return STRepository.findById(id).orElseGet(null);
 	}
 }

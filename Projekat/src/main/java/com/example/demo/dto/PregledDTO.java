@@ -8,6 +8,7 @@ public class PregledDTO {
 	private Long id;
 
 	private Date datum;
+	// TODO 1: DODATI TRAJANJE I KRAJ PREGLEDA
 
 	private Long tipPregledaID;
 	private String nazivTP;
@@ -32,17 +33,22 @@ public class PregledDTO {
 
 	private double cena;
 
-	//0-nije ni potvrdjeno ni odbijeno
-	//1-potvrdjeno
-	//2-odbijeno
-	//3-zavrsen pregled
-	//4-ocenjena samo klinika
-	//5-ocenjen samo lekar
-	//6-ocenjen i lekar i klinika
+	private int termin;
+
+	// 0-nije ni potvrdjeno ni odbijeno
+	// 1-potvrdjeno
+	// 2-odbijeno
+	// 3-zavrsen pregled
+	// 4-ocenjena samo klinika
+	// 5-ocenjen samo lekar
+	// 6-ocenjen i lekar i klinika
 	private int status;
 
 	public PregledDTO() {
 	}
+
+
+
 
 	@Override
 	public String toString() {
@@ -50,11 +56,14 @@ public class PregledDTO {
 				+ ", lekarID=" + lekarID + ", imeL=" + imeL + ", prezimeL=" + prezimeL + ", pacijentEmail="
 				+ pacijentEmail + ", klinikaID=" + klinikaID + ", pacijentID=" + pacijentID + ", imeP=" + imeP
 				+ ", prezimeP=" + prezimeP + ", nazivKl=" + nazivKl + ", salaID=" + salaID + ", salaN=" + salaN
-				+ ", cena=" + cena + ", status=" + status + "]";
+				+ ", salaBR=" + salaBR + ", cena=" + cena + ", termin=" + termin + ", status=" + status + "]";
 	}
 
+
+
+
 	public PregledDTO(Long id, Date datum, Long tipPregledaID, Long lekarID, String pacijentEmail, Long klinikaID,
-			double cena, int status, Long sala) {
+			double cena, int status, Long sala, int termin) {
 		this.id = id;
 		this.datum = datum;
 		this.tipPregledaID = tipPregledaID;
@@ -64,29 +73,49 @@ public class PregledDTO {
 		this.cena = cena;
 		this.status = status;
 		this.salaID = sala;
+		this.termin = termin;
 	}
 
 	public PregledDTO(Pregled pregled) {
 		this.id = pregled.getId();
 		this.datum = pregled.getDatum();
-		this.tipPregledaID = pregled.getTipPregleda().getId();
-		this.lekarID = pregled.getLekar().getId();
-		this.pacijentEmail = pregled.getPacijent().getEmail();
-		this.klinikaID = pregled.getKlinika().getId();
+		if (pregled.getTipPregleda() != null) {
+			this.tipPregledaID = pregled.getTipPregleda().getId();
+			this.nazivTP = pregled.getTipPregleda().getNaziv();
+		}
+		if (pregled.getLekar() != null) {
+			this.lekarID = pregled.getLekar().getId();
+			this.imeL = pregled.getLekar().getIme();
+			this.prezimeL = pregled.getLekar().getPrezime();
+		}
+		if (pregled.getPacijent() != null) {
+			this.pacijentEmail = pregled.getPacijent().getEmail();
+			this.prezimeP = pregled.getPacijent().getPrezime();
+			this.imeP = pregled.getPacijent().getIme();
+		}
+		if (pregled.getKlinika() != null) {
+			this.nazivKl = pregled.getKlinika().getNaziv();
+			this.klinikaID = pregled.getKlinika().getId();
+		}
+
 		this.cena = pregled.getCena();
 		this.status = pregled.getStatus();
-		this.nazivKl = pregled.getKlinika().getNaziv();
-		this.imeL = pregled.getLekar().getIme();
-		this.imeP = pregled.getPacijent().getIme();
-		this.nazivTP = pregled.getTipPregleda().getNaziv();
-		this.prezimeL = pregled.getLekar().getPrezime();
-		this.prezimeP = pregled.getPacijent().getPrezime();
+
+		this.termin = pregled.getTermin();
 		if (pregled.getSala() != null) {
 
 			this.salaID = pregled.getSala().getId();
 			this.salaN = pregled.getSala().getNaziv();
 			this.salaBR = pregled.getSala().getBroj();
 		}
+	}
+
+	public int getTermin() {
+		return termin;
+	}
+
+	public void setTermin(int termin) {
+		this.termin = termin;
 	}
 
 	public String getPrezimeL() {
@@ -193,8 +222,6 @@ public class PregledDTO {
 		this.cena = cena;
 	}
 
-
-
 	public int getStatus() {
 		return status;
 	}
@@ -234,6 +261,5 @@ public class PregledDTO {
 	public void setSalaBR(int salaBR) {
 		this.salaBR = salaBR;
 	}
-	
 
 }

@@ -24,6 +24,9 @@ public class Sala {
 	@Column(name="broj", nullable=false)
 	private int broj;
 	
+	@Column(name="tipSale", nullable=false)	
+	private int tipSale; //tip sobe 0-operacije, 1-preg led 
+	
 	@OneToMany(mappedBy = "sala", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Pregled> listaPregleda = new HashSet<Pregled>();
 	
@@ -33,6 +36,9 @@ public class Sala {
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Klinika klinika;
 	
+	@OneToMany(mappedBy = "sala", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Termin> zauzetiTermini = new HashSet<Termin>();
+	
 	public Long getId() {
 		return id;
 	}
@@ -40,6 +46,13 @@ public class Sala {
 		this.id = id;
 	}
 	
+	
+	public int getTipSale() {
+		return tipSale;
+	}
+	public void setTipSale(int tipSale) {
+		this.tipSale = tipSale;
+	}
 	public String getNaziv() {
 		return naziv;
 	}
@@ -83,6 +96,17 @@ public class Sala {
 	}
 	public void setKlinika(Klinika klinika) {
 		this.klinika = klinika;
+	}
+	public Set<Termin> getZauzetiTermini() {
+		return zauzetiTermini;
+	}
+	public void setZauzetiTermini(Set<Termin> zauzetiTermini) {
+		this.zauzetiTermini = zauzetiTermini;
+	}
+	@Override
+	public String toString() {
+		return "Sala [id=" + id + ", naziv=" + naziv + ", broj=" + broj + ", tipSale=" + tipSale +  ", zauzetiTermini="
+				+ zauzetiTermini + "]";
 	}
 	
 	

@@ -19,12 +19,19 @@ public class SlobodniTerminDTO {
 
 	private Long klinikaID;
 	private String klinikaN;
+	
+	private Long salaID;
+	private String salaN;
+	private int salaBR;
+
 
 	private double cena;
 
 	private boolean status;
 
 	private double popust;
+	
+	private int termin;
 
 	public SlobodniTerminDTO() {
 		super();
@@ -35,7 +42,7 @@ public class SlobodniTerminDTO {
 
 	public SlobodniTerminDTO(Long id, Date datum, Long tipPregledaID, String tipPregledaN, Long lekarID,
 			String lekarIme, String lekarPrezime, Long klinikaID, String klinikaN, double cena, boolean status,
-			double popust) {
+			double popust, int termin, Long salaID, String salaN, int salaBR) {
 		super();
 		this.id = id;
 		this.datum = datum;
@@ -49,6 +56,10 @@ public class SlobodniTerminDTO {
 		this.cena = cena;
 		this.status = status;
 		this.popust = popust;
+		this.termin = termin;
+		this.salaBR = salaBR;
+		this.salaID = salaID;
+		this.salaN = salaN;
 	}
 
 
@@ -76,6 +87,11 @@ public class SlobodniTerminDTO {
 		this.lekarIme = st.getLekar().getIme();
 		this.lekarPrezime = st.getLekar().getPrezime();
 		this.klinikaN = st.getKlinika().getNaziv();
+		this.termin = st.getTermin();
+		this.salaBR = st.getSala().getBroj();
+		this.salaN = st.getSala().getNaziv();
+		this.salaID = st.getSala().getId();
+		
 	}
 
 	public Long getId() {
@@ -189,6 +205,58 @@ public class SlobodniTerminDTO {
 	public void setKlinikaN(String klinikaN) {
 		this.klinikaN = klinikaN;
 	}
+
+
+
+	public int getTermin() {
+		return termin;
+	}
+
+
+
+	public void setTermin(int termin) {
+		this.termin = termin;
+	}
+
+
+
+	public Long getSalaID() {
+		return salaID;
+	}
+
+
+
+	public void setSalaID(Long salaID) {
+		this.salaID = salaID;
+	}
+
+
+
+	public String getSalaN() {
+		return salaN;
+	}
+
+
+
+	public void setSalaN(String salaN) {
+		this.salaN = salaN;
+	}
+
+
+
+	public int getSalaBR() {
+		return salaBR;
+	}
+
+
+
+	public void setSalaBR(int salaBR) {
+		this.salaBR = salaBR;
+	}
+
+
+
+
 	
 	
 
