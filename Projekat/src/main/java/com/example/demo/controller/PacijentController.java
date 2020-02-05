@@ -11,7 +11,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,11 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.PacijentDTO;
 import com.example.demo.dto.ZdravstveniKartonDTO;
-import com.example.demo.model.KlinickiCentar;
 import com.example.demo.model.Pacijent;
 import com.example.demo.model.ZdravstveniKarton;
 import com.example.demo.service.KlinickiCentarService;
 import com.example.demo.service.PacijentService;
+import com.example.demo.service.ZdravstveniKartonService;
 
 @RestController
 //@RequestMapping(value = "/api/pacijenti", produces=MediaType.APPLICATION_JSON_VALUE)
@@ -35,6 +34,9 @@ public class PacijentController {
 
 	@Autowired
 	private KlinickiCentarService KCService;
+	
+	@Autowired
+	private ZdravstveniKartonService ZKService;
 
 //	@Autowired
 //	private EmailService emailService;
@@ -94,16 +96,19 @@ public class PacijentController {
 
 		Pacijent pacijent = pacijentService.findByEmail(pr.getName());
 		System.out.println("Pacijent: " + pacijent.getZdravstveniKarton().getId());
-//		if (pacijent == null) {
-//			
-//			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//		}
+		
+		if (pacijent == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
 
 		ZdravstveniKarton zk = pacijent.getZdravstveniKarton();
+		zk.setPacijent(pacijent);
+		ZKService.save(zk);
 		System.out.println("____");
 		System.out.println(zk);
 //		zk.setPacijent(pacijent);
 		System.out.println(zk);
+		System.out.println("---------------- " + zk.getPacijent());
 		System.out.println(pacijent.getEmail() + "++++");
 //		Pacijent p = new Pacijent();
 //		p.setEmail(pacijent.getEmail());

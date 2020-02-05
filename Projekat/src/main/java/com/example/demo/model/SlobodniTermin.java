@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.Version;
 
 @Entity
 public class SlobodniTermin {
@@ -30,6 +31,9 @@ public class SlobodniTermin {
 	@Column(name="popust", nullable=false)
 	private double popust;
 	
+	@Column(name="termin", nullable=false)
+	private int termin;
+	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private TipPregleda tipPregleda;
 
@@ -38,6 +42,9 @@ public class SlobodniTermin {
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Lekar lekar;
+	
+	
+
 
 //	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 //	private MedicinskaSestra medicinskaSestra;
@@ -48,7 +55,12 @@ public class SlobodniTermin {
 
 	@Column(name = "cena", nullable = false)
 	private double cena;
+	
+	@Version
+	private Long version;
 
+	//true  = zauzet
+	//false = slobodan
 	@Column(name = "status", nullable = false)
 	private boolean status;
 
@@ -173,6 +185,22 @@ public class SlobodniTermin {
 
 	public void setPopust(double popust) {
 		this.popust = popust;
+	}
+
+	public Long getVersion() {
+		return version;
+	}
+
+	public void setVersion(Long version) {
+		this.version = version;
+	}
+
+	public int getTermin() {
+		return termin;
+	}
+
+	public void setTermin(int termin) {
+		this.termin = termin;
 	}
 	
 	

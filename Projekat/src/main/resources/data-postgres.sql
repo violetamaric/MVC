@@ -26,6 +26,7 @@ insert into dijagnoza(naziv, opis, oznaka, klinicki_centar_id ) values('Velike b
 insert into dijagnoza(naziv, opis, oznaka, klinicki_centar_id ) values('Male boginje bez komplikacija', 'Morbilli sine complicationibus', 'B059', 1);
 
 
+
 insert into lekar (ime, prezime, email, lozinka,klinika_id, ocena, telefon) values ('Milica','Markovic', 'micacica@gmail.com', '$2y$12$TSUwPf/Ji7j5xr2eq6QjaugOzsFjNnKo.TedGrtdRsugH7hhFhtBW', 1, 7, '066/243-665');
 insert into lekar (ime, prezime, email, lozinka,klinika_id, ocena,  telefon) values ('Jovan','Jovanovic', 'jole@gmail.com', '$2y$12$7hS4PjDxhrvZJtxaGseXOOlR52ZyNlS3fa4X0Z/dQHLv7W69gVbi.', 3, 7, '063/200-765');
 insert into lekar (ime, prezime, email, lozinka,klinika_id, ocena, telefon) values ('Dusan','Dusanovic', 'duskodule@gmail.com', '$2y$12$VNa2wnV9nqBp082R9OyfleQVTTJlV9EcuEApVR8wSUHYZRXfpg.uy', 3, 6, '066/993-785');
@@ -39,6 +40,7 @@ insert into lekar (ime, prezime, email, lozinka,klinika_id, ocena, telefon) valu
 insert into medicinska_sestra (ime, prezime, email, br_telefona, lozinka,klinika_id) values ('Jelena','Jelenovic', 'jeca@gmail.com', '066/222-665', '$2y$12$ckUemsooeJoZ8mWv0h83G.pENxUrVVIMr2jgclhFFVepHGRPwpAtG', 1);
 insert into medicinska_sestra (ime, prezime, email, br_telefona, lozinka,klinika_id) values ('Olgica','Olganovic', 'olgaolgaa@gmail.com','063/222-765', '$2y$12$a.k4FY.bo4SmCenCbJZxEOxrWKtaOaLX2ubDV4/0aAmMX98K6onmu', 3);
 insert into medicinska_sestra (ime, prezime, email, br_telefona, lozinka,klinika_id) values ('Gordana','Gordanovic', 'gocagordana@gmail.com', '066/963-785', '$2y$12$RWNCcUWoAu9Ez5EUZCrDheKlhAAdWpKKcs3NoSlenGYmNrzBkCVlK', 3);
+
 
 insert into zdravstveni_karton (visina, tezina, krvna_grupa) values (180,80, 'AB');
 insert into zdravstveni_karton (visina, tezina, krvna_grupa) values (190,90, 'A');
@@ -99,9 +101,6 @@ insert into medicinska_sestra_pacijent (pacijent_id, medicinska_sestra_id) value
 --insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status) values ('19-dec-2019 08:00', 2, 2, 2, 2, 3000, false);
 
 
-insert into slobodni_termin(datum, tip_pregleda_id, lekar_id, klinika_id, cena, status, popust) values ('15-dec-2019 09:00', 3, 2, 3, 1500, false, 50.0);
-insert into slobodni_termin(datum, tip_pregleda_id, lekar_id, klinika_id, cena, status, popust) values ('18-dec-2019 11:00', 4, 1, 3, 2000, true, 25.0);
-insert into slobodni_termin(datum, tip_pregleda_id, lekar_id, klinika_id, cena, status, popust) values ('19-dec-2019 13:00', 2, 2, 2, 3000, false, 10.0);
 
 
 --insert into sala(naziv, broj, klinika_id) values ('Oper', 123, 3);
@@ -129,6 +128,10 @@ insert into sala(naziv, broj, klinika_id, tip_sale) values ('O', 1, 1, 0);
 insert into sala(naziv, broj, klinika_id, tip_sale) values ('O', 2, 1, 0);
 insert into sala(naziv, broj, klinika_id, tip_sale) values ('P', 1, 1, 1);
 insert into sala(naziv, broj, klinika_id, tip_sale) values ('P', 2, 1, 1);
+
+insert into slobodni_termin(datum, tip_pregleda_id, lekar_id, klinika_id, cena, status, popust, sala_id, termin) values ('15-mar-2019 09:00', 3, 2, 3, 1500, false, 50.0, 1, 9);
+insert into slobodni_termin(datum, tip_pregleda_id, lekar_id, klinika_id, cena, status, popust, sala_id, termin) values ('18-mar-2019 11:00', 4, 1, 3, 2000, true, 25.0, 2, 11);
+insert into slobodni_termin(datum, tip_pregleda_id, lekar_id, klinika_id, cena, status, popust, sala_id, termin) values ('19-mar-2019 13:00', 2, 2, 2, 3000, false, 10.0, 5, 13);
 
 
 --insert into radni_dan (datum_pocetka, datum_kraja,  medicinska_sestra_id) values ('11-dec-2019 06:00:00+02:00', '11-dec-2019 13:59:00+02:00', 1);
@@ -285,3 +288,15 @@ insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, c
 insert into izvestajopregledu (sadrzaj, dijagnoza_id, pregled_id, zdravstveni_karton_id) values ('Pacijent se zalio na tegobe u delu grudnog kosa. Potrebno odraditi dodatne analize radi odredjivanja preciznije dijagnoze', 2, 1, 1);
 --insert into izvestajopregledu (sadrzaj, dijagnoza_id, pregled_id, zdravstveni_karton_id) values ('Pacijent se zalio na tegobe u delu grudnog kosa. Potrebno odraditi dodatne analize radi odredjivanja preciznije dijagnoze', 2, 1, 1)
 insert into izvestajopregledu (sadrzaj, dijagnoza_id, pregled_id, zdravstveni_karton_id) values ('Pacijent je dobio velike boginje', 5, 2, 1);
+
+insert into recept (izvestajopregledu_id, lek_id, medicinska_sestra_id, medicinska_sestra_overa) values (1, 1, 1, true);
+insert into recept (izvestajopregledu_id, lek_id, medicinska_sestra_id, medicinska_sestra_overa) values (1, 2, 1, true);
+insert into recept (izvestajopregledu_id, lek_id, medicinska_sestra_id, medicinska_sestra_overa) values (1, 3, 1, false);
+insert into recept (izvestajopregledu_id, lek_id, medicinska_sestra_id, medicinska_sestra_overa) values (2, 4, 2, true);
+insert into recept (izvestajopregledu_id, lek_id, medicinska_sestra_id, medicinska_sestra_overa) values (2, 5, 2, true);
+insert into recept (izvestajopregledu_id, lek_id, medicinska_sestra_id, medicinska_sestra_overa) values (2, 6, 2, true);
+insert into recept (izvestajopregledu_id, lek_id, medicinska_sestra_id, medicinska_sestra_overa) values (2, 7, 2, true);
+
+
+
+

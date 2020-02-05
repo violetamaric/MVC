@@ -26,7 +26,6 @@ import lombok.Setter;
 
 @Entity
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-
 @Getter
 @Setter
 @NoArgsConstructor

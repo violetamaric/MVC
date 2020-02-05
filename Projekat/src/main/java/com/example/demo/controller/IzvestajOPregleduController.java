@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -78,7 +80,11 @@ public class IzvestajOPregleduController {
 		
 		
 		//RECEPTI
-		List<Long> recepti = izDTO.getRecepti();
+		
+		List<Long> recepti = new ArrayList<Long>();
+		for(Long id:izDTO.getRecepti().keySet()) {
+			recepti.add(id);
+		}
 		for(Long id : recepti) {
 			Recept r = new Recept();
 			r.setIzvestajOPregledu(iz);

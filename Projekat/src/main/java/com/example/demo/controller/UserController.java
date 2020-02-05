@@ -177,7 +177,9 @@ public class UserController {
 		
 		List<Pacijent> pacijenti = pacijentService.findAll();
 		for (Pacijent p :pacijenti) {
-			if(p.getLbo().equals(pacijentDTO.getLbo())) {
+			if(p.getLbo().equals(pacijentDTO.getLbo()) ||
+					p.getJmbg().equals(pacijentDTO.getJmbg()) ||
+					p.getEmail().equals(pacijentDTO.getEmail())) {
 				return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 			}
 		}

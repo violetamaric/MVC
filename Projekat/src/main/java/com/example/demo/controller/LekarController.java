@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.LekarDTO;
 import com.example.demo.dto.OdmorOdsustvoLDTO;
-import com.example.demo.dto.OdmorOdsustvoMSDTO;
 import com.example.demo.dto.PacijentDTO;
 import com.example.demo.dto.PregledDTO;
 import com.example.demo.dto.TerminDTO;
@@ -29,6 +28,7 @@ import com.example.demo.model.Lekar;
 import com.example.demo.model.OdmorOdsustvoLekar;
 import com.example.demo.model.Pacijent;
 import com.example.demo.model.Pregled;
+import com.example.demo.model.SlobodniTermin;
 import com.example.demo.model.Termin;
 import com.example.demo.service.LekarService;
 import com.example.demo.service.PacijentService;
@@ -218,7 +218,36 @@ public class LekarController {
 
 		
 	}
-	
+//	@GetMapping(value = "/listaZauzetostiLekara/{id}")
+//	@CrossOrigin(origins = "http://localhost:3000")
+//	public ResponseEntity<List<TerminDTO>> getListaZauzetostiLekara(@PathVariable Long id) {
+//		System.out.println("*************");
+//
+//		Lekar lekar = lekarService.findOne(id);
+//		System.out.println(lekar.getIme());
+//		
+//		Set<Termin> listaTermina = lekar.getListaZauzetihTermina();
+//		System.out.println(listaTermina.size());
+//		
+//		List<TerminDTO> listaTerminaDTO = new ArrayList<TerminDTO>();
+//		for(Termin rd: listaTermina) {
+//			listaTerminaDTO.add(new TerminDTO(rd));
+//		}
+//		Set<SlobodniTermin>listast = lekar.getListaSlobodnihTermina();
+//		for(SlobodniTermin st:listast) {
+//			TerminDTO tdto = new TerminDTO();
+//			tdto.setDatumPocetka(st.getDatum());
+//			tdto.setSalaBR(st.getSala().getBroj());
+//			tdto.setSalaID(st.getSala().getId());
+//			
+//		}
+//		
+//
+//		System.out.println("*************");
+//		return new ResponseEntity<>(listaTerminaDTO, HttpStatus.OK);
+//
+//		
+//	}
 
 	@PutMapping(path = "/oceni/{id}/{ocena}/{pregled_id}", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")

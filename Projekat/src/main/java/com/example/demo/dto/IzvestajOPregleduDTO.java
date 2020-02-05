@@ -2,7 +2,9 @@ package com.example.demo.dto;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.example.demo.model.IzvestajOPregledu;
 import com.example.demo.model.Recept;
@@ -20,7 +22,7 @@ public class IzvestajOPregleduDTO {
 	private String imeL;
 	private String prezimeL;
 	private Long pregledID;
-	private List<Long> recepti = new ArrayList<>();
+	private Map<Long, String> recepti = new HashMap<Long, String>();
 	
 	public Long getPregledID() {
 		return pregledID;
@@ -91,13 +93,14 @@ public class IzvestajOPregleduDTO {
 	
 	
 	
-	public List<Long> getRecepti() {
+
+	
+	public Map<Long, String> getRecepti() {
 		return recepti;
 	}
-	public void setRecepti(List<Long> recepti) {
+	public void setRecepti(Map<Long, String> recepti) {
 		this.recepti = recepti;
 	}
-	
 	public IzvestajOPregleduDTO() {
 		super();
 	}
@@ -113,10 +116,13 @@ public class IzvestajOPregleduDTO {
 		this.imeL = IOP.getPregled().getLekar().getIme();
 		this.prezimeL = IOP.getPregled().getLekar().getPrezime();
 		this.pregledID = IOP.getPregled().getId();
-		this.recepti = new ArrayList<>();
+		this.recepti = new HashMap<>();
 		for(Recept r : IOP.getListaRecepata()) {
+			if(r.isOveren()) {
+				this.recepti.put(r.getId(), r.getLek().getNaziv());
+			}
 			
-			this.recepti.add(r.getId());
+			
 		}
 	}
 //	public IzvestajOPregleduDTO(Long id, Long zkID, String dijagnozaN, String dijagnozaO, Long dijagnozaID, Date datum,

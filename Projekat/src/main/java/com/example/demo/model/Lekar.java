@@ -18,6 +18,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Version;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -66,8 +67,14 @@ public class Lekar implements UserDetails{
 	@OneToMany(mappedBy = "lekar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<OdmorOdsustvoLekar> listaOdmorOdsustvo = new HashSet<OdmorOdsustvoLekar>();
 	
+//	@OneToMany(mappedBy = "lekar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//	private Set<SlobodniTermin> listaSlobodnihTermina = new HashSet<SlobodniTermin>();
+	
 	@Column(name="ocena", nullable=false)
 	private int ocena; 
+	
+	@Version
+	private Long version;
 
 	@ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
 	@JoinTable(name = "lekar_authority",
@@ -237,11 +244,42 @@ public class Lekar implements UserDetails{
 				
 			}
 		}
+//		for(SlobodniTermin st:listaSlobodnihTermina) {
+//			if(st.getDatum().getDate() == datum.getDate() &&
+//					st.getDatum().getMonth() == datum.getMonth() &&
+//							st.getDatum().getYear() == datum.getYear()) {
+//				if(st.getTermin() == 9) {
+//					flag -=1;
+//				}else if(st.getTermin() == 11) {
+//					flag -=1;
+//				}else if(st.getTermin() == 13) {
+//					flag -=1;
+//				}else if(st.getTermin() == 15) {
+//					flag -=1;
+//				}
+//				if(flag == 0) {
+//					return false;
+//				}
+//				
+//			}
+//		}
 		return true;
 //	    return listaTermina.stream().filter(o -> o.getTermin() == termin).findFirst().isPresent();
 
 	}
-
+	public Long getVersion() {
+		return version;
+	}
+	public void setVersion(Long version) {
+		this.version = version;
+	}
+//	public Set<SlobodniTermin> getListaSlobodnihTermina() {
+//		return listaSlobodnihTermina;
+//	}
+//	public void setListaSlobodnihTermina(Set<SlobodniTermin> listaSlobodnihTermina) {
+//		this.listaSlobodnihTermina = listaSlobodnihTermina;
+//	}
+	
 	
 	
 }

@@ -49,7 +49,10 @@ public class EmailService {
 
 		SimpleMailMessage mail = new SimpleMailMessage();
 		mail.setTo(pacijentDTO.getEmail());
-		
+		System.out.println();
+		System.out.println(pacijentDTO.getEmail());
+		System.out.println(env.getProperty("spring.mail.username"));
+		System.out.println("****************************");
 		//UNIVERZALNI MAIL
 		mail.setFrom(env.getProperty("spring.mail.username"));
 		
