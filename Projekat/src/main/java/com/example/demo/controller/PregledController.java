@@ -25,12 +25,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.AdministratorKlinikeDTO;
+import com.example.demo.dto.LekarDTO;
+import com.example.demo.dto.OperacijaDTO;
 import com.example.demo.dto.PacijentDTO;
 import com.example.demo.dto.PregledDTO;
+import com.example.demo.dto.SalaDTO;
 import com.example.demo.dto.SlobodniTerminDTO;
+import com.example.demo.dto.TerminDTO;
 import com.example.demo.model.AdministratorKlinike;
 import com.example.demo.model.Klinika;
 import com.example.demo.model.Lekar;
+import com.example.demo.model.OdmorOdsustvoLekar;
+import com.example.demo.model.Operacija;
 import com.example.demo.model.Pacijent;
 import com.example.demo.model.Pregled;
 import com.example.demo.model.Sala;
@@ -40,6 +46,7 @@ import com.example.demo.model.TipPregleda;
 import com.example.demo.service.EmailService;
 import com.example.demo.service.KlinikaService;
 import com.example.demo.service.LekarService;
+import com.example.demo.service.OperacijaService;
 import com.example.demo.service.PacijentService;
 import com.example.demo.service.PregledService;
 import com.example.demo.service.SalaService;
@@ -64,7 +71,8 @@ public class PregledController {
 	private SlobodniTerminService STService;
 	@Autowired
 	private EmailService emailService;
-	
+	@Autowired
+	private OperacijaService operacijaService;
 	@Autowired
 	private SalaService salaService;
 	
@@ -220,9 +228,10 @@ public class PregledController {
 
 	@GetMapping(value = "/{id}")	
 	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
-	public ResponseEntity<PregledDTO> getLekar(@PathVariable Long id) {
+	public ResponseEntity<PregledDTO> getPregled(@PathVariable Long id) {
 
 		Pregled pregled = pregledService.findOne(id);
+		System.out.println(pregled);
 
 		// studen must exist
 		if (pregled == null) {
@@ -376,6 +385,8 @@ public class PregledController {
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 
+	
+	
 	@PutMapping(path = "/potvrda/{id}")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('PACIJENT')")
@@ -456,51 +467,341 @@ public class PregledController {
 	}
 	
 	
+
 	//postupak rezervisanja sale za p
 	@PostMapping(path = "/rezervisanje", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
-	public ResponseEntity<String> rezervisanjeSale(@RequestBody PregledDTO pDTO){
+	public ResponseEntity<String> rezervisanjeSaleNMP(@RequestBody PregledDTO pDTO){
 		System.out.println("-----   REZERVISANJEEE -------------------------------");
 		System.out.println(pDTO);
 		Klinika klinika = klinikaService.findById(pDTO.getKlinikaID());
-//		KlinickiCentar kc = listaKC.get(0);	
-		
-//		Pacijent p = pacijentService.findByEmail(paDTO.getEmail());
-//		PacijentDTO pDTO = new PacijentDTO(p);
+////		KlinickiCentar kc = listaKC.get(0);	
 //		
-////		Set<Pacijent> listaz = kc.getZahteviZaRegistraciju();
-//		
-//		if(kc.getZahteviZaRegistraciju().isEmpty()) {
-//			System.out.println("prazna listaaa");
-//			return new ResponseEntity<>("U listi ne postoji pacijent", HttpStatus.BAD_REQUEST);
-//		}else {
-//			
-//			p.setOdobrenaRegistracija(true);
-//			p = pacijentService.save(p);
-//			System.out.println(p.getOdobrenaRegistracija());
-//			
-//			kc.getZahteviZaRegistraciju().remove(p);
-//			kc.setZahteviZaRegistraciju(kc.getZahteviZaRegistraciju());
-//			kc = KCService.save(kc);
-//			System.out.println(kc.getZahteviZaRegistraciju().toString());
-//		}
-//
-//			
-//		String subject ="Odobrena registracija";
-//		String text = "Postovani " + pDTO.getIme() + " " + pDTO.getPrezime() 
-//					+ ",\n\nMolimo Vas da potvrdite vasu registraciju klikom na sledeci link: http://localhost:3000 .";
-//
-//		System.out.println(text);
-//		
-//		//slanje emaila
-//		try {
-//			emailService.poslatiOdgovorPacijentu(pDTO, subject, text);
-//		}catch( Exception e ){
-//			logger.info("Greska prilikom slanja emaila: " + e.getMessage());
-//			return new ResponseEntity<>("Mail nije poslat", HttpStatus.BAD_REQUEST);
-//		}
+////		Pacijent p = pacijentService.findByEmail(paDTO.getEmail());
+////		PacijentDTO pDTO = new PacijentDTO(p);
+////		
+//////		Set<Pacijent> listaz = kc.getZahteviZaRegistraciju();
+////		
+////		if(kc.getZahteviZaRegistraciju().isEmpty()) {
+////			System.out.println("prazna listaaa");
+////			return new ResponseEntity<>("U listi ne postoji pacijent", HttpStatus.BAD_REQUEST);
+////		}else {
+////			
+////			p.setOdobrenaRegistracija(true);
+////			p = pacijentService.save(p);
+////			System.out.println(p.getOdobrenaRegistracija());
+////			
+////			kc.getZahteviZaRegistraciju().remove(p);
+////			kc.setZahteviZaRegistraciju(kc.getZahteviZaRegistraciju());
+////			kc = KCService.save(kc);
+////			System.out.println(kc.getZahteviZaRegistraciju().toString());
+////		}
+////
+////			
+////		String subject ="Odobrena registracija";
+////		String text = "Postovani " + pDTO.getIme() + " " + pDTO.getPrezime() 
+////					+ ",\n\nMolimo Vas da potvrdite vasu registraciju klikom na sledeci link: http://localhost:3000 .";
+////
+////		System.out.println(text);
+////		
+////		//slanje emaila
+////		try {
+////			emailService.poslatiOdgovorPacijentu(pDTO, subject, text);
+////		}catch( Exception e ){
+////			logger.info("Greska prilikom slanja emaila: " + e.getMessage());
+////			return new ResponseEntity<>("Mail nije poslat", HttpStatus.BAD_REQUEST);
+////		}
 
 		return new ResponseEntity<>("Odobreno", HttpStatus.OK);
 	}
+	
+	
+	
+	
+	// pronalazak sala slobodnih za taj teremin i datum za PREGLED
+	@GetMapping(value = "/pronadjiSaleZaTajTermin/{idP}")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
+	public ResponseEntity<List<SalaDTO>> getSaleTermin(@PathVariable Long idP) {
+
+		Pregled pregled = pregledService.findById(idP);
+		System.out.println(pregled.getDatum() + " " + pregled.getTermin());
+
+		List<Sala> sale = salaService.findAll();
+		List<Sala> listaSalaKlinike = new ArrayList<Sala>();
+		for (Sala s : sale) {
+			if (s.getKlinika().getId() == pregled.getKlinika().getId()) {
+				if(s.getTipSale()==1) {
+					listaSalaKlinike.add(s);
+				}
+			}
+		}
+
+		List<Sala> listaSalaTest = new ArrayList<Sala>();
+		boolean flag = false;
+		List<SalaDTO> listaSalaSlob = new ArrayList<SalaDTO>();
+		List<Sala> listaZauzete = new ArrayList<Sala>();
+		for (Sala sD : listaSalaKlinike) {
+			System.out.println();
+			System.out.println(sD.getId());
+			flag = false;
+			SalaDTO sdt = new SalaDTO();
+			for (Termin t : terminService.findAll()) {
+
+				System.out.println(t);
+				if (t.getSala().getId() == sD.getId()) {
+					System.out.println(t.getSala().getId() + " " + t.getTermin() + " " + t.getDatumPocetka());
+					if (t.getDatumPocetka().equals(pregled.getDatum()) && t.getTermin().equals(pregled.getTermin())) {
+						System.out.println("Istiiii termin i njega preskoci");
+							sD.getZauzetiTermini().add(t);
+							listaZauzete.add(sD);
+
+						flag = true;
+						break;
+
+					} else if (t.getDatumPocetka().equals(pregled.getDatum())) {
+						System.out.println("||||||||||||||||||||||||||||||||||||||||||||");
+						if (!t.getTermin().equals(pregled.getTermin())) {
+							sD.getZauzetiTermini().add(t);
+							System.out.println();
+							salaService.save(sD);
+							listaSalaTest.add(sD);
+							System.out.println("********************aaaa " + sD.getId() + sD.getBroj() + " " + t.getTermin());
+
+							TerminDTO terminDTO = new TerminDTO(t);
+
+							sdt.getZauzetiTermini().add(terminDTO);
+						}
+					}
+
+				}
+
+			}
+
+			if (flag) {
+				continue;
+			}
+
+			
+			sdt.setNaziv(sD.getNaziv());
+			sdt.setBroj(sD.getBroj());
+			sdt.setId(sD.getId());
+			sdt.setKlinikaID(sD.getKlinika().getId());
+
+			System.out.println();
+			System.out.println("DUZINAAAAAAAAAAAAAAAAAAAA : " + listaSalaTest.size());
+			listaSalaSlob.add(sdt);
+//			
+			
+		}
+
+	
+		if(listaZauzete.size()==listaSalaKlinike.size()) {
+			listaZauzete = new ArrayList<Sala>();
+			//znaci da su sve sale zauzete za taj termin, tada mi vrati sve sale sa 
+			//disabled tim terminom, jer ima mogucnost da izabere novi termin i ako ima potrebe da mijenja lekara 
+			for (Sala sala : listaSalaKlinike) {
+				if(sala.getTipSale()==1) {
+					SalaDTO sdt = new SalaDTO();
+					for (Termin termin : terminService.findAll()) {
+						if(sala.getId()==termin.getSala().getId()) {
+							if (termin.getDatumPocetka().equals(pregled.getDatum()) && termin.getTermin().equals(pregled.getTermin())) {
+								sala.getZauzetiTermini().add(termin);
+								TerminDTO terDTO = new TerminDTO(termin);
+
+								sdt.getZauzetiTermini().add(terDTO);
+								sdt.setNaziv(sala.getNaziv());
+								sdt.setBroj(sala.getBroj());
+								sdt.setId(sala.getId());
+								sdt.setKlinikaID(sala.getKlinika().getId());
+
+//								System.out.println();
+//								System.out.println("********************bbbbb " + sala.getId() +" " + sala.getBroj() + " " + termin.getTermin());
+								
+							}else if(termin.getDatumPocetka().equals(pregled.getDatum())){
+								sala.getZauzetiTermini().add(termin);
+								TerminDTO terDTO = new TerminDTO(termin);
+
+								sdt.getZauzetiTermini().add(terDTO);
+								sdt.setNaziv(sala.getNaziv());
+								sdt.setBroj(sala.getBroj());
+								sdt.setId(sala.getId());
+								sdt.setKlinikaID(sala.getKlinika().getId());
+	//
+//								System.out.println();
+//								System.out.println("********************bbbbb " + sala.getId() + sala.getBroj() + " " + termin.getTermin());
+							}
+						}
+						
+						
+					}
+//					System.out.println();
+					salaService.save(sala);
+				
+
+					
+					listaSalaSlob.add(sdt);
+				}
+			
+				
+			}
+			
+			
+		}
+		return new ResponseEntity<>(listaSalaSlob, HttpStatus.OK);
+	}
+
+	// rezervisanje sale i slanje mejla pacijentu i lekaru
+	@PostMapping(path = "/rezervisanjeSale", consumes = "application/json")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
+	public ResponseEntity<String> rezervisanjeSale(@RequestBody PregledDTO pDTO) {
+		System.out.println();
+		System.out.println("......... Rezervisanje sale ..... ");
+		System.out.println(pDTO);
+		System.out.println();
+
+		List<Pregled> listaPregleda = pregledService.findAll();
+		Pacijent pacijent = null;
+		Lekar l = null;
+		for (Pregled p : listaPregleda) {
+			if (p.getId().equals(pDTO.getId())) {
+				p.setStatus(1);
+				Sala s = salaService.findById(pDTO.getSalaID());
+				p.setSala(s);
+				pacijent = pacijentService.findByID(pDTO.getPacijentID());
+
+				l = lekarService.findById(pDTO.getLekarID());
+				p.setLekar(l);
+				p.setTermin(pDTO.getTermin());
+				p.setDatum(pDTO.getDatum());
+				pregledService.save(p);
+				Termin t = new Termin();
+				t.setTermin(pDTO.getTermin());
+				int idT = terminService.findAll().size() + 1;
+				long idTermina = (long) idT;
+				t.setId(idTermina);
+				t.setDatumPocetka(pDTO.getDatum());
+				t.setSala(s);
+				t.setLekar(l);
+				terminService.save(t);
+
+			}
+		}
+
+		System.out.println("REZERVISANOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+
+		String subject = "Rezervisana sala";
+		String text = "Postovani " + pacijent.getIme() + " " + pacijent.getPrezime()
+				+ ",\n\nMolimo Vas da potvrdite vas pregled klikom na sledeci link: http://localhost:3000 .";
+
+		System.out.println(text);
+
+		PacijentDTO pd = new PacijentDTO(pacijent);
+		LekarDTO ld = new LekarDTO(l);
+		// slanje emaila
+		try {
+			emailService.poslatiOdgovorPacijentu(pd, subject, text);
+		} catch (Exception e) {
+			logger.info("Greska prilikom slanja emaila: " + e.getMessage());
+			return new ResponseEntity<>("Mail nije poslat", HttpStatus.BAD_REQUEST);
+		}
+
+		String subject2 = "Rezervisana sala";
+		String text2 = "Postovani " + l.getIme() + " " + l.getPrezime() + ",\n\nRezervisana je sala za Vas pregled! ";
+
+		System.out.println(text);
+
+		// slanje emaila
+		try {
+			emailService.poslatiOdgovorLekaru(ld, subject2, text2);
+		} catch (Exception e) {
+			logger.info("Greska prilikom slanja emaila: " + e.getMessage());
+			return new ResponseEntity<>("Mail nije poslat2", HttpStatus.BAD_REQUEST);
+		}
+
+		return new ResponseEntity<>("uspesno rezervisana sala1", HttpStatus.OK);
+	}
+
+	// metoda koja vraca listu slobodnih lekara za taj datum i termin
+		@PostMapping(path = "/pronadjiLekaraZaPregled", consumes = "application/json")
+		@CrossOrigin(origins = "http://localhost:3000")
+		@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
+		public ResponseEntity<List<LekarDTO>> slobodanLekar(@RequestBody PregledDTO pDTO) {
+
+			List<LekarDTO> listaSlobodnihLekara = new ArrayList<LekarDTO>();
+			Klinika klinika = klinikaService.findById(pDTO.getKlinikaID());
+
+			System.out.println(pDTO);
+			List<Lekar> listaSvihLekaraKlinike = new ArrayList<Lekar>();
+			List<Lekar> listaSvihLekara = lekarService.findAll();
+			for (Lekar l : listaSvihLekara) {
+				if (l.getKlinika().equals(klinika)) {
+					listaSvihLekaraKlinike.add(l);
+				}
+
+			}
+			System.out.println();
+			System.out.println(" SVI LEKARI KLINIKE *************** " + listaSvihLekaraKlinike.size());
+			System.out.println(listaSvihLekaraKlinike.size());
+
+			// Lekar lekar = lekarService.findByEmail(ooDTO.getEmailL());
+			for (Lekar lekar : listaSvihLekaraKlinike) {
+				System.out.println("-----> " + lekar.getId() + " " + lekar.getIme() + " " + lekar.getPrezime());
+				boolean flag = false;
+//				Set<Termin> pregledi = lekar.getListaZauzetihTermina();
+				for (Pregled t : pregledService.findAll()) {
+					if (t.getStatus() == 1) {
+						if (t.getLekar().getId() == lekar.getId()) {
+							System.out.println("LEKAR ISTI");
+							if (t.getTermin() == pDTO.getTermin()) {
+								System.out.println("TERMIN ISTI");
+								if (t.getDatum().compareTo(pDTO.getDatum()) == 0) {
+									System.out.println("Zauzet lekar :");
+									System.out.println(lekar.getId() + " " + lekar.getIme() + " " + lekar.getPrezime());
+									System.out.println();
+									flag = true;
+									break;
+
+								}
+
+							}
+						}
+					}
+
+				}
+
+				Set<OdmorOdsustvoLekar> listaool = lekar.getListaOdmorOdsustvo();
+
+				for (OdmorOdsustvoLekar ool : listaool) {
+					if (ool.getStatus() == 1) {
+						if (ool.getDatumOd().compareTo(pDTO.getDatum())
+								* pDTO.getDatum().compareTo(ool.getDatumDo()) >= 0) {
+							System.out.println();
+							System.out.println("Lekar na odmoru");
+							System.out.println(lekar.getId() + " " + lekar.getIme() + " " + lekar.getPrezime());
+							System.out.println();
+							flag = true;
+							break;
+						}
+
+					}
+				}
+
+				if (!flag) {
+					LekarDTO l = new LekarDTO(lekar);
+					listaSlobodnihLekara.add(l);
+				}
+
+			}
+
+			for (LekarDTO l : listaSlobodnihLekara) {
+				System.out.println(l);
+			}
+
+			System.out.println("*************** " + listaSlobodnihLekara.size());
+
+			return new ResponseEntity<>(listaSlobodnihLekara, HttpStatus.OK);
+		}
 }

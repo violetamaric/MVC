@@ -143,8 +143,14 @@ insert into slobodni_termin(datum, tip_pregleda_id, lekar_id, klinika_id, cena, 
 
 insert into operacija (status, datum, termin, tip_operacije, sala_id, pacijent_id, cena, klinika_id) values (0, '17-mar-2020', 9, 'mala hiruska intervencija', 1, 1, 10000, 1);
 insert into operacija (status, datum, termin, tip_operacije, sala_id, pacijent_id, cena, klinika_id) values (1, '13-mar-2020', 11, 'velika hiruska intervencija', 3, 2, 15000, 3);
-insert into operacija (status, datum, termin, tip_operacije, sala_id, pacijent_id, cena, klinika_id) values (1, '14-mar-2020', 11, 'mala hiruska intervencija', 2, 3, 10000, 3);
-insert into operacija (status, datum, termin, tip_operacije, sala_id, pacijent_id, cena, klinika_id) values (1, '15-mar-2020', 15, 'velika hiruska intervencija', 3, 1, 20000, 2);
+insert into operacija (status, datum, termin, tip_operacije, sala_id, pacijent_id, cena, klinika_id) values (0, '14-mar-2020', 11, 'mala hiruska intervencija', 2, 3, 10000, 3);
+insert into operacija (status, datum, termin, tip_operacije, sala_id, pacijent_id, cena, klinika_id) values (0, '15-mar-2020', 15, 'velika hiruska intervencija', 2, 1, 20000, 2);
+insert into operacija (status, datum, termin, tip_operacije, sala_id, pacijent_id, cena, klinika_id) values (1, '15-mar-2020', 15, 'velika hiruska intervencija', 1, 1, 20000, 3	);
+insert into operacija (status, datum, termin, tip_operacije, sala_id, pacijent_id, cena, klinika_id) values (0, '1-mar-2020', 11, 'velika hiruska intervencija', 1, 3, 32000, 3	);
+insert into operacija (status, datum, termin, tip_operacije, sala_id, pacijent_id, cena, klinika_id) values (0, '25-feb-2020', 9, 'velika hiruska intervencija', 1, 1, 25555, 3	);
+
+
+
 
 insert into lekar_operacija (operacija_id, lekar_id) values (1, 2);
 insert into lekar_operacija (operacija_id, lekar_id) values (2, 2);
@@ -227,6 +233,15 @@ insert into termin (datum_pocetka, termin, sala_id, lekar_id ) values ('21-mar-2
 insert into termin (datum_pocetka, termin, sala_id, lekar_id ) values ('21-mar-2020', 9, 3, 1);
 insert into termin (datum_pocetka, termin, sala_id, lekar_id ) values ('21-mar-2020', 9, 4, 1);
 insert into termin (datum_pocetka, termin, sala_id, lekar_id ) values ('21-mar-2020', 9, 5, 1);
+
+insert into termin (datum_pocetka, termin, sala_id, lekar_id ) values ('1-mar-2020', 11, 1, 3);
+insert into termin (datum_pocetka, termin, sala_id, lekar_id ) values ('1-mar-2020', 11, 2, 1);
+insert into termin (datum_pocetka, termin, sala_id, lekar_id ) values ('1-mar-2020', 11, 6, 2);
+insert into termin (datum_pocetka, termin, sala_id, lekar_id ) values ('1-mar-2020', 9, 1, 1);
+insert into termin (datum_pocetka, termin, sala_id, lekar_id ) values ('1-mar-2020', 15, 1, 2);
+insert into termin (datum_pocetka, termin, sala_id, lekar_id ) values ('1-mar-2020', 13, 2, 1);
+insert into termin (datum_pocetka, termin, sala_id, lekar_id ) values ('25-feb-2020', 9, 1, 1);
+insert into termin (datum_pocetka, termin, sala_id, lekar_id ) values ('25-feb-2020', 13, 2, 1);
 
 --insert into termin (datum_pocetka, termin, sala_id, lekar_id ) values ('20-mar-2020', 13, 1, 4);
 insert into termin (datum_pocetka, termin, sala_id, lekar_id ) values ('20-mar-2020', 13, 2, 3);
