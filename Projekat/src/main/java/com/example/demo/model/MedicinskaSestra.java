@@ -1,6 +1,6 @@
 package com.example.demo.model;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -11,13 +11,18 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+
 @Entity
-public class MedicinskaSestra {
-	
+public class MedicinskaSestra implements UserDetails{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,30 +37,45 @@ public class MedicinskaSestra {
 	@Column(name="email", nullable=false)
 	private String email;
 	
-	@Column(name="korisnickoIme", nullable=false)
-	private String korisnickoIme;
+	@Column(name="brTelefona", nullable=false)
+	private String brTelefona;
 	
 	@Column(name="lozinka", nullable=false)
 	private String lozinka;
 	
-	@ManyToMany(mappedBy = "listaMedicinskihSestara")
-	private Set<Pacijent> listaPacijenata = new HashSet<Pacijent>();
+	@ManyToMany
+	@JoinTable(name = "medicinska_sestra_pacijent", joinColumns = @JoinColumn(name = "pacijent_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "medicinska_sestra_id", referencedColumnName = "id"))
+	private Set<Pacijent> listaPacijenataMedSestra = new HashSet<Pacijent>();
+	
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Klinika klinika;
-	//kalendar
 	
 	@OneToMany(mappedBy = "medicinskaSestra", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Recept> recepti = new HashSet<Recept>();
 	
+	//kalendar
+	@OneToMany(mappedBy = "medicinskaSestra", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<OdmorOdsustvoMedicinskaSestra> listaOdmorOdsustvo = new HashSet<OdmorOdsustvoMedicinskaSestra>();
+
+	@OneToMany(mappedBy = "medicinskaSestra", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<RadniDan> listaRadnihDana = new HashSet<RadniDan>();
+
+	@ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	@JoinTable(name = "medicinska_sestra_authority",
+			joinColumns = @JoinColumn(name = "medicinska_sestra_id", referencedColumnName = "id"),
+			inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
+	private Set<Authority> authorities;
+	
+
 	public String getIme() {
 		return ime;
 	}
-	public String getKorisnickoIme() {
-		return korisnickoIme;
+	public String getBrTelefona() {
+		return brTelefona;
 	}
-	public void setKorisnickoIme(String korisnickoIme) {
-		this.korisnickoIme = korisnickoIme;
+	public void setBrTelefona(String brTelefona) {
+		this.brTelefona = brTelefona;
 	}
 	public String getLozinka() {
 		return lozinka;
@@ -79,10 +99,10 @@ public class MedicinskaSestra {
 		this.email = email;
 	}
 	public Set<Pacijent> getListaPacijenata() {
-		return listaPacijenata;
+		return listaPacijenataMedSestra;
 	}
 	public void setListaPacijenata(Set<Pacijent> listaPacijenata) {
-		this.listaPacijenata = listaPacijenata;
+		this.listaPacijenataMedSestra = listaPacijenata;
 	}
 	public Klinika getKlinika() {
 		return klinika;
@@ -120,6 +140,66 @@ public class MedicinskaSestra {
 	public void setRecepti(Set<Recept> recepti) {
 		this.recepti = recepti;
 	}
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		// TODO Auto-generated method stub
+		return this.authorities;
+	}
+	@Override
+	public String getPassword() {
+		// TODO Auto-generated method stub
+		return lozinka;
+	}
+	@Override
+	public String getUsername() {
+		// TODO Auto-generated method stub
+		return email;
+	}
+	@Override
+	public boolean isAccountNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+	@Override
+	public boolean isAccountNonLocked() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+	@Override
+	public boolean isCredentialsNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+	@Override
+	public boolean isEnabled() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+	public Set<Pacijent> getListaPacijenataMedSestra() {
+		return listaPacijenataMedSestra;
+	}
+	public void setListaPacijenataMedSestra(Set<Pacijent> listaPacijenataMedSestra) {
+		this.listaPacijenataMedSestra = listaPacijenataMedSestra;
+	}
+	public void setAuthorities(Set<Authority> authorities) {
+		this.authorities = authorities;
+	}
+	public Set<OdmorOdsustvoMedicinskaSestra> getListaOdmorOdsustvo() {
+		return listaOdmorOdsustvo;
+	}
+	public void setListaOdmorOdsustvo(Set<OdmorOdsustvoMedicinskaSestra> listaOdmorOdsustvo) {
+		this.listaOdmorOdsustvo = listaOdmorOdsustvo;
+	}
+	public Set<RadniDan> getListaRadnihDana() {
+		return listaRadnihDana;
+	}
+	public void setListaRadnihDana(Set<RadniDan> listaRadnihDana) {
+		this.listaRadnihDana = listaRadnihDana;
+	}
+	
+	
+	
+
 	
 	
 }

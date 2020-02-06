@@ -1,7 +1,24 @@
 package com.example.demo.dto;
 
-import com.example.demo.model.Klinika;
+import java.util.ArrayList;
+import java.util.Set;
 
+import com.example.demo.model.AdministratorKlinike;
+import com.example.demo.model.KlinickiCentar;
+import com.example.demo.model.Klinika;
+import com.example.demo.model.Lekar;
+import com.example.demo.model.MedicinskaSestra;
+import com.example.demo.model.OdmorOdsustvoLekar;
+import com.example.demo.model.OdmorOdsustvoMedicinskaSestra;
+import com.example.demo.model.Operacija;
+import com.example.demo.model.Pacijent;
+import com.example.demo.model.Pregled;
+import com.example.demo.model.Sala;
+import com.example.demo.model.TipPregleda;
+import com.example.demo.model.Klinika.KlinikaBuilder;
+
+import lombok.Builder;
+//@Builder
 public class KlinikaDTO {
 
 	private Long id;
@@ -10,6 +27,8 @@ public class KlinikaDTO {
 	private String adresa;
 	private String opis;
 	private int ocena;
+//	private ArrayList<Long> listaAdministratoraKlinike = new ArrayList<Long>(); 
+	//lista id-eva administratora klinike
 	
 	public KlinikaDTO() {
 		super();
@@ -22,16 +41,30 @@ public class KlinikaDTO {
 		this.adresa = adresa;
 		this.opis = opis;
 		this.ocena = ocena;
+		
 	}
+//	public KlinikaDTO(Long id, String naziv, String adresa, String opis, int ocena, ArrayList<Long> lista) {
+//		super();
+//		this.id = id;
+//		this.naziv = naziv;
+//		this.adresa = adresa;
+//		this.opis = opis;
+//		this.ocena = ocena;
+//		this.listaAdministratoraKlinike = lista;
+//	}
 
 	public KlinikaDTO(Klinika klinika) {
 		super();
-		// TODO Auto-generated constructor stub
+		
 		this.id = klinika.getId();
 		this.naziv = klinika.getNaziv();
 		this.adresa = klinika.getAdresa();
 		this.opis = klinika.getOpis();
 		this.ocena = klinika.getOcena();
+//		for (AdministratorKlinike ak : klinika.getListaAdminKlinike()) {
+//			this.listaAdministratoraKlinike.add(ak.getId());
+//		}
+		
 	}
 
 	
@@ -73,7 +106,15 @@ public class KlinikaDTO {
 
 	public void setOcena(int ocena) {
 		this.ocena = ocena;
-	} 
+	}
+
+//	public ArrayList<Long> getListaAdministratoraKlinike() {
+//		return listaAdministratoraKlinike;
+//	}
+//
+//	public void setListaAdministratoraKlinike(ArrayList<Long> listaAdministratoraKlinike) {
+//		this.listaAdministratoraKlinike = listaAdministratoraKlinike;
+//	} 
 	
 	
 	
