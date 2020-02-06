@@ -44,6 +44,9 @@ public class Klinika {
 
 	@Column(name = "opis", nullable = false)
 	private String opis;
+	
+	@Column(name = "status", nullable = false)
+	private int status;
 
 //	@Column(name="izvestajOKlinici", nullable=false)
 //	private IzvestajOKlinici izvestajOKlinici;
@@ -95,25 +98,27 @@ public class Klinika {
 	@Version
 	private Long version;
 
-	public Klinika(String naziv, String adresa, String opis, int ocena) {
+	public Klinika(String naziv, String adresa, String opis, int ocena, int status) {
 		super();
 		this.naziv = naziv;
 		this.adresa = adresa;
 		this.opis = opis;
 		this.ocena = ocena;
+		this.status = status;
 	}
 
-	public Klinika(String naziv, String adresa, String opis, KlinickiCentar klinickiCentar, int ocena) {
+	public Klinika(String naziv, String adresa, String opis, KlinickiCentar klinickiCentar, int ocena, int status) {
 		super();
 		this.naziv = naziv;
 		this.adresa = adresa;
 		this.opis = opis;
 		this.klinickiCentar = klinickiCentar;
 		this.ocena = ocena;
+		this.status = status;
 	}
 	
 
-	public Klinika(Long id, String naziv, String adresa, String opis, Set<Pregled> listaPregleda,
+	public Klinika(Long id, String naziv, String adresa, String opis, int status, Set<Pregled> listaPregleda,
 			Set<Operacija> listaOperacija, Set<Lekar> listaLekara, Set<TipPregleda> listaTipovaPregleda,
 			Set<Pacijent> listaPacijenata, Set<MedicinskaSestra> listaMedSestara, Set<Sala> listaSala,
 			Set<AdministratorKlinike> listaAdminKlinike, KlinickiCentar klinickiCentar, int ocena, Long version,
@@ -135,10 +140,11 @@ public class Klinika {
 		this.klinickiCentar = klinickiCentar;
 		this.ocena = ocena;
 		this.version = version;
+		this.status = status;
 		this.zahteviZaOdmorOdsustvoLekara = zahteviZaOdmorOdsustvoLekara;
 		this.zahteviZaOdmorOdsustvoMedestre = zahteviZaOdmorOdsustvoMedestre;
 	}
-
+	
 
 	@OneToMany(mappedBy = "klinika", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<OdmorOdsustvoLekar> zahteviZaOdmorOdsustvoLekara = new HashSet<OdmorOdsustvoLekar>();

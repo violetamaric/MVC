@@ -38,6 +38,9 @@ public class AdministratorKC implements UserDetails{
 	@Column(name="email", nullable=false)
 	private String email;
 	
+	@Column(name = "status", nullable = false)
+	private int status;
+	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private KlinickiCentar klinickiCentar;
 	
@@ -82,6 +85,12 @@ public class AdministratorKC implements UserDetails{
 		this.klinickiCentar = klinickiCentar;
 	}
 	
+	public int getStatus() {
+		return status;
+	}
+	public void setStatus(int status) {
+		this.status = status;
+	}
 	@Override
 	public boolean equals(Object obj) {
 		// TODO Auto-generated method stub
