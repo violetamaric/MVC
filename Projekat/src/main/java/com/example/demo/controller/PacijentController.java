@@ -186,16 +186,22 @@ public class PacijentController {
 		ZdravstveniKarton zk = ZKService.findById(zkDTO.getId());
 		
 		zk.setPacijent(p);
-		zk.setKrvnaGrupa(zkDTO.getKrvnaGrupa());
-		zk.setTezina(zkDTO.getTezina());
-		zk.setVisina(zkDTO.getVisina());
-		
+		if(zkDTO.getKrvnaGrupa() != "") {
+			zk.setKrvnaGrupa(zkDTO.getKrvnaGrupa());
+		}
+		if(zkDTO.getTezina() != 0) {
+			zk.setTezina(zkDTO.getTezina());
+		}
+		if(zkDTO.getVisina() != 0) {
+			zk.setVisina(zkDTO.getVisina());
+		}
+
 		zk = ZKService.save(zk);
 		p.setZdravstveniKarton(zk);
 		p = pacijentService.save(p);
 		
 		System.out.println("-------------ZK--------------");
-		return new ResponseEntity<>("Uspesno", HttpStatus.OK);
+		return new ResponseEntity<>("USPESNO", HttpStatus.OK);
 	}
 
 	

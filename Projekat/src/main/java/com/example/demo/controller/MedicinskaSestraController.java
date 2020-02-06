@@ -31,6 +31,7 @@ import com.example.demo.model.Pregled;
 import com.example.demo.model.Recept;
 import com.example.demo.service.KlinikaService;
 import com.example.demo.service.MedicinskaSestraService;
+import com.example.demo.service.ReceptService;
 
 
 
@@ -40,6 +41,8 @@ public class MedicinskaSestraController {
 	@Autowired
 	private MedicinskaSestraService medicinskaSestraService;
 	
+	@Autowired
+	private ReceptService receptService;
 	
 	@Autowired
 	private KlinikaService klinikaService;
@@ -196,9 +199,10 @@ public class MedicinskaSestraController {
 	}
 	
 	
-	//vraca listu pregleda
+	//vraca listu recepata
 	@GetMapping(value = "/listaRecepata")
 	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('MED_SESTRA')")
 	public ResponseEntity<List<ReceptDTO>> getlistaRecepata(Principal p) {
 		System.out.println("//////////////////// MED SESTRA LISTA Recepata ////////////////////////");
 		
@@ -213,8 +217,11 @@ public class MedicinskaSestraController {
 			IzvestajOPregledu iop = pregled.getIzvestajOPregledu();
 			Set<Recept> recepti = iop.getListaRecepata();
 			for(Recept rec : recepti) {
-				System.out.println("RECEPT : "+ rec.getLek().getNaziv());
-				lista.add(new ReceptDTO(rec));
+				if(rec.isOveren() == false) {
+					System.out.println("RECEPT : "+ rec.getLek().getNaziv());
+					lista.add(new ReceptDTO(rec));
+				}
+				
 			}
 		}
 		
@@ -225,5 +232,17 @@ public class MedicinskaSestraController {
 		
 	}
 	
-
+	
+	//overa recepta
+	@PutMapping(path = "/overa/{id}")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('MED_SESTRA')")
+	public ResponseEntity<?> overaRecepta(@PathVariable Long id) {
+		System.out.println("OVERA RECEPTA");
+		Recept recept = receptService.findByID(id);
+		recept.setOveren(true);
+		recept = receptService.save(recept);
+		System.out.println("OVERA RECEPTA");
+		return new ResponseEntity<>("overen", HttpStatus.OK);
+	}
 }

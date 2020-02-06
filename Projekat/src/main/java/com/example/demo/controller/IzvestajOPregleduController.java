@@ -17,6 +17,7 @@ import com.example.demo.dto.IzvestajOPregleduDTO;
 import com.example.demo.model.Dijagnoza;
 import com.example.demo.model.IzvestajOPregledu;
 import com.example.demo.model.Lek;
+import com.example.demo.model.Lekar;
 import com.example.demo.model.Pacijent;
 import com.example.demo.model.Pregled;
 import com.example.demo.model.Recept;
@@ -24,6 +25,8 @@ import com.example.demo.model.ZdravstveniKarton;
 import com.example.demo.service.DijagnozaService;
 import com.example.demo.service.IzvestajOPregleduService;
 import com.example.demo.service.LekService;
+import com.example.demo.service.LekarService;
+import com.example.demo.service.PacijentService;
 import com.example.demo.service.PregledService;
 import com.example.demo.service.ReceptService;
 import com.example.demo.service.ZdravstveniKartonService;
@@ -36,15 +39,16 @@ public class IzvestajOPregleduController {
 	
 	@Autowired
 	private PregledService pregledService;
-	
-	
+	@Autowired
+	private LekarService lekarService;
+	@Autowired
+	private PacijentService pacijentService;
 	@Autowired
 	private DijagnozaService dijagnozaService;
 	@Autowired
 	private LekService lekService;
 	@Autowired
 	private ReceptService receptService;
-	
 	@Autowired
 	private ZdravstveniKartonService zdravstveniKartonService;
 	
@@ -57,14 +61,37 @@ public class IzvestajOPregleduController {
 		
 		IzvestajOPregledu iz = new IzvestajOPregledu();
 		
+		
 		//PREGLED
 		
 		Pregled pregled = pregledService.findById(izDTO.getPregledID());
 		pregled.setStatus(3); //zavrsen pregled
-		
+//		Lekar lekar = pregled.getLekar();
+//		boolean flag = false;
+//		Pacijent pacijent = pregled.getPacijent();
+////		System.out.println("ISPIS FLAG  JE FALSE");
+//		for(Pacijent pac : lekar.getListaPacijenata()) {
+//			if(pac.getId().equals(pacijent.getId())) {
+//				flag = true;
+//				System.out.println("ISPIS FLAG  JE TRUE");
+//				break;
+//			}
+//		}
+//		if(flag == false) {
+//			System.out.println("1");
+//			lekar.getListaPacijenata().add(pacijent);
+//			System.out.println("2");
+//			
+//			
+//			pacijent.getListaLekara().add(lekar);
+//			System.out.println("3");
+////			pacijent = pacijentService.save(pacijent);
+////			System.out.println("4");
+////			lekar = lekarService.save(lekar);
+////			System.out.println("5");
+//		}
 		
 		Pacijent pacijent = pregled.getPacijent();
-		
 		iz.setPregled(pregled);
 		
 		//ZDRAVSTVENI KARTON
