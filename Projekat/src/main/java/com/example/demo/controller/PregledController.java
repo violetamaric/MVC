@@ -1,7 +1,10 @@
 package com.example.demo.controller;
 
 import java.security.Principal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -74,7 +77,7 @@ public class PregledController {
 
 	@PostMapping(path = "/new", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('PACIJENT')")
+//	@PreAuthorize("hasAuthority('PACIJENT')")
 	public ResponseEntity<?> noviPregled(@RequestBody PregledDTO pregledDTO) {
 		
 		//TODO 1: PROVERITI DA LI UOPSTE MOZE TOG DATUMA DA ZAKAZE
@@ -125,7 +128,7 @@ public class PregledController {
 
 	@PostMapping(path = "/newST", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('PACIJENT')")
+//	@PreAuthorize("hasAuthority('PACIJENT')")
 	public ResponseEntity<?> noviPregledST(@RequestBody PregledDTO pregledDTO) {
 		System.out.println("dodavanje novog pregleda ST");
 		System.out.println(pregledDTO);
@@ -412,6 +415,46 @@ public class PregledController {
 		return new ResponseEntity<>(new PregledDTO(pregled), HttpStatus.OK);
 	}
 
+	//otkazivanje pregleda
+	@PutMapping(path = "/otkazivanje/{id}")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('PACIJENT')")
+	public ResponseEntity<PregledDTO> otkaziPregled(@PathVariable Long id) {
+		System.out.println("OTKAZIVANEJ PREGLEDA");
+		Pregled pregled = pregledService.findById(id);
+		System.out.println(new PregledDTO(pregled));
+
+		Date date = new Date();
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DATE, -1);
+		Date date2 = cal.getTime();
+		
+		
+		
+		System.out.println();
+		System.out.println(date);
+		System.out.println(date2);
+		System.out.println(pregled.getDatum().compareTo(date2));
+		System.out.println(date2.compareTo(pregled.getDatum()));
+		System.out.println();
+		
+		if(date2.compareTo(pregled.getDatum())*pregled.getDatum().compareTo(date)>=0) {
+			System.out.println("datum je izmedju - ne moze se otkazati");
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
+		}else {
+			System.out.println("datum je otkazan");
+			pregled.setStatus(2);
+			pregledService.save(pregled);
+			return new ResponseEntity<>(new PregledDTO(pregled), HttpStatus.OK);
+
+		}
+		
+
+		
+
+		
+	}
+	
 	
 	//postupak rezervisanja sale za p
 	@PostMapping(path = "/rezervisanje", consumes = "application/json")

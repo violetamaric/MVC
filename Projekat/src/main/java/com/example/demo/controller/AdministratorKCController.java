@@ -189,8 +189,8 @@ public class AdministratorKCController {
 			return new ResponseEntity<>("U listi ne postoji pacijent", HttpStatus.BAD_REQUEST);
 		}else {
 			
-			p.setOdobrenaRegistracija(true);
-			p = pacijentService.save(p);
+//			p.setOdobrenaRegistracija(true);
+//			p = pacijentService.save(p);
 			System.out.println(p.getOdobrenaRegistracija());
 			
 			kc.getZahteviZaRegistraciju().remove(p);
@@ -202,7 +202,7 @@ public class AdministratorKCController {
 			
 		String subject ="Odobrena registracija";
 		String text = "Postovani " + pDTO.getIme() + " " + pDTO.getPrezime() 
-					+ ",\n\nMolimo Vas da potvrdite vasu registraciju klikom na sledeci link: http://localhost:3000 .";
+					+ ",\n\nMolimo Vas da potvrdite vasu registraciju klikom na sledeci link: http://localhost:3000/potvrdaRegistracije/"+p.getId()+" .";
 
 		System.out.println(text);
 		

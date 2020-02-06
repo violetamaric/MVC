@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,5 +30,8 @@ public class TerminService {
 	}
 	public void delete(Termin termin) {
 		terminRepository.delete(termin);
+	}
+	public List<Termin> zauzetiTerminiLekara(Long id, Date pocDatum, Date krajDatum) {
+		return terminRepository.zauzetiTerminiLekara(id, pocDatum, krajDatum);
 	}
 }

@@ -40,7 +40,7 @@ public class Pregled {
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER )
 	private Sala sala;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Lekar lekar;
 
 //	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
