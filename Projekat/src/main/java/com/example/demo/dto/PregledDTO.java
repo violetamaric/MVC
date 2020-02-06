@@ -76,6 +76,21 @@ public class PregledDTO {
 		this.termin = termin;
 	}
 
+	public PregledDTO(SlobodniTerminDTO st) {
+		this.cena = st.getCena();
+		this.datum = st.getDatum();
+		this.nazivKl = st.getKlinikaN();
+		this.klinikaID = st.getKlinikaID();
+		this.lekarID = st.getLekarID();
+		this.imeL = st.getLekarIme();
+		this.prezimeL = st.getLekarPrezime();
+		this.nazivTP = st.getTipPregledaN();
+		this.tipPregledaID = st.getTipPregledaID();
+		this.termin = st.getTermin();
+		this.salaBR = st.getSalaBR();
+		this.salaID = st.getSalaID();
+		this.salaN = st.getSalaN();
+	}
 	public PregledDTO(Pregled pregled) {
 		this.id = pregled.getId();
 		this.datum = pregled.getDatum();

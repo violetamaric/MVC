@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@Transactional
+//@Transactional
 //@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class ZdravstveniKarton {
 	
@@ -35,7 +35,7 @@ public class ZdravstveniKarton {
 	@Column(name="krvnaGrupa", nullable=true)
 	private String krvnaGrupa;
 	
-	@OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	@OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
 	private Pacijent pacijent;
 	
 	@OneToMany(mappedBy = "zdravstveniKarton", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

@@ -77,7 +77,7 @@ public class PregledController {
 
 	@PostMapping(path = "/new", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('PACIJENT')")
+//	@PreAuthorize("hasAuthority('PACIJENT')")
 	public ResponseEntity<?> noviPregled(@RequestBody PregledDTO pregledDTO) {
 		
 		//TODO 1: PROVERITI DA LI UOPSTE MOZE TOG DATUMA DA ZAKAZE
@@ -128,7 +128,7 @@ public class PregledController {
 
 	@PostMapping(path = "/newST", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('PACIJENT')")
+//	@PreAuthorize("hasAuthority('PACIJENT')")
 	public ResponseEntity<?> noviPregledST(@RequestBody PregledDTO pregledDTO) {
 		System.out.println("dodavanje novog pregleda ST");
 		System.out.println(pregledDTO);

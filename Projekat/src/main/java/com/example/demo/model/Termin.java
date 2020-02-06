@@ -32,10 +32,10 @@ public class Termin {
 	@Column(name = "termin", nullable = false)
 	private int termin;
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Sala sala;
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Lekar lekar;
 	
 //	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
