@@ -237,7 +237,7 @@ public class MedicinskaSestraController {
 	
 	
 	//overa recepta
-	@PutMapping(path = "/overa/{id}")
+	@PutMapping(path = "/overa/{id}", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('MED_SESTRA')")
 	public ResponseEntity<?> overaRecepta(@PathVariable Long id) {
