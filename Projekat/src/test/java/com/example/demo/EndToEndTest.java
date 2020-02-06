@@ -7,11 +7,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -32,9 +29,11 @@ import com.example.demo.dto.PregledDTO;
 import com.example.demo.dto.SlobodniTerminDTO;
 import com.example.demo.model.Authority;
 import com.example.demo.model.Pacijent;
+import com.example.demo.model.Pregled;
 import com.example.demo.repository.AuthorityRepository;
 import com.example.demo.security.TokenUtils;
 import com.example.demo.service.PacijentService;
+import com.example.demo.service.PregledService;
 
 //Scenario: "Ja pacijent zelim da zakakazem unapred definisani pregled."
 //
@@ -57,6 +56,9 @@ public class EndToEndTest {
 
 	@Autowired
 	private PacijentService pacijentService;
+	
+	@Autowired
+	private PregledService pregledService;
 
 	@Autowired
 	private TokenUtils tokenUtils;
@@ -124,7 +126,10 @@ public class EndToEndTest {
 		SlobodniTerminDTO st = (STController.getAllUnapredDef()).getBody().get(0);
 		PregledDTO pregledDTO = new PregledDTO(st);
 		List<SlobodniTerminDTO> termini = (STController.getAllUnapredDef()).getBody();
-		int pregledi = (pregledController.getAll()).getBody().size();
+//		int pregledi = (pregledController.getAll()).getBody().size();
+//		List<Pregled> pregledi2 = (pregledService.findAll());
+//		assertThat(pregledi2).hasSize(pregledi2.size());
+		
 		System.out.println();
 		PacijentDTO pacijent2 = new PacijentDTO((pacijentService.findByID(1L)));
 		System.out.println("*****************pacijent 2" + pacijent2);
@@ -166,7 +171,7 @@ public class EndToEndTest {
 		System.out.println();
 		System.out.println("VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV");
 //		List<SlobodniTerminDTO> termini = (STController.getAllUnapredDef()).getBody();
-//		List<PregledDTO> pregledi2 = (pregledController.getAll()).getBody();
+		
 		assertThat(termini).hasSize(termini.size());
 //		assertThat(pregledi2).hasSize(pregledi + 1);
 
