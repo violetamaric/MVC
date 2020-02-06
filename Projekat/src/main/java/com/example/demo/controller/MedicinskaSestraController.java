@@ -215,14 +215,17 @@ public class MedicinskaSestraController {
 		
 		for(Pregled pregled: preglediKlinike) {
 			IzvestajOPregledu iop = pregled.getIzvestajOPregledu();
-			Set<Recept> recepti = iop.getListaRecepata();
-			for(Recept rec : recepti) {
-				if(rec.isOveren() == false) {
-					System.out.println("RECEPT : "+ rec.getLek().getNaziv());
-					lista.add(new ReceptDTO(rec));
+			if(iop != null) {
+				Set<Recept> recepti = iop.getListaRecepata();
+				for(Recept rec : recepti) {
+					if(rec.isOveren() == false) {
+						System.out.println("RECEPT : "+ rec.getLek().getNaziv());
+						lista.add(new ReceptDTO(rec));
+					}
+					
 				}
-				
 			}
+			
 		}
 		
 

@@ -84,7 +84,10 @@ public class ReceptDTO {
 		this.id = r.getId();
 		this.lekID = r.getLek().getId();
 		this.nazivLeka = r.getLek().getNaziv();
-		this.medSesID = r.getMedicinskaSestra().getId();
+		if(r.getMedicinskaSestra() != null) {
+			this.medSesID = r.getMedicinskaSestra().getId();
+		}
+		
 		this.overen = r.isOveren();
 		this.izvestajID = r.getIzvestajOPregledu().getId();
 		this.datumIzvestaja = r.getIzvestajOPregledu().getPregled().getDatum();

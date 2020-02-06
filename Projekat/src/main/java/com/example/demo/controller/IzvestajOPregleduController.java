@@ -66,31 +66,40 @@ public class IzvestajOPregleduController {
 		
 		Pregled pregled = pregledService.findById(izDTO.getPregledID());
 		pregled.setStatus(3); //zavrsen pregled
-//		Lekar lekar = pregled.getLekar();
-//		boolean flag = false;
-//		Pacijent pacijent = pregled.getPacijent();
-////		System.out.println("ISPIS FLAG  JE FALSE");
-//		for(Pacijent pac : lekar.getListaPacijenata()) {
-//			if(pac.getId().equals(pacijent.getId())) {
-//				flag = true;
-//				System.out.println("ISPIS FLAG  JE TRUE");
-//				break;
-//			}
-//		}
-//		if(flag == false) {
-//			System.out.println("1");
-//			lekar.getListaPacijenata().add(pacijent);
-//			System.out.println("2");
-//			
-//			
-//			pacijent.getListaLekara().add(lekar);
-//			System.out.println("3");
-////			pacijent = pacijentService.save(pacijent);
-////			System.out.println("4");
-////			lekar = lekarService.save(lekar);
-////			System.out.println("5");
-//		}
 		
+		Lekar lekar = pregled.getLekar();
+		
+		Pacijent paci = pregled.getPacijent();
+		int flag = 0;
+		for(Pacijent pac : lekar.getListaPacijenata()) {
+			if(pac.getId().equals(paci.getId())) {
+				flag = 1;
+				System.out.println("ISPIS FLAG  JE 1");
+				break;
+			}
+		}
+		for(Lekar lek : paci.getListaLekara()) {
+			if(lek.equals(lekar)) {
+				flag = 2;
+				System.out.println("ISPIS FLAG  JE 2");
+				break;
+			}
+		}
+		System.out.println("Vrednost flaga : " + flag);
+		
+		
+		//ne radi ovo izbacuje gresku 
+//		if(flag == 0) {
+//			
+//			lekar.getListaPacijenata().add(paci);
+//			
+//			paci.getListaLekara().add(lekar);
+//			
+//			paci = pacijentService.save(paci);
+//			
+//			lekar =  lekarService.save(lekar);
+//		}
+
 		Pacijent pacijent = pregled.getPacijent();
 		iz.setPregled(pregled);
 		
