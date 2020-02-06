@@ -69,6 +69,13 @@ public class OperacijaDTO {
 	}
 
 	@Override
+	public String toString() {
+		return "OperacijaDTO [id=" + id + ", datum=" + datum + ", tipOperacije=" + tipOperacije + ", pacijentID="
+				+ pacijentID + ", klinikaID=" + klinikaID + ", salaID=" + salaID + ", salaN=" + salaN + ", salaBR="
+				+ salaBR + ", status=" + status + ", termin=" + termin + ", listaLekara=" + listaLekara + "]";
+	}
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
