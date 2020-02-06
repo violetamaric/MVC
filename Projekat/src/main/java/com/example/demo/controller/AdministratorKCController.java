@@ -296,6 +296,7 @@ public class AdministratorKCController {
 		System.out.println("pocinje");
 		Klinika aKC = klinikaService.findById(akcDTO.getId());
 		aKC.setStatus(1); //obrisana klinika
+//		aKC.builder().status(1);
 		aKC = klinikaService.save(aKC);
 		
 		System.out.println("------------------------------------------------------");
