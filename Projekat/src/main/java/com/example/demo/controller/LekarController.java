@@ -218,36 +218,7 @@ public class LekarController {
 
 		
 	}
-//	@GetMapping(value = "/listaZauzetostiLekara/{id}")
-//	@CrossOrigin(origins = "http://localhost:3000")
-//	public ResponseEntity<List<TerminDTO>> getListaZauzetostiLekara(@PathVariable Long id) {
-//		System.out.println("*************");
-//
-//		Lekar lekar = lekarService.findOne(id);
-//		System.out.println(lekar.getIme());
-//		
-//		Set<Termin> listaTermina = lekar.getListaZauzetihTermina();
-//		System.out.println(listaTermina.size());
-//		
-//		List<TerminDTO> listaTerminaDTO = new ArrayList<TerminDTO>();
-//		for(Termin rd: listaTermina) {
-//			listaTerminaDTO.add(new TerminDTO(rd));
-//		}
-//		Set<SlobodniTermin>listast = lekar.getListaSlobodnihTermina();
-//		for(SlobodniTermin st:listast) {
-//			TerminDTO tdto = new TerminDTO();
-//			tdto.setDatumPocetka(st.getDatum());
-//			tdto.setSalaBR(st.getSala().getBroj());
-//			tdto.setSalaID(st.getSala().getId());
-//			
-//		}
-//		
-//
-//		System.out.println("*************");
-//		return new ResponseEntity<>(listaTerminaDTO, HttpStatus.OK);
-//
-//		
-//	}
+
 
 	@PutMapping(path = "/oceni/{id}/{ocena}/{pregled_id}", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
@@ -305,7 +276,7 @@ public class LekarController {
 		System.out.println("*************");
 		
 		Lekar lekar = lekarService.findByEmail(p.getName());
-		Pacijent pacijent = pacijentiSevice.findByEmail(pacijentDTO.getEmail());
+		Pacijent pacijent = pacijentiSevice.findByID(pacijentDTO.getId());
 		
 		Set<Pacijent> listaPacijenta = lekar.getListaPacijenata();
 		//dodeli pacijente lekaru
@@ -320,5 +291,28 @@ public class LekarController {
 
 		
 	}
+	
+//	@PostMapping(value = "/menjanjeZKPacijenta")
+//	@CrossOrigin(origins = "http://localhost:3000")
+//	@PreAuthorize("hasAuthority('LEKAR')")
+//	public ResponseEntity<?> menjanjeZKPacijenta(@RequestBody PacijentDTO pacijentDTO, Principal p) {
+//		System.out.println("*************");
+//		
+////		Lekar lekar = lekarService.findByEmail(p.getName());
+////		Pacijent pacijent = pacijentiSevice.findByEmail(pacijentDTO.getEmail());
+////		
+////		Set<Pacijent> listaPacijenta = lekar.getListaPacijenata();
+////		//dodeli pacijente lekaru
+////		
+////		for(Pacijent pac : listaPacijenta) {
+////			if(pac.getId().equals(pacijent.getId())) {
+////				return new ResponseEntity<>("MOZE", HttpStatus.OK);
+////			}
+////		}
+////		
+//		return new ResponseEntity<>("NE MOZE", HttpStatus.OK);
+//
+//		
+//	}
 	
 }

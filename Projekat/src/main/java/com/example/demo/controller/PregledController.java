@@ -260,7 +260,7 @@ public class PregledController {
 		return new ResponseEntity<>(pregledDTO, HttpStatus.OK);
 	}
 	
-	//vrati pregled pacijenta kod odredjenog lekara
+	//vrati listu pregleda pacijenta kod odredjenog lekara
 	@GetMapping(value = "/pregledPacijenta/{id}" )
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('LEKAR')")
@@ -269,27 +269,43 @@ public class PregledController {
 		Pacijent pacijent = pacijentService.findByID(id);
 		
 		List<PregledDTO> pregledDTO = new ArrayList<>();
-		//ako je pacijent od naseg lekara 
-		if(lekar.getListaPacijenata().contains(pacijent)) {
-			Set<Pregled> pregledi = pacijent.getListaPregleda();
+		
+		
+		Set<Pregled> pregledi = pacijent.getListaPregleda();
 			
 			
-			for (Pregled p : pregledi) {
+		for (Pregled p : pregledi) {
 			
-				System.out.println("Status pregleda pacijenta " + pacijent.getIme() + " : " + p.getStatus());
-				System.out.println("Lekar tog pregleda je : " + p.getLekar().getIme());
-				if (p.getStatus() == 1 && p.getLekar().getId().equals(lekar.getId())) {
+			
+			System.out.println("Status pregleda pacijenta " + pacijent.getIme() + " : " + p.getStatus());
+			System.out.println("Lekar tog pregleda je : " + p.getLekar().getIme());
+			if (p.getStatus() == 1 && p.getLekar().getId().equals(lekar.getId())) {
 					
-					pregledDTO.add(new PregledDTO(p));
-				}
-
+				pregledDTO.add(new PregledDTO(p));
 			}
+	
+			
 		}
 		
 
 		return new ResponseEntity<>(pregledDTO, HttpStatus.OK);
 	}
 
+	//vrati pregled pacijenta
+	@GetMapping(value = "/getPregledPac/{id}" )
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('LEKAR')")
+	public ResponseEntity<?> getPregledPac(@PathVariable Long id) {
+		
+		Pregled pregled = pregledService.findById(id);
+		
+		if(pregled == null) {
+			return new ResponseEntity<>("greska", HttpStatus.NOT_FOUND);
+		}
+
+		return new ResponseEntity<>(new PregledDTO(pregled), HttpStatus.OK);
+	}
+	
 	//vrati mi preglede koji nisu pregledani od lekara
 	@GetMapping(value = "/getPreglediLekara")
 	@CrossOrigin(origins = "http://localhost:3000")

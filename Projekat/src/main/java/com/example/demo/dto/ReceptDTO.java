@@ -1,14 +1,45 @@
 package com.example.demo.dto;
 
+import java.util.Date;
+
 import com.example.demo.model.Recept;
 
 public class ReceptDTO {
 	private Long id;
 	private Long lekID;
+	private String nazivLeka;
 	private Long medSesID;
 	private boolean overen;
 	private Long izvestajID;
+	private Date datumIzvestaja; //datum pregleda
+	private String imeL;
+	private String prezimeL;
 	
+	
+	public String getImeL() {
+		return imeL;
+	}
+	public void setImeL(String imeL) {
+		this.imeL = imeL;
+	}
+	public String getPrezimeL() {
+		return prezimeL;
+	}
+	public void setPrezimeL(String prezimeL) {
+		this.prezimeL = prezimeL;
+	}
+	public Date getDatumIzvestaja() {
+		return datumIzvestaja;
+	}
+	public void setDatumIzvestaja(Date datumIzvestaja) {
+		this.datumIzvestaja = datumIzvestaja;
+	}
+	public String getNazivLeka() {
+		return nazivLeka;
+	}
+	public void setNazivLeka(String nazivLeka) {
+		this.nazivLeka = nazivLeka;
+	}
 	public Long getId() {
 		return id;
 	}
@@ -39,21 +70,29 @@ public class ReceptDTO {
 	public void setIzvestajID(Long izvestajID) {
 		this.izvestajID = izvestajID;
 	}
-	public ReceptDTO(Long id, Long lekID, Long medSesID, boolean overen, Long izvestajID) {
+	public ReceptDTO(Long id, Long lekID, Long medSesID, boolean overen, Long izvestajID, String nazivLeka) {
 		super();
 		this.id = id;
 		this.lekID = lekID;
 		this.medSesID = medSesID;
 		this.overen = overen;
 		this.izvestajID = izvestajID;
+		this.nazivLeka = nazivLeka;
 	}
 	public ReceptDTO(Recept r) {
 		super();
 		this.id = r.getId();
 		this.lekID = r.getLek().getId();
-		this.medSesID = r.getMedicinskaSestra().getId();
+		this.nazivLeka = r.getLek().getNaziv();
+		if(r.getMedicinskaSestra() != null) {
+			this.medSesID = r.getMedicinskaSestra().getId();
+		}
+		
 		this.overen = r.isOveren();
 		this.izvestajID = r.getIzvestajOPregledu().getId();
+		this.datumIzvestaja = r.getIzvestajOPregledu().getPregled().getDatum();
+		this.imeL = r.getIzvestajOPregledu().getPregled().getLekar().getIme();
+		this.prezimeL = r.getIzvestajOPregledu().getPregled().getLekar().getPrezime();
 	}
 	
 	
