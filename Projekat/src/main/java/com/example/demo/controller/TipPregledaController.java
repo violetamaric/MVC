@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import java.io.Console;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -19,11 +20,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.LekarDTO;
+import com.example.demo.dto.SalaDTO;
 import com.example.demo.dto.SlobodniTerminDTO;
 import com.example.demo.dto.TipPregledaDTO;
 import com.example.demo.model.Klinika;
 import com.example.demo.model.Lekar;
+import com.example.demo.model.Pregled;
+import com.example.demo.model.Sala;
 import com.example.demo.model.SlobodniTermin;
+import com.example.demo.model.Termin;
 import com.example.demo.model.TipPregleda;
 import com.example.demo.service.KlinikaService;
 import com.example.demo.service.SlobodniTerminService;
@@ -102,14 +107,63 @@ public class TipPregledaController {
 			tp.add(pDTO);
 
 		}
-		System.out.println("*************");
-		for (TipPregledaDTO pd : tp) {
-			System.out.println(pd);
-		}
+		
 		System.out.println("*************");
 		return new ResponseEntity<>(tp, HttpStatus.OK);
 	}
 
+	@GetMapping(value = "/allTerminiIB/{idKlinike}")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
+	public ResponseEntity<List<TipPregledaDTO>> getAllTerminiIB(@PathVariable Long idKlinike) {
+
+//		List<Sala> ret = new ArrayList<Sala>();
+		Klinika klinika = klinikaService.findById(idKlinike);
+		List<TipPregleda> listatp = TPService.findAll();
+	//	List<Pregled> pregledi = pregledService.findAll();
+		// convert students to DTOs
+		System.out.println("****************************************************************");
+		Date datumDanasnji = new Date();
+		List<TipPregledaDTO> tpDTO = new ArrayList<>();
+		
+		
+			for (TipPregleda p : listatp) {
+				if(p.getKlinika().getId()==klinika.getId()) {
+					
+						for(Termin t: p.getZauzetiTermini()) {
+							if(t.getDatumPocetka().before(datumDanasnji)) {
+								System.out.println("Datum: " + t.getDatumPocetka()) ;
+								if(p.equals(t.getSala())) {
+									if(!salaDTO.contains(p)) {
+//										ret.add(p);
+										System.out.println(p);
+										salaDTO.add(new SalaDTO(p));
+									}
+								}
+								
+							}else {
+								continue;
+							}
+								
+								
+							
+						}
+						if(p.getZauzetiTermini().size()==0) {
+							System.out.println(p);
+							salaDTO.add(new SalaDTO(p));
+						}
+						
+					}
+					
+				
+				
+			}
+		
+		
+		System.out.println("****************************************************************");
+		return new ResponseEntity<>(tpDTO, HttpStatus.OK);
+	}
+	
 	// brisanje tp 
 	@PostMapping(path = "/brisanjeTP", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
