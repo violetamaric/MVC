@@ -322,5 +322,11 @@ public class PacijentControllerJUnit {
 		
 	}
 
+	@Test
+	@Transactional
+//	@Rollback(true)
+	public void testPotvrdaPregleda() {
+		
+	}
 	
 }
