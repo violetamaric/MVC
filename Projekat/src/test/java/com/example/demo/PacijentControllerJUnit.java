@@ -110,119 +110,6 @@ public class PacijentControllerJUnit {
 	public static final int DB_KOL = 5;
 	private static final String URL_PREFIX = "/api/pacijenti";
 
-	@Test
-	public void testFindAll() {
-//		Authority a = new Authority();
-//		a.setId(new Long(1L));
-//		a.setName(new String("PACIJENT"));
-//
-//		System.out.println("????????????????????auth" + a);
-//		
-//		String jwt = tokenUtils.tokenPacijent(pacijent, a);
-//		assertNotNull(jwt);
-//		
-//		System.out.println("1111111");
-//	    final Authentication authentication = authenticationManager
-//
-//				.authenticate(new UsernamePasswordAuthenticationToken(pacijent2.getEmail(),
-//
-//						"pera"));
-//		System.out.println("1111111");
-//		SecurityContextHolder.getContext().setAuthentication(authentication);
-
-		List<PacijentDTO> pacijenti = (pacijentController.getAll()).getBody();
-		assertThat(pacijenti).hasSize(DB_KOL);
-//		assertThat(pacijenti)
-	}
-
-	@Test
-	public void testFindByID() {
-		PacijentDTO pacijent = (PacijentDTO) (pacijentController.getPacijentByID(DB_ID)).getBody();
-		assertThat(pacijent).hasFieldOrProperty("email");
-		assertThat(pacijent).isNotNull();
-		assertThat(pacijent.getId()).isEqualTo(DB_ID);
-		assertThat(pacijent.getIme()).isEqualTo(DB_IME);
-		assertThat(pacijent.getPrezime()).isEqualTo(DB_PREZIME);
-	}
-
-	@Test
-	@Transactional
-	@Rollback(true)
-	public void testUpdatePacijent() {
-		PacijentDTO pacijent2 = (PacijentDTO) (pacijentController.getPacijentByID(DB_ID)).getBody();
-		Pacijent pacijent = new Pacijent();
-		pacijent.setId(DB_ID);
-		pacijent.setIme(DB_NOVO_IME);
-		pacijent.setPrezime(DB_NOVO_PREZIME);
-		pacijent.setLbo(pacijent2.getLbo());
-		pacijent.setEmail(pacijent2.getEmail());
-		pacijent.setLozinka(pacijent2.getLozinka());
-		pacijent.setAdresa(pacijent2.getAdresa());
-		pacijent.setGrad(pacijent2.getGrad());
-		pacijent.setDrzava(pacijent2.getDrzava());
-		pacijent.setTelefon(pacijent2.getTelefon());
-		pacijent.setOdobrenaRegistracija(pacijent2.getOdobrenaRegistracija());
-
-		pacijent = pacijentService.save(pacijent);
-		assertThat(pacijent).isNotNull();
-
-		PacijentDTO pacijent3 = (PacijentDTO) (pacijentController.getPacijentByID(DB_ID)).getBody();
-		assertThat(pacijent3.getIme()).isEqualTo(DB_NOVO_IME);
-		assertThat(pacijent3.getPrezime()).isEqualTo(DB_NOVO_PREZIME);
-		assertThat(pacijent3.getId()).isEqualTo(DB_ID);
-		assertThat(pacijent3).hasFieldOrProperty("email");
-		assertThat(pacijent3).isNotNull();
-	}
-
-	@Test
-	@Transactional
-	@Rollback(true) // it can be omitted because it is true by default
-	public void testAddPacijent() {
-		Pacijent pacijent = new Pacijent();
-		pacijent.setIme(DB_NOVO_IME);
-		pacijent.setPrezime(DB_NOVO_PREZIME);
-		pacijent.setLbo("101");
-		pacijent.setEmail("test@gmail.com");
-		pacijent.setLozinka("test");
-		pacijent.setAdresa("Temerinska 4");
-		pacijent.setGrad("Novi Sad");
-		pacijent.setDrzava("Srbija");
-		pacijent.setTelefon("060789654");
-		pacijent.setJmbg("0303966811711");
-		pacijent.setOdobrenaRegistracija(false);
-//		
-//		Authority a = new Authority();
-//		a.setId(new Long(1L));
-//		a.setName(new String("PACIJENT"));
-//
-//		System.out.println("????????????????????auth" + a);
-//		
-//		String jwt = tokenUtils.tokenPacijent(pacijent, a);
-//		assertNotNull(jwt);
-//		
-//		System.out.println("1111111");
-//	    final Authentication authentication = authenticationManager
-//
-//				.authenticate(new UsernamePasswordAuthenticationToken(pacijent2.getEmail(),
-//
-//						pacijent2.getLozinka()));
-//		System.out.println("1111111");
-//		SecurityContextHolder.getContext().setAuthentication(authentication);
-//
-//		
-		int dbSizeBeforeAdd = (pacijentController.getAll()).getBody().size();
-
-		Pacijent dbPacijent = pacijentService.save(pacijent);
-		assertThat(dbPacijent).isNotNull();
-
-		// Validate that new student is in the database
-		List<PacijentDTO> pacijenti = (pacijentController.getAll()).getBody();
-		assertThat(pacijenti).hasSize(dbSizeBeforeAdd + 1);
-		PacijentDTO pDTO = new PacijentDTO(dbPacijent);
-		pDTO = pacijenti.get(pacijenti.size() - 1); // get last student
-		assertThat(pDTO.getIme()).isEqualTo(DB_NOVO_IME);
-		assertThat(pDTO.getPrezime()).isEqualTo(DB_NOVO_PREZIME);
-	}
 
 	@Test
 	@Transactional
@@ -254,7 +141,7 @@ public class PacijentControllerJUnit {
 
 		IzvestajOPregledu izvestajOPregledu = IOPService.findById(1L);
 		pregled.setKlinika(klinikaService.findOne(1L));
-		pregled.setPacijent(pacijent);
+		pregled.setPacijent(pacijentService.findByID(1L));
 		pregled.setSala(salaService.findOne(1L));
 		pregled.setIzvestajOPregledu(IOPService.findById(1L));
 		pregled.setTipPregleda(TPService.findOne(1L));

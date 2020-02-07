@@ -64,23 +64,21 @@ public class PregledController {
 	private SlobodniTerminService STService;
 	@Autowired
 	private EmailService emailService;
-	
+
 	@Autowired
 	private SalaService salaService;
-	
-	private Logger logger = LoggerFactory.getLogger(UserController.class);
 
+	private Logger logger = LoggerFactory.getLogger(UserController.class);
 
 	@Autowired
 	private TerminService terminService;
-	
 
 	@PostMapping(path = "/new", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 //	@PreAuthorize("hasAuthority('PACIJENT')")
 	public ResponseEntity<?> noviPregled(@RequestBody PregledDTO pregledDTO) {
-		
-		//TODO 1: PROVERITI DA LI UOPSTE MOZE TOG DATUMA DA ZAKAZE
+
+		// TODO 1: PROVERITI DA LI UOPSTE MOZE TOG DATUMA DA ZAKAZE
 		System.out.println("dodavanje novog pregleda");
 		System.out.println(pregledDTO);
 		Pregled pregled = new Pregled();
@@ -98,10 +96,10 @@ public class PregledController {
 		pregled.setTipPregleda(tp);
 
 		pregled = pregledService.save(pregled);
-		
+
 //		pacijent.getListaPregleda().add(pregled);
 //		pacijent = pacijentService.save(pacijent);
-		
+
 		klinika.getListaPregleda().add(pregled);
 		klinika = klinikaService.save(klinika);
 
@@ -150,12 +148,11 @@ public class PregledController {
 		pregled.setSala(salaService.findById(pregledDTO.getSalaID()));
 
 		pregled = pregledService.save(pregled);
-		
+
 //		pacijent.getListaPregleda().add(pregled);
 //		pacijent = pacijentService.save(pacijent);
 //		
 //		lekar.getListaPregleda().add(pregled);
-		
 
 		List<SlobodniTermin> st = STService.findAll();
 
@@ -199,26 +196,27 @@ public class PregledController {
 //		System.out.println("Sacuvan lekar");
 //		salaService.save(sala);
 //		System.out.println("Sacuvana sala");
-		
+
 		PacijentDTO pDTO = new PacijentDTO(pacijent);
-		String subject ="Pregled je zakazan";
-		String text = "Postovani " + pDTO.getIme() + " " + pDTO.getPrezime() 
-					+ ",\n\nObavestavamo Vas da je Vas pregled uspesno prihvacen i zakazan.";
+		String subject = "Pregled je zakazan";
+		String text = "Postovani " + pDTO.getIme() + " " + pDTO.getPrezime()
+				+ ",\n\nObavestavamo Vas da je Vas pregled uspesno prihvacen i zakazan.";
 
 		System.out.println(text);
-		
-		//slanje emaila
+
+		// slanje emaila
 		try {
 			emailService.poslatiOdgovorPacijentu(pDTO, subject, text);
-		}catch( Exception e ){
+		} catch (Exception e) {
 			logger.info("Greska prilikom slanja emaila: " + e.getMessage());
+//			
 			return new ResponseEntity<>("Mail nije poslat", HttpStatus.BAD_REQUEST);
 		}
 
 		return new ResponseEntity<>(new PregledDTO(pregled), HttpStatus.OK);
 	}
 
-	@GetMapping(value = "/{id}")	
+	@GetMapping(value = "/{id}")
 	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
 	public ResponseEntity<PregledDTO> getLekar(@PathVariable Long id) {
 
@@ -236,7 +234,6 @@ public class PregledController {
 	public ResponseEntity<List<PregledDTO>> getAll() {
 
 		List<Pregled> pregledi = pregledService.findAll();
-
 
 		List<PregledDTO> pregledDTO = new ArrayList<>();
 		for (Pregled p : pregledi) {
@@ -262,47 +259,45 @@ public class PregledController {
 
 		return new ResponseEntity<>(pregledDTO, HttpStatus.OK);
 	}
-	
-	//vrati pregled pacijenta kod odredjenog lekara
-	@GetMapping(value = "/pregledPacijenta/{id}" )
+
+	// vrati pregled pacijenta kod odredjenog lekara
+	@GetMapping(value = "/pregledPacijenta/{id}")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('LEKAR')")
 	public ResponseEntity<List<PregledDTO>> getPregledPacijenta(@PathVariable Long id, Principal pr) {
 		Lekar lekar = lekarService.findByEmail(pr.getName());
 		Pacijent pacijent = pacijentService.findByID(id);
-		
+
 		List<PregledDTO> pregledDTO = new ArrayList<>();
-		//ako je pacijent od naseg lekara 
-		if(lekar.getListaPacijenata().contains(pacijent)) {
+		// ako je pacijent od naseg lekara
+		if (lekar.getListaPacijenata().contains(pacijent)) {
 			Set<Pregled> pregledi = pacijent.getListaPregleda();
-			
-			
+
 			for (Pregled p : pregledi) {
-			
+
 				System.out.println("Status pregleda pacijenta " + pacijent.getIme() + " : " + p.getStatus());
 				System.out.println("Lekar tog pregleda je : " + p.getLekar().getIme());
 				if (p.getStatus() == 1 && p.getLekar().getId().equals(lekar.getId())) {
-					
+
 					pregledDTO.add(new PregledDTO(p));
 				}
 
 			}
 		}
-		
 
 		return new ResponseEntity<>(pregledDTO, HttpStatus.OK);
 	}
 
-	//vrati mi preglede koji nisu pregledani od lekara
+	// vrati mi preglede koji nisu pregledani od lekara
 	@GetMapping(value = "/getPreglediLekara")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('LEKAR')")
 	public ResponseEntity<List<PregledDTO>> getPreglediLekara(Principal p) {
 
 		Lekar lekar = lekarService.findByEmail(p.getName());
-		
+
 		Set<Pregled> pregledi = lekar.getListaPregleda();
-		
+
 		List<PregledDTO> lista = new ArrayList<PregledDTO>();
 		for (Pregled pre : pregledi) {
 			System.out.println(pre.getStatus());
@@ -315,7 +310,7 @@ public class PregledController {
 
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
-	
+
 	@GetMapping(value = "preuzmiPregledeKlinike/{id}")
 	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
 	public ResponseEntity<List<PregledDTO>> getPreglediKlinike(@PathVariable Long id) {
@@ -399,7 +394,7 @@ public class PregledController {
 		return new ResponseEntity<>(new PregledDTO(pregled), HttpStatus.OK);
 	}
 
-	//otkazivanje pregleda
+	// otkazivanje pregleda
 	@PutMapping(path = "/otkazivanje/{id}")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('PACIJENT')")
@@ -412,44 +407,37 @@ public class PregledController {
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DATE, -1);
 		Date date2 = cal.getTime();
-		
-		
-		
+
 		System.out.println();
 		System.out.println(date);
 		System.out.println(date2);
 		System.out.println(pregled.getDatum().compareTo(date2));
 		System.out.println(date2.compareTo(pregled.getDatum()));
 		System.out.println();
-		
-		if(date2.compareTo(pregled.getDatum())*pregled.getDatum().compareTo(date)>=0) {
+
+		if (date2.compareTo(pregled.getDatum()) * pregled.getDatum().compareTo(date) >= 0) {
 			System.out.println("datum je izmedju - ne moze se otkazati");
 			return new ResponseEntity<>(HttpStatus.CONFLICT);
-		}else {
+		} else {
 			System.out.println("datum je otkazan");
 			pregled.setStatus(2);
 			pregledService.save(pregled);
 			return new ResponseEntity<>(new PregledDTO(pregled), HttpStatus.OK);
 
 		}
-		
 
-		
-
-		
 	}
-	
-	
-	//postupak rezervisanja sale za p
+
+	// postupak rezervisanja sale za p
 	@PostMapping(path = "/rezervisanje", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
-	public ResponseEntity<String> rezervisanjeSale(@RequestBody PregledDTO pDTO){
+	public ResponseEntity<String> rezervisanjeSale(@RequestBody PregledDTO pDTO) {
 		System.out.println("-----   REZERVISANJEEE -------------------------------");
 		System.out.println(pDTO);
 		Klinika klinika = klinikaService.findById(pDTO.getKlinikaID());
 //		KlinickiCentar kc = listaKC.get(0);	
-		
+
 //		Pacijent p = pacijentService.findByEmail(paDTO.getEmail());
 //		PacijentDTO pDTO = new PacijentDTO(p);
 //		
