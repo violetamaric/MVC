@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -10,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,15 +21,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.dto.LekarDTO;
-import com.example.demo.dto.PacijentDTO;
-import com.example.demo.dto.PregledDTO;
 import com.example.demo.dto.SalaDTO;
 import com.example.demo.dto.TerminDTO;
 import com.example.demo.model.Klinika;
-import com.example.demo.model.Lekar;
-import com.example.demo.model.OdmorOdsustvoLekar;
-import com.example.demo.model.Pacijent;
 import com.example.demo.model.Pregled;
 import com.example.demo.model.Sala;
 import com.example.demo.model.Termin;
@@ -43,7 +37,7 @@ import com.example.demo.service.TerminService;
 
 @RestController
 @RequestMapping(value = "/api/sale", produces = MediaType.APPLICATION_JSON_VALUE)
-
+@CrossOrigin(origins = "http://localhost:3000")
 public class SalaController {
 	@Autowired
 	private SalaService salaService;
@@ -90,6 +84,57 @@ public class SalaController {
 			salaDTO.add(new SalaDTO(p));
 		}
 
+		return new ResponseEntity<>(salaDTO, HttpStatus.OK);
+	}
+	@GetMapping(value = "/allIB/{idKlinike}")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
+	public ResponseEntity<List<SalaDTO>> getAllBI(@PathVariable Long idKlinike) {
+
+//		List<Sala> ret = new ArrayList<Sala>();
+		Klinika klinika = klinikaService.findById(idKlinike);
+		List<Sala> sale = salaService.findAll();
+		List<Pregled> pregledi = pregledService.findAll();
+		// convert students to DTOs
+		System.out.println("****************************************************************");
+		Date datumDanasnji = new Date();
+		List<SalaDTO> salaDTO = new ArrayList<>();
+		
+		
+			for (Sala p : sale) {
+				if(p.getKlinika().getId()==klinika.getId()) {
+					
+						for(Termin t: p.getZauzetiTermini()) {
+							if(t.getDatumPocetka().before(datumDanasnji)) {
+								System.out.println("Datum: " + t.getDatumPocetka()) ;
+								if(p.equals(t.getSala())) {
+									if(!salaDTO.contains(p)) {
+//										ret.add(p);
+										System.out.println(p);
+										salaDTO.add(new SalaDTO(p));
+									}
+								}
+								
+							}else {
+								continue;
+							}
+								
+								
+							
+						}
+						if(p.getZauzetiTermini().size()==0) {
+							System.out.println(p);
+							salaDTO.add(new SalaDTO(p));
+						}
+						
+					}
+					
+				
+				
+			}
+		
+		
+		System.out.println("****************************************************************");
 		return new ResponseEntity<>(salaDTO, HttpStatus.OK);
 	}
 
@@ -223,7 +268,22 @@ public class SalaController {
 	}
 
 
-	
+	@GetMapping(value = "/getSaleZaBrisanjeIzm")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
+	public ResponseEntity<List<SalaDTO>> getSaleBI1() {
+
+		List<Sala> sale = salaService.findAll();
+
+		// convert students to DTOs
+		List<SalaDTO> salaDTO = new ArrayList<>();
+		for (Sala p : sale) {
+//			for(Pregled p)
+			salaDTO.add(new SalaDTO(p));
+		}
+
+		return new ResponseEntity<>(salaDTO, HttpStatus.OK);
+	}
 
 //	@Scheduled(cron = "59 59 23 * * ?")
 //    public void automaticSchedule() {

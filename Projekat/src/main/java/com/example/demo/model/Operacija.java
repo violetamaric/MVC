@@ -14,7 +14,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+
+import org.springframework.transaction.annotation.Transactional;
 @Entity
+
 public class Operacija {
 	
 	

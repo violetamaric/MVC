@@ -108,7 +108,7 @@ public class Sala {
 		return "Sala [id=" + id + ", naziv=" + naziv + ", broj=" + broj + ", tipSale=" + tipSale +  ", zauzetiTermini="
 				+ zauzetiTermini + "]";
 	}
-	
+
 	
 	
 }

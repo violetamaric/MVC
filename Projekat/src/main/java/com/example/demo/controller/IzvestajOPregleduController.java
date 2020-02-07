@@ -32,6 +32,7 @@ import com.example.demo.service.ReceptService;
 import com.example.demo.service.ZdravstveniKartonService;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping(value = "/api/izvestajOP", produces = MediaType.APPLICATION_JSON_VALUE)
 public class IzvestajOPregleduController {
 	@Autowired

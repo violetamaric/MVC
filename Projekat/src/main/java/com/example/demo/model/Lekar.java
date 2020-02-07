@@ -22,8 +22,10 @@ import javax.persistence.Version;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.transaction.annotation.Transactional;
 
 @Entity
+
 public class Lekar implements UserDetails{
 	
 	@Id

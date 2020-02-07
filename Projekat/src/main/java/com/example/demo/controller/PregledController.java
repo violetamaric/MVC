@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import java.security.Principal;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -14,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.AdministratorKlinikeDTO;
 import com.example.demo.dto.LekarDTO;
-import com.example.demo.dto.OperacijaDTO;
 import com.example.demo.dto.PacijentDTO;
 import com.example.demo.dto.PregledDTO;
 import com.example.demo.dto.SalaDTO;
@@ -36,7 +35,6 @@ import com.example.demo.model.AdministratorKlinike;
 import com.example.demo.model.Klinika;
 import com.example.demo.model.Lekar;
 import com.example.demo.model.OdmorOdsustvoLekar;
-import com.example.demo.model.Operacija;
 import com.example.demo.model.Pacijent;
 import com.example.demo.model.Pregled;
 import com.example.demo.model.Sala;
@@ -54,6 +52,7 @@ import com.example.demo.service.SlobodniTerminService;
 import com.example.demo.service.TerminService;
 import com.example.demo.service.TipPregledaService;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping(value = "/api/pregledi", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PregledController {
@@ -270,7 +269,6 @@ public class PregledController {
 
 		return new ResponseEntity<>(pregledDTO, HttpStatus.OK);
 	}
-
 	
 	//vrati listu pregleda pacijenta kod odredjenog lekara
 	@GetMapping(value = "/pregledPacijenta/{id}" )
@@ -303,7 +301,6 @@ public class PregledController {
 
 		return new ResponseEntity<>(pregledDTO, HttpStatus.OK);
 	}
-
 
 	//vrati pregled pacijenta
 	@GetMapping(value = "/getPregledPac/{id}" )
@@ -426,7 +423,6 @@ public class PregledController {
 		return new ResponseEntity<>(new PregledDTO(pregled), HttpStatus.OK);
 	}
 
-
 	// otkazivanje pregleda
 	@PutMapping(path = "/otkazivanje/{id}")
 	@CrossOrigin(origins = "http://localhost:3000")
@@ -460,8 +456,6 @@ public class PregledController {
 		}
 
 	}
-
-	
 
 	// pronalazak sala slobodnih za taj teremin i datum za PREGLED
 	@GetMapping(value = "/pronadjiSaleZaTajTermin/{idP}")
@@ -593,6 +587,7 @@ public class PregledController {
 	}
 
 	// rezervisanje sale i slanje mejla pacijentu i lekaru
+	@Async
 	@PostMapping(path = "/rezervisanjeSale", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
@@ -609,6 +604,7 @@ public class PregledController {
 			if (p.getId().equals(pDTO.getId())) {
 				p.setStatus(1);
 				Sala s = salaService.findById(pDTO.getSalaID());
+				
 				p.setSala(s);
 				pacijent = pacijentService.findByID(pDTO.getPacijentID());
 

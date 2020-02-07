@@ -50,8 +50,9 @@ import com.example.demo.service.KlinikaService;
 import com.example.demo.service.PacijentService;
 import com.example.demo.service.ZdravstveniKartonService;
 
-
-@CrossOrigin
+//
+//@CrossOrigin
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping(value="/api/administratoriKC", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AdministratorKCController {

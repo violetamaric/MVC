@@ -53,6 +53,7 @@ import com.example.demo.service.MedicinskaSestraService;
 import com.example.demo.service.PacijentService;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping(value = "/api/korisnici", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserController {
 	

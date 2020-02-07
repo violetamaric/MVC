@@ -31,18 +31,24 @@ import com.example.demo.dto.LekarDTO;
 import com.example.demo.dto.OdmorOdsustvoLDTO;
 import com.example.demo.dto.PacijentDTO;
 import com.example.demo.dto.PregledDTO;
+import com.example.demo.dto.SalaDTO;
 import com.example.demo.dto.TerminDTO;
+import com.example.demo.model.Klinika;
 import com.example.demo.model.Lekar;
 import com.example.demo.model.OdmorOdsustvoLekar;
+import com.example.demo.model.Operacija;
 import com.example.demo.model.Pacijent;
 import com.example.demo.model.Pregled;
 import com.example.demo.model.Termin;
+import com.example.demo.service.KlinikaService;
 import com.example.demo.service.LekarService;
 import com.example.demo.service.PacijentService;
 import com.example.demo.service.PregledService;
+import com.example.demo.service.SalaService;
 import com.example.demo.service.TerminService;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping(value = "/api/lekari", produces = MediaType.APPLICATION_JSON_VALUE)
 public class LekarController {
 
@@ -54,6 +60,12 @@ public class LekarController {
 
 	@Autowired
 	private PregledService pregledService;
+	
+	@Autowired
+	private KlinikaService klinikaService;
+	
+	@Autowired
+	private SalaService salaService;
 
 	@Autowired
 	private TerminService terminService;
@@ -104,6 +116,59 @@ public class LekarController {
 		}
 
 		return new ResponseEntity<>(lekarDTO, HttpStatus.OK);
+	}
+	//lekari koji se mogu mijenjati i brisati
+	@GetMapping(value = "/allIBlekari/{idKlinike}")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
+	public ResponseEntity<List<LekarDTO>> getAllBIlekari(@PathVariable Long idKlinike) {
+
+//		List<Sala> ret = new ArrayList<Sala>();
+		Klinika klinika = klinikaService.findById(idKlinike);
+		List<Lekar> lekari = lekarService.findAll();
+//		List<Pregled> pregledi = pregledService.findAll();
+		// convert students to DTOs
+		System.out.println("****************************************************************");
+		Date datumDanasnji = new Date();
+		List<LekarDTO> lekariDTO = new ArrayList<>();
+
+		for (Lekar p : lekari) {
+			if (p.getKlinika().getId() == klinika.getId()) {
+
+				for (Operacija o: p.getListaOperacija()) {
+					if (o.getDatum().before(datumDanasnji)) {
+						for(Pregled pp : p.getListaPregleda()) {
+							if (pp.getDatum().before(datumDanasnji)) {
+								System.out.println("Datum: " + o.getDatum());
+								if (o.getListaLekara().contains(p)) {
+									if (!lekariDTO.contains(p)) {
+//												ret.add(p);
+										System.out.println(p);
+										lekariDTO.add(new LekarDTO(p));
+									}
+								}
+							}else {
+								continue;
+							}
+						}
+						
+
+					} else {
+						continue;
+					}
+
+				}
+				if (p.getListaOperacija().size() == 0 && p.getListaPregleda().size() == 0) {
+					System.out.println(p);
+					lekariDTO.add(new LekarDTO(p));
+				}
+
+			}
+
+		}
+
+		System.out.println("****************************************************************");
+		return new ResponseEntity<>(lekariDTO, HttpStatus.OK);
 	}
 
 	@PutMapping(path = "/update", consumes = "application/json")
@@ -241,10 +306,10 @@ public class LekarController {
 		datum.setHours(0);
 		datum.setMinutes(0);
 		datum.setSeconds(0);
-		
+
 		Date date = new Date();
-		Calendar c = Calendar.getInstance(); 
-		c.setTime(datum); 
+		Calendar c = Calendar.getInstance();
+		c.setTime(datum);
 		date = c.getTime();
 		date.setHours(0);
 		date.setMinutes(0);
@@ -252,8 +317,8 @@ public class LekarController {
 
 		System.out.println(date);
 		Date date2 = new Date();
-		c = Calendar.getInstance(); 
-		c.setTime(datum); 
+		c = Calendar.getInstance();
+		c.setTime(datum);
 		c.add(Calendar.DATE, 1);
 		date2 = c.getTime();
 		System.out.println(date2);
@@ -310,7 +375,6 @@ public class LekarController {
 		return new ResponseEntity<>(listaTerminaDTO, HttpStatus.OK);
 
 	}
-
 
 	@PutMapping(path = "/oceni/{id}/{ocena}/{pregled_id}", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
@@ -370,7 +434,6 @@ public class LekarController {
 		Lekar lekar = lekarService.findByEmail(p.getName());
 
 		Pacijent pacijent = pacijentiSevice.findByID(pacijentDTO.getId());
-		
 
 		Set<Pacijent> listaPacijenta = lekar.getListaPacijenata();
 		// dodeli pacijente lekaru
@@ -384,6 +447,7 @@ public class LekarController {
 		return new ResponseEntity<>("NE MOZE", HttpStatus.OK);
 
 	}
+
 
 	//menjanje lozinke
 	
@@ -427,5 +491,6 @@ public class LekarController {
 	}
 
 	
+
 
 }
