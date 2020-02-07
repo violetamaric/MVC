@@ -126,38 +126,38 @@ public class TipPregledaController {
 		Date datumDanasnji = new Date();
 		List<TipPregledaDTO> tpDTO = new ArrayList<>();
 		
-		
-			for (TipPregleda p : listatp) {
-				if(p.getKlinika().getId()==klinika.getId()) {
-					
-						for(Termin t: p.getZauzetiTermini()) {
-							if(t.getDatumPocetka().before(datumDanasnji)) {
-								System.out.println("Datum: " + t.getDatumPocetka()) ;
-								if(p.equals(t.getSala())) {
-									if(!salaDTO.contains(p)) {
-//										ret.add(p);
-										System.out.println(p);
-										salaDTO.add(new SalaDTO(p));
-									}
-								}
-								
-							}else {
-								continue;
-							}
-								
-								
-							
-						}
-						if(p.getZauzetiTermini().size()==0) {
-							System.out.println(p);
-							salaDTO.add(new SalaDTO(p));
-						}
-						
-					}
-					
-				
-				
-			}
+//		
+//			for (TipPregleda p : listatp) {
+//				if(==klinika.getId()) {
+//					
+//						for(Termin t: p.getZauzetiTermini()) {
+//							if(t.getDatumPocetka().before(datumDanasnji)) {
+//								System.out.println("Datum: " + t.getDatumPocetka()) ;
+//								if(p.equals(t.getSala())) {
+//									if(!salaDTO.contains(p)) {
+////										ret.add(p);
+//										System.out.println(p);
+//										salaDTO.add(new SalaDTO(p));
+//									}
+//								}
+//								
+//							}else {
+//								continue;
+//							}
+//								
+//								
+//							
+//						}
+//						if(p.getZauzetiTermini().size()==0) {
+//							System.out.println(p);
+//							salaDTO.add(new SalaDTO(p));
+//						}
+//						
+//					}
+//					
+//				
+//				
+//			}
 		
 		
 		System.out.println("****************************************************************");
