@@ -42,7 +42,7 @@ public class EmailService {
 
 		System.out.println("Email poslat!");
 	}
-	@Transactional
+//	@Transactional
 	@Async
 	public void poslatiOdgovorPacijentu(PacijentDTO pacijentDTO, String subject, String text) throws MailException, InterruptedException {
 
@@ -99,7 +99,7 @@ public class EmailService {
 		System.out.println("Email poslat!");
 	}
 	
-	@Transactional
+//	@Transactional
 	@Async
 	public void poslatiOdgovorLekaru(LekarDTO lekarDTO, String subject, String text) throws MailException, InterruptedException {
 

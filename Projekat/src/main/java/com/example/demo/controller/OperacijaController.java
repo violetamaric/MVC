@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -427,9 +429,9 @@ public class OperacijaController {
 	}
 
 	// rezervisanje sale i slanje mejla pacijentu i lekaru
-	@Transactional
+
+	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
 	@PostMapping(path = "/rezervisanjeSale", consumes = "application/json")
-	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
 	public ResponseEntity<String> rezervisanjeSaleOp(@RequestBody OperacijaDTO oDTO) {
 		System.out.println();
@@ -452,13 +454,13 @@ public class OperacijaController {
 				for (Long i : oDTO.getListaLekara()) {
 					Lekar lekarO = lekarService.findById(i);
 					listaLekaraOper.add(lekarO);
-					//dodajem tu operaciju kod lekara:
-					
+					// dodajem tu operaciju kod lekara:
+
 				}
 
 				p.setTermin(oDTO.getTermin());
 				p.setDatum(oDTO.getDatum());
-			
+
 				operacijaService.save(p);
 				for (Lekar le : listaLekaraOper) {
 					Termin t = new Termin();
@@ -470,13 +472,14 @@ public class OperacijaController {
 					t.setSala(s);
 					t.setLekar(le);
 					terminService.save(t);
+					// TODO 1 : dodavanje lekatu operaciju
 					Set<Operacija> lekarOperacije = le.getListaOperacija();
 					lekarOperacije.add(p);
 					le.setListaOperacija(lekarOperacije);
 //					le.getListaOperacija().add(p);
 					lekarService.save(le);
-					
-					
+				
+
 				}
 
 			}
@@ -487,7 +490,7 @@ public class OperacijaController {
 		String subject = "Rezervisana sala za operaciju";
 //		String dat = new SimpleDateFormat("yyyy-MM-dd").format(oDTO.getDatum().getDate());
 		String text = "Postovani " + pacijent.getIme() + " " + pacijent.getPrezime()
-				+ ",\n\nVasa operacija je zakazana za " + oDTO.getDatum().getDay() + " u " + oDTO.getTermin() + ":00h";
+				+ ",\n\nVasa operacija je zakazana za " + oDTO.getDatum().getDate() + " u " + oDTO.getTermin() + ":00h";
 
 		System.out.println(text);
 
@@ -513,8 +516,6 @@ public class OperacijaController {
 				return new ResponseEntity<>("Mail nije poslat2", HttpStatus.BAD_REQUEST);
 			}
 		}
-
-
 
 		return new ResponseEntity<>("uspesno rezervisana sala1", HttpStatus.OK);
 	}

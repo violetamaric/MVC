@@ -27,7 +27,7 @@ import com.example.demo.service.AdministratorKCService;
 import com.example.demo.service.DijagnozaService;
 import com.example.demo.service.KlinickiCentarService;
 
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping(value="/api/dijagnoze", produces = MediaType.APPLICATION_JSON_VALUE)
 public class DijagnozaController {
@@ -60,8 +60,6 @@ public class DijagnozaController {
 
 		return new ResponseEntity<>(lista, HttpStatus.OK);	
 	}
-	
-	
 
 	
 	//dodavanje nove dijagnoze

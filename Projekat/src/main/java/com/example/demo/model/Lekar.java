@@ -25,7 +25,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
 
 @Entity
-@Transactional
+
 public class Lekar implements UserDetails{
 	
 	@Id

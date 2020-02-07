@@ -31,7 +31,7 @@ import com.example.demo.service.TipPregledaService;
 
 @RestController
 @RequestMapping(value = "/api/tipPregleda", produces = MediaType.APPLICATION_JSON_VALUE)
-
+@CrossOrigin(origins = "http://localhost:3000")
 public class TipPregledaController {
 
 	@Autowired
@@ -132,13 +132,15 @@ public class TipPregledaController {
 			List<SlobodniTermin> listaST = STService.findAll();
 			for(SlobodniTermin s: listaST) {
 				if(s.getTipPregleda().getId().equals(tp.getId())) {
-					listaST.remove(s);
-					STService.delete(s);
+					s.setStatus(true);
+					break;
+//					listaST.remove(s);
+//					STService.delete(s);
 				}
 			}
 			System.out.println("TP =============== " + tp.getNaziv());
 //			Set<Lekar> lista = klinika.getListaLekara();
-			listaTP.remove(tp);
+//			listaTP.remove(tp);
 //			klinika.getListaLekara().clear();
 //			klinika.setListaLekara(lista);
 

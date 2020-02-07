@@ -34,7 +34,7 @@ import com.example.demo.service.MedicinskaSestraService;
 import com.example.demo.service.ReceptService;
 
 
-
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping(value="/api/medicinskaSestra", produces = MediaType.APPLICATION_JSON_VALUE)
 public class MedicinskaSestraController {
