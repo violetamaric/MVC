@@ -12,6 +12,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -51,6 +57,12 @@ public class LekarController {
 
 	@Autowired
 	private TerminService terminService;
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private AuthenticationManager authenticationManager;
 
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<LekarDTO> getLekar(@PathVariable Long id) {
@@ -373,7 +385,46 @@ public class LekarController {
 
 	}
 
+	//menjanje lozinke
 	
+	@PutMapping(path = "/promeniLozinku", consumes = "application/json")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('LEKAR')")
+	public ResponseEntity<?> promeniLozinku(@RequestBody PasswordChanger passCh, Principal pr) {
+
+		// a student must exist
+		System.out.println("Pacijent UPDRATE LOZINKA");
+		Lekar adminKC = lekarService.findByEmail(pr.getName());
+		
+		
+		System.out.println("LOZINKA: "+ adminKC.getLozinka());
+		
+		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+		String username = currentUser.getName();
+		System.out.println(username);
+		if (authenticationManager != null) {
+			System.out.println("PROMENJENA LOZINKA");
+
+			final Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, passCh.oldPassword));
+
+			System.err.println("-----");
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+			System.out.println("-----");
+		} else {
+			System.out.println("NE MOZE SE PROMENITI LOZINKA");
+
+			return new ResponseEntity<>(new LekarDTO(adminKC), HttpStatus.OK);
+		}
+		
+		adminKC.setLozinka(passwordEncoder.encode(passCh.newPassword));
+		adminKC.setStatus(1);
+		adminKC = lekarService.save(adminKC);
+		return new ResponseEntity<>(new LekarDTO(adminKC), HttpStatus.OK);
+	}
+	static class PasswordChanger {
+		public String oldPassword;
+		public String newPassword;
+	}
 
 	
 

@@ -417,7 +417,7 @@ public class AdministratorKCController {
 	}
 	
 	//menjanje lozinke 
-	@PutMapping(path = "/promeniLozinkuAKC", consumes = "application/json")
+	@PutMapping(path = "/promeniLozinku", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('ADMIN_KC')")
 	public ResponseEntity<?> promeniLozinku(@RequestBody PasswordChanger passCh, Principal pr) {
@@ -454,7 +454,7 @@ public class AdministratorKCController {
 
 		adminKC.setLozinka(passwordEncoder.encode(passCh.newPassword));
 //		pacijent.setLbo(pacijentDTO.getLbo());
-
+		adminKC.setStatus(1);
 		adminKC = administratorKCService.save(adminKC);
 		return new ResponseEntity<>(new AdministratorKCDTO(adminKC), HttpStatus.OK);
 	}

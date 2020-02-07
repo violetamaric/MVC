@@ -1,13 +1,15 @@
 insert into klinicki_centar (naziv, adresa, opis) values ('Klinicki centar Srbije', 'Pasterova 2','Klinicki centar uvek na usluzi svojim pacijentima');
 
 insert into administratorkc (ime, prezime, lozinka, email, status, klinicki_centar_id) values ('MVC', 'MVC', '$2y$12$YlXYBQHItM7BAtAwRWS5VOe3x0aufhZ3qDz8r5BVdghgZGJMtVY.2', 'mvc@gmail.com', 1, 1);
+insert into administratorkc (ime, prezime, lozinka, email, status, klinicki_centar_id) values ('SOKO', 'ORAO', '$2a$10$I58svTrFjZcbyqbooOB.J.izCnJGqHvbDLPuR6F8aj2lrV2as6BYm', 'orao@gmail.com', 0, 1); 
+
 
 insert into klinika (naziv, adresa, opis, klinicki_centar_id, ocena, version, status) values ('Klinika Beograd', 'Pasterova 2','Klinika uvek na usluzi svojim pacijentima',1, 8, 0, 0);
 insert into klinika (naziv, adresa, opis, klinicki_centar_id, ocena, version, status) values ('Klinika Nis', 'Bulevar dr Zorana Djindjica 48','Klinika uvek na usluzi svojim pacijentima',1, 9, 0, 0);
 insert into klinika (naziv, adresa, opis, klinicki_centar_id, ocena, version, status) values ('Klinika Novi Sad', 'Hajduk Veljkova 1','Klinika uvek na usluzi svojim pacijentima',1, 10, 0, 0);
 
 insert into administrator_klinike (ime, prezime, lozinka, email, telefon, status, klinika_id) values ('Magdalena', 'Lakic', '$2y$12$XYkK0PZgshWgicsvaRF5IONp/ayRb15YJbSAYYI.Pguv05UI85s7S', 'magdalena@gmail.com', '066/000-665',1, 3);
-insert into administrator_klinike (ime, prezime, lozinka, email, telefon, status, klinika_id) values ('Ceca', 'Antesevic', '$2y$12$0u9Lrx8s9VDyMp/MttaHseqJbQ0l0lLRmzHbaWCrtzVPBXtbxVVVO', 'ceca@gmail.com', '061/422-852', 1, 2);
+insert into administrator_klinike (ime, prezime, lozinka, email, telefon, status, klinika_id) values ('Ceca', 'Antesevic', '$2y$12$0u9Lrx8s9VDyMp/MttaHseqJbQ0l0lLRmzHbaWCrtzVPBXtbxVVVO', 'ceca@gmail.com', '061/422-852', 0, 2);
 insert into administrator_klinike (ime, prezime, lozinka, email, telefon, status, klinika_id) values ('Viki', 'Maric', '$2y$12$IYv24FLHC3QXGryKQgcgYubTQxsWYWihRJO19mW8BV93Gk6dIlFM.', 'viki@gmail.com', '064/656-969', 1, 1);
 
 insert into lek (naziv, sifra, klinicki_centar_id) values ('Andol','001', 1);
@@ -179,12 +181,16 @@ insert into lekar_authority (lekar_id, authority_id) values (3,2);
 insert into lekar_authority (lekar_id, authority_id) values (4,2);
 insert into lekar_authority (lekar_id, authority_id) values (5,2);
 insert into lekar_authority (lekar_id, authority_id) values (6,2);
+insert into lekar_authority (lekar_id, authority_id) values (7,2);
+insert into lekar_authority (lekar_id, authority_id) values (8,2);
+insert into lekar_authority (lekar_id, authority_id) values (9,2);
 
 insert into medicinska_sestra_authority (medicinska_sestra_id, authority_id) values (1,3);
 insert into medicinska_sestra_authority (medicinska_sestra_id, authority_id) values (2,3);
 insert into medicinska_sestra_authority (medicinska_sestra_id, authority_id) values (3,3);
 
 insert into administrator_kc_authority (administrator_kc_id, authority_id) values (1,4);
+insert into administrator_kc_authority (administrator_kc_id, authority_id) values (2,4);
 
 insert into administrator_klinike_authority (administrator_klinike_id, authority_id) values (1,5);
 insert into administrator_klinike_authority (administrator_klinike_id, authority_id) values (2,5);

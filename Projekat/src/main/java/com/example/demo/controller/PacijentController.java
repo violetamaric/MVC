@@ -159,7 +159,7 @@ public class PacijentController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		System.out.println(pacijent.getEmail() + "++++");
-		return ResponseEntity.ok(new PacijentDTO(pacijent));
+		return new ResponseEntity<>(new PacijentDTO(pacijent), HttpStatus.OK);
 	}
 
 	

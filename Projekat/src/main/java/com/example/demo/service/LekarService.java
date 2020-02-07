@@ -4,16 +4,16 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.example.demo.model.Lek;
 import com.example.demo.model.Lekar;
-import com.example.demo.model.Pacijent;
 import com.example.demo.repository.LekarRepository;
 
 
 
 
 @Service
+
 public class LekarService {
 
 	@Autowired
@@ -32,6 +32,7 @@ public class LekarService {
 	public List<Lekar> findAll() {
 		return lekarRepository.findAll();
 	}
+	
 	
 	public Lekar save(Lekar lekar) {
 		return lekarRepository.save(lekar);
