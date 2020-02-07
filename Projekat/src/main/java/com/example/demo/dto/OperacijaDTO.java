@@ -25,7 +25,7 @@ public class OperacijaDTO {
 	private int status;
 	private int termin;
 	
-	private Set<LekarDTO> listaLekara = new HashSet<LekarDTO>();
+	private Set<Long> listaLekara = new HashSet<>();
 //	private List<Long> lekariID = new ArrayList<>();
 	
 	
@@ -47,7 +47,7 @@ public class OperacijaDTO {
 		this.status = operacija.getStatus();
 		this.termin = operacija.getTermin();
 		for(Lekar l:operacija.getListaLekara()) {
-			this.listaLekara.add(new LekarDTO(l));
+			this.listaLekara.add(l.getId());
 		}
 		
 	}
@@ -73,6 +73,10 @@ public class OperacijaDTO {
 		return "OperacijaDTO [id=" + id + ", datum=" + datum + ", tipOperacije=" + tipOperacije + ", pacijentID="
 				+ pacijentID + ", klinikaID=" + klinikaID + ", salaID=" + salaID + ", salaN=" + salaN + ", salaBR="
 				+ salaBR + ", status=" + status + ", termin=" + termin + ", listaLekara=" + listaLekara + "]";
+	}
+	
+
+	public OperacijaDTO() {
 	}
 
 	@Override
@@ -207,11 +211,11 @@ public class OperacijaDTO {
 		this.termin = termin;
 	}
 
-	public Set<LekarDTO> getListaLekara() {
+	public Set<Long> getListaLekara() {
 		return listaLekara;
 	}
 
-	public void setListaLekara(Set<LekarDTO> listaLekara) {
+	public void setListaLekara(Set<Long> listaLekara) {
 		this.listaLekara = listaLekara;
 	}
 
