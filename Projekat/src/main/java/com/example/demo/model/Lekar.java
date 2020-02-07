@@ -45,6 +45,9 @@ public class Lekar implements UserDetails{
 	@Column(name="telefon", nullable=false)
 	private String telefon;
 	
+	@Column(name = "status", nullable = false)
+	private int status;
+	
 	@ManyToMany
 	@JoinTable(name = "lekar_pacijent", joinColumns = @JoinColumn(name = "lekar_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "pacijent_id", referencedColumnName = "id"))
 	private Set<Pacijent> listaPacijenata = new HashSet<Pacijent>();
@@ -122,6 +125,12 @@ public class Lekar implements UserDetails{
 	}
 	public Set<OdmorOdsustvoLekar> getListaOdmorOdsustvo() {
 		return listaOdmorOdsustvo;
+	}
+	public int getStatus() {
+		return status;
+	}
+	public void setStatus(int status) {
+		this.status = status;
 	}
 	public void setListaOdmorOdsustvo(Set<OdmorOdsustvoLekar> listaOdmorOdsustvo) {
 		this.listaOdmorOdsustvo = listaOdmorOdsustvo;

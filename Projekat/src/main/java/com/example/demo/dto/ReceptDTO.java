@@ -14,8 +14,29 @@ public class ReceptDTO {
 	private Date datumIzvestaja; //datum pregleda
 	private String imeL;
 	private String prezimeL;
+	private String imeP;
+	private String prezimeP;
+	private String jmbgP;
 	
 	
+	public String getImeP() {
+		return imeP;
+	}
+	public void setImeP(String imeP) {
+		this.imeP = imeP;
+	}
+	public String getPrezimeP() {
+		return prezimeP;
+	}
+	public void setPrezimeP(String prezimeP) {
+		this.prezimeP = prezimeP;
+	}
+	public String getJmbgP() {
+		return jmbgP;
+	}
+	public void setJmbgP(String jmbgP) {
+		this.jmbgP = jmbgP;
+	}
 	public String getImeL() {
 		return imeL;
 	}
@@ -70,15 +91,16 @@ public class ReceptDTO {
 	public void setIzvestajID(Long izvestajID) {
 		this.izvestajID = izvestajID;
 	}
-	public ReceptDTO(Long id, Long lekID, Long medSesID, boolean overen, Long izvestajID, String nazivLeka) {
-		super();
-		this.id = id;
-		this.lekID = lekID;
-		this.medSesID = medSesID;
-		this.overen = overen;
-		this.izvestajID = izvestajID;
-		this.nazivLeka = nazivLeka;
-	}
+//	public ReceptDTO(Long id, Long lekID, Long medSesID, boolean overen, Long izvestajID, String nazivLeka) {
+//		super();
+//		this.id = id;
+//		this.lekID = lekID;
+//		this.medSesID = medSesID;
+//		this.overen = overen;
+//		this.izvestajID = izvestajID;
+//		this.nazivLeka = nazivLeka;
+//		
+//	}
 	public ReceptDTO(Recept r) {
 		super();
 		this.id = r.getId();
@@ -87,6 +109,9 @@ public class ReceptDTO {
 		if(r.getMedicinskaSestra() != null) {
 			this.medSesID = r.getMedicinskaSestra().getId();
 		}
+		this.imeP = r.getIzvestajOPregledu().getPregled().getPacijent().getIme();
+		this.prezimeP = r.getIzvestajOPregledu().getPregled().getPacijent().getPrezime();
+		this.jmbgP = r.getIzvestajOPregledu().getPregled().getPacijent().getJmbg();
 		
 		this.overen = r.isOveren();
 		this.izvestajID = r.getIzvestajOPregledu().getId();

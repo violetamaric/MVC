@@ -66,7 +66,7 @@ public class Pacijent implements UserDetails{
 	private String telefon;
 	
 	@Column(name = "odobrenaRegistracija", nullable = true)
-	private Boolean odobrenaRegistracija;
+	private int odobrenaRegistracija;
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private KlinickiCentar klinickiCentar;
@@ -240,11 +240,11 @@ public class Pacijent implements UserDetails{
 		this.telefon = telefon;
 	}
 	
-	public Boolean getOdobrenaRegistracija() {
+	public int getOdobrenaRegistracija() {
 		return odobrenaRegistracija;
 	}
 
-	public void setOdobrenaRegistracija(Boolean odobrenaRegistracija) {
+	public void setOdobrenaRegistracija(int odobrenaRegistracija) {
 		this.odobrenaRegistracija = odobrenaRegistracija;
 	}
 

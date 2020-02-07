@@ -91,7 +91,7 @@ public class EndToEndTest {
 		pacijent.setDrzava("Srbija");
 		pacijent.setTelefon("060789654");
 		pacijent.setJmbg("0303966811711");
-		pacijent.setOdobrenaRegistracija(false);
+		pacijent.setOdobrenaRegistracija(2);
 
 		Authority a = authRepository.findByUloga("PACIJENT");
 		Set<Authority> auth = new HashSet<Authority>();

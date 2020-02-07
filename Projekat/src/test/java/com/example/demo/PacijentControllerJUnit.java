@@ -189,7 +189,7 @@ public class PacijentControllerJUnit {
 		pacijent.setDrzava("Srbija");
 		pacijent.setTelefon("060789654");
 		pacijent.setJmbg("0303966811711");
-		pacijent.setOdobrenaRegistracija(false);
+		pacijent.setOdobrenaRegistracija(2);
 //		
 //		Authority a = new Authority();
 //		a.setId(new Long(1L));
@@ -248,7 +248,7 @@ public class PacijentControllerJUnit {
 		pacijent.setDrzava("Srbija");
 		pacijent.setTelefon("060789654");
 		pacijent.setJmbg("0303966811711");
-		pacijent.setOdobrenaRegistracija(false);
+		pacijent.setOdobrenaRegistracija(2);
 
 		pregled.setLekar(lekarService.findOne(1L));
 
@@ -336,7 +336,7 @@ public class PacijentControllerJUnit {
 		pacijent.setDrzava("Srbija");
 		pacijent.setTelefon("060789654");
 		pacijent.setJmbg("0303966811711");
-		pacijent.setOdobrenaRegistracija(false);
+		pacijent.setOdobrenaRegistracija(2);
 
 		Authority a = authRepository.findByUloga("PACIJENT");
 //		a.setId(new Long(1L));

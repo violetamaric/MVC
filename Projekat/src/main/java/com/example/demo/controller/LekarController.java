@@ -131,7 +131,7 @@ public class LekarController {
 
 		List<PacijentDTO> lista = new ArrayList<>();
 		for (Pacijent p : listaSvihP) {
-			if (p.getOdobrenaRegistracija() == true) {
+			if (p.getOdobrenaRegistracija() == 2) {
 
 				System.out.println(p);
 				PacijentDTO pDTO = new PacijentDTO(p);

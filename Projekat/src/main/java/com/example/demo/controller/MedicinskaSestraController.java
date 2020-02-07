@@ -114,7 +114,7 @@ public class MedicinskaSestraController {
 			
 				System.out.println(p);
 				
-				if(p.getOdobrenaRegistracija() == true ) {
+				if(p.getOdobrenaRegistracija() == 2 ) {
 					PacijentDTO pDTO = new PacijentDTO(p);
 					System.out.println("Pacijent dodat");
 					lista.add(pDTO);
@@ -237,12 +237,12 @@ public class MedicinskaSestraController {
 	
 	
 	//overa recepta
-	@PutMapping(path = "/overa/{id}", consumes = "application/json")
+	@PutMapping(path = "/overa", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('MED_SESTRA')")
-	public ResponseEntity<?> overaRecepta(@PathVariable Long id) {
+	public ResponseEntity<?> overaRecepta(@RequestBody Long rec) {
 		System.out.println("OVERA RECEPTA");
-		Recept recept = receptService.findByID(id);
+		Recept recept = receptService.findByID(rec);
 		recept.setOveren(true);
 		recept = receptService.save(recept);
 		System.out.println("OVERA RECEPTA");

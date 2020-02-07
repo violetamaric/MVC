@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -34,11 +35,13 @@ import com.example.demo.dto.LekDTO;
 import com.example.demo.dto.PacijentDTO;
 import com.example.demo.model.AdministratorKC;
 import com.example.demo.model.AdministratorKlinike;
+import com.example.demo.model.Authority;
 import com.example.demo.model.KlinickiCentar;
 import com.example.demo.model.Klinika;
 import com.example.demo.model.Lek;
 import com.example.demo.model.Pacijent;
 import com.example.demo.model.ZdravstveniKarton;
+import com.example.demo.repository.AuthorityRepository;
 import com.example.demo.service.AdministratorKCService;
 import com.example.demo.service.AdministratorKlinikeService;
 import com.example.demo.service.EmailService;
@@ -80,19 +83,25 @@ public class AdministratorKCController {
 	private AuthenticationManager authenticationManager;
 	private Logger logger = LoggerFactory.getLogger(UserController.class);
 	
+	
+	@Autowired
+	private AuthorityRepository authorityRepository;
 	//vrati mi sve admnistratore kc
 	@GetMapping(value = "/svi")
 	@PreAuthorize("hasAuthority('ADMIN_KC')")
 	@CrossOrigin(origins = "http://localhost:3000")
 	public ResponseEntity<List<AdministratorKCDTO>> getAll(Principal p) {
-
+		AdministratorKC admin = administratorKCService.findByEmail(p.getName());
 		List<AdministratorKC> administratoriKC = administratorKCService.findAll();
 
 		System.out.println("ISPISANI SVI ADMINISTRATORI KC IZ BAZE");
 		List<AdministratorKCDTO> administratoriKCDTO = new ArrayList<>();
 		for (AdministratorKC aKC : administratoriKC) {
-			if(aKC.getStatus() != 2) { //samo koji nisu obrisani 
-				administratoriKCDTO.add(new AdministratorKCDTO(aKC));
+			if(aKC.getStatus() != 2) { //samo koji nisu obrisani
+				if(!aKC.equals(admin)) {
+					administratoriKCDTO.add(new AdministratorKCDTO(aKC));
+				}
+				
 			}
 			
 		}
@@ -144,7 +153,7 @@ public class AdministratorKCController {
 		KlinickiCentar kc = administratorKC.getKlinickiCentar();
 		List<PacijentDTO> lista = new ArrayList<PacijentDTO>();
 		for(Pacijent p : kc.getZahteviZaRegistraciju()) {
-			if(p.getOdobrenaRegistracija() == false) {
+			if(p.getOdobrenaRegistracija() == 0) {
 				PacijentDTO pDTO = new PacijentDTO(p);
 				lista.add(pDTO);
 			}
@@ -204,8 +213,8 @@ public class AdministratorKCController {
 			return new ResponseEntity<>("U listi ne postoji pacijent", HttpStatus.BAD_REQUEST);
 		}else {
 			
-//			p.setOdobrenaRegistracija(true);
-//			p = pacijentService.save(p);
+			p.setOdobrenaRegistracija(1);
+			p = pacijentService.save(p);
 			System.out.println(p.getOdobrenaRegistracija());
 			
 			kc.getZahteviZaRegistraciju().remove(p);
@@ -241,29 +250,9 @@ public class AdministratorKCController {
 		System.out.println("------------------------------------");
 		Pacijent p = pacijentService.findByEmail(paDTO.getEmail());
 		PacijentDTO pDTO = new PacijentDTO(p);
+		p.setOdobrenaRegistracija(3); //pac je obrisan
+		p = pacijentService.save(p);
 
-		List<KlinickiCentar> listaKC = KCService.find();
-		KlinickiCentar kc = listaKC.get(0);
-
-
-			System.out.println("Uspesno obrisan pacijent");
-			kc.getZahteviZaRegistraciju().remove(p);
-
-			kc.setZahteviZaRegistraciju(kc.getZahteviZaRegistraciju());
-			kc = KCService.save(kc);
-			
-
-			if(kc.getZahteviZaRegistraciju().contains(p)) {
-				Set<Pacijent> lista = kc.getZahteviZaRegistraciju();
-				lista.remove(p);
-				kc.getZahteviZaRegistraciju().clear();
-				kc.setZahteviZaRegistraciju(lista);
-				kc = KCService.save(kc);
-				System.out.println("obrisano");
-				
-			}
-			
-			
 
 		String subject ="Odobijena registracija";
 		String text = "Postovani " + pDTO.getIme() + " " + pDTO.getPrezime() 
@@ -278,11 +267,10 @@ public class AdministratorKCController {
 			logger.info("Greska prilikom slanja emaila: " + e.getMessage());
 			return new ResponseEntity<>("Mail nije poslat", HttpStatus.BAD_REQUEST);
 		}
-//		List<Pacijent> pac = pacijentService.findAll();
-//		pac.remove(p);
+
 		
-		pacijentService.delete(p);
-		
+
+		System.out.println("Uspesno obrisan pacijent");
 
 		return new ResponseEntity<>("Odbijeno", HttpStatus.OK);
 	}
@@ -381,9 +369,13 @@ public class AdministratorKCController {
 		ak.setIme(akDTO.getIme());
 		ak.setPrezime(akDTO.getPrezime());
 		ak.setEmail(akDTO.getEmail());
-		ak.setLozinka(akDTO.getLozinka());
+		ak.setLozinka(passwordEncoder.encode(akDTO.getLozinka()));
 		ak.setTelefon(akDTO.getTelefon());
 		ak.setStatus(0); //mora da promeni lozinku
+		Set<Authority> authorities = new HashSet<Authority>();
+		authorities.add(authorityRepository.findByUloga("ADMIN_KLINIKE"));
+		ak.setAuthorities(authorities);
+	
 			
 		Klinika k = klinikaService.findById(akDTO.getIdKlinike());
 		ak.setKlinika(k);
@@ -405,9 +397,12 @@ public class AdministratorKCController {
 		ak.setIme(akDTO.getIme());
 		ak.setPrezime(akDTO.getPrezime());
 		ak.setEmail(akDTO.getEmail());
-		ak.setLozinka(akDTO.getLozinka());
+		ak.setLozinka(passwordEncoder.encode(akDTO.getLozinka()));
 		ak.setStatus(0); //mora da promeni lozinku prilikom prvog logovanja
-
+		Set<Authority> authorities = new HashSet<Authority>();
+		authorities.add(authorityRepository.findByUloga("ADMIN_KC"));
+		ak.setAuthorities(authorities);
+		
 		List<KlinickiCentar> listaKC = KCService.find();
 		KlinickiCentar kc = listaKC.get(0);
 		ak.setKlinickiCentar(kc);
@@ -467,4 +462,6 @@ public class AdministratorKCController {
 		public String oldPassword;
 		public String newPassword;
 	}
+
+	
 }
