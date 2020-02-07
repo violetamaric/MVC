@@ -62,18 +62,23 @@ public class PregledDTO {
 
 
 
-	public PregledDTO(Long id, Date datum, Long tipPregledaID, Long lekarID, String pacijentEmail, Long klinikaID,
+
+
+	public PregledDTO(Long id, Date datum, Long tipPregledaID,Long pacijentID, Long lekarID, String pacijentEmail, Long klinikaID,
 			double cena, int status, Long sala, int termin) {
+
 		this.id = id;
 		this.datum = datum;
 		this.tipPregledaID = tipPregledaID;
 		this.lekarID = lekarID;
 		this.pacijentEmail = pacijentEmail;
 		this.klinikaID = klinikaID;
+		this.pacijentID = pacijentID;
 		this.cena = cena;
 		this.status = status;
 		this.salaID = sala;
 		this.termin = termin;
+		this.pacijentID = pacijentID;
 	}
 
 	public PregledDTO(SlobodniTerminDTO st) {
@@ -107,6 +112,8 @@ public class PregledDTO {
 			this.pacijentEmail = pregled.getPacijent().getEmail();
 			this.prezimeP = pregled.getPacijent().getPrezime();
 			this.imeP = pregled.getPacijent().getIme();
+			this.pacijentID = pregled.getPacijent().getId();
+
 		}
 		if (pregled.getKlinika() != null) {
 			this.nazivKl = pregled.getKlinika().getNaziv();
@@ -115,7 +122,7 @@ public class PregledDTO {
 
 		this.cena = pregled.getCena();
 		this.status = pregled.getStatus();
-
+		
 		this.termin = pregled.getTermin();
 		if (pregled.getSala() != null) {
 

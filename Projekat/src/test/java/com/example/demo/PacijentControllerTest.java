@@ -254,7 +254,7 @@ public class PacijentControllerTest {
 		pacijent.setDrzava("Srbija");
 		pacijent.setTelefon("060789654");
 		pacijent.setJmbg("0303966811711");
-		pacijent.setOdobrenaRegistracija(false);
+		pacijent.setOdobrenaRegistracija(2);
 //		
 //		Authority a = new Authority();
 //		a.setId(new Long(1L));

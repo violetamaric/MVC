@@ -17,6 +17,10 @@ public class ZdravstveniKartonDTO {
 	private String prezimeP;
 	private Set<IzvestajOPregleduDTO> listaIzvestaja = new HashSet<IzvestajOPregleduDTO>();
 
+	public ZdravstveniKartonDTO() {
+		super();
+	}
+
 	public ZdravstveniKartonDTO(ZdravstveniKarton zk) {
 		this.id = zk.getId();
 		this.visina = zk.getVisina();

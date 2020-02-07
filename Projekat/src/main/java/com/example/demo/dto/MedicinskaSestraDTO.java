@@ -10,11 +10,20 @@ public class MedicinskaSestraDTO{
 	private String email;
 	private String brTelefona;
 	private String lozinka;
+	//0-mora da promeni lozinku pri prvom logovanju
+	//1-moze da se loguje lagano 
+	//2-izbrisan 
+	private int status; 
 	
 	
 	
 	
-	
+	public int getStatus() {
+		return status;
+	}
+	public void setStatus(int status) {
+		this.status = status;
+	}
 	public String getLozinka() {
 		return lozinka;
 	}
@@ -52,16 +61,18 @@ public class MedicinskaSestraDTO{
 	public void setBrTelefona(String brTelefona) {
 		this.brTelefona = brTelefona;
 	}
-	public MedicinskaSestraDTO(Long id, String ime, String prezime, String email,String lozinka, String brTelefona) {
-		super();
-		this.id = id;
-		this.ime = ime;
-		this.prezime = prezime;
-		this.email = email;
-		this.lozinka = lozinka;
-		this.brTelefona = brTelefona;
-
-	}
+//	public MedicinskaSestraDTO(Long id, String ime, String prezime, 
+//			String email,String lozinka, String brTelefona, int status) {
+//		super();
+//		this.id = id;
+//		this.ime = ime;
+//		this.prezime = prezime;
+//		this.email = email;
+//		this.lozinka = lozinka;
+//		this.brTelefona = brTelefona;
+//		this.status = status;
+//
+//	}
 	public MedicinskaSestraDTO() {
 		super();
 	}
@@ -73,8 +84,10 @@ public class MedicinskaSestraDTO{
 		this.email = ms.getEmail();
 		this.lozinka = ms.getLozinka();
 		this.brTelefona = ms.getBrTelefona();
+		this.status = ms.getStatus();
 
 	}
+	
 	
 	
 }

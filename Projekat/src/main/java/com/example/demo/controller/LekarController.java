@@ -131,7 +131,7 @@ public class LekarController {
 
 		List<PacijentDTO> lista = new ArrayList<>();
 		for (Pacijent p : listaSvihP) {
-			if (p.getOdobrenaRegistracija() == true) {
+			if (p.getOdobrenaRegistracija() == 2) {
 
 				System.out.println(p);
 				PacijentDTO pDTO = new PacijentDTO(p);
@@ -299,6 +299,7 @@ public class LekarController {
 
 	}
 
+
 	@PutMapping(path = "/oceni/{id}/{ocena}/{pregled_id}", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 	public ResponseEntity<LekarDTO> oceniLekara(@PathVariable Long id, @PathVariable int ocena,
@@ -355,7 +356,9 @@ public class LekarController {
 		System.out.println("*************");
 
 		Lekar lekar = lekarService.findByEmail(p.getName());
-		Pacijent pacijent = pacijentiSevice.findByEmail(pacijentDTO.getEmail());
+
+		Pacijent pacijent = pacijentiSevice.findByID(pacijentDTO.getId());
+		
 
 		Set<Pacijent> listaPacijenta = lekar.getListaPacijenata();
 		// dodeli pacijente lekaru
@@ -369,5 +372,9 @@ public class LekarController {
 		return new ResponseEntity<>("NE MOZE", HttpStatus.OK);
 
 	}
+
+	
+
+	
 
 }

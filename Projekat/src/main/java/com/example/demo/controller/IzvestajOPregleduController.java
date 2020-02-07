@@ -1,8 +1,6 @@
 package com.example.demo.controller;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +17,7 @@ import com.example.demo.dto.IzvestajOPregleduDTO;
 import com.example.demo.model.Dijagnoza;
 import com.example.demo.model.IzvestajOPregledu;
 import com.example.demo.model.Lek;
+import com.example.demo.model.Lekar;
 import com.example.demo.model.Pacijent;
 import com.example.demo.model.Pregled;
 import com.example.demo.model.Recept;
@@ -26,6 +25,8 @@ import com.example.demo.model.ZdravstveniKarton;
 import com.example.demo.service.DijagnozaService;
 import com.example.demo.service.IzvestajOPregleduService;
 import com.example.demo.service.LekService;
+import com.example.demo.service.LekarService;
+import com.example.demo.service.PacijentService;
 import com.example.demo.service.PregledService;
 import com.example.demo.service.ReceptService;
 import com.example.demo.service.ZdravstveniKartonService;
@@ -38,15 +39,16 @@ public class IzvestajOPregleduController {
 	
 	@Autowired
 	private PregledService pregledService;
-	
-	
+	@Autowired
+	private LekarService lekarService;
+	@Autowired
+	private PacijentService pacijentService;
 	@Autowired
 	private DijagnozaService dijagnozaService;
 	@Autowired
 	private LekService lekService;
 	@Autowired
 	private ReceptService receptService;
-	
 	@Autowired
 	private ZdravstveniKartonService zdravstveniKartonService;
 	
@@ -59,14 +61,46 @@ public class IzvestajOPregleduController {
 		
 		IzvestajOPregledu iz = new IzvestajOPregledu();
 		
+		
 		//PREGLED
 		
 		Pregled pregled = pregledService.findById(izDTO.getPregledID());
 		pregled.setStatus(3); //zavrsen pregled
 		
+		Lekar lekar = pregled.getLekar();
 		
+		Pacijent paci = pregled.getPacijent();
+		int flag = 0;
+		for(Pacijent pac : lekar.getListaPacijenata()) {
+			if(pac.getId().equals(paci.getId())) {
+				flag = 1;
+				System.out.println("ISPIS FLAG  JE 1");
+				break;
+			}
+		}
+		for(Lekar lek : paci.getListaLekara()) {
+			if(lek.equals(lekar)) {
+				flag = 2;
+				System.out.println("ISPIS FLAG  JE 2");
+				break;
+			}
+		}
+		System.out.println("Vrednost flaga : " + flag);
+		
+		
+		//ne radi ovo izbacuje gresku 
+//		if(flag == 0) {
+//			
+//			lekar.getListaPacijenata().add(paci);
+//			
+//			paci.getListaLekara().add(lekar);
+//			
+//			paci = pacijentService.save(paci);
+//			
+//			lekar =  lekarService.save(lekar);
+//		}
+
 		Pacijent pacijent = pregled.getPacijent();
-		
 		iz.setPregled(pregled);
 		
 		//ZDRAVSTVENI KARTON
@@ -81,10 +115,7 @@ public class IzvestajOPregleduController {
 		
 		//RECEPTI
 		
-		List<Long> recepti = new ArrayList<Long>();
-		for(Long id:izDTO.getRecepti().keySet()) {
-			recepti.add(id);
-		}
+		List<Long> recepti = izDTO.getRecepti();
 		for(Long id : recepti) {
 			Recept r = new Recept();
 			r.setIzvestajOPregledu(iz);

@@ -22,7 +22,8 @@ public class IzvestajOPregleduDTO {
 	private String imeL;
 	private String prezimeL;
 	private Long pregledID;
-	private Map<Long, String> recepti = new HashMap<Long, String>();
+	private Map<Long, String> naziviLekova = new HashMap<Long, String>();
+	private List<Long> recepti = new ArrayList<>();
 	
 	public Long getPregledID() {
 		return pregledID;
@@ -95,10 +96,17 @@ public class IzvestajOPregleduDTO {
 	
 
 	
-	public Map<Long, String> getRecepti() {
+
+	public Map<Long, String> getNaziviLekova() {
+		return naziviLekova;
+	}
+	public void setNaziviLekova(Map<Long, String> naziviLekova) {
+		this.naziviLekova = naziviLekova;
+	}
+	public List<Long> getRecepti() {
 		return recepti;
 	}
-	public void setRecepti(Map<Long, String> recepti) {
+	public void setRecepti(List<Long> recepti) {
 		this.recepti = recepti;
 	}
 	public IzvestajOPregleduDTO() {
@@ -116,32 +124,19 @@ public class IzvestajOPregleduDTO {
 		this.imeL = IOP.getPregled().getLekar().getIme();
 		this.prezimeL = IOP.getPregled().getLekar().getPrezime();
 		this.pregledID = IOP.getPregled().getId();
-		this.recepti = new HashMap<>();
+		this.naziviLekova = new HashMap<>();
 		for(Recept r : IOP.getListaRecepata()) {
 			if(r.isOveren()) {
-				this.recepti.put(r.getId(), r.getLek().getNaziv());
+				this.naziviLekova.put(r.getId(), r.getLek().getNaziv());
 			}
-			
-			
 		}
+		this.recepti = new ArrayList<>();
+		for(Recept r : IOP.getListaRecepata()) {
+			this.recepti.add(r.getId());
+		}
+		
 	}
-//	public IzvestajOPregleduDTO(Long id, Long zkID, String dijagnozaN, String dijagnozaO, Long dijagnozaID, Date datum,
-//			String sadrzaj, Long lekarID, String imeL, String prezimeL, Long pregledID, List<Long> recepti) {
-//		super();
-//		this.id = id;
-//		this.zkID = zkID;
-//		this.dijagnozaN = dijagnozaN;
-//		this.dijagnozaO = dijagnozaO;
-//		this.dijagnozaID = dijagnozaID;
-//		this.datum = datum;
-//		this.sadrzaj = sadrzaj;
-//		this.lekarID = lekarID;
-//		this.imeL = imeL;
-//		this.prezimeL = prezimeL;
-//		this.pregledID = pregledID;
-//		this.recepti = new ArrayList<>();
-//		this.recepti = recepti;
-//	}
+
 	
 	
 }
