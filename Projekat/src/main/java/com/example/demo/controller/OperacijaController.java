@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import java.security.Principal;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -13,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,7 +34,6 @@ import com.example.demo.model.Lekar;
 import com.example.demo.model.OdmorOdsustvoLekar;
 import com.example.demo.model.Operacija;
 import com.example.demo.model.Pacijent;
-import com.example.demo.model.Pregled;
 import com.example.demo.model.Sala;
 import com.example.demo.model.Termin;
 import com.example.demo.service.EmailService;
@@ -428,7 +427,7 @@ public class OperacijaController {
 	}
 
 	// rezervisanje sale i slanje mejla pacijentu i lekaru
-//	@Transactional
+	@Transactional
 	@PostMapping(path = "/rezervisanjeSale", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
@@ -459,6 +458,7 @@ public class OperacijaController {
 
 				p.setTermin(oDTO.getTermin());
 				p.setDatum(oDTO.getDatum());
+			
 				operacijaService.save(p);
 				for (Lekar le : listaLekaraOper) {
 					Termin t = new Termin();
@@ -470,7 +470,10 @@ public class OperacijaController {
 					t.setSala(s);
 					t.setLekar(le);
 					terminService.save(t);
-					le.getListaOperacija().add(p);
+					Set<Operacija> lekarOperacije = le.getListaOperacija();
+					lekarOperacije.add(p);
+					le.setListaOperacija(lekarOperacije);
+//					le.getListaOperacija().add(p);
 					lekarService.save(le);
 					
 					
