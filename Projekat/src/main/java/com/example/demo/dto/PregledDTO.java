@@ -62,8 +62,11 @@ public class PregledDTO {
 
 
 
+
+
 	public PregledDTO(Long id, Date datum, Long tipPregledaID,Long pacijentID, Long lekarID, String pacijentEmail, Long klinikaID,
 			double cena, int status, Long sala, int termin) {
+
 		this.id = id;
 		this.datum = datum;
 		this.tipPregledaID = tipPregledaID;
@@ -75,8 +78,24 @@ public class PregledDTO {
 		this.status = status;
 		this.salaID = sala;
 		this.termin = termin;
+		this.pacijentID = pacijentID;
 	}
 
+	public PregledDTO(SlobodniTerminDTO st) {
+		this.cena = st.getCena();
+		this.datum = st.getDatum();
+		this.nazivKl = st.getKlinikaN();
+		this.klinikaID = st.getKlinikaID();
+		this.lekarID = st.getLekarID();
+		this.imeL = st.getLekarIme();
+		this.prezimeL = st.getLekarPrezime();
+		this.nazivTP = st.getTipPregledaN();
+		this.tipPregledaID = st.getTipPregledaID();
+		this.termin = st.getTermin();
+		this.salaBR = st.getSalaBR();
+		this.salaID = st.getSalaID();
+		this.salaN = st.getSalaN();
+	}
 	public PregledDTO(Pregled pregled) {
 		this.id = pregled.getId();
 		this.datum = pregled.getDatum();
@@ -93,7 +112,8 @@ public class PregledDTO {
 			this.pacijentEmail = pregled.getPacijent().getEmail();
 			this.prezimeP = pregled.getPacijent().getPrezime();
 			this.imeP = pregled.getPacijent().getIme();
-			this.pacijentID =  pregled.getPacijent().getId();
+			this.pacijentID = pregled.getPacijent().getId();
+
 		}
 		if (pregled.getKlinika() != null) {
 			this.nazivKl = pregled.getKlinika().getNaziv();
@@ -102,7 +122,7 @@ public class PregledDTO {
 
 		this.cena = pregled.getCena();
 		this.status = pregled.getStatus();
-
+		
 		this.termin = pregled.getTermin();
 		if (pregled.getSala() != null) {
 

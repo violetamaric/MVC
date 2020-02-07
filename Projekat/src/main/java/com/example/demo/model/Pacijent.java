@@ -31,7 +31,7 @@ public class Pacijent implements UserDetails{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@OneToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+	@OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
 	@JoinColumn(name = "zdravstveniKarton_id")
 	private ZdravstveniKarton zdravstveniKarton;
 
@@ -66,7 +66,7 @@ public class Pacijent implements UserDetails{
 	private String telefon;
 	
 	@Column(name = "odobrenaRegistracija", nullable = true)
-	private Boolean odobrenaRegistracija;
+	private int odobrenaRegistracija;
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private KlinickiCentar klinickiCentar;
@@ -84,7 +84,7 @@ public class Pacijent implements UserDetails{
 	@OneToMany(mappedBy = "pacijent", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Operacija> listaOperacija = new HashSet<Operacija>();
 
-	@OneToMany(mappedBy = "pacijent", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "pacijent", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<Pregled> listaPregleda = new HashSet<Pregled>();
 	
 	@ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
@@ -240,11 +240,11 @@ public class Pacijent implements UserDetails{
 		this.telefon = telefon;
 	}
 	
-	public Boolean getOdobrenaRegistracija() {
+	public int getOdobrenaRegistracija() {
 		return odobrenaRegistracija;
 	}
 
-	public void setOdobrenaRegistracija(Boolean odobrenaRegistracija) {
+	public void setOdobrenaRegistracija(int odobrenaRegistracija) {
 		this.odobrenaRegistracija = odobrenaRegistracija;
 	}
 

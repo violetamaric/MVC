@@ -43,6 +43,9 @@ public class MedicinskaSestra implements UserDetails{
 	@Column(name="lozinka", nullable=false)
 	private String lozinka;
 	
+	@Column(name = "status", nullable = false)
+	private int status;
+	
 	@ManyToMany
 	@JoinTable(name = "medicinska_sestra_pacijent", joinColumns = @JoinColumn(name = "pacijent_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "medicinska_sestra_id", referencedColumnName = "id"))
 	private Set<Pacijent> listaPacijenataMedSestra = new HashSet<Pacijent>();
@@ -70,6 +73,12 @@ public class MedicinskaSestra implements UserDetails{
 
 	public String getIme() {
 		return ime;
+	}
+	public int getStatus() {
+		return status;
+	}
+	public void setStatus(int status) {
+		this.status = status;
 	}
 	public String getBrTelefona() {
 		return brTelefona;

@@ -9,17 +9,22 @@ public class AdministratorKCDTO {
 	private String prezime;
 	private String lozinka;
 	private String email;
+	//0-mora da promeni lozinku pri prvom logovanju
+	//1-moze da se loguje lagano 
+	//2-izbrisan 
+	private int status; 
 	
 	public AdministratorKCDTO() {
 		super();
 	}
-	public AdministratorKCDTO(Long id, String ime, String prezime, String lozinka, String email) {
+	public AdministratorKCDTO(Long id, String ime, String prezime, String lozinka, String email, int status) {
 		super();
 		this.id = id;
 		this.ime = ime;
 		this.prezime = prezime;
 		this.lozinka = lozinka;
 		this.email = email;
+		this.status = status;
 	}
 	public AdministratorKCDTO(AdministratorKC administratorKC) {
 		super();
@@ -28,6 +33,7 @@ public class AdministratorKCDTO {
 		this.prezime = administratorKC.getPrezime();
 		this.lozinka = administratorKC.getLozinka();
 		this.email = administratorKC.getEmail();
+		this.status = administratorKC.getStatus();
 	}
 	
 	
@@ -51,6 +57,12 @@ public class AdministratorKCDTO {
 		this.prezime = prezime;
 	}
 
+	public int getStatus() {
+		return status;
+	}
+	public void setStatus(int status) {
+		this.status = status;
+	}
 	public String getLozinka() {
 		return lozinka;
 	}

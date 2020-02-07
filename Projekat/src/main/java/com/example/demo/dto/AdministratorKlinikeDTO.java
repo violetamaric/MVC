@@ -14,7 +14,11 @@ public class AdministratorKlinikeDTO {
 	private String nazivKlinike;
 
 	private String telefon;
-
+	//0-mora da promeni lozinku pri prvom logovanju
+	//1-moze da se loguje lagano 
+	//2-izbrisan 
+	private int status;
+	
 	//nisam sigurna
 //	private String nazivKlinike; 
 	
@@ -28,14 +32,16 @@ public class AdministratorKlinikeDTO {
 		this.ime = adminKlinike.getIme();
 		this.prezime = adminKlinike.getPrezime();
 		this.email = adminKlinike.getEmail();
-    this.telefon = adminKlinike.getTelefon();
+		this.telefon = adminKlinike.getTelefon();
 		this.lozinka = adminKlinike.getLozinka();
 		this.idKlinike = adminKlinike.getKlinika().getId();
 		this.nazivKlinike = adminKlinike.getKlinika().getNaziv();
+		this.status = adminKlinike.getStatus();
 	}
 	
 	
-	public AdministratorKlinikeDTO(Long id, String ime, String prezime, String email, String telefon, String lozinka, Long idKlinike, String nazivKlinike) {
+	public AdministratorKlinikeDTO(Long id, String ime, String prezime, String email, 
+			String telefon, String lozinka, Long idKlinike, String nazivKlinike, int status) {
 		super();
 		this.id = id;
 		this.ime = ime;
@@ -44,10 +50,20 @@ public class AdministratorKlinikeDTO {
 
 		this.lozinka = lozinka;
 		this.idKlinike = idKlinike;
-
+		this.status = status;
 		this.telefon = telefon;
 		this.nazivKlinike = nazivKlinike;
 	}
+	
+	
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
 	public Long getId() {
 		return id;
 	}

@@ -1,23 +1,6 @@
 package com.example.demo.dto;
 
-import java.util.ArrayList;
-import java.util.Set;
-
-import com.example.demo.model.AdministratorKlinike;
-import com.example.demo.model.KlinickiCentar;
 import com.example.demo.model.Klinika;
-import com.example.demo.model.Lekar;
-import com.example.demo.model.MedicinskaSestra;
-import com.example.demo.model.OdmorOdsustvoLekar;
-import com.example.demo.model.OdmorOdsustvoMedicinskaSestra;
-import com.example.demo.model.Operacija;
-import com.example.demo.model.Pacijent;
-import com.example.demo.model.Pregled;
-import com.example.demo.model.Sala;
-import com.example.demo.model.TipPregleda;
-import com.example.demo.model.Klinika.KlinikaBuilder;
-
-import lombok.Builder;
 //@Builder
 public class KlinikaDTO {
 
@@ -27,6 +10,7 @@ public class KlinikaDTO {
 	private String adresa;
 	private String opis;
 	private int ocena;
+	private int status;
 //	private ArrayList<Long> listaAdministratoraKlinike = new ArrayList<Long>(); 
 	//lista id-eva administratora klinike
 	
@@ -34,13 +18,14 @@ public class KlinikaDTO {
 		super();
 	}
 
-	public KlinikaDTO(Long id, String naziv, String adresa, String opis, int ocena) {
+	public KlinikaDTO(Long id, String naziv, String adresa, String opis, int ocena, int status) {
 		super();
 		this.id = id;
 		this.naziv = naziv;
 		this.adresa = adresa;
 		this.opis = opis;
 		this.ocena = ocena;
+		this.status = status;
 		
 	}
 //	public KlinikaDTO(Long id, String naziv, String adresa, String opis, int ocena, ArrayList<Long> lista) {
@@ -61,6 +46,7 @@ public class KlinikaDTO {
 		this.adresa = klinika.getAdresa();
 		this.opis = klinika.getOpis();
 		this.ocena = klinika.getOcena();
+		this.status = klinika.getStatus();
 //		for (AdministratorKlinike ak : klinika.getListaAdminKlinike()) {
 //			this.listaAdministratoraKlinike.add(ak.getId());
 //		}
@@ -106,6 +92,14 @@ public class KlinikaDTO {
 
 	public void setOcena(int ocena) {
 		this.ocena = ocena;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
 	}
 
 //	public ArrayList<Long> getListaAdministratoraKlinike() {

@@ -19,26 +19,23 @@ public class SlobodniTerminDTO {
 
 	private Long klinikaID;
 	private String klinikaN;
-	
+
 	private Long salaID;
 	private String salaN;
 	private int salaBR;
-
 
 	private double cena;
 
 	private boolean status;
 
 	private double popust;
-	
+
 	private int termin;
 
 	public SlobodniTerminDTO() {
 		super();
 
 	}
-
-
 
 	public SlobodniTerminDTO(Long id, Date datum, Long tipPregledaID, String tipPregledaN, Long lekarID,
 			String lekarIme, String lekarPrezime, Long klinikaID, String klinikaN, double cena, boolean status,
@@ -62,8 +59,6 @@ public class SlobodniTerminDTO {
 		this.salaN = salaN;
 	}
 
-
-
 	@Override
 	public String toString() {
 		return "SlobodniTerminDTO [id=" + id + ", datum=" + datum + ", tipPregledaID=" + tipPregledaID
@@ -72,26 +67,34 @@ public class SlobodniTerminDTO {
 				+ cena + ", status=" + status + ", popust=" + popust + "]";
 	}
 
-
-
 	public SlobodniTerminDTO(SlobodniTermin st) {
 		this.id = st.getId();
 		this.datum = st.getDatum();
-		this.tipPregledaID = st.getTipPregleda().getId();
-		this.lekarID = st.getLekar().getId();
-		this.klinikaID = st.getKlinika().getId();
 		this.cena = st.getCena();
 		this.status = st.isStatus();
 		this.popust = st.getPopust();
-		this.tipPregledaN = st.getTipPregleda().getNaziv();
-		this.lekarIme = st.getLekar().getIme();
-		this.lekarPrezime = st.getLekar().getPrezime();
-		this.klinikaN = st.getKlinika().getNaziv();
+		if (st.getTipPregleda() != null) {
+			this.tipPregledaID = st.getTipPregleda().getId();
+			this.tipPregledaN = st.getTipPregleda().getNaziv();
+		}
+		if (st.getKlinika() != null) {
+			this.klinikaID = st.getKlinika().getId();
+			this.klinikaN = st.getKlinika().getNaziv();
+		}
+		if (st.getLekar() != null) {
+			this.lekarIme = st.getLekar().getIme();
+			this.lekarPrezime = st.getLekar().getPrezime();
+			this.lekarID = st.getLekar().getId();
+		}
+		if (st.getSala() != null) {
+			this.salaBR = st.getSala().getBroj();
+			this.salaN = st.getSala().getNaziv();
+			this.salaID = st.getSala().getId();
+
+		}
+
 		this.termin = st.getTermin();
-		this.salaBR = st.getSala().getBroj();
-		this.salaN = st.getSala().getNaziv();
-		this.salaID = st.getSala().getId();
-		
+
 	}
 
 	public Long getId() {
@@ -158,106 +161,68 @@ public class SlobodniTerminDTO {
 		this.popust = popust;
 	}
 
-
-
 	public String getTipPregledaN() {
 		return tipPregledaN;
 	}
-
-
 
 	public void setTipPregledaN(String tipPregledaN) {
 		this.tipPregledaN = tipPregledaN;
 	}
 
-
-
 	public String getLekarIme() {
 		return lekarIme;
 	}
-
-
 
 	public void setLekarIme(String lekarIme) {
 		this.lekarIme = lekarIme;
 	}
 
-
-
 	public String getLekarPrezime() {
 		return lekarPrezime;
 	}
-
-
 
 	public void setLekarPrezime(String lekarPrezime) {
 		this.lekarPrezime = lekarPrezime;
 	}
 
-
-
 	public String getKlinikaN() {
 		return klinikaN;
 	}
-
-
 
 	public void setKlinikaN(String klinikaN) {
 		this.klinikaN = klinikaN;
 	}
 
-
-
 	public int getTermin() {
 		return termin;
 	}
-
-
 
 	public void setTermin(int termin) {
 		this.termin = termin;
 	}
 
-
-
 	public Long getSalaID() {
 		return salaID;
 	}
-
-
 
 	public void setSalaID(Long salaID) {
 		this.salaID = salaID;
 	}
 
-
-
 	public String getSalaN() {
 		return salaN;
 	}
-
-
 
 	public void setSalaN(String salaN) {
 		this.salaN = salaN;
 	}
 
-
-
 	public int getSalaBR() {
 		return salaBR;
 	}
 
-
-
 	public void setSalaBR(int salaBR) {
 		this.salaBR = salaBR;
 	}
-
-
-
-
-	
-	
 
 }

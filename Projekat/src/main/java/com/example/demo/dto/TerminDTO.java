@@ -98,6 +98,12 @@ public class TerminDTO {
 		this.salaN = salaN;
 	}
 
+	@Override
+	public String toString() {
+		return "TerminDTO [id=" + id + ", datumPocetka=" + datumPocetka + ", termin=" + termin + ", salaBR=" + salaBR
+				+ ", salaID=" + salaID + ", salaN=" + salaN + "]";
+	}
+
 //	public Long getKlinikaID() {
 //		return klinikaID;
 //	}

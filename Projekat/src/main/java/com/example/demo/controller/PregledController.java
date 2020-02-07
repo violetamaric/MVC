@@ -1,7 +1,10 @@
 package com.example.demo.controller;
 
 import java.security.Principal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -68,8 +71,10 @@ public class PregledController {
 	private SlobodniTerminService STService;
 	@Autowired
 	private EmailService emailService;
+
 	@Autowired
 	private OperacijaService operacijaService;
+
 	@Autowired
 	private SalaService salaService;
 
@@ -80,7 +85,7 @@ public class PregledController {
 
 	@PostMapping(path = "/new", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('PACIJENT')")
+//	@PreAuthorize("hasAuthority('PACIJENT')")
 	public ResponseEntity<?> noviPregled(@RequestBody PregledDTO pregledDTO) {
 
 		// TODO 1: PROVERITI DA LI UOPSTE MOZE TOG DATUMA DA ZAKAZE
@@ -131,7 +136,7 @@ public class PregledController {
 
 	@PostMapping(path = "/newST", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('PACIJENT')")
+//	@PreAuthorize("hasAuthority('PACIJENT')")
 	public ResponseEntity<?> noviPregledST(@RequestBody PregledDTO pregledDTO) {
 		System.out.println("dodavanje novog pregleda ST");
 		System.out.println(pregledDTO);
@@ -214,6 +219,7 @@ public class PregledController {
 			emailService.poslatiOdgovorPacijentu(pDTO, subject, text);
 		} catch (Exception e) {
 			logger.info("Greska prilikom slanja emaila: " + e.getMessage());
+//			
 			return new ResponseEntity<>("Mail nije poslat", HttpStatus.BAD_REQUEST);
 		}
 
@@ -265,35 +271,56 @@ public class PregledController {
 		return new ResponseEntity<>(pregledDTO, HttpStatus.OK);
 	}
 
-	// vrati pregled pacijenta kod odredjenog lekara
-	@GetMapping(value = "/pregledPacijenta/{id}")
+	
+	//vrati listu pregleda pacijenta kod odredjenog lekara
+	@GetMapping(value = "/pregledPacijenta/{id}" )
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('LEKAR')")
 	public ResponseEntity<List<PregledDTO>> getPregledPacijenta(@PathVariable Long id, Principal pr) {
 		Lekar lekar = lekarService.findByEmail(pr.getName());
 		Pacijent pacijent = pacijentService.findByID(id);
 
+
+		
+		
+		Set<Pregled> pregledi = pacijent.getListaPregleda();
 		List<PregledDTO> pregledDTO = new ArrayList<>();
-		// ako je pacijent od naseg lekara
-		if (lekar.getListaPacijenata().contains(pacijent)) {
-			Set<Pregled> pregledi = pacijent.getListaPregleda();
+			
+		for (Pregled p : pregledi) {
+			
+			
+			System.out.println("Status pregleda pacijenta " + pacijent.getIme() + " : " + p.getStatus());
+			System.out.println("Lekar tog pregleda je : " + p.getLekar().getIme());
+			if (p.getStatus() == 1 && p.getLekar().getId().equals(lekar.getId())) {
+					
+				pregledDTO.add(new PregledDTO(p));
 
-			for (Pregled p : pregledi) {
-
-				System.out.println("Status pregleda pacijenta " + pacijent.getIme() + " : " + p.getStatus());
-				System.out.println("Lekar tog pregleda je : " + p.getLekar().getIme());
-				if (p.getStatus() == 1 && p.getLekar().getId().equals(lekar.getId())) {
-
-					pregledDTO.add(new PregledDTO(p));
-				}
 
 			}
+	
+			
 		}
 
 		return new ResponseEntity<>(pregledDTO, HttpStatus.OK);
 	}
 
-	// vrati mi preglede koji nisu pregledani od lekara
+
+	//vrati pregled pacijenta
+	@GetMapping(value = "/getPregledPac/{id}" )
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('LEKAR')")
+	public ResponseEntity<?> getPregledPac(@PathVariable Long id) {
+		
+		Pregled pregled = pregledService.findById(id);
+		
+		if(pregled == null) {
+			return new ResponseEntity<>("greska", HttpStatus.NOT_FOUND);
+		}
+
+		return new ResponseEntity<>(new PregledDTO(pregled), HttpStatus.OK);
+	}
+	
+	//vrati mi preglede koji nisu pregledani od lekara
 	@GetMapping(value = "/getPreglediLekara")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('LEKAR')")
@@ -399,6 +426,42 @@ public class PregledController {
 		return new ResponseEntity<>(new PregledDTO(pregled), HttpStatus.OK);
 	}
 
+
+	// otkazivanje pregleda
+	@PutMapping(path = "/otkazivanje/{id}")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('PACIJENT')")
+	public ResponseEntity<PregledDTO> otkaziPregled(@PathVariable Long id) {
+		System.out.println("OTKAZIVANEJ PREGLEDA");
+		Pregled pregled = pregledService.findById(id);
+		System.out.println(new PregledDTO(pregled));
+
+		Date date = new Date();
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DATE, -1);
+		Date date2 = cal.getTime();
+
+		System.out.println();
+		System.out.println(date);
+		System.out.println(date2);
+		System.out.println(pregled.getDatum().compareTo(date2));
+		System.out.println(date2.compareTo(pregled.getDatum()));
+		System.out.println();
+
+		if (date2.compareTo(pregled.getDatum()) * pregled.getDatum().compareTo(date) >= 0) {
+			System.out.println("datum je izmedju - ne moze se otkazati");
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
+		} else {
+			System.out.println("datum je otkazan");
+			pregled.setStatus(2);
+			pregledService.save(pregled);
+			return new ResponseEntity<>(new PregledDTO(pregled), HttpStatus.OK);
+
+		}
+
+	}
+
+	
 
 	// pronalazak sala slobodnih za taj teremin i datum za PREGLED
 	@GetMapping(value = "/pronadjiSaleZaTajTermin/{idP}")

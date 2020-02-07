@@ -51,7 +51,7 @@ public class SlobodniTerminController {
 	private TerminService terminService;
 	
 	@GetMapping(value = "/unapredDef")
-	@PreAuthorize("hasAuthority('PACIJENT')")
+//	@PreAuthorize("hasAuthority('PACIJENT')")
 	public ResponseEntity<List<SlobodniTerminDTO>> getAllUnapredDef() {
 
 		List<SlobodniTermin> st = STService.findAll();

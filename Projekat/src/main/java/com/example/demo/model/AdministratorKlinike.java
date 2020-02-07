@@ -40,6 +40,8 @@ public class AdministratorKlinike implements UserDetails{
 //	@Column(name="korisnickoIme", nullable=false)
 //	private String korisnickoIme;
 	
+	@Column(name = "status", nullable = false)
+	private int status;
 
 	@Column(name="lozinka", nullable=false)
 	private String lozinka;
@@ -69,6 +71,14 @@ public class AdministratorKlinike implements UserDetails{
 		return ime;
 	}
 	
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
 	public void setIme(String ime) {
 		this.ime = ime;
 	}
