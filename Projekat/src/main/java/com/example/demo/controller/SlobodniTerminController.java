@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.SalaDTO;
 import com.example.demo.dto.SlobodniTerminDTO;
 import com.example.demo.model.Klinika;
 import com.example.demo.model.Lekar;
@@ -103,6 +104,7 @@ public class SlobodniTerminController {
 		st.setCena(stDTO.getCena());
 		st.setPopust(stDTO.getPopust());
 		st.setDatum(stDTO.getDatum());
+		st.setTermin(stDTO.getTermin());
 		st.setStatus(false);
 		Klinika klinika = klinikaService.findById(stDTO.getKlinikaID());
 		st.setKlinika(klinika);
@@ -132,6 +134,31 @@ public class SlobodniTerminController {
 		salaService.save(sala);
 
 		return new ResponseEntity<>(new SlobodniTerminDTO(st), HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "preuzmiSaleKlinikeZaPregled/{id}")
+	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
+	public ResponseEntity<List<SalaDTO>> getSaleKlinikeZaPRegled(@PathVariable Long id) {
+
+		Klinika klinika = klinikaService.findOne(id);
+		List<Sala> sale = salaService.findAll();
+		List<SalaDTO> lista = new ArrayList<SalaDTO>();
+		for (Sala s : sale) {
+			if (s.getKlinika().getId() == klinika.getId()) {
+				if(s.getTipSale()==1) {
+					SalaDTO salaDTO = new SalaDTO(s);
+					lista.add(salaDTO);
+				}
+			
+			}
+		}
+
+		System.out.println("Lista sala u klinici:" + klinika.getNaziv() + " ID: " + id);
+		for (SalaDTO ss : lista) {
+			System.out.println(ss.getNaziv() + ss.getBroj());
+		}
+
+		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 
 }

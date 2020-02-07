@@ -64,7 +64,7 @@ public class SlobodniTerminDTO {
 		return "SlobodniTerminDTO [id=" + id + ", datum=" + datum + ", tipPregledaID=" + tipPregledaID
 				+ ", tipPregledaN=" + tipPregledaN + ", lekarID=" + lekarID + ", lekarIme=" + lekarIme
 				+ ", lekarPrezime=" + lekarPrezime + ", klinikaID=" + klinikaID + ", klinikaN=" + klinikaN + ", cena="
-				+ cena + ", status=" + status + ", popust=" + popust + "]";
+				+ cena + ", status=" + status + ", popust=" + popust +  ", termin=" + termin + "]";
 	}
 
 	public SlobodniTerminDTO(SlobodniTermin st) {
