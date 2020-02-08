@@ -138,5 +138,10 @@ public class TipPregleda{
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "TipPregleda [id=" + id + ", naziv=" + naziv + ", cena=" + cena + ", listaKlinika=" + listaKlinika + "]";
+	}
 	
 }

@@ -62,6 +62,8 @@ insert into tip_pregleda(naziv, cena) values ('oftalmoloski pregled', 5500);
 insert into tip_pregleda(naziv, cena) values ('ginekoloski pregled', 2500);
 insert into tip_pregleda(naziv, cena) values ('stomatoloski pregled', 1500);
 insert into tip_pregleda(naziv, cena) values ('psihijatrijski pregled', 2000);
+insert into tip_pregleda(naziv, cena) values ('nefroloski pregled', 2350);
+insert into tip_pregleda(naziv, cena) values ('imunoloski pregled', 3050);
 
 
 insert into lekar_pacijent (pacijent_id, lekar_id) values (1,2);
@@ -72,18 +74,20 @@ insert into lekar_pacijent (pacijent_id, lekar_id) values (5,2);
 insert into tip_pregleda_klinika (tip_pregleda_id, klinika_id) values (1,1);
 insert into tip_pregleda_klinika (tip_pregleda_id, klinika_id) values (1,2);
 insert into tip_pregleda_klinika (tip_pregleda_id, klinika_id) values (1,3);
---insert into tip_pregleda_klinika (tip_pregleda_id, klinika_id) values (2,1);
+insert into tip_pregleda_klinika (tip_pregleda_id, klinika_id) values (2,1);
 insert into tip_pregleda_klinika (tip_pregleda_id, klinika_id) values (2,2);
 insert into tip_pregleda_klinika (tip_pregleda_id, klinika_id) values (2,3);
 insert into tip_pregleda_klinika (tip_pregleda_id, klinika_id) values (3,1);
 insert into tip_pregleda_klinika (tip_pregleda_id, klinika_id) values (3,2);
 insert into tip_pregleda_klinika (tip_pregleda_id, klinika_id) values (3,3);
---insert into tip_pregleda_klinika (tip_pregleda_id, klinika_id) values (4,1);
+insert into tip_pregleda_klinika (tip_pregleda_id, klinika_id) values (4,1);
 insert into tip_pregleda_klinika (tip_pregleda_id, klinika_id) values (4,2);
 insert into tip_pregleda_klinika (tip_pregleda_id, klinika_id) values (4,3);
 insert into tip_pregleda_klinika (tip_pregleda_id, klinika_id) values (5,1);
 insert into tip_pregleda_klinika (tip_pregleda_id, klinika_id) values (5,2);
 insert into tip_pregleda_klinika (tip_pregleda_id, klinika_id) values (5,3);
+insert into tip_pregleda_klinika (tip_pregleda_id, klinika_id) values (6,3);
+insert into tip_pregleda_klinika (tip_pregleda_id, klinika_id) values (7,3);
 
 insert into klinika_pacijent (klinika_id, pacijent_id) values (3,3);
 insert into klinika_pacijent (klinika_id, pacijent_id) values (3,5);
@@ -183,6 +187,10 @@ insert into lekar_authority (lekar_id, authority_id) values (3,2);
 insert into lekar_authority (lekar_id, authority_id) values (4,2);
 insert into lekar_authority (lekar_id, authority_id) values (5,2);
 insert into lekar_authority (lekar_id, authority_id) values (6,2);
+insert into lekar_authority (lekar_id, authority_id) values (7,2);
+insert into lekar_authority (lekar_id, authority_id) values (8,2);
+insert into lekar_authority (lekar_id, authority_id) values (9,2);
+insert into lekar_authority (lekar_id, authority_id) values (10,2);
 
 insert into medicinska_sestra_authority (medicinska_sestra_id, authority_id) values (1,3);
 insert into medicinska_sestra_authority (medicinska_sestra_id, authority_id) values (2,3);
@@ -311,6 +319,12 @@ insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, c
 insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status, sala_id, termin) values ('10-mar-2020', 4, 2, 1, 3, 3000, 1, 1, 15);
 insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status, sala_id, termin) values ('11-feb-2020', 2, 2, 3, 3, 3000, 1, 1, 9);
 insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status, sala_id, termin) values ('10-mar-2020', 1, 2, 3, 3, 3000, 1, 1, 11);
+
+
+insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status, termin) values ('15-mar-2020', 4, 2, 1, 3, 3000, 0, 15);
+insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status, termin) values ('27-feb-2020', 2, 2, 3, 3, 3000, 0, 9);
+insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status, termin) values ('27-feb-2020', 1, 2, 3, 3, 3000, 0, 11);
+
 
 
 

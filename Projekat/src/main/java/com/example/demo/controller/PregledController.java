@@ -38,6 +38,7 @@ import com.example.demo.model.AdministratorKlinike;
 import com.example.demo.model.Klinika;
 import com.example.demo.model.Lekar;
 import com.example.demo.model.OdmorOdsustvoLekar;
+import com.example.demo.model.Operacija;
 import com.example.demo.model.Pacijent;
 import com.example.demo.model.Pregled;
 import com.example.demo.model.Sala;
@@ -591,7 +592,7 @@ public class PregledController {
 
 	// rezervisanje sale i slanje mejla pacijentu i lekaru
 //	@Async
-	//@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
+	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
 	@PostMapping(path = "/rezervisanjeSale", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
@@ -626,7 +627,12 @@ public class PregledController {
 				t.setSala(s);
 				t.setLekar(l);
 				terminService.save(t);
-				l.getListaZauzetihTermina().add(t);
+//				l.getListaZauzetihTermina().add(t);
+//				lekarService.save(l);
+				Set<Pregled> lekarPregledii = l.getListaPregleda();
+				lekarPregledii.add(p);
+				l.setListaPregleda(lekarPregledii);
+//				le.getListaOperacija().add(p);
 				lekarService.save(l);
 
 			}
@@ -747,70 +753,146 @@ public class PregledController {
 		return new ResponseEntity<>(listaSlobodnihLekara, HttpStatus.OK);
 	}
 
-	@GetMapping( consumes = "application/json")
+	@GetMapping(value = "/automatska")
 	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
 //	@Scheduled(cron = "20 44 03 * * ?")
     public ResponseEntity<List<SalaDTO>> automaticSchedule() {
 		
 		   List<SalaDTO> saD = new ArrayList<SalaDTO>();
 		
-        System.out.println("Automatska fja");
-        List<Pregled> sviPre = pregledService.findAll();
+        System.out.println("Automatska fja"); 
         List<Pregled> zahteviPregled = new ArrayList<Pregled>();
         
         //preuzeti zah za pregled kojim treba dodijeliti salu 
-        for(Pregled pp: sviPre) {
+        for(Pregled pp: pregledService.findAll()) {
         	if(pp.getStatus()==0 && pp.getSala()==null) {
         		zahteviPregled.add(pp);
         	}
         }
+        //nadje samo salo za taj pregled sa te klinike
         System.out.println("Automatska fja2");
         //preuzete sale klinike za pregled
         List<Sala> salePregled = new ArrayList<Sala>();
         for(Sala s: salaService.findAll()) {
-        	if(s.getTipSale()==1)
-        		salePregled.add(s);
+        	for(Pregled pp : zahteviPregled) {
+        		if(s.getTipSale()==1) {
+        			if(s.getKlinika().getId() == pp.getKlinika().getId()) {
+        				if(!salePregled.contains(s))
+        					salePregled.add(s);
+        			}
+        		}
+            	
+            		
+        	}
+        	
         	
         }
-        System.out.println("Automatska fja3");
-        List<Sala> slobodne = new ArrayList<Sala>();
         
-        try {
-        	for (Pregled p : zahteviPregled) {System.out.println("a");
-            for(Sala s: salePregled) {
-            	System.out.println("bbbb");
-            	for(Termin t: s.getZauzetiTermini()) {
-            		if(p.getDatum().compareTo(t.getDatumPocetka())==0) {
-            				System.out.println("NANANNA");
-            			if ( p.getTermin()!=t.getTermin()) {
-            				if(!slobodne.contains(s)) {
-            					slobodne.add(s);
-            				}
-            				
-            				break;
-            				//p.setSala(s);
-//            				p.setDatum(t.getDatumPocetka());
-//            				p.setTermin(t.getTermin());
-//            				p.setKlinika(s.getKlinika());
+        List<SalaDTO> listaSalaSlob = new ArrayList<SalaDTO>();
+		List<Sala> listaZauzete = new ArrayList<Sala>();
+        System.out.println(salaService.findAll().size());
+        System.out.println(salePregled.size());
+       
+        List<Sala> listaSalaTest = new ArrayList<Sala>();
+		boolean flag = false;
+        for(Pregled pregled: zahteviPregled) {
+        	try {
+				
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+//        	  for (Sala sD : salePregled) {
+//      			System.out.println();
+//      			System.out.println(sD.getId());
+//      			flag = false;
+//      			SalaDTO sdt = new SalaDTO();
+//      			for (Termin t : terminService.findAll()) {
+//
+//      				System.out.println(t);
+//      				if (t.getSala().getId() == sD.getId()) {
+//      					System.out.println(t.getSala().getId() + " " + t.getTermin() + " " + t.getDatumPocetka());
+//      					if (t.getDatumPocetka().equals(pregled.getDatum()) && t.getTermin().equals(pregled.getTermin())) {
+//      						System.out.println("Istiiii termin i njega preskoci");
+//      						sD.getZauzetiTermini().add(t);
+//      						listaZauzete.add(sD);
+//
+//      						flag = true;
+//      						break;
+//
+//      					} else if (t.getDatumPocetka().equals(pregled.getDatum())) {
+//      						System.out.println("||||||||||||||||||||||||||||||||||||||||||||");
+//      						if (!t.getTermin().equals(pregled.getTermin())) {
+//      							sD.getZauzetiTermini().add(t);
+//      							System.out.println();
+//      							salaService.save(sD);
+//      							listaSalaTest.add(sD);
+//      							System.out.println(
+//      									"********************aaaa " + sD.getId() + sD.getBroj() + " " + t.getTermin());
+//
+//      							TerminDTO terminDTO = new TerminDTO(t);
+//
+//      							sdt.getZauzetiTermini().add(terminDTO);
+//      						}
+//      					}
+//
+//      				}
+//
+//      			}
+//
+//      			if (flag) {
+//      				continue;
+//      			}
+//      			System.out.println("DUZINAAAAAAAAAAAAAAAAAAAA : " + listaSalaTest.size());
+//    			listaSalaSlob.add(sdt);
+//    			Sala sala = salaService.findById(sdt.getId());
+//    			pregled.setSala(sala);
+//              }
+        }
+      
+//        System.out.println("Automatska fja3");
+//        List<Sala> slobodne = new ArrayList<Sala>();
+//        
+//      
+//        System.out.println("Trazim sve slobodne termine za taj pregled");
+//        	for (Pregled p : zahteviPregled) {
+//        		System.out.println("a");
+//            for(Sala s: salePregled) {
+//            	System.out.println("bbbb");
+//            	for(Termin t: s.getZauzetiTermini()) {
+//            		if(p.getDatum().compareTo(t.getDatumPocetka())==0) {
+//            				System.out.println("NANANNA");
+//            			if ( p.getTermin()!=t.getTermin()) {
+//            				if(!slobodne.contains(s)) {
+//            					slobodne.add(s);
+//            				}
+//            				
 //            				break;
-            			}
-            		}
-            	}
-            }
-            System.out.println(p);
-         
-            System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-            for(Sala ss: slobodne) {
-            	System.out.println(ss);
-            	SalaDTO s = new SalaDTO(ss);
-            	saD.add(s);
-            }
-            System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-        	} 
-		} catch (Exception e) {
-			// TODO: handle exception
-			System.out.println("NE RADI");
-		}
+//            				//p.setSala(s);
+////            				p.setDatum(t.getDatumPocetka());
+////            				p.setTermin(t.getTermin());
+////            				p.setKlinika(s.getKlinika());
+////            				break;
+//            			}
+//            		}
+//            	}
+//            }
+//            System.out.println(p);
+//         
+//            System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+//            for(Sala ss: slobodne) {
+//            	System.out.println(ss);
+//            	SalaDTO s = new SalaDTO(ss);
+//            	saD.add(s);
+//            }
+//            System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+//        	}
+//        	System.out.println(saD.size());
+//       try {
+//    	   System.out.println("try catch");
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//			System.out.println("NE RADI");
+//		}
         
 //      
 //            try {

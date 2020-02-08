@@ -17,7 +17,6 @@ import javax.persistence.ManyToOne;
 
 import org.springframework.transaction.annotation.Transactional;
 @Entity
-
 public class Operacija {
 	
 	

@@ -34,7 +34,7 @@ public class SlobodniTermin {
 	@Column(name="termin", nullable=false)
 	private int termin;
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	private TipPregleda tipPregleda;
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

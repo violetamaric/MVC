@@ -35,5 +35,10 @@ public class TipPregledaDTO {
 	public void setNaziv(String naziv) {
 		this.naziv = naziv;
 	}
+	@Override
+	public String toString() {
+		return "TipPregledaDTO [id=" + id + ", naziv=" + naziv + ", cena=" + cena + "]";
+	}
+	
 	
 }

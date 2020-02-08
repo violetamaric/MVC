@@ -34,7 +34,7 @@ public class Pregled {
 	@Column(name = "trajanje", nullable = true)
 	private Time trajanje; // dateTime
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne( fetch = FetchType.LAZY)
 	private TipPregleda tipPregleda;
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER )
