@@ -9,4 +9,6 @@ import com.example.demo.service.ReceptService;
 public class ReceptController {
 	@Autowired
 	private ReceptService receptService;
+	
+	
 }

@@ -1,5 +1,9 @@
 package com.example.demo.model;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -7,10 +11,20 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+
+import javax.persistence.OneToOne;
+
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
-public class AdministratorKlinike {
+public class AdministratorKlinike implements UserDetails{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,6 +40,8 @@ public class AdministratorKlinike {
 //	@Column(name="korisnickoIme", nullable=false)
 //	private String korisnickoIme;
 	
+	@Column(name = "status", nullable = false)
+	private int status;
 
 	@Column(name="lozinka", nullable=false)
 	private String lozinka;
@@ -39,12 +55,30 @@ public class AdministratorKlinike {
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Klinika klinika; // samo id do klinike 
 	
-//	private Set<Pregled> listaPregleda;
-//	private Set<Operacija> listaOperacija; //?? proveriti
+	
+	
+	@ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	@JoinTable(name = "administrator_klinike_authority",
+			joinColumns = @JoinColumn(name = "administrator_klinike_id", referencedColumnName = "id"),
+			inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
+	private Set<Authority> authorities;
+	
+	//	private Set<Operacija> listaOperacija; //?? proveriti
 //	
+	
+	
 	public String getIme() {
 		return ime;
 	}
+	
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
 	public void setIme(String ime) {
 		this.ime = ime;
 	}
@@ -123,6 +157,46 @@ public class AdministratorKlinike {
 		// TODO Auto-generated method stub
 		return super.toString();
 	}
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		// TODO Auto-generated method stub
+		return this.authorities;
+	}
+	@Override
+	public String getPassword() {
+		// TODO Auto-generated method stub
+		return lozinka;
+	}
+	@Override
+	public String getUsername() {
+		// TODO Auto-generated method stub
+		return email;
+	}
+	@Override
+	public boolean isAccountNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+	@Override
+	public boolean isAccountNonLocked() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+	@Override
+	public boolean isCredentialsNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+	@Override
+	public boolean isEnabled() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+	public void setAuthorities(Set<Authority> authorities) {
+		this.authorities = authorities;
+	}
+
+	
 	
 	
 }

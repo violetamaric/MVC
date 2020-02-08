@@ -2,6 +2,8 @@ package com.example.demo.model;
 
 import java.sql.Time;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -10,8 +12,12 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+
+import org.springframework.transaction.annotation.Transactional;
 @Entity
+
 public class Operacija {
 	
 	
@@ -22,30 +28,55 @@ public class Operacija {
 	@Column(name="datum", nullable=false)
 	private Date datum;
 	
-	@Column(name="tipOperacije", nullable=false)
+	@Column(name="tipOperacije")
 	private String tipOperacije;
 	
-	@Column(name="trajanje", nullable=false)
+	@Column(name="trajanje", nullable=true)
 	private Time trajanje;
+	
+	@Column(name="cena", nullable=false)
+	private double cena;
+	
+	@Column(name = "termin", nullable = false)
+	private int termin;
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Sala sala;
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private Lekar lekar;
+	@ManyToMany(mappedBy = "listaOperacija")
+	private Set<Lekar> listaLekara = new HashSet<Lekar>();
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Pacijent pacijent;
 	
-	@Column(name="cena", nullable=false)
-	private double cena;
-
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private ZdravstveniKarton zdravstveniKarton;
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Klinika klinika;
 	
+	//0-nije ni potvrdjeno ni odbijeno
+	//1-potvrdjeno
+	//2-odbijeno
+	//3-zavrsena operacija
+	//4-ocenjena samo klinika
+	//5-ocenjen samo lekar
+	//6-ocenjen i lekar i klinika
+	@Column(name = "status", nullable = false)
+	private int status;
+	
+	
+	
+	public int getTermin() {
+		return termin;
+	}
+	public void setTermin(int termin) {
+		this.termin = termin;
+	}
+	public int getStatus() {
+		return status;
+	}
+	public void setStatus(int status) {
+		this.status = status;
+	}
 	public Date getDatum() {
 		return datum;
 	}
@@ -70,11 +101,12 @@ public class Operacija {
 	public void setSala(Sala sala) {
 		this.sala = sala;
 	}
-	public Lekar getLekar() {
-		return lekar;
+
+	public Set<Lekar> getListaLekara() {
+		return listaLekara;
 	}
-	public void setLekar(Lekar lekar) {
-		this.lekar = lekar;
+	public void setListaLekara(Set<Lekar> listaLekara) {
+		this.listaLekara = listaLekara;
 	}
 	public double getCena() {
 		return cena;
@@ -112,12 +144,7 @@ public class Operacija {
 	public void setPacijent(Pacijent pacijent) {
 		this.pacijent = pacijent;
 	}
-	public ZdravstveniKarton getZdravstveniKarton() {
-		return zdravstveniKarton;
-	}
-	public void setZdravstveniKarton(ZdravstveniKarton zdravstveniKarton) {
-		this.zdravstveniKarton = zdravstveniKarton;
-	}
+
 	public Klinika getKlinika() {
 		return klinika;
 	}

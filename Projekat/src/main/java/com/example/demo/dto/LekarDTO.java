@@ -1,5 +1,7 @@
 package com.example.demo.dto;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import com.example.demo.model.Lekar;
 
 
@@ -18,12 +20,20 @@ public class LekarDTO {
 	private String telefon;
 	
 	private Long klinikaID;
+	
+	private int ocena;
+	//0-mora da promeni lozinku pri prvom logovanju
+	//1-moze da se loguje lagano 
+	//2-izbrisan 
+	private int status; 
+	
 
 	public LekarDTO() {
 		super();
 	}
 
-	public LekarDTO(Long id, String ime, String prezime, String lozinka,Long klinikaID, String email, String telefon) {
+	public LekarDTO(Long id, String ime, String prezime, String lozinka,
+			Long klinikaID, String email, String telefon, int ocena, int status) {
 		super();
 		this.id = id;
 		this.ime = ime;
@@ -32,6 +42,8 @@ public class LekarDTO {
 		this.email = email;
 		this.telefon=telefon;
 		this.klinikaID = klinikaID;
+		this.ocena = ocena;
+		this.status = status;
 	}
 	
 	public LekarDTO(Lekar lekar) {
@@ -42,12 +54,39 @@ public class LekarDTO {
 		this.prezime = lekar.getPrezime();
 		this.lozinka = lekar.getLozinka();
 		this.email = lekar.getEmail();
-		this.klinikaID = lekar.getKlinika().getId();
+		if(lekar.getKlinika() != null) {
+			this.klinikaID = lekar.getKlinika().getId();
+		}
+		
 		this.telefon = lekar.getTelefon();
+		this.ocena = lekar.getOcena();
+		this.status = lekar.getStatus();
 	}
 
 	
 	
+	@Override
+	public String toString() {
+		return "LekarDTO [id=" + id + ", ime=" + ime + ", prezime=" + prezime + ", lozinka=" + lozinka + ", email="
+				+ email + ", telefon=" + telefon + ", klinikaID=" + klinikaID + ", ocena=" + ocena + "]";
+	}
+
+	public int getOcena() {
+		return ocena;
+	}
+
+	public void setOcena(int ocena) {
+		this.ocena = ocena;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
 	public Long getKlinikaID() {
 		return klinikaID;
 	}

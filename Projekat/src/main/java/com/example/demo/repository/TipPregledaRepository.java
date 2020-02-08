@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import com.example.demo.model.Klinika;
 import com.example.demo.model.TipPregleda;
 
 public interface TipPregledaRepository extends JpaRepository<TipPregleda,Long>{ 
@@ -14,5 +15,6 @@ public interface TipPregledaRepository extends JpaRepository<TipPregleda,Long>{
 	
 	@Query("select tp from TipPregleda tp inner join tp.listaKlinika lk where lk.id = ?1")
 	List<TipPregleda> findByIdKlinike(Long id);
+	TipPregleda findByNaziv(String naziv);
 	
 }

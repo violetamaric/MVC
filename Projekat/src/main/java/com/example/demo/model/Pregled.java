@@ -17,20 +17,27 @@ import javax.persistence.OneToOne;
 @Entity
 public class Pregled {
 
+ //dodati satnicu pregleda i salu za brze preglede koje bira pacijent
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@Column(name = "datum", nullable = false)
+//	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date datum;
+	
+	@Column(name = "termin", nullable = false)
+	private int termin;
 
-	@Column(name = "trajanje", nullable = false)
+	//treba false ali kasnije promjeniti
+	@Column(name = "trajanje", nullable = true)
 	private Time trajanje; // dateTime
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private TipPregleda tipPregleda;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER )
 	private Sala sala;
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -48,8 +55,15 @@ public class Pregled {
 	@Column(name = "cena", nullable = false)
 	private double cena;
 
+	//0-nije ni potvrdjeno ni odbijeno
+	//1-potvrdjeno
+	//2-odbijeno
+	//3-zavrsen pregled
+	//4-ocenjena samo klinika
+	//5-ocenjen samo lekar
+	//6-ocenjen i lekar i klinika
 	@Column(name = "status", nullable = false)
-	private boolean status;
+	private int status;
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "izvestajOPregledu_id")
@@ -57,6 +71,38 @@ public class Pregled {
 
 	public Pregled() {
 		super();
+	}
+
+	public Pregled(Long id, Date datum, int termin, Time trajanje, TipPregleda tipPregleda, Sala sala, Lekar lekar,
+			Pacijent pacijent, Klinika klinika, double cena, int status, IzvestajOPregledu izvestajOPregledu) {
+		this.id = id;
+		this.datum = datum;
+		this.termin = termin;
+		this.trajanje = trajanje;
+		this.tipPregleda = tipPregleda;
+		this.sala = sala;
+		this.lekar = lekar;
+		this.pacijent = pacijent;
+		this.klinika = klinika;
+		this.cena = cena;
+		this.status = status;
+		this.izvestajOPregledu = izvestajOPregledu;
+	}
+
+	public Pregled(Pregled p) {
+		// TODO Auto-generated constructor stub
+		this.id = p.getId();
+		this.datum = p.getDatum();
+		this.termin = p.getTermin();
+		this.trajanje = p.getTrajanje();
+		this.tipPregleda = p.getTipPregleda();
+		this.sala = p.getSala();
+		this.lekar = p.getLekar();
+		this.pacijent = p.getPacijent();
+		this.klinika = p.getKlinika();
+		this.cena = p.getCena();
+		this.status = p.getStatus();
+		this.izvestajOPregledu = p.getIzvestajOPregledu();
 	}
 
 	public Date getDatum() {
@@ -89,6 +135,14 @@ public class Pregled {
 
 	public void setSala(Sala sala) {
 		this.sala = sala;
+	}
+
+	public int getTermin() {
+		return termin;
+	}
+
+	public void setTermin(int termin) {
+		this.termin = termin;
 	}
 
 	public Lekar getLekar() {
@@ -133,11 +187,13 @@ public class Pregled {
 		return super.toString();
 	}
 
-	public boolean isStatus() {
+
+
+	public int getStatus() {
 		return status;
 	}
 
-	public void setStatus(boolean status) {
+	public void setStatus(int status) {
 		this.status = status;
 	}
 

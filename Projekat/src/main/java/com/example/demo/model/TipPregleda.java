@@ -1,12 +1,10 @@
 package com.example.demo.model;
 
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -17,10 +15,11 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.springframework.transaction.annotation.Transactional;
 
 @Entity
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+//@Transactional
+//@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class TipPregleda{
 
 
@@ -30,6 +29,9 @@ public class TipPregleda{
 	
 	@Column(name="naziv", nullable=false)
 	private String naziv;
+	
+	@Column(name="cena", nullable=false)
+	private double cena;
 	
 	@ManyToMany
 	@JoinTable(name = "tip_pregleda_klinika", joinColumns = @JoinColumn(name = "tip_pregleda_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "klinika_id", referencedColumnName = "id"))
@@ -45,11 +47,20 @@ public class TipPregleda{
 	public TipPregleda(TipPregleda tp) {
 		super();
 		this.id = tp.getId();
+		this.cena = tp.getCena();
 		this.naziv = tp.getNaziv();
 		this.listaKlinika = tp.getListaKlinika();
 		this.listaPregleda = tp.getListaPregleda();
 	}
 	
+
+	public double getCena() {
+		return cena;
+	}
+
+	public void setCena(double cena) {
+		this.cena = cena;
+	}
 
 	public Set<Pregled> getListaPregleda() {
 		return listaPregleda;

@@ -13,7 +13,10 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class IzvestajOPregledu {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,7 +34,7 @@ public class IzvestajOPregledu {
 	@OneToOne(fetch=FetchType.LAZY)
 	private Pregled pregled;
 	
-	@Column(name="sadrzaj", nullable=false)
+	@Column(name="sadrzaj")
 	private String sadrzaj;
 	
 	public IzvestajOPregledu() {

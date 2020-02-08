@@ -1,6 +1,8 @@
 package com.example.demo.model;
 
-import java.util.ArrayList;
+
+import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,9 +18,15 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Version;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.transaction.annotation.Transactional;
 
 @Entity
-public class Lekar {
+
+public class Lekar implements UserDetails{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,24 +47,46 @@ public class Lekar {
 	@Column(name="telefon", nullable=false)
 	private String telefon;
 	
+	@Column(name = "status", nullable = false)
+	private int status;
+	
 	@ManyToMany
-	@JoinTable(name = "lekar_pacijent", joinColumns = @JoinColumn(name = "pacijent_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "lekar_id", referencedColumnName = "id"))
+	@JoinTable(name = "lekar_pacijent", joinColumns = @JoinColumn(name = "lekar_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "pacijent_id", referencedColumnName = "id"))
 	private Set<Pacijent> listaPacijenata = new HashSet<Pacijent>();
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Klinika klinika;
-	//kalendar
 	
-	@OneToMany(mappedBy = "lekar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	//dodati za kalendar 
+	
+	@ManyToMany
+	@JoinTable(name = "lekar_operacija", joinColumns = @JoinColumn(name = "lekar_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "operacija_id", referencedColumnName = "id"))
 	private Set<Operacija> listaOperacija = new HashSet<Operacija>();
 	
 	@OneToMany(mappedBy = "lekar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Pregled> listaPregleda = new HashSet<Pregled>();
 	
+	@OneToMany(mappedBy = "lekar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Termin> listaZauzetihTermina = new HashSet<Termin>();
+	
+	@OneToMany(mappedBy = "lekar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<OdmorOdsustvoLekar> listaOdmorOdsustvo = new HashSet<OdmorOdsustvoLekar>();
+	
+//	@OneToMany(mappedBy = "lekar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//	private Set<SlobodniTermin> listaSlobodnihTermina = new HashSet<SlobodniTermin>();
+	
 	@Column(name="ocena", nullable=false)
 	private int ocena; 
+	
+//	@Version
+//	private Long version;
 
-
+	@ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	@JoinTable(name = "lekar_authority",
+			joinColumns = @JoinColumn(name = "lekar_id", referencedColumnName = "id"),
+			inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
+	private Set<Authority> authorities;
+	
 	public String getTelefon() {
 		return telefon;
 	}
@@ -75,6 +105,7 @@ public class Lekar {
 	public void setOcena(int ocena) {
 		this.ocena = ocena;
 	}
+
 	public Set<Operacija> getListaOperacija() {
 		return listaOperacija;
 	}
@@ -86,6 +117,25 @@ public class Lekar {
 	}
 	public void setListaPregleda(Set<Pregled> listaPregleda) {
 		this.listaPregleda = listaPregleda;
+	}
+	
+	public Set<Termin> getListaZauzetihTermina() {
+		return listaZauzetihTermina;
+	}
+	public void setListaZauzetihTermina(Set<Termin> listaZauzetihTermina) {
+		this.listaZauzetihTermina = listaZauzetihTermina;
+	}
+	public Set<OdmorOdsustvoLekar> getListaOdmorOdsustvo() {
+		return listaOdmorOdsustvo;
+	}
+	public int getStatus() {
+		return status;
+	}
+	public void setStatus(int status) {
+		this.status = status;
+	}
+	public void setListaOdmorOdsustvo(Set<OdmorOdsustvoLekar> listaOdmorOdsustvo) {
+		this.listaOdmorOdsustvo = listaOdmorOdsustvo;
 	}
 	public String getIme() {
 		return ime;
@@ -141,6 +191,106 @@ public class Lekar {
 	public void setId(Long id) {
 		this.id = id;
 	}
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		// TODO Auto-generated method stub
+		return this.authorities;
+	}
+	@Override
+	public String getPassword() {
+		// TODO Auto-generated method stub
+		return lozinka;
+	}
+	@Override
+	public String getUsername() {
+		// TODO Auto-generated method stub
+		return email;
+	}
+	@Override
+	public boolean isAccountNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+	@Override
+	public boolean isAccountNonLocked() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+	@Override
+	public boolean isCredentialsNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+	@Override
+	public boolean isEnabled() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+	public void setAuthorities(Set<Authority> authorities) {
+		this.authorities = authorities;
+	}
+
+	public boolean sadrziTermin(Set<Termin> listaTermina, int termin){
+	    return listaTermina.stream().filter(o -> o.getTermin() == termin).findFirst().isPresent();
+	}
+	@SuppressWarnings("deprecation")
+	public boolean sadrziSlobodanTermin(Set<Termin> listaTermina, Date datum){
+		int flag = 4;
+		for(Termin t:listaZauzetihTermina) {
+			if(t.getDatumPocetka().getDate() == datum.getDate() &&
+					t.getDatumPocetka().getMonth() == datum.getMonth() &&
+					t.getDatumPocetka().getYear() == datum.getYear()) {
+				if(t.getTermin() == 9) {
+					flag -=1;
+				}else if(t.getTermin() == 11) {
+					flag -=1;
+				}else if(t.getTermin() == 13) {
+					flag -=1;
+				}else if(t.getTermin() == 15) {
+					flag -=1;
+				}
+				if(flag == 0) {
+					return false;
+				}
+				
+			}
+		}
+//		for(SlobodniTermin st:listaSlobodnihTermina) {
+//			if(st.getDatum().getDate() == datum.getDate() &&
+//					st.getDatum().getMonth() == datum.getMonth() &&
+//							st.getDatum().getYear() == datum.getYear()) {
+//				if(st.getTermin() == 9) {
+//					flag -=1;
+//				}else if(st.getTermin() == 11) {
+//					flag -=1;
+//				}else if(st.getTermin() == 13) {
+//					flag -=1;
+//				}else if(st.getTermin() == 15) {
+//					flag -=1;
+//				}
+//				if(flag == 0) {
+//					return false;
+//				}
+//				
+//			}
+//		}
+		return true;
+//	    return listaTermina.stream().filter(o -> o.getTermin() == termin).findFirst().isPresent();
+
+	}
+//	public Long getVersion() {
+//		return version;
+//	}
+//	public void setVersion(Long version) {
+//		this.version = version;
+//	}
+//	public Set<SlobodniTermin> getListaSlobodnihTermina() {
+//		return listaSlobodnihTermina;
+//	}
+//	public void setListaSlobodnihTermina(Set<SlobodniTermin> listaSlobodnihTermina) {
+//		this.listaSlobodnihTermina = listaSlobodnihTermina;
+//	}
+	
 	
 	
 }

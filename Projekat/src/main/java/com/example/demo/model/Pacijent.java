@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,17 +18,20 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Pacijent {
+//@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+public class Pacijent implements UserDetails{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
 	@JoinColumn(name = "zdravstveniKarton_id")
 	private ZdravstveniKarton zdravstveniKarton;
 
@@ -39,6 +43,9 @@ public class Pacijent {
 
 	@Column(name = "lbo", nullable = false)
 	private String lbo;
+	
+	@Column(name = "jmbg", nullable = false)
+	private String jmbg;
 
 	@Column(name = "lozinka", nullable = false)
 	private String lozinka;
@@ -59,7 +66,7 @@ public class Pacijent {
 	private String telefon;
 	
 	@Column(name = "odobrenaRegistracija", nullable = true)
-	private Boolean odobrenaRegistracija;
+	private int odobrenaRegistracija;
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private KlinickiCentar klinickiCentar;
@@ -77,8 +84,14 @@ public class Pacijent {
 	@OneToMany(mappedBy = "pacijent", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Operacija> listaOperacija = new HashSet<Operacija>();
 
-	@OneToMany(mappedBy = "pacijent", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "pacijent", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<Pregled> listaPregleda = new HashSet<Pregled>();
+	
+	@ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	@JoinTable(name = "pacijent_authority",
+			joinColumns = @JoinColumn(name = "pacijent_id", referencedColumnName = "id"),
+			inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
+	private Set<Authority> authorities;
 
 	public Pacijent() {
 		super();
@@ -123,6 +136,15 @@ public class Pacijent {
 	public void setLbo(String lbo) {
 		this.lbo = lbo;
 	}
+	
+
+	public String getJmbg() {
+		return jmbg;
+	}
+
+	public void setJmbg(String jmbg) {
+		this.jmbg = jmbg;
+	}
 
 	public String getLozinka() {
 		return lozinka;
@@ -146,12 +168,7 @@ public class Pacijent {
 		return super.hashCode();
 	}
 
-	@Override
-	public String toString() {
-		return "Pacijent [id=" + id + ", zdravstveniKarton=" + zdravstveniKarton + ", ime=" + ime + ", prezime="
-				+ prezime + ", lbo=" + lbo + ", lozinka=" + lozinka + ", email=" + email + ", adresa=" + adresa
-				+ ", grad=" + grad + ", drzava=" + drzava + ", telefon=" + telefon + "]";
-	}
+
 
 	@Override
 	public boolean equals(Object arg0) {
@@ -223,11 +240,11 @@ public class Pacijent {
 		this.telefon = telefon;
 	}
 	
-	public Boolean getOdobrenaRegistracija() {
+	public int getOdobrenaRegistracija() {
 		return odobrenaRegistracija;
 	}
 
-	public void setOdobrenaRegistracija(Boolean odobrenaRegistracija) {
+	public void setOdobrenaRegistracija(int odobrenaRegistracija) {
 		this.odobrenaRegistracija = odobrenaRegistracija;
 	}
 
@@ -238,6 +255,62 @@ public class Pacijent {
 	public void setKlinickiCentar(KlinickiCentar klinickiCentar) {
 		this.klinickiCentar = klinickiCentar;
 	}
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		// TODO Auto-generated method stub
+		return this.authorities;
+	}
+
+	@Override
+	public String getPassword() {
+		// TODO Auto-generated method stub
+		return lozinka;
+	}
+
+	@Override
+	public String getUsername() {
+		// TODO Auto-generated method stub
+		return email;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	public Set<Klinika> getListaKlinika() {
+		return listaKlinika;
+	}
+
+	public void setListaKlinika(Set<Klinika> listaKlinika) {
+		this.listaKlinika = listaKlinika;
+	}
+
+	public void setAuthorities(Set<Authority> authorities) {
+		this.authorities = authorities;
+	}
+
+
 	
 	
 	
