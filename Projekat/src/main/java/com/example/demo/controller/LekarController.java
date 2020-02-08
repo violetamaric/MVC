@@ -12,6 +12,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,12 +27,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.AdministratorKlinikeDTO;
 import com.example.demo.dto.LekarDTO;
 import com.example.demo.dto.OdmorOdsustvoLDTO;
 import com.example.demo.dto.PacijentDTO;
 import com.example.demo.dto.PregledDTO;
 import com.example.demo.dto.SalaDTO;
 import com.example.demo.dto.TerminDTO;
+import com.example.demo.model.AdministratorKlinike;
 import com.example.demo.model.Klinika;
 import com.example.demo.model.Lekar;
 import com.example.demo.model.OdmorOdsustvoLekar;
@@ -34,6 +42,7 @@ import com.example.demo.model.Operacija;
 import com.example.demo.model.Pacijent;
 import com.example.demo.model.Pregled;
 import com.example.demo.model.Termin;
+import com.example.demo.model.TipPregleda;
 import com.example.demo.service.KlinikaService;
 import com.example.demo.service.LekarService;
 import com.example.demo.service.PacijentService;
@@ -63,6 +72,12 @@ public class LekarController {
 
 	@Autowired
 	private TerminService terminService;
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private AuthenticationManager authenticationManager;
 
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<LekarDTO> getLekar(@PathVariable Long id) {
@@ -328,9 +343,11 @@ public class LekarController {
 		Set<OdmorOdsustvoLekar> listaool = lekar.getListaOdmorOdsustvo();
 		int flag = 0;
 		for (OdmorOdsustvoLekar ool : listaool) {
-			if (ool.getDatumOd().compareTo(datum) * datum.compareTo(ool.getDatumDo()) >= 0) {
-				flag = 1;
-				break;
+			if(ool.getStatus() ==  1) {
+				if (ool.getDatumOd().compareTo(datum) * datum.compareTo(ool.getDatumDo()) >= 0) {
+					flag = 1;
+					break;
+				}
 			}
 
 		}
@@ -434,6 +451,48 @@ public class LekarController {
 
 		return new ResponseEntity<>("NE MOZE", HttpStatus.OK);
 
+	}
+
+
+	//menjanje lozinke
+	
+	@PutMapping(path = "/promeniLozinku", consumes = "application/json")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('LEKAR')")
+	public ResponseEntity<?> promeniLozinku(@RequestBody PasswordChanger passCh, Principal pr) {
+
+		// a student must exist
+		System.out.println("Pacijent UPDRATE LOZINKA");
+		Lekar adminKC = lekarService.findByEmail(pr.getName());
+		
+		
+		System.out.println("LOZINKA: "+ adminKC.getLozinka());
+		
+		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+		String username = currentUser.getName();
+		System.out.println(username);
+		if (authenticationManager != null) {
+			System.out.println("PROMENJENA LOZINKA");
+
+			final Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, passCh.oldPassword));
+
+			System.err.println("-----");
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+			System.out.println("-----");
+		} else {
+			System.out.println("NE MOZE SE PROMENITI LOZINKA");
+
+			return new ResponseEntity<>(new LekarDTO(adminKC), HttpStatus.OK);
+		}
+		
+		adminKC.setLozinka(passwordEncoder.encode(passCh.newPassword));
+		adminKC.setStatus(1);
+		adminKC = lekarService.save(adminKC);
+		return new ResponseEntity<>(new LekarDTO(adminKC), HttpStatus.OK);
+	}
+	static class PasswordChanger {
+		public String oldPassword;
+		public String newPassword;
 	}
 
 }

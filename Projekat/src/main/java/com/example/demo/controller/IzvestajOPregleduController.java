@@ -90,16 +90,16 @@ public class IzvestajOPregleduController {
 		
 		
 		//ne radi ovo izbacuje gresku 
-//		if(flag == 0) {
-//			
-//			lekar.getListaPacijenata().add(paci);
-//			
-//			paci.getListaLekara().add(lekar);
-//			
-//			paci = pacijentService.save(paci);
-//			
-//			lekar =  lekarService.save(lekar);
-//		}
+		if(flag == 0) {
+			
+			lekar.getListaPacijenata().add(paci);
+			
+			paci.getListaLekara().add(lekar);
+			
+			paci = pacijentService.save(paci);
+			
+			lekar =  lekarService.save(lekar);
+		}
 
 		Pacijent pacijent = pregled.getPacijent();
 		iz.setPregled(pregled);

@@ -162,6 +162,21 @@ public class PacijentController {
 		return ResponseEntity.ok(new PacijentDTO(pacijent));
 	}
 
+	@GetMapping(value = "/pacijentMedSestra/{id}")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('MED_SESTRA')")
+	public ResponseEntity<PacijentDTO> getPacijentByMedSes(@PathVariable Long id) {
+
+		System.out.println("find pacijent");
+		System.out.println(id);
+		Pacijent pacijent = pacijentService.findByID(id);
+		System.out.println("pacijent " + pacijent);
+		if (pacijent == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		System.out.println(pacijent.getEmail() + "++++");
+		return ResponseEntity.ok(new PacijentDTO(pacijent));
+	}
 	
 
 	//metoda za vracanje zdravstvenog kartona- za med sestru i lekara 
