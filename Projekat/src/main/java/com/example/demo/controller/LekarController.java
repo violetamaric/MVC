@@ -27,12 +27,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.AdministratorKlinikeDTO;
 import com.example.demo.dto.LekarDTO;
 import com.example.demo.dto.OdmorOdsustvoLDTO;
 import com.example.demo.dto.PacijentDTO;
 import com.example.demo.dto.PregledDTO;
 import com.example.demo.dto.SalaDTO;
 import com.example.demo.dto.TerminDTO;
+import com.example.demo.model.AdministratorKlinike;
 import com.example.demo.model.Klinika;
 import com.example.demo.model.Lekar;
 import com.example.demo.model.OdmorOdsustvoLekar;
@@ -40,6 +42,7 @@ import com.example.demo.model.Operacija;
 import com.example.demo.model.Pacijent;
 import com.example.demo.model.Pregled;
 import com.example.demo.model.Termin;
+import com.example.demo.model.TipPregleda;
 import com.example.demo.service.KlinikaService;
 import com.example.demo.service.LekarService;
 import com.example.demo.service.PacijentService;
@@ -489,8 +492,5 @@ public class LekarController {
 		public String oldPassword;
 		public String newPassword;
 	}
-
-	
-
 
 }

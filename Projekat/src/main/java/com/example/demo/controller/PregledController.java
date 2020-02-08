@@ -88,6 +88,8 @@ public class PregledController {
 	public ResponseEntity<?> noviPregled(@RequestBody PregledDTO pregledDTO) {
 
 		// TODO 1: PROVERITI DA LI UOPSTE MOZE TOG DATUMA DA ZAKAZE
+		
+		
 		System.out.println("dodavanje novog pregleda");
 		System.out.println(pregledDTO);
 		Pregled pregled = new Pregled();
@@ -106,8 +108,6 @@ public class PregledController {
 
 		pregled = pregledService.save(pregled);
 
-//		pacijent.getListaPregleda().add(pregled);
-//		pacijent = pacijentService.save(pacijent);
 
 		klinika.getListaPregleda().add(pregled);
 		klinika = klinikaService.save(klinika);
@@ -740,4 +740,114 @@ public class PregledController {
 
 		return new ResponseEntity<>(listaSlobodnihLekara, HttpStatus.OK);
 	}
+
+	//zakazivanje pregleda lekar
+	@PostMapping(value = "/zakazivanjePregledaLekar")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('LEKAR')")
+	public ResponseEntity<?> zakazivanjePregledaLekar(@RequestBody PregledDTO pregledDTO, Principal pr) {
+		System.out.println("*************");
+
+		Lekar lekar = lekarService.findByEmail(pr.getName());
+		
+
+		
+		
+		System.out.println("dodavanje novog pregleda");
+		System.out.println(pregledDTO);
+		
+		Pregled pregled = new Pregled();
+		pregled.setCena(pregledDTO.getCena()); //???
+		pregled.setDatum(pregledDTO.getDatum());
+		
+		Klinika klinika = lekar.getKlinika();
+		pregled.setKlinika(klinika);
+		
+		pregled.setLekar(lekar); 
+		pregled.setTermin(pregledDTO.getTermin());
+		
+		Pacijent pacijent = pacijentService.findByEmail(pregledDTO.getPacijentEmail());
+		pregled.setPacijent(pacijent);
+		pregled.setStatus(0);
+		
+		TipPregleda tp = tipPregledaService.findOne(pregledDTO.getTipPregledaID());
+		pregled.setTipPregleda(tp);
+		
+		pregled = pregledService.save(pregled);
+		
+		klinika.getListaPregleda().add(pregled);
+		klinika = klinikaService.save(klinika);
+		
+		Set<AdministratorKlinike> ak = klinika.getListaAdminKlinike();
+
+		for (AdministratorKlinike AK : ak) {
+			AdministratorKlinikeDTO akDTO = new AdministratorKlinikeDTO(AK);
+			String subject = "Zahtev za pregled";
+			String text = "Postovani " + AK.getIme() + " " + AK.getPrezime() + ",\n\n imate novi zahtev za pregled.";
+
+			System.out.println(text);
+
+			// slanje emaila
+			try {
+				emailService.poslatiOdgovorAdminuK(akDTO, subject, text);
+			} catch (Exception e) {
+				logger.info("Greska prilikom slanja emaila: " + e.getMessage());
+				return new ResponseEntity<>("Mail nije poslat", HttpStatus.BAD_REQUEST);
+			}
+		}
+
+		return new ResponseEntity<>(new PregledDTO(pregled), HttpStatus.OK);
+
+
+	}
+	
+	//vrati mi listu termina za neki datum 
+	@GetMapping(value = "/getTerminiLekaraZaDatum")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('LEKAR')")
+	public ResponseEntity<?> getTerminiLekaraZaDatum(@RequestBody PregledDTO pregledDTO, Principal pr) {
+
+		System.out.println("*************");
+
+		Lekar lekar = lekarService.findByEmail(pr.getName());
+		List<Integer> termini = new ArrayList<>();
+		termini.add(9);
+		termini.add(11);
+		termini.add(13);
+		termini.add(15);
+		System.out.println(termini);
+		//proveriti da li je lekar slobodan tad 
+		
+		Set<OdmorOdsustvoLekar> listaool = lekar.getListaOdmorOdsustvo();
+		for(OdmorOdsustvoLekar ool: listaool) {
+			if(ool.getStatus() ==  1) {
+				if( ool.getDatumOd().compareTo(pregledDTO.getDatum()) * pregledDTO.getDatum().compareTo(ool.getDatumDo()) >= 0) {
+					System.out.println("-------------nalazi se odsustvo i odmor-------------");
+					return new ResponseEntity<>("Datum je zauzet.", HttpStatus.OK);
+				}
+			}
+		}
+		
+		Set<Termin> pregledi = lekar.getListaZauzetihTermina();
+		for(Termin p : pregledi) {
+		
+			
+			if(p.getDatumPocetka().equals(pregledDTO.getDatum())) {
+				if(termini.contains(p.getTermin())) {
+					//obrisi iz liste taj termin 
+					termini.remove(p.getTermin());
+					System.out.println(termini);
+				}
+				System.out.println("----------------nalazi se pregled---------------");
+//				return new ResponseEntity<>("Datum je zauzet.", HttpStatus.OK);
+			}
+		}
+		
+		
+		System.out.println(termini);
+		
+		return new ResponseEntity<>(termini, HttpStatus.OK);
+	}
+	
+
 }

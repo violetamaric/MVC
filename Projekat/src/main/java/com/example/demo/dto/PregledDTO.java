@@ -8,7 +8,6 @@ public class PregledDTO {
 	private Long id;
 
 	private Date datum;
-	// TODO 1: DODATI TRAJANJE I KRAJ PREGLEDA
 
 	private Long tipPregledaID;
 	private String nazivTP;
@@ -35,10 +34,11 @@ public class PregledDTO {
 
 	private int termin;
 
-	// 0-nije ni potvrdjeno ni odbijeno
-	// 1-potvrdjeno
-	// 2-odbijeno
-	// 3-zavrsen pregled
+	// 0 i sala je null -> zahtev za pregled kom admin dodeljuje salu
+	// 0 i sala nije null -> pacijentu ostaje da potvrdi ili odbije zahtev
+	// 1-potvrdjeno od strane pacijenta
+	// 2-odbijeno od stane pacijenta
+	// 3-zavrsen pregled od strane lekara
 	// 4-ocenjena samo klinika
 	// 5-ocenjen samo lekar
 	// 6-ocenjen i lekar i klinika
