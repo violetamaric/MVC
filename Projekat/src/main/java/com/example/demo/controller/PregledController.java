@@ -7,17 +7,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -748,7 +745,7 @@ public class PregledController {
 	}
 
 
-	//zakazivanje pregleda lekar
+	//zakazivanje pregleda (lekar zakazuje)
 	@PostMapping(value = "/zakazivanjePregledaLekar")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('LEKAR')")
@@ -757,14 +754,11 @@ public class PregledController {
 
 		Lekar lekar = lekarService.findByEmail(pr.getName());
 		
-
-		
-		
 		System.out.println("dodavanje novog pregleda");
-		System.out.println(pregledDTO);
+//		System.out.println(pregledDTO);
 		
 		Pregled pregled = new Pregled();
-		pregled.setCena(pregledDTO.getCena()); //???
+		
 		pregled.setDatum(pregledDTO.getDatum());
 		
 		Klinika klinika = lekar.getKlinika();
@@ -779,6 +773,7 @@ public class PregledController {
 		
 		TipPregleda tp = tipPregledaService.findOne(pregledDTO.getTipPregledaID());
 		pregled.setTipPregleda(tp);
+		pregled.setCena(tp.getCena()); 
 		
 		pregled = pregledService.save(pregled);
 		
@@ -808,7 +803,7 @@ public class PregledController {
 
 	}
 	
-	//vrati mi listu termina za neki datum 
+	//vrati mi listu termina za neki datum (lekar zakazuje)
 	@PostMapping(value = "/getTerminiLekaraZaDatum")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('LEKAR')")
@@ -817,42 +812,87 @@ public class PregledController {
 		System.out.println("*************");
 
 		Lekar lekar = lekarService.findByEmail(pr.getName());
+		System.out.println(lekar.getIme());
+		System.out.println(pregledDTO.getDatum());
+		pregledDTO.getDatum().setHours(0);
+		pregledDTO.getDatum().setMinutes(0);
+		pregledDTO.getDatum().setSeconds(0);
+		System.out.println(pregledDTO.getDatum());
+		
+//
+		Date date = new Date();
+		Calendar c = Calendar.getInstance();
+		c.setTime(pregledDTO.getDatum());
+		date = c.getTime();
+		date.setHours(0);
+		date.setMinutes(0);
+		date.setSeconds(0);
+		
+
+		System.out.println(date);
+		
+		Date date2 = new Date();
+		c = Calendar.getInstance();
+		c.setTime(pregledDTO.getDatum());
+		c.add(Calendar.DATE, 1);
+		date2 = c.getTime();
+		System.out.println(date2);
+		date2.setHours(0);
+		date2.setMinutes(0);
+		date2.setSeconds(0);
+		System.out.println("----------------------------");
+		System.out.println(date);
+		System.out.println(date2);
+		System.out.println();
+		List<Termin> listaTermina = terminService.zauzetiTerminiLekara(lekar.getId(), date, date2);
+		
+		System.out.println(listaTermina.size());
+		//1-brisi 9
+		//2-brisi 11
+		//3-brisi 13
+		//4-brisi 15
+		int fleg = 0;
 		List<Integer> termini = new ArrayList<>();
 		termini.add(9);
 		termini.add(11);
 		termini.add(13);
 		termini.add(15);
 		System.out.println(termini);
-		//proveriti da li je lekar slobodan tad 
+
+		List<TerminDTO> listaTerminaDTO = new ArrayList<TerminDTO>();
+		for (Termin rd : listaTermina) {
+			
+			System.out.println(new TerminDTO(rd));
+			listaTerminaDTO.add(new TerminDTO(rd));
+		}
+		for(TerminDTO tdto : listaTerminaDTO) {
+			System.out.println(tdto.getTermin());
+			
+			if(termini.contains(tdto.getTermin())) {
+				for(int i = 0; i < termini.size(); i++) {
+					if(termini.get(i) == tdto.getTermin()) {
+						termini.remove(i);
+					}
+				}
+			}
+		}
+		System.out.println(termini);
 		
+		
+
 		Set<OdmorOdsustvoLekar> listaool = lekar.getListaOdmorOdsustvo();
 		for(OdmorOdsustvoLekar ool: listaool) {
 			if(ool.getStatus() ==  1) {
 				if( ool.getDatumOd().compareTo(pregledDTO.getDatum()) * pregledDTO.getDatum().compareTo(ool.getDatumDo()) >= 0) {
 					System.out.println("-------------nalazi se odsustvo i odmor-------------");
-					return new ResponseEntity<>("Datum je zauzet.", HttpStatus.OK);
+					termini.clear();
+					return new ResponseEntity<>(termini, HttpStatus.OK);
 				}
 			}
 		}
-		
-		Set<Termin> pregledi = lekar.getListaZauzetihTermina();
-		for(Termin p : pregledi) {
-		
-			
-			if(p.getDatumPocetka().equals(pregledDTO.getDatum())) {
-				if(termini.contains(p.getTermin())) {
-					//obrisi iz liste taj termin 
-					termini.remove(p.getTermin());
-					System.out.println(termini);
-				}
-				System.out.println("----------------nalazi se pregled---------------");
-//				return new ResponseEntity<>("Datum je zauzet.", HttpStatus.OK);
-			}
-		}
-		
 		
 		System.out.println(termini);
-		
+		System.out.println("*************");
 		return new ResponseEntity<>(termini, HttpStatus.OK);
 	}
 	

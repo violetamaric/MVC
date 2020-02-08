@@ -343,9 +343,11 @@ public class LekarController {
 		Set<OdmorOdsustvoLekar> listaool = lekar.getListaOdmorOdsustvo();
 		int flag = 0;
 		for (OdmorOdsustvoLekar ool : listaool) {
-			if (ool.getDatumOd().compareTo(datum) * datum.compareTo(ool.getDatumDo()) >= 0) {
-				flag = 1;
-				break;
+			if(ool.getStatus() ==  1) {
+				if (ool.getDatumOd().compareTo(datum) * datum.compareTo(ool.getDatumDo()) >= 0) {
+					flag = 1;
+					break;
+				}
 			}
 
 		}
