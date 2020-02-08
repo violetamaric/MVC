@@ -328,10 +328,8 @@ public class KlinikaController {
 
 		Klinika klinika = klinikaService.findById(id);
 		int temp = klinika.getOcena();
-		klinika.builder()
-		.ocena((temp + ocena) / 2)
-		.build();
-//		klinika.setOcena((temp + ocena) / 2);
+
+		klinika.setOcena((temp + ocena) / 2);
 		klinikaService.save(klinika);
 		Pregled pregled = pregledService.findById(pregled_id);
 		if (pregled.getStatus() == 3) {

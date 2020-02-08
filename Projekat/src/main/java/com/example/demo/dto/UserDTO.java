@@ -7,6 +7,14 @@ public class UserDTO {
 	private String email;
 	
 	private Uloga uloga;
+	
+	public UserDTO() {
+		
+	}
+	public UserDTO(String email, String lozinka) {
+		this.email = email;
+		this.lozinka = lozinka;
+	}
 
 	public String getLozinka() {
 		return lozinka;

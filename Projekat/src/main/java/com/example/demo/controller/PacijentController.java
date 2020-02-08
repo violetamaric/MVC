@@ -228,7 +228,7 @@ public class PacijentController {
 
 	@PutMapping(path = "/update", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('PACIJENT')")
+//	@PreAuthorize("hasAuthority('PACIJENT')")
 	public ResponseEntity<?> updatePacijent(@RequestBody PacijentDTO pacijentDTO) {
 
 		// a student must exist
