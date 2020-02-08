@@ -624,4 +624,6 @@ public class KlinikaController {
 
 		return new ResponseEntity<>(pregledi, HttpStatus.OK);
 	}
+
+	
 }

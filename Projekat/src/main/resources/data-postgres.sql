@@ -59,11 +59,11 @@ insert into pacijent (ime, prezime, lbo, jmbg, lozinka, email, adresa, grad, drz
 insert into pacijent (ime, prezime, lbo, jmbg, lozinka, email, adresa, grad, drzava, telefon, odobrena_registracija, klinicki_centar_id, zdravstveni_karton_id) values ('Lara', 'Nikolic', '00487885437', '2306999804556', '$2y$12$Q71g/k/ItGEpebDRS9727OJ/EutFXhCp1GjpUO4ofljoIGTGs7u0.', 'lara@gmail.com', 'Kralja Petra 11', 'Novi Sad', 'Srbija','0642255696', 0, 1, 4);
 insert into pacijent (ime, prezime, lbo, jmbg, lozinka, email, adresa, grad, drzava, telefon, odobrena_registracija, klinicki_centar_id, zdravstveni_karton_id) values ('Anita', 'Antic', '00500987234', '0105949806635', '$2y$12$cttD74SUFF/vnIJ3r6/yYebun0yY1Zji2pNkncrY/b87/e5za29tO', 'anita@gmail.com', 'Mise Dimitrijevica 66', 'Novi Sad', 'Srbija','069221478', 2, 1, 3);
 
-insert into tip_pregleda(naziv) values ('dermatoloski pregled');
-insert into tip_pregleda(naziv) values ('oftalmoloski pregled');
-insert into tip_pregleda(naziv) values ('ginekoloski pregled');
-insert into tip_pregleda(naziv) values ('stomatoloski pregled');
-insert into tip_pregleda(naziv) values ('psihijatrijski pregled');
+insert into tip_pregleda(naziv, cena) values ('dermatoloski pregled', 3000);
+insert into tip_pregleda(naziv, cena) values ('oftalmoloski pregled', 5500);
+insert into tip_pregleda(naziv, cena) values ('ginekoloski pregled', 2500);
+insert into tip_pregleda(naziv, cena) values ('stomatoloski pregled', 1500);
+insert into tip_pregleda(naziv, cena) values ('psihijatrijski pregled', 2000);
 
 
 insert into lekar_pacijent (pacijent_id, lekar_id) values (1,2);

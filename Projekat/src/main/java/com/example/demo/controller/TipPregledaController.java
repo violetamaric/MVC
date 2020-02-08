@@ -128,7 +128,7 @@ public class TipPregledaController {
 		
 //		
 //			for (TipPregleda p : listatp) {
-//				if(==klinika.getId()) {
+//			{
 //					
 //						for(Termin t: p.getZauzetiTermini()) {
 //							if(t.getDatumPocetka().before(datumDanasnji)) {
@@ -168,24 +168,23 @@ public class TipPregledaController {
 	@PostMapping(path = "/brisanjeTP", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
-	public ResponseEntity<String> brisanjeTP(@RequestBody TipPregledaDTO tpDTO) {
+	public ResponseEntity<String> brisanjeTP(@RequestBody Long idt) {
 		System.out.println("------------------------------------------------------");
 		System.out.println("pocinje");
 		// tp koji se brise
-		TipPregleda tp = TPService.findByNaziv(tpDTO.getNaziv());
+		TipPregleda tp = TPService.findOne(idt);
 		
 		List<TipPregleda> listaTP = TPService.findAll();
 
 
-		Long idLong = tp.getId();
-
 //		Klinika klinika = klinikaService.findById(idLong);
 //		System.out.println("Klinika id ------------- : " + klinika.getId());
-
+		boolean flag = false;
 		if (listaTP.contains(tp)) {
 			List<SlobodniTermin> listaST = STService.findAll();
 			for(SlobodniTermin s: listaST) {
 				if(s.getTipPregleda().getId().equals(tp.getId())) {
+					flag = true;
 					s.setStatus(true);
 					break;
 //					listaST.remove(s);
@@ -197,8 +196,10 @@ public class TipPregledaController {
 //			listaTP.remove(tp);
 //			klinika.getListaLekara().clear();
 //			klinika.setListaLekara(lista);
-
-			TPService.delete(tp);
+			if(!flag) {
+				TPService.delete(tp);
+			}
+			
 
 //			tp = TPService.save(tp);
 			System.out.println("obrisano");
@@ -216,7 +217,7 @@ public class TipPregledaController {
 		System.out.println(tpDTO);
 		TipPregleda tp = new TipPregleda();
 		tp.setNaziv(tpDTO.getNaziv());
-	
+		tp.setCena(tpDTO.getCena());
 		tp = TPService.save(tp);
 		
 

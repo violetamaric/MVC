@@ -30,6 +30,9 @@ public class TipPregleda{
 	@Column(name="naziv", nullable=false)
 	private String naziv;
 	
+	@Column(name="cena", nullable=false)
+	private double cena;
+	
 	@ManyToMany
 	@JoinTable(name = "tip_pregleda_klinika", joinColumns = @JoinColumn(name = "tip_pregleda_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "klinika_id", referencedColumnName = "id"))
 	private Set<Klinika> listaKlinika = new HashSet<Klinika>();
@@ -44,11 +47,20 @@ public class TipPregleda{
 	public TipPregleda(TipPregleda tp) {
 		super();
 		this.id = tp.getId();
+		this.cena = tp.getCena();
 		this.naziv = tp.getNaziv();
 		this.listaKlinika = tp.getListaKlinika();
 		this.listaPregleda = tp.getListaPregleda();
 	}
 	
+
+	public double getCena() {
+		return cena;
+	}
+
+	public void setCena(double cena) {
+		this.cena = cena;
+	}
 
 	public Set<Pregled> getListaPregleda() {
 		return listaPregleda;
