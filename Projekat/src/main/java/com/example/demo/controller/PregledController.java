@@ -802,7 +802,7 @@ public class PregledController {
 	}
 	
 	//vrati mi listu termina za neki datum 
-	@GetMapping(value = "/getTerminiLekaraZaDatum")
+	@PostMapping(value = "/getTerminiLekaraZaDatum")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('LEKAR')")
 	public ResponseEntity<?> getTerminiLekaraZaDatum(@RequestBody PregledDTO pregledDTO, Principal pr) {

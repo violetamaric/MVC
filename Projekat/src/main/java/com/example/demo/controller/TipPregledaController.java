@@ -77,7 +77,7 @@ public class TipPregledaController {
 	}
 	
 	@GetMapping(value = "/all")
-	@PreAuthorize("hasAuthority('PACIJENT') or hasAuthority('ADMIN_KLINIKE')" )
+	@PreAuthorize("hasAuthority('PACIJENT') or hasAuthority('ADMIN_KLINIKE')or hasAuthority('LEKAR')" )
 	@CrossOrigin(origins = "http://localhost:3000")
 	public ResponseEntity<List<TipPregledaDTO>> findAll() {
 
