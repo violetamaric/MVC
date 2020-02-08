@@ -42,8 +42,6 @@ public class Dijagnoza {
 		this.id = id;
 	}
 
-	
-
 	public String getOpis() {
 		return opis;
 	}

@@ -24,10 +24,7 @@ public class SlobodniTermin {
 
 	@Column(name = "datum", nullable = false)
 	private Date datum;
-	
-	@Column(name="trajanje", nullable=true)
-	private Time trajanje; //dateTime
-	
+
 	@Column(name="popust", nullable=false)
 	private double popust;
 	
@@ -42,12 +39,6 @@ public class SlobodniTermin {
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Lekar lekar;
-	
-	
-
-
-//	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-//	private MedicinskaSestra medicinskaSestra;
 
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -89,13 +80,7 @@ public class SlobodniTermin {
 		this.tipPregleda = tipPregleda;
 	}
 
-	public Time getTrajanje() {
-		return trajanje;
-	}
 
-	public void setTrajanje(Time trajanje) {
-		this.trajanje = trajanje;
-	}
 
 	public Sala getSala() {
 		return sala;

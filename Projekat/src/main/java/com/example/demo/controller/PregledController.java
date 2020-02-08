@@ -404,10 +404,10 @@ public class PregledController {
 		Lekar lekar = lekarService.findOne(pregled.getLekar().getId());
 		Sala sala = salaService.findOne(pregled.getSala().getId());
 		pregledService.save(pregled);
-		lekar.getListaZauzetihTermina().add(termin);
-		sala.getZauzetiTermini().add(termin);
+		lekar.getListaPregleda().add(pregled);
+		//sala.getZauzetiTermini().add(termin);
 		lekarService.save(lekar);
-		salaService.save(sala);
+	//	salaService.save(sala);
 		return new ResponseEntity<>(new PregledDTO(pregled), HttpStatus.OK);
 	}
 
@@ -604,7 +604,7 @@ public class PregledController {
 		Lekar l = null;
 		for (Pregled p : listaPregleda) {
 			if (p.getId().equals(pDTO.getId())) {
-				p.setStatus(1);
+//				p.setStatus(0); //treba nula
 				Sala s = salaService.findById(pDTO.getSalaID());
 				
 				p.setSala(s);
@@ -623,14 +623,21 @@ public class PregledController {
 				t.setDatumPocetka(pDTO.getDatum());
 				t.setSala(s);
 				t.setLekar(l);
-				terminService.save(t);
+				t = terminService.save(t);
+				l.getListaZauzetihTermina().add(t);
+				lekarService.save(l);
+				s.getZauzetiTermini().add(t);
+				salaService.save(s);
+				//odradi ko operacije ovako!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 //				l.getListaZauzetihTermina().add(t);
 //				lekarService.save(l);
-				Set<Pregled> lekarPregledii = l.getListaPregleda();
-				lekarPregledii.add(p);
-				l.setListaPregleda(lekarPregledii);
-//				le.getListaOperacija().add(p);
-				lekarService.save(l);
+//				Set<Pregled> lekarPregledii = l.getListaPregleda();
+//				lekarPregledii.add(p);
+//				l.setListaPregleda(lekarPregledii);
+////				le.getListaOperacija().add(p);
+//				lekarService.save(l);
+				//premjestiti kod vioeletekad pacijent potvrdi pregled,
+				//a a ko odbije pregled izbaciti iz liste zauzetih termina !
 
 			}
 		}

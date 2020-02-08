@@ -56,7 +56,7 @@ import com.example.demo.service.PacijentService;
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping(value = "/api/korisnici", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserController {
-	
+
 	@Autowired
 	TokenUtils tokenUtils;
 
@@ -68,7 +68,7 @@ public class UserController {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-	
+
 	@Autowired
 	private PacijentService pacijentService;
 
@@ -89,21 +89,17 @@ public class UserController {
 
 	@Autowired
 	private AuthorityRepository authorityRepository;
-    
-
 
 	@PostMapping(path = "/register", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 	public ResponseEntity<PacijentDTO> registerPacijent(@RequestBody PacijentDTO pacijentDTO) {
 
 		Pacijent pacijent = new Pacijent();
-		
+
 		List<Pacijent> pacijenti = pacijentService.findAll();
-		for (Pacijent p :pacijenti) {
-			if(p.getLbo().equals(pacijentDTO.getLbo()) || 
-					p.getJmbg().equals(pacijentDTO.getJmbg()) || 
-					(p.getEmail().equals(pacijentDTO.getEmail()) &&  
-						pacijentDTO.getOdobrenaRegistracija() == 2) ) {
+		for (Pacijent p : pacijenti) {
+			if (p.getLbo().equals(pacijentDTO.getLbo()) || p.getJmbg().equals(pacijentDTO.getJmbg())
+					|| (p.getEmail().equals(pacijentDTO.getEmail()) && pacijentDTO.getOdobrenaRegistracija() == 2)) {
 				return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 			}
 
@@ -132,29 +128,24 @@ public class UserController {
 		kc.getZahteviZaRegistraciju().add(pacijent);
 		kc = KCService.save(kc);
 
-//		KlinickiCentar kc = pacijent.getKlinickiCentar();
-//		
-//		System.out.println("dodat u zahteve za registraciju");
-//		kc.getZahteviZaRegistraciju().add(pacijent);
-
 		return new ResponseEntity<>(new PacijentDTO(pacijent), HttpStatus.CREATED);
 	}
 
-	
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	@CrossOrigin(origins = "http://localhost:3000")
-	public ResponseEntity<?> createAuthenticationToken(HttpServletRequest req,@RequestBody UserDTO userDTO,
+	public ResponseEntity<?> createAuthenticationToken(HttpServletRequest req, @RequestBody UserDTO userDTO,
 
 			HttpServletResponse response) throws AuthenticationException, IOException {
 		System.out.println("LOGIN");
 		System.out.println(userDTO.getEmail());
 		System.out.println(userDTO.getLozinka());
-		UsernamePasswordAuthenticationToken u = new UsernamePasswordAuthenticationToken(userDTO.getEmail(), userDTO.getLozinka());
+		UsernamePasswordAuthenticationToken u = new UsernamePasswordAuthenticationToken(userDTO.getEmail(),
+				userDTO.getLozinka());
 		System.out.println("prosao auth");
 		System.out.println(u);
 		final Authentication authentication = authenticationManager
 				.authenticate(new UsernamePasswordAuthenticationToken(userDTO.getEmail(), userDTO.getLozinka()));
-		
+
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		System.out.println("***" + SecurityContextHolder.getContext().getAuthentication());
 //		SecurityContext sc = SecurityContextHolder.getContext();
@@ -165,9 +156,10 @@ public class UserController {
 		Object nekiKorisnik = authentication.getPrincipal();
 
 		if (nekiKorisnik instanceof Pacijent) {
-			
+
 			Pacijent pacijent = (Pacijent) nekiKorisnik;
-			if(pacijent.getOdobrenaRegistracija() == 3) {
+			if (pacijent.getOdobrenaRegistracija() == 3 || pacijent.getOdobrenaRegistracija() == 1
+					|| pacijent.getOdobrenaRegistracija() == 0) {
 				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			}
 
@@ -177,37 +169,48 @@ public class UserController {
 
 			int expiresIn = tokenUtils.getExpiredIn();
 
-			return ResponseEntity.ok(new UserTokenState(jwt, expiresIn, ((Authority) roles.iterator().next()).getUloga(),((Pacijent)authentication.getPrincipal()).getEmail()));
+			return ResponseEntity
+					.ok(new UserTokenState(jwt, expiresIn, ((Authority) roles.iterator().next()).getUloga(),
+							((Pacijent) authentication.getPrincipal()).getEmail()));
 
 		} else if (nekiKorisnik instanceof Lekar) {
 
 			Lekar lekar = (Lekar) nekiKorisnik;
-			
+			if (lekar.getStatus() == 2) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+
 			Collection<?> roles = lekar.getAuthorities();
 
 			String jwt = tokenUtils.tokenLekar(lekar, (Authority) roles.iterator().next());
 
 			int expiresIn = tokenUtils.getExpiredIn();
 
-			return ResponseEntity.ok(new UserTokenState(jwt, expiresIn, ((Authority) roles.iterator().next()).getUloga(),((Lekar)authentication.getPrincipal()).getEmail()));
+			return ResponseEntity
+					.ok(new UserTokenState(jwt, expiresIn, ((Authority) roles.iterator().next()).getUloga(),
+							((Lekar) authentication.getPrincipal()).getEmail()));
 
 		} else if (nekiKorisnik instanceof MedicinskaSestra) {
 
 			MedicinskaSestra medicinskaSestra = (MedicinskaSestra) nekiKorisnik;
-
+			if (medicinskaSestra.getStatus() == 2) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
 			Collection<?> roles = medicinskaSestra.getAuthorities();
 
 			String jwt = tokenUtils.tokenMedicinskaSestra(medicinskaSestra, (Authority) roles.iterator().next());
 
 			int expiresIn = tokenUtils.getExpiredIn();
 
-			return ResponseEntity.ok(new UserTokenState(jwt, expiresIn, ((Authority) roles.iterator().next()).getUloga(),((MedicinskaSestra)authentication.getPrincipal()).getEmail()));
+			return ResponseEntity
+					.ok(new UserTokenState(jwt, expiresIn, ((Authority) roles.iterator().next()).getUloga(),
+							((MedicinskaSestra) authentication.getPrincipal()).getEmail()));
 
 		} else if (nekiKorisnik instanceof AdministratorKlinike) {
 
 			AdministratorKlinike administratorKlinike = (AdministratorKlinike) nekiKorisnik;
 
-			if(administratorKlinike.getStatus() == 2) {
+			if (administratorKlinike.getStatus() == 2) {
 				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			}
 			Collection<?> roles = administratorKlinike.getAuthorities();
@@ -215,25 +218,28 @@ public class UserController {
 			String jwt = tokenUtils.tokenAKC(administratorKlinike, (Authority) roles.iterator().next());
 
 			int expiresIn = tokenUtils.getExpiredIn();
-			
-			return ResponseEntity.ok(new UserTokenState(jwt, expiresIn, ((Authority) roles.iterator().next()).getUloga(),((AdministratorKlinike)authentication.getPrincipal()).getEmail()));
+
+			return ResponseEntity
+					.ok(new UserTokenState(jwt, expiresIn, ((Authority) roles.iterator().next()).getUloga(),
+							((AdministratorKlinike) authentication.getPrincipal()).getEmail()));
 
 		} else if (nekiKorisnik instanceof AdministratorKC) {
 
 			AdministratorKC administratorKlinickogCentra = (AdministratorKC) nekiKorisnik;
 
-			if(administratorKlinickogCentra.getStatus() == 2) {
-				System.out.println("status 2");
+			if (administratorKlinickogCentra.getStatus() == 2) {
+
 				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			}
-			System.out.println("status 1 ili 0");
-			
+
 			Collection<?> roles = administratorKlinickogCentra.getAuthorities();
 
 			String jwt = tokenUtils.tokenAK(administratorKlinickogCentra, (Authority) roles.iterator().next());
 			int expiresIn = tokenUtils.getExpiredIn();
 
-			return ResponseEntity.ok(new UserTokenState(jwt, expiresIn, ((Authority) roles.iterator().next()).getUloga(),((AdministratorKC)authentication.getPrincipal()).getEmail()));
+			return ResponseEntity
+					.ok(new UserTokenState(jwt, expiresIn, ((Authority) roles.iterator().next()).getUloga(),
+							((AdministratorKC) authentication.getPrincipal()).getEmail()));
 
 		} else {
 
@@ -248,7 +254,6 @@ public class UserController {
 	public ResponseEntity<?> aktivirajPacijenta(@PathVariable Long id) {
 
 		// a student must exist
-		System.out.println("AKTIVIRAJ PACIJENTA");
 		Pacijent pacijent = pacijentService.findByID(id);
 
 		pacijent.setOdobrenaRegistracija(2);
@@ -257,5 +262,4 @@ public class UserController {
 		return new ResponseEntity<>(new PacijentDTO(pacijent), HttpStatus.OK);
 	}
 
-	
 }

@@ -8,22 +8,22 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+
 @Entity
 public class Recept {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Lek lek;
-	
-	
+
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private MedicinskaSestra medicinskaSestra;
-	
-	@Column(name="medicinskaSestraOvera", nullable=false)
+
+	@Column(name = "medicinskaSestraOvera", nullable = false)
 	private boolean overen = false;
-	
+
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private IzvestajOPregledu izvestajOPregledu;
 
@@ -59,8 +59,6 @@ public class Recept {
 		this.overen = overen;
 	}
 
-	
-
 	public Recept() {
 		super();
 	}
@@ -90,7 +88,5 @@ public class Recept {
 	public void setIzvestajOPregledu(IzvestajOPregledu izvestajOPregledu) {
 		this.izvestajOPregledu = izvestajOPregledu;
 	}
-	
-	
-	
+
 }
