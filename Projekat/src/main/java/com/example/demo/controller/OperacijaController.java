@@ -429,7 +429,6 @@ public class OperacijaController {
 	}
 
 	// rezervisanje sale i slanje mejla pacijentu i lekaru
-
 	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
 	@PostMapping(path = "/rezervisanjeSale", consumes = "application/json")
 	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")

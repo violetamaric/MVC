@@ -14,7 +14,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -587,7 +590,8 @@ public class PregledController {
 	}
 
 	// rezervisanje sale i slanje mejla pacijentu i lekaru
-	@Async
+//	@Async
+	//@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
 	@PostMapping(path = "/rezervisanjeSale", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
@@ -622,6 +626,8 @@ public class PregledController {
 				t.setSala(s);
 				t.setLekar(l);
 				terminService.save(t);
+				l.getListaZauzetihTermina().add(t);
+				lekarService.save(l);
 
 			}
 		}
@@ -740,4 +746,93 @@ public class PregledController {
 
 		return new ResponseEntity<>(listaSlobodnihLekara, HttpStatus.OK);
 	}
+
+	@GetMapping( consumes = "application/json")
+	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
+//	@Scheduled(cron = "20 44 03 * * ?")
+    public ResponseEntity<List<SalaDTO>> automaticSchedule() {
+		
+		   List<SalaDTO> saD = new ArrayList<SalaDTO>();
+		
+        System.out.println("Automatska fja");
+        List<Pregled> sviPre = pregledService.findAll();
+        List<Pregled> zahteviPregled = new ArrayList<Pregled>();
+        
+        //preuzeti zah za pregled kojim treba dodijeliti salu 
+        for(Pregled pp: sviPre) {
+        	if(pp.getStatus()==0 && pp.getSala()==null) {
+        		zahteviPregled.add(pp);
+        	}
+        }
+        System.out.println("Automatska fja2");
+        //preuzete sale klinike za pregled
+        List<Sala> salePregled = new ArrayList<Sala>();
+        for(Sala s: salaService.findAll()) {
+        	if(s.getTipSale()==1)
+        		salePregled.add(s);
+        	
+        }
+        System.out.println("Automatska fja3");
+        List<Sala> slobodne = new ArrayList<Sala>();
+        
+        try {
+        	for (Pregled p : zahteviPregled) {System.out.println("a");
+            for(Sala s: salePregled) {
+            	System.out.println("bbbb");
+            	for(Termin t: s.getZauzetiTermini()) {
+            		if(p.getDatum().compareTo(t.getDatumPocetka())==0) {
+            				System.out.println("NANANNA");
+            			if ( p.getTermin()!=t.getTermin()) {
+            				if(!slobodne.contains(s)) {
+            					slobodne.add(s);
+            				}
+            				
+            				break;
+            				//p.setSala(s);
+//            				p.setDatum(t.getDatumPocetka());
+//            				p.setTermin(t.getTermin());
+//            				p.setKlinika(s.getKlinika());
+//            				break;
+            			}
+            		}
+            	}
+            }
+            System.out.println(p);
+         
+            System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+            for(Sala ss: slobodne) {
+            	System.out.println(ss);
+            	SalaDTO s = new SalaDTO(ss);
+            	saD.add(s);
+            }
+            System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        	} 
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println("NE RADI");
+		}
+        
+//      
+//            try {
+//                medicalExaminationService.saveExamination(r.getDate(), r.getPrice(), r.getDuration(), r.getDiscount(), availableRooms.get(0).getId(),
+//                        r.getClinic().getId(), r.getDoctor().getId(), r.getPatient().getId(), r.getType().getId(), r.getId(), false);
+//
+//            } catch (IndexOutOfBoundsException ioobe) {
+//                List<MedicalExaminationRoom> availableRooms2;
+//                int addDays = 1;
+//                Date newDate;
+//                do {
+//                    Calendar c = Calendar.getInstance();
+//                    c.setTime(r.getDate());
+//                    c.add(Calendar.DATE, addDays);
+//                    newDate = c.getTime();
+//                    availableRooms2 = medicalExaminationRoomService.getAvailableRooms(r.getClinic().getId(), newDate);
+//                    addDays++;
+//                } while (availableRooms2.size() == 0);
+//                medicalExaminationService.saveExamination(newDate, r.getPrice(), r.getDuration(), r.getDiscount(), availableRooms2.get(0).getId(),
+//                        r.getClinic().getId(), r.getDoctor().getId(), r.getPatient().getId(), r.getType().getId(), r.getId(), false);
+//
+//            }
+        return new ResponseEntity<>(saD, HttpStatus.OK);
+    }
 }
