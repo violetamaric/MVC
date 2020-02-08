@@ -6,6 +6,7 @@ public class TipPregledaDTO {
 
 	private Long id;
 	private String naziv;
+	private double cena;
 	
 	public TipPregledaDTO() {
 		
@@ -13,6 +14,14 @@ public class TipPregledaDTO {
 	public TipPregledaDTO(TipPregleda tp) {
 		this.id = tp.getId();
 		this.naziv = tp.getNaziv();
+		this.cena = tp.getCena();
+	}
+	
+	public double getCena() {
+		return cena;
+	}
+	public void setCena(double cena) {
+		this.cena = cena;
 	}
 	public Long getId() {
 		return id;

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.SalaDTO;
 import com.example.demo.dto.SlobodniTerminDTO;
 import com.example.demo.model.Klinika;
 import com.example.demo.model.Lekar;
@@ -32,6 +33,7 @@ import com.example.demo.service.TerminService;
 import com.example.demo.service.TipPregledaService;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping(value = "/api/ST", produces = MediaType.APPLICATION_JSON_VALUE)
 public class SlobodniTerminController {
 
@@ -46,10 +48,10 @@ public class SlobodniTerminController {
 
 	@Autowired
 	private SalaService salaService;
-	
+
 	@Autowired
 	private TerminService terminService;
-	
+
 	@GetMapping(value = "/unapredDef")
 //	@PreAuthorize("hasAuthority('PACIJENT')")
 	public ResponseEntity<List<SlobodniTerminDTO>> getAllUnapredDef() {
@@ -78,8 +80,10 @@ public class SlobodniTerminController {
 		List<SlobodniTerminDTO> lista = new ArrayList<SlobodniTerminDTO>();
 		for (SlobodniTermin s : st) {
 			if (s.getKlinika().getId() == klinika.getId()) {
-				SlobodniTerminDTO sDTO = new SlobodniTerminDTO(s);
-				lista.add(sDTO);
+				if (!s.isStatus()) {
+					SlobodniTerminDTO sDTO = new SlobodniTerminDTO(s);
+					lista.add(sDTO);
+				}
 			}
 		}
 
@@ -100,6 +104,8 @@ public class SlobodniTerminController {
 		st.setCena(stDTO.getCena());
 		st.setPopust(stDTO.getPopust());
 		st.setDatum(stDTO.getDatum());
+		st.setTermin(stDTO.getTermin());
+		st.setStatus(false);
 		Klinika klinika = klinikaService.findById(stDTO.getKlinikaID());
 		st.setKlinika(klinika);
 		Lekar lekar = lekarService.findById(stDTO.getLekarID());
@@ -110,7 +116,7 @@ public class SlobodniTerminController {
 		st.setTipPregleda(tp);
 		Sala sala = salaService.findOne(stDTO.getSalaID());
 		st.setSala(sala);
-		
+
 		Termin t = new Termin();
 		t.setDatumPocetka(stDTO.getDatum());
 		t.setLekar(lekar);
@@ -119,17 +125,40 @@ public class SlobodniTerminController {
 		terminService.save(t);
 
 		st = STService.save(st);
-		
-		Set<Termin>lzt = lekar.getListaZauzetihTermina();
+
+		Set<Termin> lzt = lekar.getListaZauzetihTermina();
 		lzt.add(t);
 		lekarService.save(lekar);
-		Set<Termin>lzts = sala.getZauzetiTermini();
+		Set<Termin> lzts = sala.getZauzetiTermini();
 		lzts.add(t);
 		salaService.save(sala);
-		
-		
 
 		return new ResponseEntity<>(new SlobodniTerminDTO(st), HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "preuzmiSaleKlinikeZaPregled/{id}")
+	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
+	public ResponseEntity<List<SalaDTO>> getSaleKlinikeZaPRegled(@PathVariable Long id) {
+
+		Klinika klinika = klinikaService.findOne(id);
+		List<Sala> sale = salaService.findAll();
+		List<SalaDTO> lista = new ArrayList<SalaDTO>();
+		for (Sala s : sale) {
+			if (s.getKlinika().getId() == klinika.getId()) {
+				if(s.getTipSale()==1) {
+					SalaDTO salaDTO = new SalaDTO(s);
+					lista.add(salaDTO);
+				}
+			
+			}
+		}
+
+		System.out.println("Lista sala u klinici:" + klinika.getNaziv() + " ID: " + id);
+		for (SalaDTO ss : lista) {
+			System.out.println(ss.getNaziv() + ss.getBroj());
+		}
+
+		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 
 }

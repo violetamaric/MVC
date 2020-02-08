@@ -1,5 +1,7 @@
 package com.example.demo.dto;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import com.example.demo.model.Lekar;
 
 
@@ -52,7 +54,10 @@ public class LekarDTO {
 		this.prezime = lekar.getPrezime();
 		this.lozinka = lekar.getLozinka();
 		this.email = lekar.getEmail();
-		this.klinikaID = lekar.getKlinika().getId();
+		if(lekar.getKlinika() != null) {
+			this.klinikaID = lekar.getKlinika().getId();
+		}
+		
 		this.telefon = lekar.getTelefon();
 		this.ocena = lekar.getOcena();
 		this.status = lekar.getStatus();

@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import java.security.Principal;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -14,7 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,7 +29,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.AdministratorKlinikeDTO;
 import com.example.demo.dto.LekarDTO;
-import com.example.demo.dto.OperacijaDTO;
 import com.example.demo.dto.PacijentDTO;
 import com.example.demo.dto.PregledDTO;
 import com.example.demo.dto.SalaDTO;
@@ -36,7 +38,6 @@ import com.example.demo.model.AdministratorKlinike;
 import com.example.demo.model.Klinika;
 import com.example.demo.model.Lekar;
 import com.example.demo.model.OdmorOdsustvoLekar;
-import com.example.demo.model.Operacija;
 import com.example.demo.model.Pacijent;
 import com.example.demo.model.Pregled;
 import com.example.demo.model.Sala;
@@ -54,6 +55,7 @@ import com.example.demo.service.SlobodniTerminService;
 import com.example.demo.service.TerminService;
 import com.example.demo.service.TipPregledaService;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping(value = "/api/pregledi", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PregledController {
@@ -89,6 +91,8 @@ public class PregledController {
 	public ResponseEntity<?> noviPregled(@RequestBody PregledDTO pregledDTO) {
 
 		// TODO 1: PROVERITI DA LI UOPSTE MOZE TOG DATUMA DA ZAKAZE
+		
+		
 		System.out.println("dodavanje novog pregleda");
 		System.out.println(pregledDTO);
 		Pregled pregled = new Pregled();
@@ -107,8 +111,6 @@ public class PregledController {
 
 		pregled = pregledService.save(pregled);
 
-//		pacijent.getListaPregleda().add(pregled);
-//		pacijent = pacijentService.save(pacijent);
 
 		klinika.getListaPregleda().add(pregled);
 		klinika = klinikaService.save(klinika);
@@ -270,7 +272,6 @@ public class PregledController {
 
 		return new ResponseEntity<>(pregledDTO, HttpStatus.OK);
 	}
-
 	
 	//vrati listu pregleda pacijenta kod odredjenog lekara
 	@GetMapping(value = "/pregledPacijenta/{id}" )
@@ -303,7 +304,6 @@ public class PregledController {
 
 		return new ResponseEntity<>(pregledDTO, HttpStatus.OK);
 	}
-
 
 	//vrati pregled pacijenta
 	@GetMapping(value = "/getPregledPac/{id}" )
@@ -426,7 +426,6 @@ public class PregledController {
 		return new ResponseEntity<>(new PregledDTO(pregled), HttpStatus.OK);
 	}
 
-
 	// otkazivanje pregleda
 	@PutMapping(path = "/otkazivanje/{id}")
 	@CrossOrigin(origins = "http://localhost:3000")
@@ -460,8 +459,6 @@ public class PregledController {
 		}
 
 	}
-
-	
 
 	// pronalazak sala slobodnih za taj teremin i datum za PREGLED
 	@GetMapping(value = "/pronadjiSaleZaTajTermin/{idP}")
@@ -593,6 +590,8 @@ public class PregledController {
 	}
 
 	// rezervisanje sale i slanje mejla pacijentu i lekaru
+//	@Async
+	//@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
 	@PostMapping(path = "/rezervisanjeSale", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 //	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
@@ -609,6 +608,7 @@ public class PregledController {
 			if (p.getId().equals(pDTO.getId())) {
 				p.setStatus(1);
 				Sala s = salaService.findById(pDTO.getSalaID());
+				
 				p.setSala(s);
 				pacijent = pacijentService.findByID(pDTO.getPacijentID());
 
@@ -626,6 +626,8 @@ public class PregledController {
 				t.setSala(s);
 				t.setLekar(l);
 				terminService.save(t);
+				l.getListaZauzetihTermina().add(t);
+				lekarService.save(l);
 
 			}
 		}
@@ -744,4 +746,205 @@ public class PregledController {
 
 		return new ResponseEntity<>(listaSlobodnihLekara, HttpStatus.OK);
 	}
+
+
+	//zakazivanje pregleda lekar
+	@PostMapping(value = "/zakazivanjePregledaLekar")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('LEKAR')")
+	public ResponseEntity<?> zakazivanjePregledaLekar(@RequestBody PregledDTO pregledDTO, Principal pr) {
+		System.out.println("*************");
+
+		Lekar lekar = lekarService.findByEmail(pr.getName());
+		
+
+		
+		
+		System.out.println("dodavanje novog pregleda");
+		System.out.println(pregledDTO);
+		
+		Pregled pregled = new Pregled();
+		pregled.setCena(pregledDTO.getCena()); //???
+		pregled.setDatum(pregledDTO.getDatum());
+		
+		Klinika klinika = lekar.getKlinika();
+		pregled.setKlinika(klinika);
+		
+		pregled.setLekar(lekar); 
+		pregled.setTermin(pregledDTO.getTermin());
+		
+		Pacijent pacijent = pacijentService.findByEmail(pregledDTO.getPacijentEmail());
+		pregled.setPacijent(pacijent);
+		pregled.setStatus(0);
+		
+		TipPregleda tp = tipPregledaService.findOne(pregledDTO.getTipPregledaID());
+		pregled.setTipPregleda(tp);
+		
+		pregled = pregledService.save(pregled);
+		
+		klinika.getListaPregleda().add(pregled);
+		klinika = klinikaService.save(klinika);
+		
+		Set<AdministratorKlinike> ak = klinika.getListaAdminKlinike();
+
+		for (AdministratorKlinike AK : ak) {
+			AdministratorKlinikeDTO akDTO = new AdministratorKlinikeDTO(AK);
+			String subject = "Zahtev za pregled";
+			String text = "Postovani " + AK.getIme() + " " + AK.getPrezime() + ",\n\n imate novi zahtev za pregled.";
+
+			System.out.println(text);
+
+			// slanje emaila
+			try {
+				emailService.poslatiOdgovorAdminuK(akDTO, subject, text);
+			} catch (Exception e) {
+				logger.info("Greska prilikom slanja emaila: " + e.getMessage());
+				return new ResponseEntity<>("Mail nije poslat", HttpStatus.BAD_REQUEST);
+			}
+		}
+
+		return new ResponseEntity<>(new PregledDTO(pregled), HttpStatus.OK);
+
+
+	}
+	
+	//vrati mi listu termina za neki datum 
+	@PostMapping(value = "/getTerminiLekaraZaDatum")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('LEKAR')")
+	public ResponseEntity<?> getTerminiLekaraZaDatum(@RequestBody PregledDTO pregledDTO, Principal pr) {
+
+		System.out.println("*************");
+
+		Lekar lekar = lekarService.findByEmail(pr.getName());
+		List<Integer> termini = new ArrayList<>();
+		termini.add(9);
+		termini.add(11);
+		termini.add(13);
+		termini.add(15);
+		System.out.println(termini);
+		//proveriti da li je lekar slobodan tad 
+		
+		Set<OdmorOdsustvoLekar> listaool = lekar.getListaOdmorOdsustvo();
+		for(OdmorOdsustvoLekar ool: listaool) {
+			if(ool.getStatus() ==  1) {
+				if( ool.getDatumOd().compareTo(pregledDTO.getDatum()) * pregledDTO.getDatum().compareTo(ool.getDatumDo()) >= 0) {
+					System.out.println("-------------nalazi se odsustvo i odmor-------------");
+					return new ResponseEntity<>("Datum je zauzet.", HttpStatus.OK);
+				}
+			}
+		}
+		
+		Set<Termin> pregledi = lekar.getListaZauzetihTermina();
+		for(Termin p : pregledi) {
+		
+			
+			if(p.getDatumPocetka().equals(pregledDTO.getDatum())) {
+				if(termini.contains(p.getTermin())) {
+					//obrisi iz liste taj termin 
+					termini.remove(p.getTermin());
+					System.out.println(termini);
+				}
+				System.out.println("----------------nalazi se pregled---------------");
+//				return new ResponseEntity<>("Datum je zauzet.", HttpStatus.OK);
+			}
+		}
+		
+		
+		System.out.println(termini);
+		
+		return new ResponseEntity<>(termini, HttpStatus.OK);
+	}
+	
+
+
+	@GetMapping( consumes = "application/json")
+	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
+//	@Scheduled(cron = "20 44 03 * * ?")
+    public ResponseEntity<List<SalaDTO>> automaticSchedule() {
+		
+		   List<SalaDTO> saD = new ArrayList<SalaDTO>();
+		
+        System.out.println("Automatska fja");
+        List<Pregled> sviPre = pregledService.findAll();
+        List<Pregled> zahteviPregled = new ArrayList<Pregled>();
+        
+        //preuzeti zah za pregled kojim treba dodijeliti salu 
+        for(Pregled pp: sviPre) {
+        	if(pp.getStatus()==0 && pp.getSala()==null) {
+        		zahteviPregled.add(pp);
+        	}
+        }
+        System.out.println("Automatska fja2");
+        //preuzete sale klinike za pregled
+        List<Sala> salePregled = new ArrayList<Sala>();
+        for(Sala s: salaService.findAll()) {
+        	if(s.getTipSale()==1)
+        		salePregled.add(s);
+        	
+        }
+        System.out.println("Automatska fja3");
+        List<Sala> slobodne = new ArrayList<Sala>();
+        
+        try {
+        	for (Pregled p : zahteviPregled) {System.out.println("a");
+            for(Sala s: salePregled) {
+            	System.out.println("bbbb");
+            	for(Termin t: s.getZauzetiTermini()) {
+            		if(p.getDatum().compareTo(t.getDatumPocetka())==0) {
+            				System.out.println("NANANNA");
+            			if ( p.getTermin()!=t.getTermin()) {
+            				if(!slobodne.contains(s)) {
+            					slobodne.add(s);
+            				}
+            				
+            				break;
+            				//p.setSala(s);
+//            				p.setDatum(t.getDatumPocetka());
+//            				p.setTermin(t.getTermin());
+//            				p.setKlinika(s.getKlinika());
+//            				break;
+            			}
+            		}
+            	}
+            }
+            System.out.println(p);
+         
+            System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+            for(Sala ss: slobodne) {
+            	System.out.println(ss);
+            	SalaDTO s = new SalaDTO(ss);
+            	saD.add(s);
+            }
+            System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        	} 
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println("NE RADI");
+		}
+        
+//      
+//            try {
+//                medicalExaminationService.saveExamination(r.getDate(), r.getPrice(), r.getDuration(), r.getDiscount(), availableRooms.get(0).getId(),
+//                        r.getClinic().getId(), r.getDoctor().getId(), r.getPatient().getId(), r.getType().getId(), r.getId(), false);
+//
+//            } catch (IndexOutOfBoundsException ioobe) {
+//                List<MedicalExaminationRoom> availableRooms2;
+//                int addDays = 1;
+//                Date newDate;
+//                do {
+//                    Calendar c = Calendar.getInstance();
+//                    c.setTime(r.getDate());
+//                    c.add(Calendar.DATE, addDays);
+//                    newDate = c.getTime();
+//                    availableRooms2 = medicalExaminationRoomService.getAvailableRooms(r.getClinic().getId(), newDate);
+//                    addDays++;
+//                } while (availableRooms2.size() == 0);
+//                medicalExaminationService.saveExamination(newDate, r.getPrice(), r.getDuration(), r.getDiscount(), availableRooms2.get(0).getId(),
+//                        r.getClinic().getId(), r.getDoctor().getId(), r.getPatient().getId(), r.getType().getId(), r.getId(), false);
+//
+//            }
+        return new ResponseEntity<>(saD, HttpStatus.OK);
+    }
+
 }

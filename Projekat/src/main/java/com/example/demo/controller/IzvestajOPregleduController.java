@@ -32,6 +32,7 @@ import com.example.demo.service.ReceptService;
 import com.example.demo.service.ZdravstveniKartonService;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping(value = "/api/izvestajOP", produces = MediaType.APPLICATION_JSON_VALUE)
 public class IzvestajOPregleduController {
 	@Autowired
@@ -89,16 +90,16 @@ public class IzvestajOPregleduController {
 		
 		
 		//ne radi ovo izbacuje gresku 
-//		if(flag == 0) {
-//			
-//			lekar.getListaPacijenata().add(paci);
-//			
-//			paci.getListaLekara().add(lekar);
-//			
-//			paci = pacijentService.save(paci);
-//			
-//			lekar =  lekarService.save(lekar);
-//		}
+		if(flag == 0) {
+			
+			lekar.getListaPacijenata().add(paci);
+			
+			paci.getListaLekara().add(lekar);
+			
+			paci = pacijentService.save(paci);
+			
+			lekar =  lekarService.save(lekar);
+		}
 
 		Pacijent pacijent = pregled.getPacijent();
 		iz.setPregled(pregled);

@@ -37,6 +37,7 @@ import com.example.demo.service.LekarService;
 import com.example.demo.service.PregledService;
 import com.example.demo.service.SlobodniTerminService;
 
+
 @RestController
 @RequestMapping(value = "/api/klinike", produces = MediaType.APPLICATION_JSON_VALUE)
 public class KlinikaController {
@@ -65,23 +66,6 @@ public class KlinikaController {
 		System.out.println(k.getNaziv() + " " + k.getId());
 		return ResponseEntity.ok(new KlinikaDTO(k));
 	}
-
-//	@GetMapping(value = "/{id}")
-//	@CrossOrigin(origins = "http://localhost:3000")
-//	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
-//	public ResponseEntity<?> getKlinikaById(@PathVariable Long id) {
-//		System.out.println("Metoda find by id klinika: ");
-//		System.out.println(id);
-//		
-//		Klinika k = klinikaService.findOne(id);
-//		System.out.println("Pretraga klinike po ID");
-//		// studen must exist
-//		if (k == null) {
-//			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//		}
-//		System.out.println(k.getNaziv() + " " + k.getId());
-//		return ResponseEntity.ok(new KlinikaDTO(k));
-//	}
 
 	@GetMapping(value = "/all")
 	@PreAuthorize("hasAuthority('PACIJENT') or hasAuthority('ADMIN_KLINIKE')")
@@ -638,4 +622,6 @@ public class KlinikaController {
 
 		return new ResponseEntity<>(pregledi, HttpStatus.OK);
 	}
+
+	
 }

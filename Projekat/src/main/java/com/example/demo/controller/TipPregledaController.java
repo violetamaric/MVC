@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import java.io.Console;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -19,11 +20,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.LekarDTO;
+import com.example.demo.dto.SalaDTO;
 import com.example.demo.dto.SlobodniTerminDTO;
 import com.example.demo.dto.TipPregledaDTO;
 import com.example.demo.model.Klinika;
 import com.example.demo.model.Lekar;
+import com.example.demo.model.Pregled;
+import com.example.demo.model.Sala;
 import com.example.demo.model.SlobodniTermin;
+import com.example.demo.model.Termin;
 import com.example.demo.model.TipPregleda;
 import com.example.demo.service.KlinikaService;
 import com.example.demo.service.SlobodniTerminService;
@@ -31,7 +36,7 @@ import com.example.demo.service.TipPregledaService;
 
 @RestController
 @RequestMapping(value = "/api/tipPregleda", produces = MediaType.APPLICATION_JSON_VALUE)
-
+@CrossOrigin(origins = "http://localhost:3000")
 public class TipPregledaController {
 
 	@Autowired
@@ -72,7 +77,7 @@ public class TipPregledaController {
 	}
 	
 	@GetMapping(value = "/all")
-	@PreAuthorize("hasAuthority('PACIJENT') or hasAuthority('ADMIN_KLINIKE')" )
+	@PreAuthorize("hasAuthority('PACIJENT') or hasAuthority('ADMIN_KLINIKE')or hasAuthority('LEKAR')" )
 	@CrossOrigin(origins = "http://localhost:3000")
 	public ResponseEntity<List<TipPregledaDTO>> findAll() {
 
@@ -102,47 +107,99 @@ public class TipPregledaController {
 			tp.add(pDTO);
 
 		}
-		System.out.println("*************");
-		for (TipPregledaDTO pd : tp) {
-			System.out.println(pd);
-		}
+		
 		System.out.println("*************");
 		return new ResponseEntity<>(tp, HttpStatus.OK);
 	}
 
+	@GetMapping(value = "/allTerminiIB/{idKlinike}")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
+	public ResponseEntity<List<TipPregledaDTO>> getAllTerminiIB(@PathVariable Long idKlinike) {
+
+//		List<Sala> ret = new ArrayList<Sala>();
+		Klinika klinika = klinikaService.findById(idKlinike);
+		List<TipPregleda> listatp = TPService.findAll();
+	//	List<Pregled> pregledi = pregledService.findAll();
+		// convert students to DTOs
+		System.out.println("****************************************************************");
+		Date datumDanasnji = new Date();
+		List<TipPregledaDTO> tpDTO = new ArrayList<>();
+		
+//		
+//			for (TipPregleda p : listatp) {
+//			{
+//					
+//						for(Termin t: p.getZauzetiTermini()) {
+//							if(t.getDatumPocetka().before(datumDanasnji)) {
+//								System.out.println("Datum: " + t.getDatumPocetka()) ;
+//								if(p.equals(t.getSala())) {
+//									if(!salaDTO.contains(p)) {
+////										ret.add(p);
+//										System.out.println(p);
+//										salaDTO.add(new SalaDTO(p));
+//									}
+//								}
+//								
+//							}else {
+//								continue;
+//							}
+//								
+//								
+//							
+//						}
+//						if(p.getZauzetiTermini().size()==0) {
+//							System.out.println(p);
+//							salaDTO.add(new SalaDTO(p));
+//						}
+//						
+//					}
+//					
+//				
+//				
+//			}
+		
+		
+		System.out.println("****************************************************************");
+		return new ResponseEntity<>(tpDTO, HttpStatus.OK);
+	}
+	
 	// brisanje tp 
 	@PostMapping(path = "/brisanjeTP", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
-	public ResponseEntity<String> brisanjeTP(@RequestBody TipPregledaDTO tpDTO) {
+	public ResponseEntity<String> brisanjeTP(@RequestBody Long idt) {
 		System.out.println("------------------------------------------------------");
 		System.out.println("pocinje");
 		// tp koji se brise
-		TipPregleda tp = TPService.findByNaziv(tpDTO.getNaziv());
+		TipPregleda tp = TPService.findOne(idt);
 		
 		List<TipPregleda> listaTP = TPService.findAll();
 
 
-		Long idLong = tp.getId();
-
 //		Klinika klinika = klinikaService.findById(idLong);
 //		System.out.println("Klinika id ------------- : " + klinika.getId());
-
+		boolean flag = false;
 		if (listaTP.contains(tp)) {
 			List<SlobodniTermin> listaST = STService.findAll();
 			for(SlobodniTermin s: listaST) {
 				if(s.getTipPregleda().getId().equals(tp.getId())) {
-					listaST.remove(s);
-					STService.delete(s);
+					flag = true;
+					s.setStatus(true);
+					break;
+//					listaST.remove(s);
+//					STService.delete(s);
 				}
 			}
 			System.out.println("TP =============== " + tp.getNaziv());
 //			Set<Lekar> lista = klinika.getListaLekara();
-			listaTP.remove(tp);
+//			listaTP.remove(tp);
 //			klinika.getListaLekara().clear();
 //			klinika.setListaLekara(lista);
-
-			TPService.delete(tp);
+			if(!flag) {
+				TPService.delete(tp);
+			}
+			
 
 //			tp = TPService.save(tp);
 			System.out.println("obrisano");
@@ -160,7 +217,7 @@ public class TipPregledaController {
 		System.out.println(tpDTO);
 		TipPregleda tp = new TipPregleda();
 		tp.setNaziv(tpDTO.getNaziv());
-	
+		tp.setCena(tpDTO.getCena());
 		tp = TPService.save(tp);
 		
 

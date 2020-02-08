@@ -1,13 +1,15 @@
 insert into klinicki_centar (naziv, adresa, opis) values ('Klinicki centar Srbije', 'Pasterova 2','Klinicki centar uvek na usluzi svojim pacijentima');
 
 insert into administratorkc (ime, prezime, lozinka, email, status, klinicki_centar_id) values ('MVC', 'MVC', '$2y$12$YlXYBQHItM7BAtAwRWS5VOe3x0aufhZ3qDz8r5BVdghgZGJMtVY.2', 'mvc@gmail.com', 1, 1);
+insert into administratorkc (ime, prezime, lozinka, email, status, klinicki_centar_id) values ('SOKO', 'ORAO', '$2a$10$I58svTrFjZcbyqbooOB.J.izCnJGqHvbDLPuR6F8aj2lrV2as6BYm', 'orao@gmail.com', 0, 1); 
+
 
 insert into klinika (naziv, adresa, opis, klinicki_centar_id, ocena, version, status) values ('Klinika Beograd', 'Pasterova 2','Klinika uvek na usluzi svojim pacijentima',1, 8, 0, 0);
 insert into klinika (naziv, adresa, opis, klinicki_centar_id, ocena, version, status) values ('Klinika Nis', 'Bulevar dr Zorana Djindjica 48','Klinika uvek na usluzi svojim pacijentima',1, 9, 0, 0);
 insert into klinika (naziv, adresa, opis, klinicki_centar_id, ocena, version, status) values ('Klinika Novi Sad', 'Hajduk Veljkova 1','Klinika uvek na usluzi svojim pacijentima',1, 10, 0, 0);
 
 insert into administrator_klinike (ime, prezime, lozinka, email, telefon, status, klinika_id) values ('Magdalena', 'Lakic', '$2y$12$XYkK0PZgshWgicsvaRF5IONp/ayRb15YJbSAYYI.Pguv05UI85s7S', 'magdalena@gmail.com', '066/000-665',1, 3);
-insert into administrator_klinike (ime, prezime, lozinka, email, telefon, status, klinika_id) values ('Ceca', 'Antesevic', '$2y$12$0u9Lrx8s9VDyMp/MttaHseqJbQ0l0lLRmzHbaWCrtzVPBXtbxVVVO', 'ceca@gmail.com', '061/422-852', 1, 2);
+insert into administrator_klinike (ime, prezime, lozinka, email, telefon, status, klinika_id) values ('Ceca', 'Antesevic', '$2y$12$0u9Lrx8s9VDyMp/MttaHseqJbQ0l0lLRmzHbaWCrtzVPBXtbxVVVO', 'ceca@gmail.com', '061/422-852', 0, 2);
 insert into administrator_klinike (ime, prezime, lozinka, email, telefon, status, klinika_id) values ('Viki', 'Maric', '$2y$12$IYv24FLHC3QXGryKQgcgYubTQxsWYWihRJO19mW8BV93Gk6dIlFM.', 'viki@gmail.com', '064/656-969', 1, 1);
 
 insert into lek (naziv, sifra, klinicki_centar_id) values ('Andol','001', 1);
@@ -36,6 +38,8 @@ insert into lekar (ime, prezime, email, lozinka,klinika_id, ocena, telefon, stat
 insert into lekar (ime, prezime, email, lozinka,klinika_id, ocena, telefon, status) values ('Mirko','Mirkovic', 'mirko@gmail.com', '$2y$12$sv7FSvNrcxRVZVZT41utauowcOHB9HVHvjqtCkcxL8.5nC/XaxWcC', 2, 7, '065/955-445', 0);
 insert into lekar (ime, prezime, email, lozinka,klinika_id, ocena, telefon, status) values ('Jovana','Ilic', 'jovana@gmail.com', '$2y$12$8tBONOj41DnGxrA4Su2BWOtk60BfFAVdo9lCMK861AGZ6/vxNQKda', 2, 8, '068/555-445', 1);
 insert into lekar (ime, prezime, email, lozinka,klinika_id, ocena, telefon, status) values ('Mitar','Djordjevic', 'mitar@gmail.com', '$2y$12$ehhRFMSy6vRnnZmN/uEXKOLl2LjBfi18DyEhl27L4tFji22GyGFeG', 2, 7, '068/953-333', 0);
+insert into lekar (ime, prezime, email, lozinka,klinika_id, ocena, telefon, status) values ('Helena','Lakic', 'hela@gmail.com', '$2a$10$s9lGJ1n4jE.U2ZjjOhEBSO8g5RPe5wg4fcViVjVxaFe6Ouz97pLhm', 3, 8, '068/953-333', 1);
+
 
 insert into medicinska_sestra (ime, prezime, email, br_telefona, lozinka, klinika_id, status) values ('Jelena','Jelenovic', 'jeca@gmail.com', '066/222-665', '$2y$12$ckUemsooeJoZ8mWv0h83G.pENxUrVVIMr2jgclhFFVepHGRPwpAtG', 1, 0);
 insert into medicinska_sestra (ime, prezime, email, br_telefona, lozinka, klinika_id, status) values ('Olgica','Olganovic', 'olgaolgaa@gmail.com','063/222-765', '$2y$12$a.k4FY.bo4SmCenCbJZxEOxrWKtaOaLX2ubDV4/0aAmMX98K6onmu', 3, 0);
@@ -55,11 +59,11 @@ insert into pacijent (ime, prezime, lbo, jmbg, lozinka, email, adresa, grad, drz
 insert into pacijent (ime, prezime, lbo, jmbg, lozinka, email, adresa, grad, drzava, telefon, odobrena_registracija, klinicki_centar_id, zdravstveni_karton_id) values ('Lara', 'Nikolic', '00487885437', '2306999804556', '$2y$12$Q71g/k/ItGEpebDRS9727OJ/EutFXhCp1GjpUO4ofljoIGTGs7u0.', 'lara@gmail.com', 'Kralja Petra 11', 'Novi Sad', 'Srbija','0642255696', 0, 1, 4);
 insert into pacijent (ime, prezime, lbo, jmbg, lozinka, email, adresa, grad, drzava, telefon, odobrena_registracija, klinicki_centar_id, zdravstveni_karton_id) values ('Anita', 'Antic', '00500987234', '0105949806635', '$2y$12$cttD74SUFF/vnIJ3r6/yYebun0yY1Zji2pNkncrY/b87/e5za29tO', 'anita@gmail.com', 'Mise Dimitrijevica 66', 'Novi Sad', 'Srbija','069221478', 2, 1, 3);
 
-insert into tip_pregleda(naziv) values ('dermatoloski pregled');
-insert into tip_pregleda(naziv) values ('oftalmoloski pregled');
-insert into tip_pregleda(naziv) values ('ginekoloski pregled');
-insert into tip_pregleda(naziv) values ('stomatoloski pregled');
-insert into tip_pregleda(naziv) values ('psihijatrijski pregled');
+insert into tip_pregleda(naziv, cena) values ('dermatoloski pregled', 3000);
+insert into tip_pregleda(naziv, cena) values ('oftalmoloski pregled', 5500);
+insert into tip_pregleda(naziv, cena) values ('ginekoloski pregled', 2500);
+insert into tip_pregleda(naziv, cena) values ('stomatoloski pregled', 1500);
+insert into tip_pregleda(naziv, cena) values ('psihijatrijski pregled', 2000);
 
 
 insert into lekar_pacijent (pacijent_id, lekar_id) values (1,2);
@@ -120,13 +124,15 @@ insert into sala(naziv, broj, klinika_id, tip_sale) values ('Oper', 123, 3, 0);
 insert into sala(naziv, broj, klinika_id, tip_sale) values ('Oper', 22, 3, 0);
 insert into sala(naziv, broj, klinika_id, tip_sale) values ('P-Dermatoloski', 111, 3, 1);
 insert into sala(naziv, broj, klinika_id, tip_sale) values ('P-Stomatoloski', 96, 3, 1);
-insert into sala(naziv, broj, klinika_id, tip_sale) values ('Oper', 19, 2, 0);
+insert into sala(naziv, broj, klinika_id, tip_sale) values ('Oper', 19, 3, 0);
 insert into sala(naziv, broj, klinika_id, tip_sale) values ('Operaciona sala', 2, 3, 0);
-insert into sala(naziv, broj, klinika_id, tip_sale) values ('Sala za pregled', 1, 2, 1);
-insert into sala(naziv, broj, klinika_id, tip_sale) values ('Pregled oftalmoloski', 2, 2, 1);
+insert into sala(naziv, broj, klinika_id, tip_sale) values ('Sala za pregled', 1, 3, 1);
+insert into sala(naziv, broj, klinika_id, tip_sale) values ('Pregled oftalmoloski', 2, 3, 1);
+insert into sala(naziv, broj, klinika_id, tip_sale) values ('Nova sala', 333, 3, 1);
+insert into sala(naziv, broj, klinika_id, tip_sale) values ('Nova sala2', 225, 3, 0);
 insert into sala(naziv, broj, klinika_id, tip_sale) values ('O', 1, 1, 0);
-insert into sala(naziv, broj, klinika_id, tip_sale) values ('O', 2, 1, 0);
-insert into sala(naziv, broj, klinika_id, tip_sale) values ('P', 1, 1, 1);
+insert into sala(naziv, broj, klinika_id, tip_sale) values ('O', 2, 2, 0);
+insert into sala(naziv, broj, klinika_id, tip_sale) values ('P', 1, 2, 1);
 insert into sala(naziv, broj, klinika_id, tip_sale) values ('P', 2, 1, 1);
 
 insert into slobodni_termin(datum, tip_pregleda_id, lekar_id, klinika_id, cena, status, popust, sala_id, termin) values ('15-mar-2019 09:00', 3, 2, 3, 1500, false, 50.0, 1, 9);
@@ -179,12 +185,16 @@ insert into lekar_authority (lekar_id, authority_id) values (3,2);
 insert into lekar_authority (lekar_id, authority_id) values (4,2);
 insert into lekar_authority (lekar_id, authority_id) values (5,2);
 insert into lekar_authority (lekar_id, authority_id) values (6,2);
+insert into lekar_authority (lekar_id, authority_id) values (7,2);
+insert into lekar_authority (lekar_id, authority_id) values (8,2);
+insert into lekar_authority (lekar_id, authority_id) values (9,2);
 
 insert into medicinska_sestra_authority (medicinska_sestra_id, authority_id) values (1,3);
 insert into medicinska_sestra_authority (medicinska_sestra_id, authority_id) values (2,3);
 insert into medicinska_sestra_authority (medicinska_sestra_id, authority_id) values (3,3);
 
 insert into administrator_kc_authority (administrator_kc_id, authority_id) values (1,4);
+insert into administrator_kc_authority (administrator_kc_id, authority_id) values (2,4);
 
 insert into administrator_klinike_authority (administrator_klinike_id, authority_id) values (1,5);
 insert into administrator_klinike_authority (administrator_klinike_id, authority_id) values (2,5);

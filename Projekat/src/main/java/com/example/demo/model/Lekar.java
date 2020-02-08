@@ -22,8 +22,10 @@ import javax.persistence.Version;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.transaction.annotation.Transactional;
 
 @Entity
+
 public class Lekar implements UserDetails{
 	
 	@Id
@@ -76,8 +78,8 @@ public class Lekar implements UserDetails{
 	@Column(name="ocena", nullable=false)
 	private int ocena; 
 	
-	@Version
-	private Long version;
+//	@Version
+//	private Long version;
 
 	@ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
 	@JoinTable(name = "lekar_authority",
@@ -276,12 +278,12 @@ public class Lekar implements UserDetails{
 //	    return listaTermina.stream().filter(o -> o.getTermin() == termin).findFirst().isPresent();
 
 	}
-	public Long getVersion() {
-		return version;
-	}
-	public void setVersion(Long version) {
-		this.version = version;
-	}
+//	public Long getVersion() {
+//		return version;
+//	}
+//	public void setVersion(Long version) {
+//		this.version = version;
+//	}
 //	public Set<SlobodniTermin> getListaSlobodnihTermina() {
 //		return listaSlobodnihTermina;
 //	}

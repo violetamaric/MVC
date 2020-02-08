@@ -16,6 +16,8 @@ public class SalaDTO {
 	private int tipSale;
 
 	private Long klinikaID;
+	
+
 
 	private Set<TerminDTO> zauzetiTermini = new HashSet<TerminDTO>();
 
@@ -44,6 +46,9 @@ public class SalaDTO {
 		this.klinikaID = s.getKlinika().getId();
 		this.tipSale = s.getTipSale();
 	}
+
+	
+	
 
 	public Long getId() {
 		return id;
