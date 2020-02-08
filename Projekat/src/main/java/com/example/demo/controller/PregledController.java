@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.AdministratorKlinikeDTO;
 import com.example.demo.dto.LekarDTO;
+import com.example.demo.dto.OperacijaDTO;
 import com.example.demo.dto.PacijentDTO;
 import com.example.demo.dto.PregledDTO;
 import com.example.demo.dto.SalaDTO;
@@ -36,6 +37,7 @@ import com.example.demo.model.AdministratorKlinike;
 import com.example.demo.model.Klinika;
 import com.example.demo.model.Lekar;
 import com.example.demo.model.OdmorOdsustvoLekar;
+import com.example.demo.model.Operacija;
 import com.example.demo.model.Pacijent;
 import com.example.demo.model.Pregled;
 import com.example.demo.model.Sala;
@@ -806,6 +808,65 @@ public class PregledController {
 		}
 
 		return new ResponseEntity<>(new PregledDTO(pregled), HttpStatus.OK);
+
+
+	}
+	
+	
+	@PostMapping(value = "/zakazivanjeOperacijeLekar")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('LEKAR')")
+	public ResponseEntity<?> zakazivanjeOperacijeLekar(@RequestBody OperacijaDTO operacijaDTO, Principal pr) {
+		System.out.println("*************");
+
+		Lekar lekar = lekarService.findByEmail(pr.getName());
+		
+		System.out.println("dodavanje nove operacije");
+//		System.out.println(pregledDTO);
+		Operacija operacija = new Operacija();
+		
+		
+		operacija.setDatum(operacijaDTO.getDatum());
+		
+		Klinika klinika = lekar.getKlinika();
+		operacija.setKlinika(klinika);
+		
+//		operacija.setLekar(lekar); 
+		operacija.setTermin(operacijaDTO.getTermin());
+		
+		Pacijent pacijent = pacijentService.findByEmail(operacijaDTO.getPacijentEmail());
+		operacija.setPacijent(pacijent);
+		operacija.setStatus(0);
+		
+		
+		operacija.setTipOperacije(operacijaDTO.getTipOperacije());
+		
+		operacija.setCena(3000); 
+		
+		operacija = operacijaService.save(operacija);
+		
+		klinika.getListaOperacija().add(operacija);
+		klinika = klinikaService.save(klinika);
+		
+		Set<AdministratorKlinike> ak = klinika.getListaAdminKlinike();
+
+		for (AdministratorKlinike AK : ak) {
+			AdministratorKlinikeDTO akDTO = new AdministratorKlinikeDTO(AK);
+			String subject = "Zahtev za operaciju";
+			String text = "Postovani " + AK.getIme() + " " + AK.getPrezime() + ",\n\n imate novi zahtev za operaciju.";
+
+			System.out.println(text);
+
+			// slanje emaila
+			try {
+				emailService.poslatiOdgovorAdminuK(akDTO, subject, text);
+			} catch (Exception e) {
+				logger.info("Greska prilikom slanja emaila: " + e.getMessage());
+				return new ResponseEntity<>("Mail nije poslat", HttpStatus.BAD_REQUEST);
+			}
+		}
+
+		return new ResponseEntity<>(new OperacijaDTO(operacija), HttpStatus.OK);
 
 
 	}
