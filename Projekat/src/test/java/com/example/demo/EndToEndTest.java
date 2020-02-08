@@ -1,5 +1,7 @@
 package com.example.demo;
 
+import org.aspectj.lang.annotation.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
@@ -9,8 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
 
 import com.example.demo.web.Login;
 import com.example.demo.web.PocetnaStrana;
@@ -21,7 +21,7 @@ import com.example.demo.web.PocetnaStrana;
 //	2. Ja pacijent zelim da zakazem jedan unapred definisan termin
 //	3. Ja pacijent zelim da vidim zakazani pregled
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @TestPropertySource("classpath:test.properties")
 public class EndToEndTest {
 	
@@ -32,7 +32,7 @@ public class EndToEndTest {
 
     private PocetnaStrana pocetna;
 
-    @BeforeMethod
+    @Before
     public void setUp() {
     	   System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver.exe");
            browser = new ChromeDriver();
@@ -66,11 +66,11 @@ public class EndToEndTest {
 		
 	}
 	
-    @AfterMethod
-    public void tearDown() {
-        browser.close();
-    }
-	
+//    @After
+//    public void tearDown() {
+//        browser.close();
+//    }
+//	
 	
 	
 	
