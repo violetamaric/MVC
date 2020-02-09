@@ -854,9 +854,7 @@ public class PregledController {
 
 	}
 
-	
-
-	//vrati mi listu termina za neki datum (lekar zakazuje)
+	// vrati mi listu termina za neki datum (lekar zakazuje)
 	@PostMapping(value = "/getTerminiLekaraZaDatum")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('LEKAR')")
