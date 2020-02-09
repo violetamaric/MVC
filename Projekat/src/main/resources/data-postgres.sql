@@ -128,6 +128,7 @@ insert into tip_pregleda_klinika (tip_pregleda_id, klinika_id) values (5,3);
 insert into tip_pregleda_klinika (tip_pregleda_id, klinika_id) values (6,3);
 insert into tip_pregleda_klinika (tip_pregleda_id, klinika_id) values (7,3);
 
+
 insert into medicinska_sestra_pacijent (pacijent_id, medicinska_sestra_id) values (2, 1);
 insert into medicinska_sestra_pacijent (pacijent_id, medicinska_sestra_id) values (2, 2);
 insert into medicinska_sestra_pacijent (pacijent_id, medicinska_sestra_id) values (3, 1);

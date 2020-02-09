@@ -136,6 +136,7 @@ public class PregledController {
 	@PostMapping(path = "/newST", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 //	@PreAuthorize("hasAuthority('PACIJENT')")
+	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
 	public ResponseEntity<?> noviPregledST(@RequestBody PregledDTO pregledDTO) {
 		System.out.println("dodavanje novog pregleda ST");
 		System.out.println(pregledDTO);
@@ -226,7 +227,7 @@ public class PregledController {
 	}
 
 	@GetMapping(value = "/{id}")
-	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
+//	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
 	public ResponseEntity<PregledDTO> getPregled(@PathVariable Long id) {
 
 		Pregled pregled = pregledService.findOne(id);
@@ -384,7 +385,7 @@ public class PregledController {
 
 	@PutMapping(path = "/potvrda/{id}")
 	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('PACIJENT')")
+//	@PreAuthorize("hasAuthority('PACIJENT')")
 	public ResponseEntity<PregledDTO> potvrdiPregled(@PathVariable Long id) {
 		System.out.println("POTVRDA PREGLEDA");
 
@@ -410,7 +411,7 @@ public class PregledController {
 
 	@PutMapping(path = "/odbijanje/{id}")
 	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('PACIJENT')")
+//	@PreAuthorize("hasAuthority('PACIJENT')")
 	public ResponseEntity<PregledDTO> odbijPregled(@PathVariable Long id) {
 		System.out.println("DBIJANJE PREGLEDA");
 		Pregled pregled = pregledService.findById(id);
@@ -510,7 +511,7 @@ public class PregledController {
 	// pronalazak sala slobodnih za taj teremin i datum za PREGLED
 	@GetMapping(value = "/pronadjiSaleZaTajTermin/{idP}")
 	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
+//	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
 	public ResponseEntity<List<SalaDTO>> getSaleTermin(@PathVariable Long idP) {
 
 		Pregled pregled = pregledService.findById(idP);
@@ -641,7 +642,7 @@ public class PregledController {
 	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
 	@PostMapping(path = "/rezervisanjeSale", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
+//	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
 	public ResponseEntity<String> rezervisanjeSale(@RequestBody PregledDTO pDTO) {
 		System.out.println();
 		System.out.println("......... Rezervisanje sale ..... ");
@@ -722,13 +723,13 @@ public class PregledController {
 			return new ResponseEntity<>("Mail nije poslat2", HttpStatus.BAD_REQUEST);
 		}
 
-		return new ResponseEntity<>("uspesno rezervisana sala1", HttpStatus.OK);
+		return new ResponseEntity<>("Uspesno rezervisana sala!", HttpStatus.OK);
 	}
 
 	// metoda koja vraca listu slobodnih lekara za taj datum i termin
 	@PostMapping(path = "/pronadjiLekaraZaPregled", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
+//	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
 	public ResponseEntity<List<LekarDTO>> slobodanLekar(@RequestBody PregledDTO pDTO) {
 
 		List<LekarDTO> listaSlobodnihLekara = new ArrayList<LekarDTO>();

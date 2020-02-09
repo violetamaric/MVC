@@ -142,7 +142,7 @@ public class KlinikaController {
 
 	@GetMapping(value = "/listaLekaraKlinika/{id}")
 	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('ADMIN_KLINIKE') or hasAuthority('PACIJENT')")
+//	@PreAuthorize("hasAuthority('ADMIN_KLINIKE') or hasAuthority('PACIJENT')")
 	public ResponseEntity<List<LekarDTO>> getKlinikaLekari(@PathVariable Long id) {
 		System.out.println("//////////////////// KLINIKA LISTA LEKARA /////////////////////////		");
 		Klinika klinika = klinikaService.findById(id);
@@ -312,10 +312,8 @@ public class KlinikaController {
 
 		Klinika klinika = klinikaService.findById(id);
 		int temp = klinika.getOcena();
-		klinika.builder()
-		.ocena((temp + ocena) / 2)
-		.build();
-//		klinika.setOcena((temp + ocena) / 2);
+
+		klinika.setOcena((temp + ocena) / 2);
 		klinikaService.save(klinika);
 		Pregled pregled = pregledService.findById(pregled_id);
 		if (pregled.getStatus() == 3) {
