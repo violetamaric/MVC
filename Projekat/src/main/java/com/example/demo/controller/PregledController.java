@@ -135,7 +135,7 @@ public class PregledController {
 	@PostMapping(path = "/newST", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 //	@PreAuthorize("hasAuthority('PACIJENT')")
-	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 	public ResponseEntity<?> noviPregledST(@RequestBody PregledDTO pregledDTO) {
 		System.out.println("dodavanje novog pregleda ST");
 		System.out.println(pregledDTO);
@@ -397,6 +397,9 @@ public class PregledController {
 		lekar.getListaPregleda().add(pregled);
 		// sala.getZauzetiTermini().add(termin);
 		lekarService.save(lekar);
+		
+		Pacijent pacijent = pacijentService.findByID(pregled.getPacijent().getId());
+		
 		// salaService.save(sala);
 		return new ResponseEntity<>(new PregledDTO(pregled), HttpStatus.OK);
 	}
@@ -672,17 +675,7 @@ public class PregledController {
 				lekarService.save(l);
 				s.getZauzetiTermini().add(t);
 				salaService.save(s);
-				// odradi ko operacije ovako!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//				l.getListaZauzetihTermina().add(t);
-//				lekarService.save(l);
-//				Set<Pregled> lekarPregledii = l.getListaPregleda();
-//				lekarPregledii.add(p);
-//				l.setListaPregleda(lekarPregledii);
-////				le.getListaOperacija().add(p);
-//				lekarService.save(l);
-				// premjestiti kod vioeletekad pacijent potvrdi pregled,
-				// a a ko odbije pregled izbaciti iz liste zauzetih termina !
-
+				
 			}
 		}
 
@@ -744,27 +737,30 @@ public class PregledController {
 
 		// Lekar lekar = lekarService.findByEmail(ooDTO.getEmailL());
 		for (Lekar lekar : listaSvihLekaraKlinike) {
+			if (lekar.getStatus() == 2) {
+				continue;
+			}
 			System.out.println("-----> " + lekar.getId() + " " + lekar.getIme() + " " + lekar.getPrezime());
 			boolean flag = false;
 //				Set<Termin> pregledi = lekar.getListaZauzetihTermina();
-			for (Pregled t : pregledService.findAll()) {
-				if (t.getStatus() == 1) {
-					if (t.getLekar().getId() == lekar.getId()) {
-						System.out.println("LEKAR ISTI");
-						if (t.getTermin() == pDTO.getTermin()) {
-							System.out.println("TERMIN ISTI");
-							if (t.getDatum().compareTo(pDTO.getDatum()) == 0) {
-								System.out.println("Zauzet lekar :");
-								System.out.println(lekar.getId() + " " + lekar.getIme() + " " + lekar.getPrezime());
-								System.out.println();
-								flag = true;
-								break;
-
-							}
+			for (Termin t : terminService.findAll()) {
+//				if (t.getStatus() == 1) {
+				if (t.getLekar().getId() == lekar.getId()) {
+					System.out.println("LEKAR ISTI");
+					if (t.getTermin() == pDTO.getTermin()) {
+						System.out.println("TERMIN ISTI");
+						if (t.getDatumPocetka().compareTo(pDTO.getDatum()) == 0) {
+							System.out.println("Zauzet lekar :");
+							System.out.println(lekar.getId() + " " + lekar.getIme() + " " + lekar.getPrezime());
+							System.out.println();
+							flag = true;
+							break;
 
 						}
+
 					}
 				}
+				// }
 
 			}
 
@@ -857,11 +853,8 @@ public class PregledController {
 		return new ResponseEntity<>(new PregledDTO(pregled), HttpStatus.OK);
 
 	}
-	
-	
-	
-	
-	//vrati mi listu termina za neki datum (lekar zakazuje)
+
+	// vrati mi listu termina za neki datum (lekar zakazuje)
 	@PostMapping(value = "/getTerminiLekaraZaDatum")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('LEKAR')")

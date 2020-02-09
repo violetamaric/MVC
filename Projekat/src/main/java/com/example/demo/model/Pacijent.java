@@ -81,10 +81,10 @@ public class Pacijent implements UserDetails {
 	@ManyToMany(mappedBy = "listaPacijenata")
 	private Set<Klinika> listaKlinika = new HashSet<Klinika>();
 
-	@OneToMany(mappedBy = "pacijent", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "pacijent", fetch = FetchType.LAZY)
 	private Set<Operacija> listaOperacija = new HashSet<Operacija>();
 
-	@OneToMany(mappedBy = "pacijent", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "pacijent", fetch = FetchType.LAZY)
 	private Set<Pregled> listaPregleda = new HashSet<Pregled>();
 
 	@ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
