@@ -63,7 +63,7 @@ public class EndToEndTest {
 	}
 
 	@Test
-	public void brzoZakazivanje() throws InterruptedException {
+	public void postupnoZakazivanje() throws InterruptedException {
 
 		pocetna.vidljivaKarticaBrzoZakazivanje();
 		pocetna.getUnapredDef().click();

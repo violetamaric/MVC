@@ -7,7 +7,8 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
 	EndToEndTest.class,
 	TestPregled.class,
-	TestSale.class
+	TestSale.class,
+	E2ERezervisanjeSala.class
 //	TestPacijent.class
 	
 })
