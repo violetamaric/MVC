@@ -1,6 +1,7 @@
 package com.example.demo.repository;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -8,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import com.example.demo.model.Klinika;
+import com.example.demo.model.TipPregleda;
 
 public interface KlinikaRepository extends JpaRepository<Klinika, Long>{
 
@@ -22,6 +24,8 @@ public interface KlinikaRepository extends JpaRepository<Klinika, Long>{
 	Integer nedeljniNivo(Long id, Date pocDatum, Date krajDatum);
 	@Query("select count(*) from Pregled p where p.status in (3,4,5,6) and p.klinika.id =?1 and p.termin = ?2 and p.datum between ?3 and ?4")
 	Integer dnevniNivo(Long id, Integer termin, Date pocDatum, Date krajDatum);
-	
+	@Query("select k from Klinika k inner join k.listaTipovaPregleda ltp where ltp.id = ?1")
+	List<Klinika> findKlinike(Long id);
+
 
 }

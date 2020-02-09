@@ -32,23 +32,12 @@ public class Termin {
 	@Column(name = "termin", nullable = false)
 	private int termin;
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne( fetch = FetchType.LAZY)
 	private Sala sala;
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Lekar lekar;
 	
-//	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//	private Klinika klinika;
-
-//	@Column(name = "datumKraja", nullable = false)
-//	private Date datumKraja;
-
-//	@Column(name = "status", nullable = true)
-//	private boolean status; 
-
-//	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-//	private RadniDan radniDan;
 
 	public Long getId() {
 		return id;

@@ -17,4 +17,7 @@ public class ReceptService {
 	public void delete(Recept recept) {
 		receptRepository.delete(recept);
 	}
+	public Recept findByID(Long id) {
+		return receptRepository.findById(id).orElseGet(null);
+	}
 }

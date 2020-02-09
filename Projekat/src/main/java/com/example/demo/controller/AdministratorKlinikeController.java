@@ -4,11 +4,18 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,15 +25,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.controller.AdministratorKCController.PasswordChanger;
+import com.example.demo.dto.AdministratorKCDTO;
 import com.example.demo.dto.AdministratorKlinikeDTO;
 import com.example.demo.dto.LekarDTO;
+import com.example.demo.model.AdministratorKC;
 import com.example.demo.model.AdministratorKlinike;
 import com.example.demo.model.Klinika;
 import com.example.demo.model.Lekar;
 import com.example.demo.service.AdministratorKlinikeService;
 import com.example.demo.service.KlinikaService;
 import com.example.demo.service.LekarService;
-
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping(value = "/api/adminKlinike", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AdministratorKlinikeController {
@@ -67,6 +77,15 @@ public class AdministratorKlinikeController {
 		return new ResponseEntity<>(administratorKlinikeDTO, HttpStatus.OK);
 	}
 
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private AuthenticationManager authenticationManager;
+
+	
+	
 //	@GetMapping(value = "/getLekarByEmail")
 //	@CrossOrigin(origins = "http://localhost:3000")
 //	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
@@ -176,4 +195,53 @@ public class AdministratorKlinikeController {
 
 		return new ResponseEntity<>(new LekarDTO(lekar), HttpStatus.CREATED);
 	}
+
+	
+	//promena lozinke
+	@PutMapping(path = "/promeniLozinku", consumes = "application/json")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
+	public ResponseEntity<?> promeniLozinku(@RequestBody PasswordChanger passCh, Principal pr) {
+
+		// a student must exist
+		System.out.println("Pacijent UPDRATE LOZINKA");
+		AdministratorKlinike adminKC = administratorKlinikeService.findByEmail(pr.getName());
+		
+		
+		System.out.println("LOZINKA: "+ adminKC.getLozinka());
+		
+		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+		String username = currentUser.getName();
+		System.out.println(username);
+		if (authenticationManager != null) {
+			System.out.println("PROMENJENA LOZINKA");
+
+			final Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, passCh.oldPassword));
+//			Collection<?> roles = pacijent.getAuthorities();
+//
+//			String jwt = tokenUtils.tokenPacijent(pacijent, (Authority) roles.iterator().next());
+//
+//			int expiresIn = tokenUtils.getExpiredIn();
+//
+//			return ResponseEntity.ok(new UserTokenState(jwt, expiresIn, ((Authority) roles.iterator().next()).getUloga(),((Pacijent)authentication.getPrincipal()).getEmail()));
+			System.err.println("-----");
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+			System.out.println("-----");
+		} else {
+			System.out.println("NE MOZE SE PROMENITI LOZINKA");
+
+			return new ResponseEntity<>(new AdministratorKlinikeDTO(adminKC), HttpStatus.OK);
+		}
+
+		adminKC.setLozinka(passwordEncoder.encode(passCh.newPassword));
+//		pacijent.setLbo(pacijentDTO.getLbo());
+		adminKC.setStatus(1);
+		adminKC = administratorKlinikeService.save(adminKC);
+		return new ResponseEntity<>(new AdministratorKlinikeDTO(adminKC), HttpStatus.OK);
+	}
+	static class PasswordChanger {
+		public String oldPassword;
+		public String newPassword;
+	}
+
 }

@@ -1,39 +1,39 @@
 package com.example.demo.model;
 
 public class UserTokenState {
-	
-    private String accessToken;
-    private Long expiresIn;
-    private String uloga;
-    private String email;
 
-    public UserTokenState() {
-        this.accessToken = null;
-        this.expiresIn = null;
-    }
+	private String accessToken;
+	private Long expiresIn;
+	private String uloga;
+	private String email;
 
-    public UserTokenState(String accessToken, long expiresIn, String uloga, String email) {
-        this.accessToken = accessToken;
-        this.expiresIn = expiresIn;
-        this.uloga = uloga;
-        this.email = email;
-    }
+	public UserTokenState() {
+		this.accessToken = null;
+		this.expiresIn = null;
+	}
 
-    public String getAccessToken() {
-        return accessToken;
-    }
+	public UserTokenState(String accessToken, long expiresIn, String uloga, String email) {
+		this.accessToken = accessToken;
+		this.expiresIn = expiresIn;
+		this.uloga = uloga;
+		this.email = email;
+	}
 
-    public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
-    }
+	public String getAccessToken() {
+		return accessToken;
+	}
 
-    public Long getExpiresIn() {
-        return expiresIn;
-    }
+	public void setAccessToken(String accessToken) {
+		this.accessToken = accessToken;
+	}
 
-    public void setExpiresIn(Long expiresIn) {
-        this.expiresIn = expiresIn;
-    }
+	public Long getExpiresIn() {
+		return expiresIn;
+	}
+
+	public void setExpiresIn(Long expiresIn) {
+		this.expiresIn = expiresIn;
+	}
 
 	public String getUloga() {
 		return uloga;
@@ -50,5 +50,5 @@ public class UserTokenState {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-    
+
 }

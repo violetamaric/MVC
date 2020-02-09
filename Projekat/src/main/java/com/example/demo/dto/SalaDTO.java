@@ -13,26 +13,30 @@ public class SalaDTO {
 
 	private int broj;
 
+	private int tipSale;
+
 	private Long klinikaID;
+	
+
 
 	private Set<TerminDTO> zauzetiTermini = new HashSet<TerminDTO>();
-	
-	
+
 
 	@Override
 	public String toString() {
-		return "SalaDTO [id=" + id + ", naziv=" + naziv + ", broj=" + broj + ", klinikaID=" + klinikaID
-				+ ", zauzetiTermini=" + zauzetiTermini + "]";
+		return "SalaDTO [id=" + id + ", naziv=" + naziv + ", broj=" + broj + ", tipSale=" + tipSale + ", klinikaID="
+				+ klinikaID + ", zauzetiTermini=" + zauzetiTermini + "]";
 	}
 
 	public SalaDTO() {
 	}
 
-	public SalaDTO(Long id, String naziv, int broj, Long klinikaID) {
+	public SalaDTO(Long id, int tipSale, String naziv, int broj, Long klinikaID) {
 		this.id = id;
 		this.naziv = naziv;
 		this.broj = broj;
 		this.klinikaID = klinikaID;
+		this.tipSale = tipSale;
 	}
 	
 	public SalaDTO(Sala s) {
@@ -40,8 +44,11 @@ public class SalaDTO {
 		this.naziv = s.getNaziv();
 		this.broj = s.getBroj();
 		this.klinikaID = s.getKlinika().getId();
-		
+		this.tipSale = s.getTipSale();
 	}
+
+	
+	
 
 	public Long getId() {
 		return id;
@@ -57,6 +64,15 @@ public class SalaDTO {
 
 	public void setNaziv(String naziv) {
 		this.naziv = naziv;
+	}
+	
+
+	public int getTipSale() {
+		return tipSale;
+	}
+
+	public void setTipSale(int tipSale) {
+		this.tipSale = tipSale;
 	}
 
 	public int getBroj() {

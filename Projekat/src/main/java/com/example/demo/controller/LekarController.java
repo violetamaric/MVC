@@ -12,6 +12,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+
+import org.springframework.transaction.annotation.Propagation;
+
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,23 +31,33 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.AdministratorKlinikeDTO;
 import com.example.demo.dto.LekarDTO;
 import com.example.demo.dto.OdmorOdsustvoLDTO;
 import com.example.demo.dto.PacijentDTO;
 import com.example.demo.dto.PregledDTO;
+import com.example.demo.dto.SalaDTO;
 import com.example.demo.dto.TerminDTO;
+import com.example.demo.model.AdministratorKlinike;
+import com.example.demo.model.Klinika;
 import com.example.demo.model.Lekar;
 import com.example.demo.model.OdmorOdsustvoLekar;
+import com.example.demo.model.Operacija;
 import com.example.demo.model.Pacijent;
 import com.example.demo.model.Pregled;
 import com.example.demo.model.Termin;
+import com.example.demo.model.TipPregleda;
+import com.example.demo.service.KlinikaService;
 import com.example.demo.service.LekarService;
 import com.example.demo.service.PacijentService;
 import com.example.demo.service.PregledService;
+import com.example.demo.service.SalaService;
 import com.example.demo.service.TerminService;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping(value = "/api/lekari", produces = MediaType.APPLICATION_JSON_VALUE)
+//@Transactional(readOnly = true)
 public class LekarController {
 
 	@Autowired
@@ -48,9 +68,21 @@ public class LekarController {
 
 	@Autowired
 	private PregledService pregledService;
+	
+	@Autowired
+	private KlinikaService klinikaService;
+	
+	@Autowired
+	private SalaService salaService;
 
 	@Autowired
 	private TerminService terminService;
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private AuthenticationManager authenticationManager;
 
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<LekarDTO> getLekar(@PathVariable Long id) {
@@ -93,6 +125,59 @@ public class LekarController {
 
 		return new ResponseEntity<>(lekarDTO, HttpStatus.OK);
 	}
+	//lekari koji se mogu mijenjati i brisati
+	@GetMapping(value = "/allIBlekari/{idKlinike}")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
+	public ResponseEntity<List<LekarDTO>> getAllBIlekari(@PathVariable Long idKlinike) {
+
+//		List<Sala> ret = new ArrayList<Sala>();
+		Klinika klinika = klinikaService.findById(idKlinike);
+		List<Lekar> lekari = lekarService.findAll();
+//		List<Pregled> pregledi = pregledService.findAll();
+		// convert students to DTOs
+		System.out.println("****************************************************************");
+		Date datumDanasnji = new Date();
+		List<LekarDTO> lekariDTO = new ArrayList<>();
+
+		for (Lekar p : lekari) {
+			if (p.getKlinika().getId() == klinika.getId()) {
+
+				for (Operacija o: p.getListaOperacija()) {
+					if (o.getDatum().before(datumDanasnji)) {
+						for(Pregled pp : p.getListaPregleda()) {
+							if (pp.getDatum().before(datumDanasnji)) {
+								System.out.println("Datum: " + o.getDatum());
+								if (o.getListaLekara().contains(p)) {
+									if (!lekariDTO.contains(p)) {
+//												ret.add(p);
+										System.out.println(p);
+										lekariDTO.add(new LekarDTO(p));
+									}
+								}
+							}else {
+								continue;
+							}
+						}
+						
+
+					} else {
+						continue;
+					}
+
+				}
+				if (p.getListaOperacija().size() == 0 && p.getListaPregleda().size() == 0) {
+					System.out.println(p);
+					lekariDTO.add(new LekarDTO(p));
+				}
+
+			}
+
+		}
+
+		System.out.println("****************************************************************");
+		return new ResponseEntity<>(lekariDTO, HttpStatus.OK);
+	}
 
 	@PutMapping(path = "/update", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
@@ -101,12 +186,12 @@ public class LekarController {
 
 		// a student must exist
 		System.out.println("LEKAR UPDRATE");
-		Lekar lekar = lekarService.findByEmail(lekarDTO.getEmail());
+		Lekar lekar = lekarService.findOne(lekarDTO.getId());
 //		System.out.println("Lekar update: " + lekar.getEmail());
 //		if (lekar == null) {
 //			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 //		}
-
+//		lekar.setId(lekarDTO.getId());
 		lekar.setIme(lekarDTO.getIme());
 		lekar.setPrezime(lekarDTO.getPrezime());
 		lekar.setTelefon(lekarDTO.getTelefon());
@@ -131,7 +216,7 @@ public class LekarController {
 
 		List<PacijentDTO> lista = new ArrayList<>();
 		for (Pacijent p : listaSvihP) {
-			if (p.getOdobrenaRegistracija() == true) {
+			if (p.getOdobrenaRegistracija() == 2) {
 
 				System.out.println(p);
 				PacijentDTO pDTO = new PacijentDTO(p);
@@ -229,10 +314,10 @@ public class LekarController {
 		datum.setHours(0);
 		datum.setMinutes(0);
 		datum.setSeconds(0);
-		
+
 		Date date = new Date();
-		Calendar c = Calendar.getInstance(); 
-		c.setTime(datum); 
+		Calendar c = Calendar.getInstance();
+		c.setTime(datum);
 		date = c.getTime();
 		date.setHours(0);
 		date.setMinutes(0);
@@ -240,8 +325,8 @@ public class LekarController {
 
 		System.out.println(date);
 		Date date2 = new Date();
-		c = Calendar.getInstance(); 
-		c.setTime(datum); 
+		c = Calendar.getInstance();
+		c.setTime(datum);
 		c.add(Calendar.DATE, 1);
 		date2 = c.getTime();
 		System.out.println(date2);
@@ -263,9 +348,11 @@ public class LekarController {
 		Set<OdmorOdsustvoLekar> listaool = lekar.getListaOdmorOdsustvo();
 		int flag = 0;
 		for (OdmorOdsustvoLekar ool : listaool) {
-			if (ool.getDatumOd().compareTo(datum) * datum.compareTo(ool.getDatumDo()) >= 0) {
-				flag = 1;
-				break;
+			if(ool.getStatus() ==  1) {
+				if (ool.getDatumOd().compareTo(datum) * datum.compareTo(ool.getDatumDo()) >= 0) {
+					flag = 1;
+					break;
+				}
 			}
 
 		}
@@ -299,8 +386,10 @@ public class LekarController {
 
 	}
 
+
 	@PutMapping(path = "/oceni/{id}/{ocena}/{pregled_id}", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 	public ResponseEntity<LekarDTO> oceniLekara(@PathVariable Long id, @PathVariable int ocena,
 			@PathVariable Long pregled_id) {
 
@@ -355,7 +444,8 @@ public class LekarController {
 		System.out.println("*************");
 
 		Lekar lekar = lekarService.findByEmail(p.getName());
-		Pacijent pacijent = pacijentiSevice.findByEmail(pacijentDTO.getEmail());
+
+		Pacijent pacijent = pacijentiSevice.findByID(pacijentDTO.getId());
 
 		Set<Pacijent> listaPacijenta = lekar.getListaPacijenata();
 		// dodeli pacijente lekaru
@@ -368,6 +458,48 @@ public class LekarController {
 
 		return new ResponseEntity<>("NE MOZE", HttpStatus.OK);
 
+	}
+
+
+	//menjanje lozinke
+	
+	@PutMapping(path = "/promeniLozinku", consumes = "application/json")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('LEKAR')")
+	public ResponseEntity<?> promeniLozinku(@RequestBody PasswordChanger passCh, Principal pr) {
+
+		// a student must exist
+		System.out.println("Pacijent UPDRATE LOZINKA");
+		Lekar adminKC = lekarService.findByEmail(pr.getName());
+		
+		
+		System.out.println("LOZINKA: "+ adminKC.getLozinka());
+		
+		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+		String username = currentUser.getName();
+		System.out.println(username);
+		if (authenticationManager != null) {
+			System.out.println("PROMENJENA LOZINKA");
+
+			final Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, passCh.oldPassword));
+
+			System.err.println("-----");
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+			System.out.println("-----");
+		} else {
+			System.out.println("NE MOZE SE PROMENITI LOZINKA");
+
+			return new ResponseEntity<>(new LekarDTO(adminKC), HttpStatus.OK);
+		}
+		
+		adminKC.setLozinka(passwordEncoder.encode(passCh.newPassword));
+		adminKC.setStatus(1);
+		adminKC = lekarService.save(adminKC);
+		return new ResponseEntity<>(new LekarDTO(adminKC), HttpStatus.OK);
+	}
+	static class PasswordChanger {
+		public String oldPassword;
+		public String newPassword;
 	}
 
 }

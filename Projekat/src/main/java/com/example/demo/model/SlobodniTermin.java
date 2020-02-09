@@ -15,6 +15,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Version;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class SlobodniTermin {
 
@@ -24,30 +26,21 @@ public class SlobodniTermin {
 
 	@Column(name = "datum", nullable = false)
 	private Date datum;
-	
-	@Column(name="trajanje", nullable=true)
-	private Time trajanje; //dateTime
-	
+
 	@Column(name="popust", nullable=false)
 	private double popust;
 	
 	@Column(name="termin", nullable=false)
 	private int termin;
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	private TipPregleda tipPregleda;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Sala sala;
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Lekar lekar;
-	
-	
-
-
-//	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-//	private MedicinskaSestra medicinskaSestra;
 
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -89,13 +82,7 @@ public class SlobodniTermin {
 		this.tipPregleda = tipPregleda;
 	}
 
-	public Time getTrajanje() {
-		return trajanje;
-	}
 
-	public void setTrajanje(Time trajanje) {
-		this.trajanje = trajanje;
-	}
 
 	public Sala getSala() {
 		return sala;

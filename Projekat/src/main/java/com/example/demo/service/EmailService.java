@@ -7,6 +7,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.dto.AdministratorKlinikeDTO;
 import com.example.demo.dto.LekarDTO;
@@ -41,7 +42,7 @@ public class EmailService {
 
 		System.out.println("Email poslat!");
 	}
-	
+//	@Transactional
 	@Async
 	public void poslatiOdgovorPacijentu(PacijentDTO pacijentDTO, String subject, String text) throws MailException, InterruptedException {
 
@@ -98,6 +99,7 @@ public class EmailService {
 		System.out.println("Email poslat!");
 	}
 	
+//	@Transactional
 	@Async
 	public void poslatiOdgovorLekaru(LekarDTO lekarDTO, String subject, String text) throws MailException, InterruptedException {
 
