@@ -173,7 +173,7 @@ insert into odmor_odsustvo_medicinska_sestra (klinika_id,medicinska_sestra_id, d
 
 insert into odmor_odsustvo_lekar (klinika_id,lekar_id, datum_od, datum_do, opis, tip, status) values (3,2, '2020-01-21', '2020-01-23', 'Slobodni dani.', 0, 1);
 insert into odmor_odsustvo_lekar (klinika_id,lekar_id, datum_od, datum_do, opis, tip, status) values (3,2, '2020-02-20', '2020-02-22', 'Slobodni dani.', 0, 1);
-insert into odmor_odsustvo_lekar (klinika_id,lekar_id, datum_od, datum_do, opis, tip, status) values (3,2, '2020-02-18', '2020-02-19', 'Put u Ljubljanu.', 1, 0);
+insert into odmor_odsustvo_lekar (klinika_id,lekar_id, datum_od, datum_do, opis, tip, status) values (3,2, '2020-02-17', '2020-02-18', 'Put u Ljubljanu.', 1, 0);
 insert into odmor_odsustvo_lekar (klinika_id,lekar_id, datum_od, datum_do, opis, tip, status) values (3,1, '2020-03-05', '2020-03-06', 'Seminar.', 0, 0);
 insert into odmor_odsustvo_lekar (klinika_id,lekar_id, datum_od, datum_do, opis, tip, status) values (3,4, '2020-03-15', '2020-03-19', 'Smrtan slucaj u porodici', 0, 1);
 insert into odmor_odsustvo_lekar (klinika_id,lekar_id, datum_od, datum_do, opis, tip, status) values (3,3, '2020-03-07', '2020-03-10', 'Putujem u Nemacku.', 0, 1);
@@ -196,6 +196,12 @@ insert into termin(datum_pocetka, termin, lekar_id, sala_id) values ('13-mar-202
 
 insert into termin(datum_pocetka, termin, lekar_id, sala_id) values ('15-mar-2020', 9, 10, 8);
 insert into termin(datum_pocetka, termin, lekar_id, sala_id) values ('15-mar-2020', 13, 2, 3);
+insert into termin(datum_pocetka, termin, lekar_id, sala_id) values ('15-mar-2020', 9, 2, 5);
+
+insert into termin(datum_pocetka, termin, lekar_id, sala_id) values ('18-mar-2020', 11, 1, 2);
+
+insert into termin(datum_pocetka, termin, lekar_id, sala_id) values ('19-mar-2020', 13, 2, 5);
+
 
 
 insert into termin (datum_pocetka, termin, sala_id, lekar_id ) values ('20-mar-2020', 11, 2, 1);
@@ -276,7 +282,5 @@ insert into recept (izvestajopregledu_id, lek_id, medicinska_sestra_id, medicins
 insert into slobodni_termin(datum, tip_pregleda_id, lekar_id, klinika_id, cena, status, popust, sala_id, termin) values ('15-mar-2020', 3, 2, 3, 1500, false, 50.0, 1, 9);
 insert into slobodni_termin(datum, tip_pregleda_id, lekar_id, klinika_id, cena, status, popust, sala_id, termin) values ('18-mar-2020', 4, 1, 3, 2000, false, 25.0, 2, 11);
 insert into slobodni_termin(datum, tip_pregleda_id, lekar_id, klinika_id, cena, status, popust, sala_id, termin) values ('19-mar-2020', 2, 2, 3, 3000, false, 10.0, 5, 13);
-
-
 
 
