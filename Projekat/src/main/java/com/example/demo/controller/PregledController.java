@@ -90,13 +90,10 @@ public class PregledController {
 //	@PreAuthorize("hasAuthority('PACIJENT')")
 	public ResponseEntity<?> noviPregled(@RequestBody PregledDTO pregledDTO) {
 
-		// TODO 1: PROVERITI DA LI UOPSTE MOZE TOG DATUMA DA ZAKAZE
-		
-		
 		System.out.println("dodavanje novog pregleda");
 		System.out.println(pregledDTO);
 		Pregled pregled = new Pregled();
-		pregled.setCena(pregledDTO.getCena());
+//		pregled.setCena(pregledDTO.getCena());
 		pregled.setDatum(pregledDTO.getDatum());
 		Klinika klinika = klinikaService.findById(pregledDTO.getKlinikaID());
 		pregled.setKlinika(klinika);
@@ -108,12 +105,12 @@ public class PregledController {
 		pregled.setStatus(0);
 		TipPregleda tp = tipPregledaService.findOne(pregledDTO.getTipPregledaID());
 		pregled.setTipPregleda(tp);
-
+		pregled.setCena(tp.getCena());
 		pregled = pregledService.save(pregled);
 
 
-		klinika.getListaPregleda().add(pregled);
-		klinika = klinikaService.save(klinika);
+//		klinika.getListaPregleda().add(pregled);
+//		klinika = klinikaService.save(klinika);
 
 		Set<AdministratorKlinike> ak = klinika.getListaAdminKlinike();
 
@@ -328,12 +325,13 @@ public class PregledController {
 
 		Lekar lekar = lekarService.findByEmail(p.getName());
 
-		Set<Pregled> pregledi = lekar.getListaPregleda();
+		List<Pregled> pregledi = pregledService.findAll();
 
 		List<PregledDTO> lista = new ArrayList<PregledDTO>();
 		for (Pregled pre : pregledi) {
 			System.out.println(pre.getStatus());
-			if (pre.getStatus() == 1) {
+			if (pre.getStatus() == 1 && pre.getLekar().getId() == lekar.getId()) {
+				
 				System.out.println("dodat");
 				PregledDTO pregledDTO = new PregledDTO(pre);
 				lista.add(pregledDTO);
@@ -351,7 +349,7 @@ public class PregledController {
 		List<Pregled> pregledi = pregledService.findAll();
 		List<PregledDTO> lista = new ArrayList<PregledDTO>();
 		for (Pregled s : pregledi) {
-			if (s.getKlinika().getId() == klinika.getId()) {
+			if (s.getKlinika().getId() == klinika.getId() && (s.getStatus()!=0 || s.getStatus()!=2)) {
 				PregledDTO pregledDTO = new PregledDTO(s);
 				lista.add(pregledDTO);
 			}
@@ -365,6 +363,7 @@ public class PregledController {
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 
+	//zahtjevi za pregled klinike
 	@GetMapping(value = "preuzmiZahtevePregledaKlinike/{id}")
 	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
 	public ResponseEntity<List<PregledDTO>> getZahteviPreglediKlinike(@PathVariable Long id) {
@@ -373,17 +372,13 @@ public class PregledController {
 		List<Pregled> pregledi = pregledService.findAll();
 		List<PregledDTO> lista = new ArrayList<PregledDTO>();
 		for (Pregled s : pregledi) {
-			if (s.getKlinika().getId() == klinika.getId() && s.getStatus() == 0) {
+			if (s.getKlinika().getId() == klinika.getId() && s.getStatus() == 0 && s.getSala()==null) {
 				PregledDTO pregledDTO = new PregledDTO(s);
 				lista.add(pregledDTO);
 			}
 		}
 
-		System.out.println("Lista  zahtjeva pregleda u klinici:" + klinika.getNaziv() + " ID: " + id);
-		for (PregledDTO ss : lista) {
-			System.out.println(ss);
-		}
-
+	
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 
@@ -397,12 +392,12 @@ public class PregledController {
 		System.out.println(new PregledDTO(pregled));
 		pregled.setStatus(1);
 		System.out.println(new PregledDTO(pregled));
-		Termin termin = new Termin();
-		termin.setDatumPocetka(pregled.getDatum());
-		termin.setTermin(pregled.getTermin());
-		termin.setLekar(pregled.getLekar());
-		termin.setSala(pregled.getSala());
-		terminService.save(termin);
+//		Termin termin = new Termin();
+//		termin.setDatumPocetka(pregled.getDatum());
+//		termin.setTermin(pregled.getTermin());
+//		termin.setLekar(pregled.getLekar());
+//		termin.setSala(pregled.getSala());
+//		terminService.save(termin);
 		Lekar lekar = lekarService.findOne(pregled.getLekar().getId());
 		Sala sala = salaService.findOne(pregled.getSala().getId());
 		pregledService.save(pregled);
@@ -423,6 +418,33 @@ public class PregledController {
 		pregled.setStatus(2);
 		System.out.println(new PregledDTO(pregled));
 		pregledService.save(pregled);
+		
+		List<Termin> terBrisanje = new ArrayList<Termin>();
+		
+		for(Termin t : terminService.findAll()) {
+			if(t.getDatumPocetka().compareTo(pregled.getDatum())==0 && t.getTermin() == pregled.getTermin() && t.getSala().getId() == pregled.getSala().getId() && t.getLekar().getId() == pregled.getLekar().getId()) {
+					Sala s = salaService.findById(t.getSala().getId());
+					s.getZauzetiTermini().remove(t);
+					salaService.save(s);
+					
+					Lekar l = lekarService.findById(t.getLekar().getId());
+					l.getListaZauzetihTermina().remove(t);
+					lekarService.save(l);
+					
+					terBrisanje.add(t);
+					
+			}
+		}
+		System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa");
+		System.out.println(terBrisanje.size());
+		for(Termin tt : terBrisanje) {
+			terminService.delete(tt);
+		}
+		
+		
+		
+		System.out.println(terBrisanje.size());
+		
 		return new ResponseEntity<>(new PregledDTO(pregled), HttpStatus.OK);
 	}
 
@@ -454,6 +476,31 @@ public class PregledController {
 			System.out.println("datum je otkazan");
 			pregled.setStatus(2);
 			pregledService.save(pregled);
+			List<Termin> terBrisanje = new ArrayList<Termin>();
+			
+			for(Termin t : terminService.findAll()) {
+				if(t.getDatumPocetka().compareTo(pregled.getDatum())==0 && t.getTermin() == pregled.getTermin() && t.getSala().getId() == pregled.getSala().getId() && t.getLekar().getId() == pregled.getLekar().getId()) {
+						Sala s = salaService.findById(t.getSala().getId());
+						s.getZauzetiTermini().remove(t);
+						salaService.save(s);
+						
+						Lekar l = lekarService.findById(t.getLekar().getId());
+						l.getListaZauzetihTermina().remove(t);
+						lekarService.save(l);
+						
+						terBrisanje.add(t);
+						
+				}
+			}
+			System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa");
+			System.out.println(terBrisanje.size());
+			for(Termin tt : terBrisanje) {
+				terminService.delete(tt);
+			}
+			
+			
+			
+			System.out.println(terBrisanje.size());
 			return new ResponseEntity<>(new PregledDTO(pregled), HttpStatus.OK);
 
 		}

@@ -153,10 +153,6 @@ insert into sala(naziv, broj, klinika_id, tip_sale) values ('Operaciona sala', 1
 insert into sala(naziv, broj, klinika_id, tip_sale) values ('Operaciona sala', 22, 3, 0);
 insert into sala(naziv, broj, klinika_id, tip_sale) values ('Operaciona sala', 225, 3, 0);
 
-insert into slobodni_termin(datum, tip_pregleda_id, lekar_id, klinika_id, cena, status, popust, sala_id, termin) values ('15-mar-2020 09:00', 3, 2, 3, 1500, false, 50.0, 1, 9);
-insert into slobodni_termin(datum, tip_pregleda_id, lekar_id, klinika_id, cena, status, popust, sala_id, termin) values ('18-mar-2020 11:00', 4, 1, 3, 2000, true, 25.0, 2, 11);
-insert into slobodni_termin(datum, tip_pregleda_id, lekar_id, klinika_id, cena, status, popust, sala_id, termin) values ('19-mar-2020 13:00', 2, 2, 3, 3000, false, 10.0, 5, 13);
-
 insert into operacija (status, datum, termin, tip_operacije, pacijent_id, cena, klinika_id) values (0, '17-mar-2020', 9, 'mala hiruska intervencija', 1, 10000, 1);
 insert into operacija (status, datum, termin, tip_operacije, sala_id, pacijent_id, cena, klinika_id) values (1, '13-mar-2020', 11, 'velika hiruska intervencija', 10, 2, 15000, 3);
 insert into operacija (status, datum, termin, tip_operacije,  pacijent_id, cena, klinika_id) values (0, '14-mar-2020', 11, 'mala hiruska intervencija',  3, 10000, 3);
@@ -276,6 +272,10 @@ insert into recept (izvestajopregledu_id, lek_id, medicinska_sestra_id, medicins
 insert into recept (izvestajopregledu_id, lek_id, medicinska_sestra_id, medicinska_sestra_overa) values (2, 5, 2, true);
 insert into recept (izvestajopregledu_id, lek_id, medicinska_sestra_id, medicinska_sestra_overa) values (2, 6, 2, true);
 insert into recept (izvestajopregledu_id, lek_id, medicinska_sestra_id, medicinska_sestra_overa) values (2, 7, 2, true);
+
+insert into slobodni_termin(datum, tip_pregleda_id, lekar_id, klinika_id, cena, status, popust, sala_id, termin) values ('15-mar-2020', 3, 2, 3, 1500, false, 50.0, 1, 9);
+insert into slobodni_termin(datum, tip_pregleda_id, lekar_id, klinika_id, cena, status, popust, sala_id, termin) values ('18-mar-2020', 4, 1, 3, 2000, false, 25.0, 2, 11);
+insert into slobodni_termin(datum, tip_pregleda_id, lekar_id, klinika_id, cena, status, popust, sala_id, termin) values ('19-mar-2020', 2, 2, 3, 3000, false, 10.0, 5, 13);
 
 
 
