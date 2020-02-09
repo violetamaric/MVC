@@ -46,7 +46,7 @@ public class MedicinskaSestra implements UserDetails {
 	private int status;
 
 	@ManyToMany
-	@JoinTable(name = "medicinska_sestra_pacijent", joinColumns = @JoinColumn(name = "pacijent_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "medicinska_sestra_id", referencedColumnName = "id"))
+	@JoinTable(name = "medicinska_sestra_pacijent", joinColumns = @JoinColumn(name = "medicinska_sestra_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "pacijent_id", referencedColumnName = "id"))
 	private Set<Pacijent> listaPacijenataMedSestra = new HashSet<Pacijent>();
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

@@ -85,7 +85,7 @@ insert into pacijent_authority (pacijent_id, authority_id) values (1,1);
 insert into pacijent_authority (pacijent_id, authority_id) values (2,1);
 insert into pacijent_authority (pacijent_id, authority_id) values (3,1);
 insert into pacijent_authority (pacijent_id, authority_id) values (4,1);
-insert into pacijent_authority (pacijent_id, authority_id) values (6,1);
+insert into pacijent_authority (pacijent_id, authority_id) values (5,1);
 
 insert into klinika_pacijent (klinika_id, pacijent_id) values (3, 3);
 insert into klinika_pacijent (klinika_id, pacijent_id) values (3, 5);
