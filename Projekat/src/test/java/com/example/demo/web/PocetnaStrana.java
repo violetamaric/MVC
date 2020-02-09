@@ -31,7 +31,7 @@ public class PocetnaStrana {
 
 
 	    public void vidljivaKarticaBrzoZakazivanje() {
-	        (new WebDriverWait(driver, 10)).until(ExpectedConditions.visibilityOfElementLocated(By.id("brzoZakazivanje")));
+	        (new WebDriverWait(driver, 30)).until(ExpectedConditions.visibilityOfElementLocated(By.id("brzoZakazivanje")));
 	    }
 
 	

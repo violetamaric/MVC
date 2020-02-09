@@ -1,12 +1,16 @@
 package com.example.demo;
 
-import org.aspectj.lang.annotation.After;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.Select;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.TestPropertySource;
@@ -14,6 +18,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.example.demo.web.Login;
 import com.example.demo.web.PocetnaStrana;
+import com.example.demo.web.PretragaKlinika;
+import com.example.demo.web.ZakazivanjePregleda;
 
 //Scenario: "Ja pacijent zelim da zakakazem unapred definisani pregled."
 //
@@ -24,68 +30,124 @@ import com.example.demo.web.PocetnaStrana;
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @TestPropertySource("classpath:test.properties")
 public class EndToEndTest {
-	
-	
-    private WebDriver browser;
 
-    private Login login;
+	private WebDriver browser;
 
-    private PocetnaStrana pocetna;
+	private Login login;
 
-    @Before
-    public void setUp() {
-    	   System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver.exe");
-           browser = new ChromeDriver();
-    
-           browser.manage().window().maximize();
-           browser.navigate().to("http://localhost:3000/login");
-    
-           login = PageFactory.initElements(browser, Login.class);
-           pocetna = PageFactory.initElements(browser, PocetnaStrana.class);
-//           registrationRequirementPage = PageFactory.initElements(browser, RegistrationRequirementPage.class);
-    
-    
-           login.ensureIsDisplayedTxtEmail();
-           login.getTxtEmail().sendKeys("pera@gmail.com");
-           login.ensureIsDisplayedTxtPass();
-           login.getTxtPass().sendKeys("pera");
-           login.ensureIsDisplayedBtnLogin();
-           login.getBtnLogin().click();
-    
-//           clinicCenterAdminPage.ensureIsDisplayedBtnRegReqs();
-//           assertEquals("http://localhost:3000/ccadmin", browser.getCurrentUrl());
-    }
-	
-	
-	
+	private PocetnaStrana pocetna;
+
+	private ZakazivanjePregleda zakazivanjePregleda;
+
+	private PretragaKlinika pretragaKlinika;
+
+	@Before
+	public void setUp() throws InterruptedException {
+		System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver.exe");
+		browser = new ChromeDriver();
+
+		browser.manage().window().maximize();
+		browser.navigate().to("http://localhost:3000/login");
+
+		login = PageFactory.initElements(browser, Login.class);
+		pocetna = PageFactory.initElements(browser, PocetnaStrana.class);
+		zakazivanjePregleda = PageFactory.initElements(browser, ZakazivanjePregleda.class);
+		pretragaKlinika = PageFactory.initElements(browser, PretragaKlinika.class);
+
+		login.ensureIsDisplayedTxtEmail();
+		login.getTxtEmail().sendKeys("pera@gmail.com");
+		login.ensureIsDisplayedTxtPass();
+		login.getTxtPass().sendKeys("pera");
+		login.ensureIsDisplayedBtnLogin();
+		login.getBtnLogin().click();
+	}
+
 	@Test
-	public void brzoZakazivanje() {
-		
+	public void brzoZakazivanje() throws InterruptedException {
+
 		pocetna.vidljivaKarticaBrzoZakazivanje();
 		pocetna.getUnapredDef().click();
-		
+		Thread.sleep(1500);
+
+		zakazivanjePregleda.vidljivoDugmeZakaziPregled();
+		zakazivanjePregleda.getZakaziPregled().click();
+		Thread.sleep(1500);
+
+		zakazivanjePregleda.getOdabranPregled().click();
+		Thread.sleep(1500);
+
+		zakazivanjePregleda.getVidiTermine().click();
+		Thread.sleep(1500);
+		Select it = new Select(browser.findElement(By.xpath("//*[@id=\"izaberiTermin\"]")));
+		List<WebElement> options = it.getOptions();
+
+		WebElement defaultItem = options.get(1);
+
+		defaultItem.click();
+		Thread.sleep(1500);
+		zakazivanjePregleda.getOdabranLekar().click();
+
+		Thread.sleep(1000);
+		zakazivanjePregleda.getPotvrdiPregled().click();
+
 	}
+
+	@Test
+	public void ZakaziPregled() throws InterruptedException {
+		pocetna.vidljivaKarticaBrzoZakazivanje();
+		pocetna.getUnapredDef().click();
+		Thread.sleep(1000);
+		browser.navigate().to("http://localhost:3000/pacijent/brzoZakazivanje");
+
+		Thread.sleep(1500);
+		zakazivanjePregleda.getOdabranUDPregled().click();
+
+		Thread.sleep(1000);
+		zakazivanjePregleda.getPotvrdiPregled().click();
+
+	}
+
+	@Test
+	public void SortirajKlinike() throws InterruptedException {
 	
+		pocetna.vidljivaKarticaBrzoZakazivanje();
+		pocetna.getUnapredDef().click();
+		Thread.sleep(1500);
+		
+		pretragaKlinika.getBtnOcena().click();
+		Thread.sleep(1000);
+		
+		pretragaKlinika.getBtnPonistiFilter().click();
+		Thread.sleep(1000);
+		
+		pretragaKlinika.getBtnPretragaKlinika().click();;
+		pretragaKlinika.getPretraziPoljeKlinika().sendKeys("Novi Sad");
+		Thread.sleep(1000);
+		
+		pretragaKlinika.getBtnTipPregleda().click();
+		Select it = new Select(browser.findElement(By.id("selectTipPregleda")));
+		List<WebElement> options = it.getOptions();
+
+		WebElement defaultItem = options.get(1);
+
+		defaultItem.click();
+		Thread.sleep(1000);
+		
+		pretragaKlinika.getBtnPonistiFilter().click();
+		Thread.sleep(1000);
+
+//		pretragaKlinika.getOdabirDatuma().clear();
+//		pretragaKlinika.getOdabirDatuma().sendKeys("12.03.2020.");
+//		pretragaKlinika.getOdabirDatuma().click();
+//		Thread.sleep(1000);
+	
+	}
+
 //    @After
 //    public void tearDown() {
 //        browser.close();
 //    }
 //	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
 //	@Autowired
 //	private SlobodniTerminController STController;
@@ -259,6 +321,4 @@ public class EndToEndTest {
 //		
 //	}
 
-	
-	
 }

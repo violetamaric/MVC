@@ -224,5 +224,15 @@ public class TipPregledaController {
 		return new ResponseEntity<>(new TipPregledaDTO(tp), HttpStatus.OK);
 	}
 	
+	@GetMapping(value = "/klinikeTP/{id}")
+	@CrossOrigin(origins = "http://localhost:3000")
+//	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
+	public ResponseEntity<?> klinikeTP(@PathVariable Long id) {
+
+		List<Klinika> klinike = TPService.findKlinike(id);
+		return new ResponseEntity<>(klinike, HttpStatus.OK);
+	}
+	
+	
 }
 
