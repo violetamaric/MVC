@@ -186,12 +186,12 @@ public class LekarController {
 
 		// a student must exist
 		System.out.println("LEKAR UPDRATE");
-		Lekar lekar = lekarService.findByEmail(lekarDTO.getEmail());
+		Lekar lekar = lekarService.findOne(lekarDTO.getId());
 //		System.out.println("Lekar update: " + lekar.getEmail());
 //		if (lekar == null) {
 //			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 //		}
-
+//		lekar.setId(lekarDTO.getId());
 		lekar.setIme(lekarDTO.getIme());
 		lekar.setPrezime(lekarDTO.getPrezime());
 		lekar.setTelefon(lekarDTO.getTelefon());

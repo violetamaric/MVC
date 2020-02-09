@@ -12,6 +12,7 @@ public class SlobodniTerminDTO {
 
 	private Long tipPregledaID;
 	private String tipPregledaN;
+	private double cenaTP;
 
 	private Long lekarID;
 	private String lekarIme;
@@ -37,7 +38,7 @@ public class SlobodniTerminDTO {
 
 	}
 
-	public SlobodniTerminDTO(Long id, Date datum, Long tipPregledaID, String tipPregledaN, Long lekarID,
+	public SlobodniTerminDTO(Long id, Date datum, Long tipPregledaID, String tipPregledaN, double cenaTP, Long lekarID,
 			String lekarIme, String lekarPrezime, Long klinikaID, String klinikaN, double cena, boolean status,
 			double popust, int termin, Long salaID, String salaN, int salaBR) {
 		super();
@@ -57,6 +58,7 @@ public class SlobodniTerminDTO {
 		this.salaBR = salaBR;
 		this.salaID = salaID;
 		this.salaN = salaN;
+		this.cenaTP = cenaTP;
 	}
 
 	@Override
@@ -223,6 +225,14 @@ public class SlobodniTerminDTO {
 
 	public void setSalaBR(int salaBR) {
 		this.salaBR = salaBR;
+	}
+
+	public double getCenaTP() {
+		return cenaTP;
+	}
+
+	public void setCenaTP(double cenaTP) {
+		this.cenaTP = cenaTP;
 	}
 
 }
