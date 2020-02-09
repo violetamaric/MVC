@@ -17,15 +17,17 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.example.demo.web.Login;
+import com.example.demo.web.OceniKliniku;
 import com.example.demo.web.PocetnaStrana;
 import com.example.demo.web.PretragaKlinika;
 import com.example.demo.web.ZakazivanjePregleda;
-
+import static org.assertj.core.api.Assertions.assertThat;
 //Scenario: "Ja pacijent zelim da zakakazem unapred definisani pregled."
 //
-//	1. Ja pacijent zelim da vidim sve unapred definisane termine
-//	2. Ja pacijent zelim da zakazem jedan unapred definisan termin
-//	3. Ja pacijent zelim da vidim zakazani pregled
+
+//	1. Ja pacijent zelim da zakazem jedan unapred definisan termin
+//	2. Ja pacijent zelim da postupno zakazem pregled, birajuci prvo kliniku, pa onda lekara i termin
+//  3. Ja pacijent zelim da pretrazim klinike i filtriram ih po ocenama
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @TestPropertySource("classpath:test.properties")
@@ -40,6 +42,8 @@ public class EndToEndTest {
 	private ZakazivanjePregleda zakazivanjePregleda;
 
 	private PretragaKlinika pretragaKlinika;
+	
+	private OceniKliniku oceniKliniku;
 
 	@Before
 	public void setUp() throws InterruptedException {
@@ -53,7 +57,9 @@ public class EndToEndTest {
 		pocetna = PageFactory.initElements(browser, PocetnaStrana.class);
 		zakazivanjePregleda = PageFactory.initElements(browser, ZakazivanjePregleda.class);
 		pretragaKlinika = PageFactory.initElements(browser, PretragaKlinika.class);
-
+		oceniKliniku = PageFactory.initElements(browser, OceniKliniku.class);
+		
+		
 		login.ensureIsDisplayedTxtEmail();
 		login.getTxtEmail().sendKeys("pera@gmail.com");
 		login.ensureIsDisplayedTxtPass();
@@ -63,7 +69,7 @@ public class EndToEndTest {
 	}
 
 	@Test
-	public void brzoZakazivanje() throws InterruptedException {
+	public void postupnoZakazivanje() throws InterruptedException {
 
 		pocetna.vidljivaKarticaBrzoZakazivanje();
 		pocetna.getUnapredDef().click();
@@ -92,20 +98,20 @@ public class EndToEndTest {
 
 	}
 
-	@Test
-	public void ZakaziPregled() throws InterruptedException {
-		pocetna.vidljivaKarticaBrzoZakazivanje();
-		pocetna.getUnapredDef().click();
-		Thread.sleep(1000);
-		browser.navigate().to("http://localhost:3000/pacijent/brzoZakazivanje");
-
-		Thread.sleep(1500);
-		zakazivanjePregleda.getOdabranUDPregled().click();
-
-		Thread.sleep(1000);
-		zakazivanjePregleda.getPotvrdiPregled().click();
-
-	}
+//	@Test
+//	public void ZakaziPregled() throws InterruptedException {
+//		pocetna.vidljivaKarticaBrzoZakazivanje();
+//		pocetna.getUnapredDef().click();
+//		Thread.sleep(1000);
+//		browser.navigate().to("http://localhost:3000/pacijent/brzoZakazivanje");
+//
+//		Thread.sleep(1500);
+//		zakazivanjePregleda.getOdabranUDPregled().click();
+//
+//		Thread.sleep(1000);
+//		zakazivanjePregleda.getPotvrdiPregled().click();
+//
+//	}
 
 	@Test
 	public void SortirajKlinike() throws InterruptedException {
@@ -121,7 +127,7 @@ public class EndToEndTest {
 		Thread.sleep(1000);
 		
 		pretragaKlinika.getBtnPretragaKlinika().click();;
-		pretragaKlinika.getPretraziPoljeKlinika().sendKeys("Novi Sad");
+		pretragaKlinika.getPretraziPoljeKlinika().sendKeys("nis");
 		Thread.sleep(1000);
 		
 		pretragaKlinika.getBtnTipPregleda().click();
@@ -142,7 +148,21 @@ public class EndToEndTest {
 //		Thread.sleep(1000);
 	
 	}
+	
+	@Test
+	public void OceniKliniku() throws InterruptedException {
+		pocetna.vidljivaKarticaBrzoZakazivanje();
+		pocetna.getUnapredDef().click();
+		Thread.sleep(1000);
+		browser.navigate().to("http://localhost:3000/pacijent/istorija");
 
+		Thread.sleep(1500);
+		oceniKliniku.getBtnOceniKliniku().click();
+
+		Thread.sleep(1000);
+		oceniKliniku.getBtn10().click();
+	}
+	
 //    @After
 //    public void tearDown() {
 //        browser.close();

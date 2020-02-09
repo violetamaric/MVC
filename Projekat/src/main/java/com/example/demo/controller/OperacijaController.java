@@ -106,7 +106,7 @@ public class OperacijaController {
 		for (Operacija o : operacije) {
 			System.out.println("======");
 			System.out.println(o.getListaLekara().size());
-			if (o.getPacijent().getEmail().equals(pr.getName()) && o.getStatus()==1 ) {
+			if (o.getPacijent().getEmail().equals(pr.getName()) && o.getStatus() == 1) {
 //				if(o.getStatus() == 3) ako su zavrsene
 				operacijeDTO.add(new OperacijaDTO(o));
 			}
@@ -429,7 +429,7 @@ public class OperacijaController {
 	}
 
 	// rezervisanje sale i slanje mejla pacijentu i lekaru
-	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 	@PostMapping(path = "/rezervisanjeSale", consumes = "application/json")
 	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
 	public ResponseEntity<String> rezervisanjeSaleOp(@RequestBody OperacijaDTO oDTO) {
@@ -449,8 +449,6 @@ public class OperacijaController {
 				p.setSala(s);
 				pacijent = pacijentService.findByID(oDTO.getPacijentID());
 				p.setPacijent(pacijent);
-				
-		
 
 				for (Long i : oDTO.getListaLekara()) {
 					Lekar lekarO = lekarService.findById(i);
@@ -464,7 +462,6 @@ public class OperacijaController {
 
 				operacijaService.save(p);
 
-				
 				for (Lekar le : listaLekaraOper) {
 					Termin t = new Termin();
 					t.setTermin(oDTO.getTermin());
@@ -475,7 +472,7 @@ public class OperacijaController {
 					t.setSala(s);
 					t.setLekar(le);
 					t = terminService.save(t);
-				
+
 					le.getListaZauzetihTermina().add(t);
 					lekarService.save(le);
 
@@ -499,8 +496,6 @@ public class OperacijaController {
 
 		PacijentDTO pd = new PacijentDTO(pacijent);
 
-	
-		
 		// slanje emaila
 		try {
 			emailService.poslatiOdgovorPacijentu(pd, subject, text);
@@ -524,8 +519,8 @@ public class OperacijaController {
 
 		return new ResponseEntity<>("uspesno rezervisana sala1", HttpStatus.OK);
 	}
-	
-	//zakazivanje operacije
+
+	// zakazivanje operacije
 	@PostMapping(value = "/zakazivanjeOperacijeLekar")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('LEKAR')")
@@ -533,33 +528,31 @@ public class OperacijaController {
 		System.out.println("*************");
 
 		Lekar lekar = lekarService.findByEmail(pr.getName());
-		
+
 		System.out.println("dodavanje nove operacije");
 
 		Operacija operacija = new Operacija();
-		
-		
+
 		operacija.setDatum(operacijaDTO.getDatum());
-		
+
 		Klinika klinika = lekar.getKlinika();
 		operacija.setKlinika(klinika);
-		
+
 		operacija.setTermin(operacijaDTO.getTermin());
-		
+
 		Pacijent pacijent = pacijentService.findByEmail(operacijaDTO.getPacijentEmail());
 		operacija.setPacijent(pacijent);
 		operacija.setStatus(0);
-		
-		
+
 		operacija.setTipOperacije(operacijaDTO.getTipOperacije());
-		
-		operacija.setCena(3000); 
-		
+
+		operacija.setCena(3000);
+
 		operacija = operacijaService.save(operacija);
-		
+
 		klinika.getListaOperacija().add(operacija);
 		klinika = klinikaService.save(klinika);
-		
+
 		Set<AdministratorKlinike> ak = klinika.getListaAdminKlinike();
 
 		for (AdministratorKlinike AK : ak) {
@@ -580,6 +573,24 @@ public class OperacijaController {
 
 		return new ResponseEntity<>(new OperacijaDTO(operacija), HttpStatus.OK);
 
+	}
+
+	@GetMapping(value = "lekariNaOperaciji/{id}")
+//	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
+	public ResponseEntity<?> getlekariNaOperaciji(@PathVariable Long id) {
+
+		List<Lekar> lekari = operacijaService.findLekare(id);
+		List<LekarDTO> lekariDTO = new ArrayList<LekarDTO>();
+
+		if (!lekari.isEmpty()) {
+			for (Lekar l : lekari) {
+				lekariDTO.add(new LekarDTO(l));
+
+			}
+			return new ResponseEntity<>(lekariDTO, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>("Nema lekara", HttpStatus.OK);
+		}
 
 	}
 

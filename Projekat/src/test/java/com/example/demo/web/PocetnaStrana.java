@@ -13,8 +13,11 @@ public class PocetnaStrana {
 
 	    @FindBy(xpath = "//*[@id=\"brzoZakazivanje\"]")
 	    private WebElement brzoZakazivanje;
-
-
+	    
+	    
+	    
+	    @FindBy(xpath = "//*[@id=\"statsCardPregledi\"]")
+	    private WebElement statsCardPregledi;
 
 	    public PocetnaStrana() {
 
@@ -33,6 +36,10 @@ public class PocetnaStrana {
 	    public void vidljivaKarticaBrzoZakazivanje() {
 	        (new WebDriverWait(driver, 30)).until(ExpectedConditions.visibilityOfElementLocated(By.id("brzoZakazivanje")));
 	    }
+
+		public WebElement getStatsCardPregledi() {
+			return statsCardPregledi;
+		}
 
 	
 }
