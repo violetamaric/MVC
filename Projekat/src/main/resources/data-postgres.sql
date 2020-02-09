@@ -203,8 +203,6 @@ insert into termin(datum_pocetka, termin, lekar_id, sala_id) values ('18-mar-202
 
 insert into termin(datum_pocetka, termin, lekar_id, sala_id) values ('19-mar-2020', 13, 2, 5);
 
-
-
 insert into termin (datum_pocetka, termin, sala_id, lekar_id ) values ('20-mar-2020', 11, 2, 1);
 insert into termin (datum_pocetka, termin, sala_id, lekar_id ) values ('20-mar-2020', 13, 1, 1);
 insert into termin (datum_pocetka, termin, sala_id, lekar_id ) values ('20-mar-2020', 15, 5, 1);

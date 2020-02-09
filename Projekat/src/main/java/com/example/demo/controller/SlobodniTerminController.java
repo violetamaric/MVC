@@ -18,8 +18,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.PregledDTO;
 import com.example.demo.dto.SalaDTO;
 import com.example.demo.dto.SlobodniTerminDTO;
+import com.example.demo.dto.TerminDTO;
 import com.example.demo.model.Klinika;
 import com.example.demo.model.Lekar;
 import com.example.demo.model.Sala;
@@ -28,6 +30,7 @@ import com.example.demo.model.Termin;
 import com.example.demo.model.TipPregleda;
 import com.example.demo.service.KlinikaService;
 import com.example.demo.service.LekarService;
+import com.example.demo.service.PregledService;
 import com.example.demo.service.SalaService;
 import com.example.demo.service.SlobodniTerminService;
 import com.example.demo.service.TerminService;
@@ -46,6 +49,8 @@ public class SlobodniTerminController {
 	private LekarService lekarService;
 	@Autowired
 	private TipPregledaService tipPregledaService;
+	@Autowired
+	private PregledService pregledService;
 
 	@Autowired
 	private SalaService salaService;
@@ -64,7 +69,10 @@ public class SlobodniTerminController {
 		for (SlobodniTermin sstt : st) {
 
 			if (!sstt.isStatus() && sstt.getDatum().after(danasnjiDatum)) {
-				stDTO.add(new SlobodniTerminDTO(sstt));
+				SlobodniTerminDTO sd = new SlobodniTerminDTO(sstt);
+				TipPregleda tp = tipPregledaService.findOne(sstt.getTipPregleda().getId());
+				sd.setCenaTP(tp.getCena());
+				stDTO.add(sd);
 
 			}
 
@@ -77,21 +85,20 @@ public class SlobodniTerminController {
 	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
 	public ResponseEntity<List<SlobodniTerminDTO>> getPreglediKlinike(@PathVariable Long id) {
 
+		Date danasnjiDatum = new Date();
 		Klinika klinika = klinikaService.findOne(id);
 		List<SlobodniTermin> st = STService.findAll();
 		List<SlobodniTerminDTO> lista = new ArrayList<SlobodniTerminDTO>();
 		for (SlobodniTermin s : st) {
 			if (s.getKlinika().getId() == klinika.getId()) {
-				if (!s.isStatus()) {
+				if (!s.isStatus() && s.getDatum().after(danasnjiDatum)) {
 					SlobodniTerminDTO sDTO = new SlobodniTerminDTO(s);
+					TipPregleda tp = tipPregledaService.findOne(s.getTipPregleda().getId());
+					sDTO.setCenaTP(tp.getCena());
+					sDTO.setCena(tp.getCena());
 					lista.add(sDTO);
 				}
 			}
-		}
-
-		System.out.println("Lista pregleda u klinici:" + klinika.getNaziv() + " ID: " + id);
-		for (SlobodniTerminDTO ss : lista) {
-			System.out.println(ss.getCena());
 		}
 
 		return new ResponseEntity<>(lista, HttpStatus.OK);
@@ -103,7 +110,7 @@ public class SlobodniTerminController {
 		System.out.println("dodavanje novog st");
 		System.out.println(stDTO);
 		SlobodniTermin st = new SlobodniTermin();
-		st.setCena(stDTO.getCena());
+
 		st.setPopust(stDTO.getPopust());
 		st.setDatum(stDTO.getDatum());
 		st.setTermin(stDTO.getTermin());
@@ -116,6 +123,10 @@ public class SlobodniTerminController {
 		st.setStatus(false);
 		TipPregleda tp = tipPregledaService.findOne(stDTO.getTipPregledaID());
 		st.setTipPregleda(tp);
+		SlobodniTerminDTO slobodniTerm = new SlobodniTerminDTO(st);
+		slobodniTerm.setCenaTP(tp.getCena());
+		slobodniTerm.setCena(tp.getCena());
+
 		Sala sala = salaService.findOne(stDTO.getSalaID());
 		st.setSala(sala);
 
@@ -135,7 +146,7 @@ public class SlobodniTerminController {
 		lzts.add(t);
 		salaService.save(sala);
 
-		return new ResponseEntity<>(new SlobodniTerminDTO(st), HttpStatus.OK);
+		return new ResponseEntity<>(slobodniTerm, HttpStatus.OK);
 	}
 
 	@GetMapping(value = "preuzmiSaleKlinikeZaPregled/{id}")
@@ -155,12 +166,114 @@ public class SlobodniTerminController {
 			}
 		}
 
-		System.out.println("Lista sala u klinici:" + klinika.getNaziv() + " ID: " + id);
-		for (SalaDTO ss : lista) {
-			System.out.println(ss.getNaziv() + ss.getBroj());
-		}
-
 		return new ResponseEntity<>(lista, HttpStatus.OK);
+	}
+
+	// pronalazak sala slobodnih za taj teremin i za taj datum-PREGLED
+	@PostMapping(path = "/pronadjiSaleZaTajTerminST", consumes = "application/json")
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
+	public ResponseEntity<List<SalaDTO>> getSaleTerminST(@RequestBody PregledDTO pregled) {
+
+		
+		System.out.println("8888 " + pregled + " ////////////////////");
+
+		List<Sala> sale = salaService.findAll();
+		List<Sala> listaSalaKlinike = new ArrayList<Sala>();
+		for (Sala s : sale) {
+			if (s.getKlinika().getId() == pregled.getKlinikaID()) {
+				if (s.getTipSale() == 1) {
+					listaSalaKlinike.add(s);
+				}
+			}
+		}
+//
+		List<Sala> listaSalaTest = new ArrayList<Sala>();
+		boolean flag = false;
+		List<SalaDTO> listaSalaSlob = new ArrayList<SalaDTO>();
+		List<Sala> listaZauzete = new ArrayList<Sala>();
+//		for (Sala sD : listaSalaKlinike) {
+//			System.out.println();
+//			System.out.println(sD.getId());
+//			flag = false;
+//			SalaDTO sdt = new SalaDTO();
+//			for (Termin t : terminService.findAll()) {
+//
+//				System.out.println(t);
+//				if (t.getSala().getId() == sD.getId()) {
+//					System.out.println(t.getSala().getId() + " " + t.getTermin() + " " + t.getDatumPocetka());
+//					if (t.getDatumPocetka().equals(pregled.getDatum()) && t.getTermin().equals(pregled.getTermin())) {
+//						System.out.println("Istiiii termin i datum i preskoci salu");
+//						//sD.getZauzetiTermini().add(t);
+//						listaZauzete.add(sD);
+//
+//						flag = true;
+//						break;
+//
+//					} else {
+//						continue;
+//					}
+//
+//
+//				}
+//
+//			}
+//
+//			if (flag) {
+//				continue;
+//			}
+//
+//			sdt.setNaziv(sD.getNaziv());
+//			sdt.setBroj(sD.getBroj());
+//			sdt.setId(sD.getId());
+//			sdt.setKlinikaID(sD.getKlinika().getId());
+//
+//			System.out.println();
+//	
+//			if(!listaZauzete.contains(sdt))
+//				listaSalaSlob.add(sdt);
+////				
+//
+//		}
+		//	System.out.println("SLOBODNE S: " + listaSalaSlob.size());
+
+		
+		for(Sala s:listaSalaKlinike) {
+			System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+			for(Termin t: terminService.findAll()) {
+				if(t.getSala().getId()==s.getId()) {
+					System.out.println(t);
+					System.out.println(t.getDatumPocetka());
+					System.out.println(pregled.getDatum());
+					if( t.getDatumPocetka().equals(pregled.getDatum())) {
+						System.out.println(t.getDatumPocetka());
+						System.out.println(pregled.getDatum());
+						System.out.println("Isti datummmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm**************************");
+						if(t.getTermin()==pregled.getTermin()) {
+							System.out.println("Isti termin -----------------------");
+							if(listaZauzete.contains(s)) {
+								continue;
+							}else {
+								listaZauzete.add(s);
+							}
+						}
+					}
+				}
+			
+			
+			}
+		}
+		
+		System.out.println("Lista zauzeteee: " + listaZauzete.size());
+		
+//		for(Sala ss: listaSalaKlinike) {
+//			if(!listaZauzete.contains(ss)) {
+//				listaSalaSlob.add(new SalaDTO(ss));
+//			}
+//		}
+//	
+		System.out.println("SLOBODNE S: " + listaSalaSlob.size());
+		return new ResponseEntity<>(listaSalaSlob, HttpStatus.OK);
 	}
 
 }
