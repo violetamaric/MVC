@@ -947,7 +947,8 @@ public class PregledController {
 	}
 
 	
-	@Scheduled(cron = "30 57 20 * * ?")
+	@Scheduled(cron = "30 03 21 * * ?")
+	@Transactional
 	public void automaticSchedule() {
 
 		List<Pregled> preglediSvi = pregledService.findAll();
@@ -1029,7 +1030,7 @@ public class PregledController {
 			pre = pregledService.save(pre);
 			
 			String subject = "Rezervisana sala";
-			String text = "Postovani " + pre.getPacijent().getIme() + " " + pre.getPacijent().getPrezime() + ",\n\nRezervisana je sala za Vas pregled! ";
+			String text = "Postovani ,\n\nRezervisana je sala za Vas pregled! ";
 
 			System.out.println(text);
 
@@ -1106,13 +1107,14 @@ public class PregledController {
 				}else {
 					
 					Sala sala = salaService.findById(8L);
-					System.out.println("DODELJENAAAAAA " + sala);
+					System.out.println("DODELJENAAAAAA " + sala.getId());
 					pre.setSala(sala);
 				}
 				pre = pregledService.save(pre);
 				System.out.println("KRAJ");
 				String subject = "Rezervisana sala";
-				String text = "Postovani " + pre.getPacijent().getIme() + " " + pre.getPacijent().getPrezime() + ",\n\nRezervisana je sala za Vas pregled! ";
+				String text = "Postovani ,\n\nRezervisana je sala za Vas pregled! ";
+//				String text = "Postovani " + pre.getPacijent().getIme() + " " + pre.getPacijent().getPrezime() + ",\n\nRezervisana je sala za Vas pregled! ";
 
 				System.out.println(text);
 
