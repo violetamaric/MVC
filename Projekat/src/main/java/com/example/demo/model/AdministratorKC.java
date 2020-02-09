@@ -41,7 +41,7 @@ public class AdministratorKC implements UserDetails{
 	@Column(name = "status", nullable = false)
 	private int status;
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne( fetch = FetchType.LAZY)
 	private KlinickiCentar klinickiCentar;
 	
 	@ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)

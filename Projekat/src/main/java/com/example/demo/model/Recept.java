@@ -15,16 +15,16 @@ public class Recept {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Lek lek;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	private MedicinskaSestra medicinskaSestra;
 
 	@Column(name = "medicinskaSestraOvera", nullable = false)
 	private boolean overen = false;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne( fetch = FetchType.LAZY)
 	private IzvestajOPregledu izvestajOPregledu;
 
 	public Long getId() {

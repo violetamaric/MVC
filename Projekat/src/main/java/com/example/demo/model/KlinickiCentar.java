@@ -28,20 +28,20 @@ public class KlinickiCentar {
 	@Column(name = "opis", nullable = false)
 	private String opis;
 
-	@OneToMany(mappedBy = "klinickiCentar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "klinickiCentar", fetch = FetchType.LAZY)
 	private Set<Klinika> listaKlinika = new HashSet<Klinika>();
 
-	@OneToMany(mappedBy = "klinickiCentar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "klinickiCentar", fetch = FetchType.LAZY)
 	private Set<AdministratorKC> listaAdminKC = new HashSet<AdministratorKC>();
 	// dijagnoza i sifrarnik
 
-	@OneToMany(mappedBy = "klinickiCentar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "klinickiCentar", fetch = FetchType.LAZY)
 	private Set<Lek> listaLekova = new HashSet<Lek>();
 
-	@OneToMany(mappedBy = "klinickiCentar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "klinickiCentar", fetch = FetchType.LAZY)
 	private Set<Dijagnoza> listaDijagnoza = new HashSet<Dijagnoza>();
 
-	@OneToMany(mappedBy = "klinickiCentar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "klinickiCentar", fetch = FetchType.LAZY)
 	private Set<Pacijent> zahteviZaRegistraciju = new HashSet<Pacijent>();
 
 	public String getNaziv() {

@@ -49,14 +49,13 @@ public class MedicinskaSestra implements UserDetails {
 	@JoinTable(name = "medicinska_sestra_pacijent", joinColumns = @JoinColumn(name = "medicinska_sestra_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "pacijent_id", referencedColumnName = "id"))
 	private Set<Pacijent> listaPacijenataMedSestra = new HashSet<Pacijent>();
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Klinika klinika;
 
-	@OneToMany(mappedBy = "medicinskaSestra", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "medicinskaSestra", fetch = FetchType.LAZY)
 	private Set<Recept> recepti = new HashSet<Recept>();
 
-	// kalendar
-	@OneToMany(mappedBy = "medicinskaSestra", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "medicinskaSestra", fetch = FetchType.LAZY)
 	private Set<OdmorOdsustvoMedicinskaSestra> listaOdmorOdsustvo = new HashSet<OdmorOdsustvoMedicinskaSestra>();
 
 	@ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)

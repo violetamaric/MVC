@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.dto.KlinikaDTO;
 import com.example.demo.dto.LekarDTO;
 import com.example.demo.dto.MedicinskaSestraDTO;
 import com.example.demo.dto.OdmorOdsustvoLDTO;
@@ -29,7 +29,6 @@ import com.example.demo.model.Lekar;
 import com.example.demo.model.MedicinskaSestra;
 import com.example.demo.model.OdmorOdsustvoLekar;
 import com.example.demo.model.OdmorOdsustvoMedicinskaSestra;
-import com.example.demo.model.Operacija;
 import com.example.demo.model.Termin;
 import com.example.demo.model.TipOdmorOdsustvo;
 import com.example.demo.service.EmailService;
@@ -112,8 +111,23 @@ public class OdmorOdsustvoController {
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 	
+	@GetMapping(value = "/zahtevL/{id}")
+	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
+	@CrossOrigin(origins = "http://localhost:3000")
+	public ResponseEntity<OdmorOdsustvoLDTO> getZahtevLekara(@PathVariable Long id) {
+
+		OdmorOdsustvoLekar ooms = oolService.findById(id);
+		
+		if(ooms != null) {
+			return new ResponseEntity<>(new OdmorOdsustvoLDTO(ooms), HttpStatus.OK);
+		}
+		
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	}
+	
 	
 	//posalji zahtev med sestra
+	@Async
 	@PostMapping(path = "/posaljiZahtev", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('MED_SESTRA')")
@@ -136,14 +150,12 @@ public class OdmorOdsustvoController {
 				}
 				
 			}
-		}
+		}		
 		
-		//TODO 2 : I ZA OPERACIJE DODATI
-		
-//		if(ms != null) {
+
 			Klinika k = klinikaService.findById(ms.getKlinika().getId());
 			
-//			if(k != null) {
+
 				OdmorOdsustvoMedicinskaSestra ooms = new OdmorOdsustvoMedicinskaSestra();
 				ooms.setDatumOd(ooDTO.getDatumOd());
 				ooms.setDatumDo(ooDTO.getDatumDo());
@@ -170,12 +182,11 @@ public class OdmorOdsustvoController {
 				
 				System.out.println("------------------------------------------------------");
 				return new ResponseEntity<>(new OdmorOdsustvoMSDTO(ooms), HttpStatus.CREATED);
-//			}
-//		}
-//		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
 	}
 	
 	//posalji zahtev lekar
+	@Async
 	@PostMapping(path = "/posaljiZahtevLekar", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('LEKAR')")
@@ -191,17 +202,6 @@ public class OdmorOdsustvoController {
 				return new ResponseEntity<>("Datum je zauzet.", HttpStatus.OK);
 			}
 		}
-		//ali i operacija se nalazi u listi zauzetih termina lekara
-//		Set<Operacija> operacije = lekar.getListaOperacija();
-//		for(Operacija o : operacije) {
-//			if(o.getStatus() == 1) {
-//				if(ooDTO.getDatumOd().compareTo(o.getDatum()) * o.getDatum().compareTo(ooDTO.getDatumDo()) >= 0) {
-//					System.out.println("----------------nalazi se pregled---------------");
-//					return new ResponseEntity<>("Datum je zauzet.", HttpStatus.OK);
-//				}
-//			}
-//			
-//		}
 		
 		
 		Set<OdmorOdsustvoLekar> listaool = lekar.getListaOdmorOdsustvo();
@@ -219,61 +219,52 @@ public class OdmorOdsustvoController {
 			}
 		}
 		
-		//TODO 1 : I ZA OPERACIJE DODATI
-		
-		
+		Klinika k = klinikaService.findById(lekar.getKlinika().getId());
 			
 
-			Klinika k = klinikaService.findById(lekar.getKlinika().getId());
-			
-
-				OdmorOdsustvoLekar ooms = new OdmorOdsustvoLekar();
-				ooms.setDatumOd(ooDTO.getDatumOd());
-				ooms.setDatumDo(ooDTO.getDatumDo());
-				ooms.setOpis(ooDTO.getOpis());
-				System.out.println(ooDTO.getTip());
-				if(ooDTO.getTip().equals("ODMOR")) {
-					System.out.println("ispis odmora");
-					ooms.setTip(TipOdmorOdsustvo.ODMOR);
-				}else {
-					ooms.setTip(TipOdmorOdsustvo.ODSUSTVO);
-				}
+		OdmorOdsustvoLekar ooms = new OdmorOdsustvoLekar();
+		ooms.setDatumOd(ooDTO.getDatumOd());
+		ooms.setDatumDo(ooDTO.getDatumDo());
+		ooms.setOpis(ooDTO.getOpis());
+		System.out.println(ooDTO.getTip());
+		if(ooDTO.getTip().equals("ODMOR")) {
+			System.out.println("ispis odmora");
+			ooms.setTip(TipOdmorOdsustvo.ODMOR);
+		}else {
+			ooms.setTip(TipOdmorOdsustvo.ODSUSTVO);
+		}
 				
-				ooms.setStatus(0);
-				ooms.setLekar(lekar);
-				ooms.setKlinika(k);
+		ooms.setStatus(0);
+		ooms.setLekar(lekar);
+		ooms.setKlinika(k);	
+		ooms = oolService.save(ooms);
 				
-				ooms = oolService.save(ooms);
+		k.getZahteviZaOdmorOdsustvoLekara().add(ooms);
+		k = klinikaService.save(k);
 				
-				k.getZahteviZaOdmorOdsustvoLekara().add(ooms);
-				k = klinikaService.save(k);
+		lekar.getListaOdmorOdsustvo().add(ooms);
+		lekar = lekarService.save(lekar);
 				
-				lekar.getListaOdmorOdsustvo().add(ooms);
-				lekar = lekarService.save(lekar);
-				
-				System.out.println("------------------------------------------------------");
-				return new ResponseEntity<>(new OdmorOdsustvoLDTO(ooms), HttpStatus.CREATED);
+		System.out.println("------------------------------------------------------");
+		return new ResponseEntity<>(new OdmorOdsustvoLDTO(ooms), HttpStatus.CREATED);
 
 
 	}
 	
-	
+	//potvrda zahteva med sestre od stara admina klinike
 	//ODOBRI zahtev med sestri
+	@Async
 	@PostMapping(path = "/potvrdaMS", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
 	public ResponseEntity<String> potvrdaZahtevaMedSes(@RequestBody OdmorOdsustvoMSDTO ooDTO) {
 		System.out.println("------------------------------------------------------");
-		
-	
+
 		MedicinskaSestra ms = medicinskaSestraService.findById(ooDTO.getIdMedSestre());
 		MedicinskaSestraDTO msDTO = new MedicinskaSestraDTO(ms);
 		
 		Klinika k = klinikaService.findById(ms.getKlinika().getId());
-		KlinikaDTO kDTO = new KlinikaDTO(k);
-		
 		OdmorOdsustvoMedicinskaSestra ooms = oomsService.findById(ooDTO.getId());
-		OdmorOdsustvoMSDTO oomsDTO = new OdmorOdsustvoMSDTO(ooms);
 			
 		String subject ="Odobren zahtev za odmor/odsustvo";
 		String text = "Postovani " + ms.getIme() + " " + ms.getPrezime() 
@@ -298,12 +289,13 @@ public class OdmorOdsustvoController {
 		ooms = oomsService.save(ooms);
 		System.out.println("status posle: "+ooms.getStatus());
 		
-	
 		return new ResponseEntity<>("odobreno", HttpStatus.CREATED);
 
 	}
 	
+	//odbijanje zahteva med sestre od stara admina klinike
 	//ODBIJ zahtev med sestri
+	@Async
 	@PostMapping(path = "/odbijanjeMS/{razlog}", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
@@ -315,10 +307,8 @@ public class OdmorOdsustvoController {
 		MedicinskaSestraDTO msDTO = new MedicinskaSestraDTO(ms);
 		
 		Klinika k = klinikaService.findById(ms.getKlinika().getId());
-//		KlinikaDTO kDTO = new KlinikaDTO(k);
 		
 		OdmorOdsustvoMedicinskaSestra ooms = oomsService.findById(ooDTO.getId());
-//		OdmorOdsustvoMSDTO oomsDTO = new OdmorOdsustvoMSDTO(ooms);
 			
 		String subject ="Odbijen zahtev za odmor/odsustvo";
 		String text = "Postovani " + ms.getIme() + " " + ms.getPrezime() 
@@ -341,12 +331,6 @@ public class OdmorOdsustvoController {
 		ooms.setStatus(2);
 		ooms = oomsService.save(ooms);
 		
-//		k.getZahteviZaOdmorOdsustvoMedestre().remove(ooms);
-		k = klinikaService.save(k);
-		
-//		ms.getListaOdmorOdsustvo().remove(ooms);
-		ms = medicinskaSestraService.save(ms);
-		
 		
 		
 		System.out.println("------------------------------------------------------");
@@ -354,22 +338,21 @@ public class OdmorOdsustvoController {
 
 	}
 	
+	//potvrda zahteva lekara od stara admina klinike
 	//ODOBRI zahtev lekaru
+	@Async
 	@PostMapping(path = "/potvrdaL", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
 	public ResponseEntity<String> potvrdaZahtevaLekaru(@RequestBody OdmorOdsustvoLDTO ooDTO) {
 		System.out.println("------------------------------------------------------");
 		
-	
 		Lekar l = lekarService.findById(ooDTO.getIdLekara());
 		LekarDTO lDTO = new LekarDTO(l);
 		
 		Klinika k = klinikaService.findById(l.getKlinika().getId());
-		KlinikaDTO kDTO = new KlinikaDTO(k);
 		
 		OdmorOdsustvoLekar ooms = oolService.findById(ooDTO.getId());
-		OdmorOdsustvoLDTO oomsDTO = new OdmorOdsustvoLDTO(ooms);
 			
 		String subject ="Odobren zahtev za odmor/odsustvo";
 		String text = "Postovani " + l.getIme() + " " + l.getPrezime() 
@@ -399,22 +382,21 @@ public class OdmorOdsustvoController {
 
 	}
 	
+	//odbijanje zahteva lekara od stara admina klinike
 	//ODBIJ zahtev lekaru
+	@Async
 	@PostMapping(path = "/odbijanjeL/{razlog}", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
 	public ResponseEntity<String> odbijanjeZahtevaLekaru(@RequestBody OdmorOdsustvoLDTO ooDTO, @PathVariable String razlog) {
 		System.out.println("------------------------------------------------------");
 		
-	
 		Lekar l = lekarService.findById(ooDTO.getIdLekara());
 		LekarDTO lDTO = new LekarDTO(l);
 		
 		Klinika k = klinikaService.findById(l.getKlinika().getId());
-		KlinikaDTO kDTO = new KlinikaDTO(k);
 		
 		OdmorOdsustvoLekar ooms = oolService.findById(ooDTO.getId());
-		OdmorOdsustvoLDTO oomsDTO = new OdmorOdsustvoLDTO(ooms);
 			
 		String subject ="Odbijen zahtev za odmor/odsustvo";
 		String text = "Postovani " + l.getIme() + " " + l.getPrezime() 
@@ -436,15 +418,7 @@ public class OdmorOdsustvoController {
 		
 		ooms.setStatus(2);
 		ooms = oolService.save(ooms);
-		
-//		k.getZahteviZaOdmorOdsustvoLekara().remove(ooms);
-		k = klinikaService.save(k);
-		
-//		l.getListaOdmorOdsustvo().remove(ooms);
-		l = lekarService.save(l);
-		
-		
-		
+
 		System.out.println("------------------------------------------------------");
 		return new ResponseEntity<>("odobreno", HttpStatus.OK);
 

@@ -326,9 +326,14 @@ public class AdministratorKCController {
 		KlinickiCentar kc = listaKC.get(0);
 		if (klinikaDTO.getNaziv() != "" && klinikaDTO.getNaziv() != null) {
 
-			Klinika klinika = Klinika.builder().naziv(klinikaDTO.getNaziv()).opis(klinikaDTO.getOpis())
-					.adresa(klinikaDTO.getAdresa()).ocena(klinikaDTO.getOcena()).status(0).klinickiCentar(kc).build();
-
+			Klinika klinika = Klinika.builder()
+					.naziv(klinikaDTO.getNaziv())
+					.opis(klinikaDTO.getOpis())
+					.adresa(klinikaDTO.getAdresa())
+					.ocena(klinikaDTO.getOcena())
+					.status(0)
+					.klinickiCentar(kc).build();
+			
 //			klinika.setNaziv(klinikaDTO.getNaziv());
 //			klinika.setOpis(klinikaDTO.getOpis());
 //			klinika.setAdresa(klinikaDTO.getAdresa());

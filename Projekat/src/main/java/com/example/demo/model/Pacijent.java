@@ -70,7 +70,7 @@ public class Pacijent implements UserDetails {
 	@Column(name = "odobrenaRegistracija", nullable = true)
 	private int odobrenaRegistracija;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	private KlinickiCentar klinickiCentar;
 
 	@ManyToMany(mappedBy = "listaPacijenataMedSestra")

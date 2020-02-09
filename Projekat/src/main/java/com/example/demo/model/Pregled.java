@@ -181,13 +181,11 @@ public class Pregled {
 		return super.hashCode();
 	}
 
-	@Override
-	public String toString() {
-		// TODO Auto-generated method stub
-		return super.toString();
-	}
+	
 
 
+
+	
 
 	public int getStatus() {
 		return status;
@@ -227,4 +225,5 @@ public class Pregled {
 		this.izvestajOPregledu = izvestajOPregledu;
 	}
 
+	
 }

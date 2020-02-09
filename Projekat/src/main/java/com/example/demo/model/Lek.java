@@ -25,10 +25,10 @@ public class Lek {
 	@Column(name = "sifra", nullable = false)
 	private String sifra;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne( fetch = FetchType.LAZY)
 	private KlinickiCentar klinickiCentar;
 
-	@OneToMany(mappedBy = "lek", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "lek", fetch = FetchType.LAZY)
 	private Set<Recept> recepti = new HashSet<Recept>();
 
 	public Long getId() {
