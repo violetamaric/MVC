@@ -18,7 +18,7 @@ import com.example.demo.repository.PacijentRepository;
 import com.example.demo.repository.PregledRepository;
 
 @Service
-@Transactional(readOnly = true)
+//@Transactional(readOnly = true)
 public class KlinikaService {
 	@Autowired
 	private KlinikaRepository klinikaRepository;
