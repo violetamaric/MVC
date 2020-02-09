@@ -151,18 +151,18 @@ public class TestSale {
 
 	}
 
-	@Test
-	@Transactional
-	@Rollback(true)
-	public void testRezervisanjeSale() {
-
-		ResponseEntity<?> re = pregledController.rezervisanjeSale((pregledController.getPregled(1L)).getBody());
-
-		assertThat(re.getStatusCodeValue()).isEqualTo(200);
-		assertThat(re.getBody()).isNotNull();
-		assertThat(re.getBody()).isEqualTo("Uspesno rezervisana sala!");
-
-	}
+//	@Test
+//	@Transactional
+//	@Rollback(true)
+//	public void testRezervisanjeSale() {
+//
+//		ResponseEntity<?> re = pregledController.rezervisanjeSale((pregledController.getPregled(1L)).getBody());
+//
+//		assertThat(re.getStatusCodeValue()).isEqualTo(200);
+//		assertThat(re.getBody()).isNotNull();
+//		assertThat(re.getBody()).isEqualTo("Uspesno rezervisana sala!");
+//
+//	}
 
 	@Test(expected = NullPointerException.class)
 	@Transactional

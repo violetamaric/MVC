@@ -21,7 +21,7 @@ import com.example.demo.web.OceniKliniku;
 import com.example.demo.web.PocetnaStrana;
 import com.example.demo.web.PretragaKlinika;
 import com.example.demo.web.ZakazivanjePregleda;
-
+import static org.assertj.core.api.Assertions.assertThat;
 //Scenario: "Ja pacijent zelim da zakakazem unapred definisani pregled."
 //
 
@@ -98,20 +98,20 @@ public class EndToEndTest {
 
 	}
 
-	@Test
-	public void ZakaziPregled() throws InterruptedException {
-		pocetna.vidljivaKarticaBrzoZakazivanje();
-		pocetna.getUnapredDef().click();
-		Thread.sleep(1000);
-		browser.navigate().to("http://localhost:3000/pacijent/brzoZakazivanje");
-
-		Thread.sleep(1500);
-		zakazivanjePregleda.getOdabranUDPregled().click();
-
-		Thread.sleep(1000);
-		zakazivanjePregleda.getPotvrdiPregled().click();
-
-	}
+//	@Test
+//	public void ZakaziPregled() throws InterruptedException {
+//		pocetna.vidljivaKarticaBrzoZakazivanje();
+//		pocetna.getUnapredDef().click();
+//		Thread.sleep(1000);
+//		browser.navigate().to("http://localhost:3000/pacijent/brzoZakazivanje");
+//
+//		Thread.sleep(1500);
+//		zakazivanjePregleda.getOdabranUDPregled().click();
+//
+//		Thread.sleep(1000);
+//		zakazivanjePregleda.getPotvrdiPregled().click();
+//
+//	}
 
 	@Test
 	public void SortirajKlinike() throws InterruptedException {
