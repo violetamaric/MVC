@@ -39,6 +39,7 @@ import com.example.demo.model.AdministratorKlinike;
 import com.example.demo.model.Klinika;
 import com.example.demo.model.Lekar;
 import com.example.demo.model.OdmorOdsustvoLekar;
+import com.example.demo.model.Operacija;
 import com.example.demo.model.Pacijent;
 import com.example.demo.model.Pregled;
 import com.example.demo.model.Sala;
@@ -947,8 +948,8 @@ public class PregledController {
 		return new ResponseEntity<>(termini, HttpStatus.OK);
 	}
 
-	
-	@Scheduled(cron = "30 03 21 * * ?")
+	// automatsko rezervisanje sala za preglede
+	@Scheduled(cron = "00 30 17 * * ?")
 	@Transactional
 	public void automaticSchedule() {
 
@@ -1050,7 +1051,7 @@ public class PregledController {
 				Date kraj = new Date();
 				Calendar c = Calendar.getInstance();
 				c.setTime(pre.getDatum());
-				c.add(Calendar.DATE, 7);
+				c.add(Calendar.DATE, 20);
 				kraj = c.getTime();
 				
 				Date randomDate = new Date(ThreadLocalRandom.current().nextLong(pre.getDatum().getTime(), kraj.getTime()));
@@ -1115,6 +1116,196 @@ public class PregledController {
 				System.out.println("KRAJ");
 				String subject = "Rezervisana sala";
 				String text = "Postovani ,\n\nRezervisana je sala za Vas pregled! ";
+//				String text = "Postovani " + pre.getPacijent().getIme() + " " + pre.getPacijent().getPrezime() + ",\n\nRezervisana je sala za Vas pregled! ";
+
+				System.out.println(text);
+
+				// slanje emaila
+				try {
+					emailService.poslatiOdgovorPacijentu(new PacijentDTO(pre.getPacijent()), subject, text);
+				} catch (Exception e) {
+					logger.info("Greska prilikom slanja emaila: " + e.getMessage());
+					
+				}
+				
+				
+			}
+			
+		
+		}
+		
+
+	}
+	
+	// automatsko rezervisanje sala za operacije
+	@Scheduled(cron = "00 00 18 * * ?")
+	@Transactional
+	public void automaticOperacija() {
+
+		
+		List<Operacija> preglediSvi = operacijaService.findAll();
+		
+		List<Operacija> zahteviZP = new ArrayList<>();
+		System.out.println("----------------------------");
+		for(Operacija p: preglediSvi) {
+			
+			if(p.getStatus() == 0 && p.getSala() == null) {
+				
+				zahteviZP.add(p);
+			}
+		}
+		
+		
+		List<Sala> sveSale = salaService.findAll();
+		List<Sala> saleZaPregled = new ArrayList<>();
+		//sale za preglede
+		for(Sala s : sveSale) {
+			if(s.getTipSale() == 0) {
+				
+				saleZaPregled.add(s);
+			}
+		}
+		
+		
+		for(Operacija pre : zahteviZP) {
+			
+		try {
+			
+			System.out.println("pregledi----------------------------");
+			System.out.println(pre.getDatum() + " " + pre.getTermin());
+			List<Sala> saleNaTojKlinici = new ArrayList<>();
+			
+			for(Sala s: saleZaPregled) {
+				if(pre.getKlinika().getId() == s.getKlinika().getId()) {
+					
+					saleNaTojKlinici.add(s);
+				}
+			}
+			
+			HashMap<Sala, Integer> zauzeteSale = new HashMap<>();
+			for(Sala s: saleNaTojKlinici) {
+				
+				for(Termin ter: terminService.findAll()) {
+
+					if(s.getId() == ter.getSala().getId()) {
+//						if(pre.getLekar().getId() == ter.getLekar().getId()) {
+							if(pre.getDatum().equals(ter.getDatumPocetka())) {
+								if(pre.getTermin() == ter.getTermin()) {
+									zauzeteSale.put(s, 1);
+								}
+							}
+//						}
+						
+					}
+				}
+				if(!zauzeteSale.containsKey(s)) {
+//					System.out.println("slobodna sala: " + s.getId());
+					zauzeteSale.put(s, 0);
+				}
+			}
+			List<Sala> slobodneSale = new ArrayList<>();
+			for(Sala s : zauzeteSale.keySet()) {
+				
+				if(zauzeteSale.get(s) == 0) {
+					slobodneSale.add(s);
+					System.out.println("slobodna "+ s.getNaziv() + " " + s.getId());
+				}else if(zauzeteSale.get(s) == 1){
+					System.out.println("zauzeta "+ s.getNaziv() + " " + s.getId());
+				}
+		
+			}
+			
+			
+			//ako ima slobodnih sala dodeli prvu
+			pre.setSala(slobodneSale.get(0));
+			
+			pre = operacijaService.save(pre);
+			
+			String subject = "Rezervisana sala";
+			String text = "Postovani ,\n\nRezervisana je sala za Vasu operaciju! ";
+
+			System.out.println(text);
+
+			// slanje emaila
+			try {
+				emailService.poslatiOdgovorPacijentu(new PacijentDTO(pre.getPacijent()), subject, text);
+			} catch (Exception e) {
+				logger.info("Greska prilikom slanja emaila: " + e.getMessage());
+				
+			}
+			System.out.println("DODELJENA");
+			
+			}catch(IndexOutOfBoundsException ioobe) {
+				
+				System.out.println("ISPIIIIISSSSSS");
+				Date kraj = new Date();
+				Calendar c = Calendar.getInstance();
+				c.setTime(pre.getDatum());
+				c.add(Calendar.DATE, 20);
+				kraj = c.getTime();
+				
+				Date randomDate = new Date(ThreadLocalRandom.current().nextLong(pre.getDatum().getTime(), kraj.getTime()));
+				System.out.println("random datum ");
+				System.out.println(randomDate);
+				
+				
+				List<Sala> saleNaTojKlinici = new ArrayList<>();
+				
+				for(Sala s: saleZaPregled) {
+					if(pre.getKlinika().getId() == s.getKlinika().getId()) {
+						
+						saleNaTojKlinici.add(s);
+					}
+				}
+				
+				HashMap<Sala, Integer> zauzeteSale = new HashMap<>();
+				for(Sala s: saleNaTojKlinici) {
+					
+					for(Termin ter: terminService.findAll()) {
+
+						if(s.getId() == ter.getSala().getId()) {
+//							if(pre.getLekar().getId() == ter.getLekar().getId()) {
+								if(randomDate.equals(ter.getDatumPocetka())) {
+									if(pre.getTermin() == ter.getTermin()) {
+										zauzeteSale.put(s, 1);
+									}
+								}
+//							}
+							
+						}
+					}
+					if(!zauzeteSale.containsKey(s)) {
+//						System.out.println("slobodna sala: " + s.getId());
+						zauzeteSale.put(s, 0);
+					}
+				}
+				List<Sala> slobodneSale = new ArrayList<>();
+				for(Sala s : zauzeteSale.keySet()) {
+					
+					if(zauzeteSale.get(s) == 0) {
+						slobodneSale.add(s);
+						System.out.println("slobodna "+ s.getNaziv() + " " + s.getId());
+					}else if(zauzeteSale.get(s) == 1){
+						System.out.println("zauzeta "+ s.getNaziv() + " " + s.getId());
+					}
+			
+				}
+				
+				
+				//ako ima slobodnih sala dodeli prvu
+				if(slobodneSale.size() != 0) {
+					System.out.println("DODELJENAAAAAA " + slobodneSale.get(0));
+					pre.setSala(slobodneSale.get(0));
+				}else {
+					
+					Sala sala = salaService.findById(8L);
+					System.out.println("DODELJENAAAAAA " + sala.getId());
+					pre.setSala(sala);
+				}
+				pre = operacijaService.save(pre);
+				System.out.println("KRAJ");
+				String subject = "Rezervisana sala";
+				String text = "Postovani ,\n\nRezervisana je sala za Vasu operaciju! ";
 //				String text = "Postovani " + pre.getPacijent().getIme() + " " + pre.getPacijent().getPrezime() + ",\n\nRezervisana je sala za Vas pregled! ";
 
 				System.out.println(text);
