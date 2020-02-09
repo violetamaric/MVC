@@ -56,8 +56,8 @@ public class SlobodniTermin {
 	@Column(name = "cena", nullable = false)
 	private double cena;
 	
-	@Version
-	private Long version;
+//	@Version
+//	private Long version;
 
 	//true  = zauzet
 	//false = slobodan
@@ -187,13 +187,13 @@ public class SlobodniTermin {
 		this.popust = popust;
 	}
 
-	public Long getVersion() {
-		return version;
-	}
-
-	public void setVersion(Long version) {
-		this.version = version;
-	}
+//	public Long getVersion() {
+//		return version;
+//	}
+//
+//	public void setVersion(Long version) {
+//		this.version = version;
+//	}
 
 	public int getTermin() {
 		return termin;
