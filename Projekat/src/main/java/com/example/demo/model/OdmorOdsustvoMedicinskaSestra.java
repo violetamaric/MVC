@@ -31,7 +31,7 @@ public class OdmorOdsustvoMedicinskaSestra {
 	@Column(name = "opis", nullable = false)
 	private String opis;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne( fetch = FetchType.LAZY)
 	private MedicinskaSestra medicinskaSestra;
 
 	// 0-ni odobreno ni odbijeno -zahtev
@@ -43,7 +43,7 @@ public class OdmorOdsustvoMedicinskaSestra {
 	@Column(name = "tip", nullable = false)
 	private TipOdmorOdsustvo tip;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne( fetch = FetchType.LAZY)
 	private Klinika klinika;
 
 	public OdmorOdsustvoMedicinskaSestra() {

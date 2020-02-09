@@ -43,7 +43,7 @@ public class AdministratorKlinike implements UserDetails {
 	@Column(name = "telefon", nullable = false)
 	private String telefon;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne( fetch = FetchType.LAZY)
 	private Klinika klinika;
 
 	@ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)

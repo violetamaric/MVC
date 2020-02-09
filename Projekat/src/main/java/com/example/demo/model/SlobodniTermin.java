@@ -39,11 +39,11 @@ public class SlobodniTermin {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Sala sala;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Lekar lekar;
 
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Klinika klinika;
 
 	@Column(name = "cena", nullable = false)

@@ -32,7 +32,7 @@ public class ZdravstveniKarton {
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Pacijent pacijent;
 
-	@OneToMany(mappedBy = "zdravstveniKarton", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "zdravstveniKarton", fetch = FetchType.LAZY)
 	private Set<IzvestajOPregledu> listaIzvestajaOPregledu = new HashSet<IzvestajOPregledu>();
 
 	public ZdravstveniKarton() {

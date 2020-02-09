@@ -33,16 +33,16 @@ public class Operacija {
 	@Column(name = "termin", nullable = false)
 	private int termin;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne( fetch = FetchType.LAZY)
 	private Sala sala;
 
 	@ManyToMany(mappedBy = "listaOperacija")
 	private Set<Lekar> listaLekara = new HashSet<Lekar>();
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Pacijent pacijent;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Klinika klinika;
 
 	// 0-nije ni potvrdjeno ni odbijeno

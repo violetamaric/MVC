@@ -29,7 +29,7 @@ public class Pacijent implements UserDetails {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "zdravstveniKarton_id")
 	private ZdravstveniKarton zdravstveniKarton;
 
@@ -66,7 +66,7 @@ public class Pacijent implements UserDetails {
 	@Column(name = "odobrenaRegistracija", nullable = true)
 	private int odobrenaRegistracija;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	private KlinickiCentar klinickiCentar;
 
 	@ManyToMany(mappedBy = "listaPacijenataMedSestra")

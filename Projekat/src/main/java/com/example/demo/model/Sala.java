@@ -27,10 +27,10 @@ public class Sala {
 	@Column(name="tipSale", nullable=false)	
 	private int tipSale; //tip sobe 0-operacije, 1-preg led 
 	
-	@OneToMany(mappedBy = "sala", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "sala", fetch = FetchType.LAZY)
 	private Set<Pregled> listaPregleda = new HashSet<Pregled>();
 	
-	@OneToMany(mappedBy = "sala", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "sala", fetch = FetchType.LAZY)
 	private Set<Operacija> listaOperacija = new HashSet<Operacija>();
 	
 	@ManyToOne( fetch = FetchType.LAZY)

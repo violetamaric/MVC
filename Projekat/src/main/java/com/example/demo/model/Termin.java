@@ -24,8 +24,7 @@ public class Termin {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-//	@Temporal(TemporalType.DATE)
-//	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
+
 	@Column(name = "datumPocetka", nullable = false)
 	private Date datumPocetka;
 
