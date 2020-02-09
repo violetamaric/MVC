@@ -41,14 +41,21 @@ public class OperacijaDTO {
 		this.klinikaID = operacija.getKlinika().getId();
 		this.nazivKl = operacija.getKlinika().getNaziv();
 		this.tipOperacije = operacija.getTipOperacije();
-		this.salaBR = operacija.getSala().getBroj();
-		this.salaID = operacija.getSala().getId();
-		this.salaN = operacija.getSala().getNaziv();
+		
+		if(operacija.getSala() != null) {
+			this.salaBR = operacija.getSala().getBroj();
+			this.salaID = operacija.getSala().getId();
+			this.salaN = operacija.getSala().getNaziv();
+		}
+		
 		this.status = operacija.getStatus();
 		this.termin = operacija.getTermin();
-		for(Lekar l:operacija.getListaLekara()) {
-			this.listaLekara.add(l.getId());
+		if(operacija.getListaLekara().size() != 0) {
+			for(Lekar l:operacija.getListaLekara()) {
+				this.listaLekara.add(l.getId());
+			}
 		}
+		
 		
 	}
 
