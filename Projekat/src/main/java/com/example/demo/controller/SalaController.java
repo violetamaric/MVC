@@ -139,7 +139,7 @@ public class SalaController {
 	}
 
 	@GetMapping(value = "preuzmiSaleKlinike/{id}")
-	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
+//	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
 	public ResponseEntity<List<SalaDTO>> getSaleKlinike(@PathVariable Long id) {
 
 		Klinika klinika = klinikaService.findOne(id);

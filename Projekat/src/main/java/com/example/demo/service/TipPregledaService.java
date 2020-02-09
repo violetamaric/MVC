@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.model.Klinika;
-import com.example.demo.model.Sala;
 import com.example.demo.model.TipPregleda;
+import com.example.demo.repository.KlinikaRepository;
 import com.example.demo.repository.TipPregledaRepository;
 
 @Service
@@ -15,6 +15,9 @@ public class TipPregledaService {
 
 	@Autowired
 	private TipPregledaRepository TPRepository;
+	
+	@Autowired
+	private KlinikaRepository klinikaRepository;
 	
 	public List<TipPregleda> findAll(){
 		return TPRepository.findAll();
@@ -35,5 +38,9 @@ public class TipPregledaService {
 	}
 	public void delete(TipPregleda klinika) {
 		TPRepository.delete(klinika);
+	}
+	public List<Klinika> findKlinike(Long id) {
+
+		return klinikaRepository.findKlinike(id);
 	}
 }

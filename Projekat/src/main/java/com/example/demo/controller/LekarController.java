@@ -12,11 +12,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+
+import org.springframework.transaction.annotation.Propagation;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -53,6 +57,7 @@ import com.example.demo.service.TerminService;
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping(value = "/api/lekari", produces = MediaType.APPLICATION_JSON_VALUE)
+//@Transactional(readOnly = true)
 public class LekarController {
 
 	@Autowired
@@ -381,8 +386,10 @@ public class LekarController {
 
 	}
 
+
 	@PutMapping(path = "/oceni/{id}/{ocena}/{pregled_id}", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 	public ResponseEntity<LekarDTO> oceniLekara(@PathVariable Long id, @PathVariable int ocena,
 			@PathVariable Long pregled_id) {
 

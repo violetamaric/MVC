@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -58,12 +59,13 @@ public class SlobodniTerminController {
 
 		List<SlobodniTermin> st = STService.findAll();
 
-		// convert students to DTOs
+		Date danasnjiDatum = new Date();
 		List<SlobodniTerminDTO> stDTO = new ArrayList<>();
 		for (SlobodniTermin sstt : st) {
-			if (!sstt.isStatus()) {
+
+			if (!sstt.isStatus() && sstt.getDatum().after(danasnjiDatum)) {
 				stDTO.add(new SlobodniTerminDTO(sstt));
-				System.out.println(new SlobodniTerminDTO(sstt));
+
 			}
 
 		}
@@ -135,7 +137,7 @@ public class SlobodniTerminController {
 
 		return new ResponseEntity<>(new SlobodniTerminDTO(st), HttpStatus.OK);
 	}
-	
+
 	@GetMapping(value = "preuzmiSaleKlinikeZaPregled/{id}")
 	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
 	public ResponseEntity<List<SalaDTO>> getSaleKlinikeZaPRegled(@PathVariable Long id) {
@@ -145,11 +147,11 @@ public class SlobodniTerminController {
 		List<SalaDTO> lista = new ArrayList<SalaDTO>();
 		for (Sala s : sale) {
 			if (s.getKlinika().getId() == klinika.getId()) {
-				if(s.getTipSale()==1) {
+				if (s.getTipSale() == 1) {
 					SalaDTO salaDTO = new SalaDTO(s);
 					lista.add(salaDTO);
 				}
-			
+
 			}
 		}
 

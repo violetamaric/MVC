@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.model.SlobodniTermin;
 import com.example.demo.repository.SlobodniTerminRepository;
@@ -17,6 +19,7 @@ public class SlobodniTerminService {
 	public List<SlobodniTermin> findAll() {
 		return STRepository.findAll();
 	}
+
 	public SlobodniTermin save(SlobodniTermin s) {
 		return STRepository.save(s);
 	}

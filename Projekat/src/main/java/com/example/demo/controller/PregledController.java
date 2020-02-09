@@ -135,6 +135,7 @@ public class PregledController {
 	@PostMapping(path = "/newST", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 //	@PreAuthorize("hasAuthority('PACIJENT')")
+	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
 	public ResponseEntity<?> noviPregledST(@RequestBody PregledDTO pregledDTO) {
 		System.out.println("dodavanje novog pregleda ST");
 		System.out.println(pregledDTO);
@@ -225,7 +226,7 @@ public class PregledController {
 	}
 
 	@GetMapping(value = "/{id}")
-	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
+//	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
 	public ResponseEntity<PregledDTO> getPregled(@PathVariable Long id) {
 
 		Pregled pregled = pregledService.findOne(id);
@@ -376,7 +377,7 @@ public class PregledController {
 
 	@PutMapping(path = "/potvrda/{id}")
 	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('PACIJENT')")
+//	@PreAuthorize("hasAuthority('PACIJENT')")
 	public ResponseEntity<PregledDTO> potvrdiPregled(@PathVariable Long id) {
 		System.out.println("POTVRDA PREGLEDA");
 
@@ -402,7 +403,7 @@ public class PregledController {
 
 	@PutMapping(path = "/odbijanje/{id}")
 	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('PACIJENT')")
+//	@PreAuthorize("hasAuthority('PACIJENT')")
 	public ResponseEntity<PregledDTO> odbijPregled(@PathVariable Long id) {
 		System.out.println("DBIJANJE PREGLEDA");
 		Pregled pregled = pregledService.findById(id);
@@ -504,7 +505,7 @@ public class PregledController {
 	// pronalazak sala slobodnih za taj teremin i za taj datum-PREGLED
 	@GetMapping(value = "/pronadjiSaleZaTajTermin/{idP}")
 	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
+//	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
 	public ResponseEntity<List<SalaDTO>> getSaleTermin(@PathVariable Long idP) {
 
 		Pregled pregled = pregledService.findById(idP);
@@ -635,7 +636,7 @@ public class PregledController {
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 	@PostMapping(path = "/rezervisanjeSale", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
+//	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
 	public ResponseEntity<String> rezervisanjeSale(@RequestBody PregledDTO pDTO) {
 		System.out.println();
 		System.out.println("......... Rezervisanje sale ..... ");
@@ -716,13 +717,13 @@ public class PregledController {
 			return new ResponseEntity<>("Mail nije poslat2", HttpStatus.BAD_REQUEST);
 		}
 
-		return new ResponseEntity<>("uspesno rezervisana sala1", HttpStatus.OK);
+		return new ResponseEntity<>("Uspesno rezervisana sala!", HttpStatus.OK);
 	}
 
 	// metoda koja vraca listu slobodnih lekara za taj datum i termin
 	@PostMapping(path = "/pronadjiLekaraZaPregled", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
+//	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
 	public ResponseEntity<List<LekarDTO>> slobodanLekar(@RequestBody PregledDTO pDTO) {
 
 		List<LekarDTO> listaSlobodnihLekara = new ArrayList<LekarDTO>();
@@ -856,63 +857,11 @@ public class PregledController {
 		return new ResponseEntity<>(new PregledDTO(pregled), HttpStatus.OK);
 
 	}
-
-	@PostMapping(value = "/zakazivanjeOperacijeLekar")
-	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('LEKAR')")
-	public ResponseEntity<?> zakazivanjeOperacijeLekar(@RequestBody OperacijaDTO operacijaDTO, Principal pr) {
-		System.out.println("*************");
-
-		Lekar lekar = lekarService.findByEmail(pr.getName());
-
-		System.out.println("dodavanje nove operacije");
-//		System.out.println(pregledDTO);
-		Operacija operacija = new Operacija();
-
-		operacija.setDatum(operacijaDTO.getDatum());
-
-		Klinika klinika = lekar.getKlinika();
-		operacija.setKlinika(klinika);
-
-//		operacija.setLekar(lekar); 
-		operacija.setTermin(operacijaDTO.getTermin());
-
-		Pacijent pacijent = pacijentService.findByEmail(operacijaDTO.getPacijentEmail());
-		operacija.setPacijent(pacijent);
-		operacija.setStatus(0);
-
-		operacija.setTipOperacije(operacijaDTO.getTipOperacije());
-
-		operacija.setCena(3000);
-
-		operacija = operacijaService.save(operacija);
-
-		klinika.getListaOperacija().add(operacija);
-		klinika = klinikaService.save(klinika);
-
-		Set<AdministratorKlinike> ak = klinika.getListaAdminKlinike();
-
-		for (AdministratorKlinike AK : ak) {
-			AdministratorKlinikeDTO akDTO = new AdministratorKlinikeDTO(AK);
-			String subject = "Zahtev za operaciju";
-			String text = "Postovani " + AK.getIme() + " " + AK.getPrezime() + ",\n\n imate novi zahtev za operaciju.";
-
-			System.out.println(text);
-
-			// slanje emaila
-			try {
-				emailService.poslatiOdgovorAdminuK(akDTO, subject, text);
-			} catch (Exception e) {
-				logger.info("Greska prilikom slanja emaila: " + e.getMessage());
-				return new ResponseEntity<>("Mail nije poslat", HttpStatus.BAD_REQUEST);
-			}
-		}
-
-		return new ResponseEntity<>(new OperacijaDTO(operacija), HttpStatus.OK);
-
-	}
-
-	// vrati mi listu termina za neki datum (lekar zakazuje)
+	
+	
+	
+	
+	//vrati mi listu termina za neki datum (lekar zakazuje)
 	@PostMapping(value = "/getTerminiLekaraZaDatum")
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority('LEKAR')")
