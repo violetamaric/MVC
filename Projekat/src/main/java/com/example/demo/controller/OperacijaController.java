@@ -106,7 +106,7 @@ public class OperacijaController {
 		for (Operacija o : operacije) {
 			System.out.println("======");
 			System.out.println(o.getListaLekara().size());
-			if (o.getPacijent().getEmail().equals(pr.getName())) {
+			if (o.getPacijent().getEmail().equals(pr.getName()) && o.getStatus()==1 ) {
 //				if(o.getStatus() == 3) ako su zavrsene
 				operacijeDTO.add(new OperacijaDTO(o));
 			}
@@ -165,8 +165,8 @@ public class OperacijaController {
 		klinika.getListaOperacija().add(operacija);
 		klinika = klinikaService.save(klinika);
 
-		pacijent.getListaOperacija().add(operacija);
-		pacijent = pacijentService.save(pacijent);
+//		pacijent.getListaOperacija().add(operacija);
+//		pacijent = pacijentService.save(pacijent);
 
 		Set<AdministratorKlinike> ak = klinika.getListaAdminKlinike();
 
@@ -444,11 +444,13 @@ public class OperacijaController {
 
 		for (Operacija p : listaOperacija) {
 			if (p.getId().equals(oDTO.getId())) {
-				p.setStatus(1);
+//				p.setStatus(1);
 				Sala s = salaService.findById(oDTO.getSalaID());
 				p.setSala(s);
 				pacijent = pacijentService.findByID(oDTO.getPacijentID());
 				p.setPacijent(pacijent);
+				
+		
 
 				for (Long i : oDTO.getListaLekara()) {
 					Lekar lekarO = lekarService.findById(i);
@@ -461,6 +463,8 @@ public class OperacijaController {
 				p.setDatum(oDTO.getDatum());
 
 				operacijaService.save(p);
+
+				
 				for (Lekar le : listaLekaraOper) {
 					Termin t = new Termin();
 					t.setTermin(oDTO.getTermin());
@@ -470,18 +474,18 @@ public class OperacijaController {
 					t.setDatumPocetka(oDTO.getDatum());
 					t.setSala(s);
 					t.setLekar(le);
-					terminService.save(t);
-					// TODO 1 : dodavanje lekatu operaciju
-					Set<Operacija> lekarOperacije = le.getListaOperacija();
-					lekarOperacije.add(p);
-					le.setListaOperacija(lekarOperacije);
-//					le.getListaOperacija().add(p);
-					lekarService.save(le);
+					t = terminService.save(t);
 				
+					le.getListaZauzetihTermina().add(t);
+					lekarService.save(le);
+
+					s.getZauzetiTermini().add(t);
+					salaService.save(s);
 
 				}
 
 			}
+
 		}
 
 		System.out.println("REZERVISANOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
@@ -495,6 +499,8 @@ public class OperacijaController {
 
 		PacijentDTO pd = new PacijentDTO(pacijent);
 
+	
+		
 		// slanje emaila
 		try {
 			emailService.poslatiOdgovorPacijentu(pd, subject, text);
