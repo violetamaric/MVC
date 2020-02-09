@@ -124,16 +124,16 @@ public class KlinikaController {
 //		if (lekar == null) {
 //			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 //		}
-		klinika.builder()
-		.naziv(klinikaDTO.getNaziv())
-		.adresa(klinikaDTO.getAdresa())
-		.opis(klinikaDTO.getOpis())
-		.ocena(klinikaDTO.getOcena())
-		.build();
-//		klinika.setNaziv(klinikaDTO.getNaziv());
-//		klinika.setAdresa(klinikaDTO.getAdresa());
-//		klinika.setOpis(klinikaDTO.getOpis());
-//		klinika.setOcena(klinikaDTO.getOcena());
+//		klinika.builder()
+//		.naziv(klinikaDTO.getNaziv())
+//		.adresa(klinikaDTO.getAdresa())
+//		.opis(klinikaDTO.getOpis())
+//		.ocena(klinikaDTO.getOcena())
+//		.build();
+		klinika.setNaziv(klinikaDTO.getNaziv());
+		klinika.setAdresa(klinikaDTO.getAdresa());
+		klinika.setOpis(klinikaDTO.getOpis());
+		klinika.setOcena(klinikaDTO.getOcena());
 
 		klinika = klinikaService.save(klinika);
 		System.out.println("Izmjenjena k: " + klinika);
