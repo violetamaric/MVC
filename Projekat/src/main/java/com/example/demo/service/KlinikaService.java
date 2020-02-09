@@ -46,7 +46,7 @@ public class KlinikaService {
 	public List<Klinika> findAll() {
 		return klinikaRepository.findAll();
 	}
-//	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
+	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
 	public Klinika save(Klinika klinika) {
 		logger.info("> create");
 		Klinika k = klinikaRepository.save(klinika);

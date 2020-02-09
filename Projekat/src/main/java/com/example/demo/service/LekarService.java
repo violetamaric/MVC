@@ -13,7 +13,6 @@ import com.example.demo.repository.LekarRepository;
 
 
 @Service
-
 public class LekarService {
 
 	@Autowired

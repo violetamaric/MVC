@@ -21,8 +21,11 @@ import javax.persistence.OneToOne;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Entity
-//@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties("zk")
 public class Pacijent implements UserDetails {
 
 	@Id
@@ -31,6 +34,7 @@ public class Pacijent implements UserDetails {
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "zdravstveniKarton_id")
+	@JsonProperty("zk")
 	private ZdravstveniKarton zdravstveniKarton;
 
 	@Column(name = "ime", nullable = false)

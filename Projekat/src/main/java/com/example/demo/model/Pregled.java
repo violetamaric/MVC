@@ -40,16 +40,16 @@ public class Pregled {
 	@ManyToOne(fetch = FetchType.LAZY )
 	private Sala sala;
 
-	@ManyToOne( fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Lekar lekar;
 
 //	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 //	private MedicinskaSestra medicinskaSestra;
 
-	@ManyToOne( fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Pacijent pacijent;
 
-	@ManyToOne( fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Klinika klinika;
 
 	@Column(name = "cena", nullable = false)

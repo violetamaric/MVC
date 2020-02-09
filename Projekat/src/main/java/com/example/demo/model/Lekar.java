@@ -53,7 +53,7 @@ public class Lekar implements UserDetails {
 	@JoinTable(name = "lekar_pacijent", joinColumns = @JoinColumn(name = "lekar_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "pacijent_id", referencedColumnName = "id"))
 	private Set<Pacijent> listaPacijenata = new HashSet<Pacijent>();
 
-	@ManyToOne( fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	private Klinika klinika;
 
 	@ManyToMany
@@ -199,11 +199,11 @@ public class Lekar implements UserDetails {
 		return super.hashCode();
 	}
 
-	@Override
-	public String toString() {
-		// TODO Auto-generated method stub
-		return super.toString();
-	}
+//	@Override
+//	public String toString() {
+//		// TODO Auto-generated method stub
+//		return super.toString();
+//	}
 
 	public Long getId() {
 		return id;

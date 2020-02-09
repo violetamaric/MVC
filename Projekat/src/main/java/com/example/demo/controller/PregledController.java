@@ -136,7 +136,7 @@ public class PregledController {
 	@PostMapping(path = "/newST", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 //	@PreAuthorize("hasAuthority('PACIJENT')")
-	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+//	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 	public ResponseEntity<?> noviPregledST(@RequestBody PregledDTO pregledDTO) {
 		System.out.println("dodavanje novog pregleda ST");
 		System.out.println(pregledDTO);
@@ -179,7 +179,7 @@ public class PregledController {
 //					sstt.getDatum() == pregled.getDatum()) {
 				System.out.println("menja se status");
 				sstt.setStatus(true);
-				STService.save(sstt);
+				sstt = STService.save(sstt);
 				break;
 			}
 
@@ -222,6 +222,7 @@ public class PregledController {
 //			
 			return new ResponseEntity<>("Mail nije poslat", HttpStatus.BAD_REQUEST);
 		}
+		System.out.println(new PregledDTO(pregled));
 
 		return new ResponseEntity<>(new PregledDTO(pregled), HttpStatus.OK);
 	}

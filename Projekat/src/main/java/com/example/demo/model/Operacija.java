@@ -33,7 +33,7 @@ public class Operacija {
 	@Column(name = "termin", nullable = false)
 	private int termin;
 
-	@ManyToOne( fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Sala sala;
 
 	@ManyToMany(mappedBy = "listaOperacija")
