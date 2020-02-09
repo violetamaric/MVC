@@ -261,12 +261,12 @@ insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, c
 insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status, sala_id, termin) values ('20-mar-2020', 1, 3, 1, 3, 2500, 1, 2, 11);
 insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status, sala_id, termin) values ('26-mar-2020', 2, 1, 2, 3, 5000, 1, 3, 11);
 insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status, sala_id, termin) values ('20-mar-2020', 3, 2, 3, 3, 1500, 1, 3, 9);
-insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status, sala_id, termin) values ('20-mar-2020', 3, 1, 1, 3, 1500, 1, 4, 9);
+--insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status, sala_id, termin) values ('20-mar-2020', 3, 1, 1, 3, 1500, 1, 4, 9);
 insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status, sala_id, termin) values ('20-mar-2020', 3, 3, 2, 3, 1500, 1, 5, 9);
 insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status, sala_id, termin) values ('20-mar-2020', 3, 4, 3, 3, 1500, 1, 6, 9);
 insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status, sala_id, termin) values ('20-mar-2020', 3, 5, 4, 3, 1500, 1, 7, 9);
 insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status, sala_id, termin) values ('20-mar-2020', 3, 6, 5, 3, 1500, 1, 1, 9);
-insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status, sala_id, termin) values ('20-mar-2020', 3, 8, 1, 3, 1500, 1, 2, 9);
+--insert into pregled(datum, tip_pregleda_id, lekar_id, pacijent_id, klinika_id, cena, status, sala_id, termin) values ('20-mar-2020', 3, 8, 1, 3, 1500, 1, 2, 9);
 
 
 insert into izvestajopregledu (sadrzaj, dijagnoza_id, pregled_id, zdravstveni_karton_id) values ('Pacijent se zalio na tegobe u delu grudnog kosa. Potrebno odraditi dodatne analize radi odredjivanja preciznije dijagnoze', 2, 6, 1);

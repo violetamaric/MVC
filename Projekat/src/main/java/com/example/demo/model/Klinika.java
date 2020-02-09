@@ -49,13 +49,14 @@ public class Klinika {
 	private int status;
 
 
-	@OneToMany(mappedBy = "klinika", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "klinika", fetch = FetchType.LAZY)
 	private Set<Pregled> listaPregleda = new HashSet<Pregled>();
 
-	@OneToMany(mappedBy = "klinika", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "klinika", fetch = FetchType.LAZY)
 	private Set<Operacija> listaOperacija = new HashSet<Operacija>();
 
-	@OneToMany(mappedBy = "klinika", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "klinika", fetch = FetchType.LAZY)
+
 	private Set<Lekar> listaLekara = new HashSet<Lekar>();
 
 	@ManyToMany(mappedBy = "listaKlinika")
@@ -65,17 +66,18 @@ public class Klinika {
 	@JoinTable(name = "klinika_pacijent", joinColumns = @JoinColumn(name = "klinika_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "pacijent_id", referencedColumnName = "id"))
 	private Set<Pacijent> listaPacijenata = new HashSet<Pacijent>();
 
-	@OneToMany(mappedBy = "klinika", fetch = FetchType.EAGER)
+
+	@OneToMany(mappedBy = "klinika", fetch = FetchType.LAZY)
 	private Set<MedicinskaSestra> listaMedSestara = new HashSet<MedicinskaSestra>();
 
-	@OneToMany(mappedBy = "klinika", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "klinika", fetch = FetchType.LAZY)
 	private Set<Sala> listaSala = new HashSet<Sala>();
 
+	@OneToMany(mappedBy = "klinika", fetch = FetchType.LAZY)
 
-	@OneToMany(mappedBy = "klinika", fetch = FetchType.EAGER)
 	private Set<AdministratorKlinike> listaAdminKlinike = new HashSet<AdministratorKlinike>();
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER)
 	private KlinickiCentar klinickiCentar;
 
 	@Column(name = "ocena", nullable = false)

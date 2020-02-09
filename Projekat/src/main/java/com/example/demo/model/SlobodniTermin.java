@@ -36,7 +36,7 @@ public class SlobodniTermin {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private TipPregleda tipPregleda;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Sala sala;
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
