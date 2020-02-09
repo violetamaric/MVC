@@ -28,7 +28,7 @@ public class PregledService {
 		return pregledRepository.findAll();
 	}
 	
-//	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
+	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
 	public Pregled save(Pregled Pregled) {
 		return pregledRepository.save(Pregled);
 	}

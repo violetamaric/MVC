@@ -19,7 +19,7 @@ public class SlobodniTerminService {
 	public List<SlobodniTermin> findAll() {
 		return STRepository.findAll();
 	}
-
+//	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 	public SlobodniTermin save(SlobodniTermin s) {
 		return STRepository.save(s);
 	}

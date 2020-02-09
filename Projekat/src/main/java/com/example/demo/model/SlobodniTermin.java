@@ -39,18 +39,18 @@ public class SlobodniTermin {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Sala sala;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Lekar lekar;
 
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Klinika klinika;
 
 	@Column(name = "cena", nullable = false)
 	private double cena;
 	
-	@Version
-	private Long version;
+//	@Version
+//	private Long version;
 
 	//true  = zauzet
 	//false = slobodan
@@ -174,13 +174,13 @@ public class SlobodniTermin {
 		this.popust = popust;
 	}
 
-	public Long getVersion() {
-		return version;
-	}
-
-	public void setVersion(Long version) {
-		this.version = version;
-	}
+//	public Long getVersion() {
+//		return version;
+//	}
+//
+//	public void setVersion(Long version) {
+//		this.version = version;
+//	}
 
 	public int getTermin() {
 		return termin;
