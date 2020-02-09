@@ -226,7 +226,7 @@ public class SalaController {
 	public ResponseEntity<SalaDTO> izmenaSale(@RequestBody SalaDTO salaDTO) {
 		System.out.println("------------------------------------------------------");
 		Sala sala = salaService.findById(salaDTO.getId());
-
+		
 		Klinika klinika = klinikaService.findById(salaDTO.getKlinikaID());
 
 		if (salaDTO.getNaziv() != null && salaDTO.getNaziv() != "") {
@@ -238,7 +238,7 @@ public class SalaController {
 		}
 
 		sala.setBroj(salaDTO.getBroj());
-//		sala.setTipSale(salaDTO.getTipSale());
+		sala.setTipSale(salaDTO.getTipSale());
 		sala.setId(salaDTO.getId());
 		sala.setKlinika(klinika);
 		sala = salaService.save(sala);
