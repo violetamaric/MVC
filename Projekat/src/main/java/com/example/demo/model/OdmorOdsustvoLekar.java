@@ -1,18 +1,17 @@
 package com.example.demo.model;
 
-import java.sql.Time;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
 
 @Entity
 public class OdmorOdsustvoLekar {
@@ -33,7 +32,7 @@ public class OdmorOdsustvoLekar {
 	@Column(name="opis", nullable=false)
 	private String opis;
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Lekar lekar; 
 	
 	
@@ -46,7 +45,7 @@ public class OdmorOdsustvoLekar {
 	@Column(name="tip", nullable=false)
 	private TipOdmorOdsustvo tip;
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Klinika klinika;
 	
 //	private Time trajanje;

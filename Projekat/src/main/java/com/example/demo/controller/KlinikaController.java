@@ -37,6 +37,7 @@ import com.example.demo.service.LekarService;
 import com.example.demo.service.PregledService;
 import com.example.demo.service.SlobodniTerminService;
 
+
 @RestController
 @RequestMapping(value = "/api/klinike", produces = MediaType.APPLICATION_JSON_VALUE)
 public class KlinikaController {
@@ -65,23 +66,6 @@ public class KlinikaController {
 		System.out.println(k.getNaziv() + " " + k.getId());
 		return ResponseEntity.ok(new KlinikaDTO(k));
 	}
-
-//	@GetMapping(value = "/{id}")
-//	@CrossOrigin(origins = "http://localhost:3000")
-//	@PreAuthorize("hasAuthority('ADMIN_KLINIKE')")
-//	public ResponseEntity<?> getKlinikaById(@PathVariable Long id) {
-//		System.out.println("Metoda find by id klinika: ");
-//		System.out.println(id);
-//		
-//		Klinika k = klinikaService.findOne(id);
-//		System.out.println("Pretraga klinike po ID");
-//		// studen must exist
-//		if (k == null) {
-//			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//		}
-//		System.out.println(k.getNaziv() + " " + k.getId());
-//		return ResponseEntity.ok(new KlinikaDTO(k));
-//	}
 
 	@GetMapping(value = "/all")
 	@PreAuthorize("hasAuthority('PACIJENT') or hasAuthority('ADMIN_KLINIKE')")
@@ -131,8 +115,8 @@ public class KlinikaController {
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PreAuthorize("hasAuthority( 'ADMIN_KLINIKE') or hasAuthority('ADMIN_KC')")
 	public ResponseEntity<KlinikaDTO> updateKliniku(@RequestBody KlinikaDTO klinikaDTO) {
-
-		// a student must exist
+		System.out.println("//////////////////// /////////////////////////");
+		
 		System.out.println(" KLINIKa UPDRATE");
 		Klinika klinika = klinikaService.findById(klinikaDTO.getId());
 
@@ -140,25 +124,26 @@ public class KlinikaController {
 //		if (lekar == null) {
 //			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 //		}
-		klinika.builder()
-		.naziv(klinikaDTO.getNaziv())
-		.adresa(klinikaDTO.getAdresa())
-		.opis(klinikaDTO.getOpis())
-		.ocena(klinikaDTO.getOcena())
-		.build();
-//		klinika.setNaziv(klinikaDTO.getNaziv());
-//		klinika.setAdresa(klinikaDTO.getAdresa());
-//		klinika.setOpis(klinikaDTO.getOpis());
-//		klinika.setOcena(klinikaDTO.getOcena());
+//		klinika.builder()
+//		.naziv(klinikaDTO.getNaziv())
+//		.adresa(klinikaDTO.getAdresa())
+//		.opis(klinikaDTO.getOpis())
+//		.ocena(klinikaDTO.getOcena())
+//		.build();
+		klinika.setNaziv(klinikaDTO.getNaziv());
+		klinika.setAdresa(klinikaDTO.getAdresa());
+		klinika.setOpis(klinikaDTO.getOpis());
+		klinika.setOcena(klinikaDTO.getOcena());
 
 		klinika = klinikaService.save(klinika);
 		System.out.println("Izmjenjena k: " + klinika);
+		System.out.println("//////////////////// /////////////////////////");
 		return new ResponseEntity<>(new KlinikaDTO(klinika), HttpStatus.OK);
 	}
 
 	@GetMapping(value = "/listaLekaraKlinika/{id}")
 	@CrossOrigin(origins = "http://localhost:3000")
-	@PreAuthorize("hasAuthority('ADMIN_KLINIKE') or hasAuthority('PACIJENT')")
+//	@PreAuthorize("hasAuthority('ADMIN_KLINIKE') or hasAuthority('PACIJENT')")
 	public ResponseEntity<List<LekarDTO>> getKlinikaLekari(@PathVariable Long id) {
 		System.out.println("//////////////////// KLINIKA LISTA LEKARA /////////////////////////		");
 		Klinika klinika = klinikaService.findById(id);
@@ -328,10 +313,8 @@ public class KlinikaController {
 
 		Klinika klinika = klinikaService.findById(id);
 		int temp = klinika.getOcena();
-		klinika.builder()
-		.ocena((temp + ocena) / 2)
-		.build();
-//		klinika.setOcena((temp + ocena) / 2);
+
+		klinika.setOcena((temp + ocena) / 2);
 		klinikaService.save(klinika);
 		Pregled pregled = pregledService.findById(pregled_id);
 		if (pregled.getStatus() == 3) {
@@ -640,4 +623,6 @@ public class KlinikaController {
 
 		return new ResponseEntity<>(pregledi, HttpStatus.OK);
 	}
+
+	
 }

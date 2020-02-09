@@ -30,8 +30,11 @@ public class PacijentDTO {
 	private String drzava;
 
 	private String telefon;
-
-	private Boolean odobrenaRegistracija;
+	//0-nije ni odobrena ni odbijena
+	//1- admin je odobrio i poslao mail
+	//2- potvrdjen od strane pacijenta klikom na link
+	//3 - izbrisan, odbijena registracija
+	private int odobrenaRegistracija;
 
 	public PacijentDTO() {
 		super();
@@ -61,7 +64,7 @@ public class PacijentDTO {
 	}
 
 	public PacijentDTO(Long id, Long zkID, String ime, String prezime, String lbo, String lozinka, String email,
-			Boolean odobrenaRegistracija, String jmbg) {
+			int odobrenaRegistracija, String jmbg) {
 		super();
 		this.id = id;
 		this.zkID = zkID;
@@ -170,11 +173,11 @@ public class PacijentDTO {
 		this.telefon = telefon;
 	}
 
-	public Boolean getOdobrenaRegistracija() {
+	public int getOdobrenaRegistracija() {
 		return odobrenaRegistracija;
 	}
 
-	public void setOdobrenaRegistracija(Boolean odobrenaRegistracija) {
+	public void setOdobrenaRegistracija(int odobrenaRegistracija) {
 		this.odobrenaRegistracija = odobrenaRegistracija;
 	}
 

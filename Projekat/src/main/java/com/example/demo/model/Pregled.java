@@ -34,22 +34,22 @@ public class Pregled {
 	@Column(name = "trajanje", nullable = true)
 	private Time trajanje; // dateTime
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne( fetch = FetchType.LAZY)
 	private TipPregleda tipPregleda;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER )
+	@ManyToOne(fetch = FetchType.LAZY )
 	private Sala sala;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Lekar lekar;
 
 //	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 //	private MedicinskaSestra medicinskaSestra;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Pacijent pacijent;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Klinika klinika;
 
 	@Column(name = "cena", nullable = false)
@@ -181,13 +181,11 @@ public class Pregled {
 		return super.hashCode();
 	}
 
-	@Override
-	public String toString() {
-		// TODO Auto-generated method stub
-		return super.toString();
-	}
+	
 
 
+
+	
 
 	public int getStatus() {
 		return status;
@@ -227,4 +225,5 @@ public class Pregled {
 		this.izvestajOPregledu = izvestajOPregledu;
 	}
 
+	
 }

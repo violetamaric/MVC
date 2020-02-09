@@ -12,25 +12,25 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+
 @Entity
 public class Lek {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
-	@Column(name="naziv", nullable=false)
+
+	@Column(name = "naziv", nullable = false)
 	private String naziv;
-	
-	@Column(name="sifra", nullable=false)
+
+	@Column(name = "sifra", nullable = false)
 	private String sifra;
-	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+
+	@ManyToOne( fetch = FetchType.LAZY)
 	private KlinickiCentar klinickiCentar;
-	
-	@OneToMany(mappedBy = "lek", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+
+	@OneToMany(mappedBy = "lek", fetch = FetchType.LAZY)
 	private Set<Recept> recepti = new HashSet<Recept>();
 
-	
 	public Long getId() {
 		return id;
 	}
@@ -92,7 +92,5 @@ public class Lek {
 		// TODO Auto-generated method stub
 		return super.toString();
 	}
-	
-	
-	
+
 }

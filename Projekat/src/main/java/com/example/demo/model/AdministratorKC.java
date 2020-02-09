@@ -38,7 +38,10 @@ public class AdministratorKC implements UserDetails{
 	@Column(name="email", nullable=false)
 	private String email;
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@Column(name = "status", nullable = false)
+	private int status;
+	
+	@ManyToOne( fetch = FetchType.LAZY)
 	private KlinickiCentar klinickiCentar;
 	
 	@ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
@@ -82,6 +85,12 @@ public class AdministratorKC implements UserDetails{
 		this.klinickiCentar = klinickiCentar;
 	}
 	
+	public int getStatus() {
+		return status;
+	}
+	public void setStatus(int status) {
+		this.status = status;
+	}
 	@Override
 	public boolean equals(Object obj) {
 		// TODO Auto-generated method stub

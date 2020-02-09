@@ -22,13 +22,13 @@ public class IzvestajOPregledu {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne( fetch = FetchType.LAZY)
 	private ZdravstveniKarton zdravstveniKarton;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Dijagnoza dijagnoza;
 	
-	@OneToMany(mappedBy = "izvestajOPregledu", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "izvestajOPregledu", fetch = FetchType.LAZY)
 	private Set<Recept> listaRecepata = new HashSet<Recept>();
 	
 	@OneToOne(fetch=FetchType.LAZY)

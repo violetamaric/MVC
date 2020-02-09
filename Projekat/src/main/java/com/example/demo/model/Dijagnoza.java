@@ -28,10 +28,10 @@ public class Dijagnoza {
 	@Column(name="oznaka", nullable=false)
 	private String oznaka;
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne( fetch = FetchType.LAZY)
 	private KlinickiCentar klinickiCentar;
 	
-	@OneToMany(mappedBy = "dijagnoza", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "dijagnoza", fetch = FetchType.LAZY)
 	private Set<IzvestajOPregledu> listaIzvestajaOPregledu = new HashSet<IzvestajOPregledu>();
 
 	public Long getId() {
@@ -41,8 +41,6 @@ public class Dijagnoza {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
-	
 
 	public String getOpis() {
 		return opis;

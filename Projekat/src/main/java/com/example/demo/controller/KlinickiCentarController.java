@@ -24,7 +24,7 @@ import com.example.demo.model.Klinika;
 import com.example.demo.service.AdministratorKCService;
 import com.example.demo.service.KlinickiCentarService;
 
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping(value="/api/kc", produces = MediaType.APPLICATION_JSON_VALUE)
 public class KlinickiCentarController {

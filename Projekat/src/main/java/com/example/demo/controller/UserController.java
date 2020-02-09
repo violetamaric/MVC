@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -21,6 +22,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -29,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.AdministratorKCDTO;
 import com.example.demo.dto.PacijentDTO;
 import com.example.demo.dto.UserDTO;
 import com.example.demo.model.AdministratorKC;
@@ -50,9 +53,10 @@ import com.example.demo.service.MedicinskaSestraService;
 import com.example.demo.service.PacijentService;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping(value = "/api/korisnici", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserController {
-	
+
 	@Autowired
 	TokenUtils tokenUtils;
 
@@ -64,7 +68,7 @@ public class UserController {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-	
+
 	@Autowired
 	private PacijentService pacijentService;
 
@@ -85,106 +89,20 @@ public class UserController {
 
 	@Autowired
 	private AuthorityRepository authorityRepository;
-    
 
-//	@Autowired
-//	private AuthenticationManager authenticationManager;
-
-//	@PostMapping(path = "/login", consumes = "application/json")
-//	@CrossOrigin(origins = "http://localhost:3000")
-//	public ResponseEntity<UserDTO> login(@RequestBody PacijentDTO pacijentDTO) {
-//
-//		System.out.println("LOGIN");
-//		
-//		AdministratorKC administratorKC = administratorKCService.findByEmailAndLozinka(pacijentDTO.getEmail(),
-//				pacijentDTO.getLozinka());
-//		if(administratorKC == null) {
-//			AdministratorKlinike administratorKlinike = administratorKlinikeService.findByEmailAndLozinka(pacijentDTO.getEmail(),
-//					pacijentDTO.getLozinka());
-//			if(administratorKlinike == null) {
-//				Lekar lekar = lekarService.findByEmailAndLozinka(pacijentDTO.getEmail(),
-//						pacijentDTO.getLozinka());
-//				if (lekar == null) {
-//					MedicinskaSestra medicinskaSestra = medicinskaSestraService.findByEmailAndLozinka(pacijentDTO.getEmail(),
-//							pacijentDTO.getLozinka());
-//					if (medicinskaSestra == null) {
-//						Pacijent pacijent = pacijentService.findByEmailAndLozinka(pacijentDTO.getEmail(),
-//								pacijentDTO.getLozinka());
-//						if (pacijent == null) {
-//							return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//						}else if(pacijent.getOdobrenaRegistracija() == false){
-//							System.out.println("NIJE ODOBRENA REGISTRACIJA OD STRANE ADMINA KC");
-//							return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//						}else {
-//							UserDTO userDTO = new UserDTO();
-//							userDTO.setEmail(pacijent.getEmail());
-//							userDTO.setLozinka(pacijent.getLozinka());
-//							userDTO.setUloga(Uloga.PACIJENT);
-//							System.out.println(userDTO);
-//							return new ResponseEntity<>(userDTO, HttpStatus.OK);							
-//						}
-//					}else {
-//						UserDTO userDTO = new UserDTO();
-//						userDTO.setEmail(medicinskaSestra.getEmail());
-//						userDTO.setLozinka(medicinskaSestra.getLozinka());
-//						userDTO.setUloga(Uloga.MEDICINSKASESTRA);
-//						System.out.println(userDTO);
-//						return new ResponseEntity<>(userDTO, HttpStatus.OK);
-//						
-//					}
-//				}else {
-//					UserDTO userDTO = new UserDTO();
-//					userDTO.setEmail(lekar.getEmail());
-//					userDTO.setLozinka(lekar.getLozinka());
-//					userDTO.setUloga(Uloga.LEKAR);
-//					System.out.println(userDTO);
-//					return new ResponseEntity<>(userDTO, HttpStatus.OK);
-//				}
-//			}else {
-//				UserDTO userDTO = new UserDTO();
-//				userDTO.setEmail(administratorKlinike.getEmail());
-//				userDTO.setLozinka(administratorKlinike.getLozinka());
-//				userDTO.setUloga(Uloga.ADMINISTRATORK);
-//				System.out.println(userDTO);
-//				return new ResponseEntity<>(userDTO, HttpStatus.OK);
-//			}
-//		}else {
-//			UserDTO userDTO = new UserDTO();
-//			userDTO.setEmail(administratorKC.getEmail());
-//			userDTO.setLozinka(administratorKC.getLozinka());
-//			userDTO.setUloga(Uloga.ADMINISTRATORKC);
-//			System.out.println(userDTO);
-//			return new ResponseEntity<>(userDTO, HttpStatus.OK);
-//		}
-//		
-//	}
-//	@RequestMapping(value = "/getUser", method = RequestMethod.GET)
-//	@CrossOrigin(origins = "http://localhost:3000")
-//	public ResponseEntity<UserDTO> getUser(){
-//		System.out.println("GET USER");
-//		
-//		UserDTO userDTO = new UserDTO();
-//		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//		System.out.println(SecurityContextHolder.getContext().getAuthentication());
-//		userDTO.setEmail((String) auth.getPrincipal());
-//		System.out.println(userDTO.getEmail());
-//		System.out.println(auth.getAuthorities());
-//		return new ResponseEntity<>(userDTO, HttpStatus.OK);
-//	}
-	
 	@PostMapping(path = "/register", consumes = "application/json")
 	@CrossOrigin(origins = "http://localhost:3000")
 	public ResponseEntity<PacijentDTO> registerPacijent(@RequestBody PacijentDTO pacijentDTO) {
 
 		Pacijent pacijent = new Pacijent();
-		
+
 		List<Pacijent> pacijenti = pacijentService.findAll();
-		for (Pacijent p :pacijenti) {
-			if(p.getLbo().equals(pacijentDTO.getLbo()) ||
-					p.getJmbg().equals(pacijentDTO.getJmbg()) ||
-					p.getEmail().equals(pacijentDTO.getEmail())) {
+		for (Pacijent p : pacijenti) {
+			if (p.getLbo().equals(pacijentDTO.getLbo()) || p.getJmbg().equals(pacijentDTO.getJmbg())
+					|| (p.getEmail().equals(pacijentDTO.getEmail()) && pacijentDTO.getOdobrenaRegistracija() == 2)) {
 				return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 			}
+
 		}
 
 		pacijent.setLbo(pacijentDTO.getLbo());
@@ -196,7 +114,7 @@ public class UserController {
 		pacijent.setGrad(pacijentDTO.getGrad());
 		pacijent.setDrzava(pacijentDTO.getDrzava());
 		pacijent.setTelefon(pacijentDTO.getTelefon());
-		pacijent.setOdobrenaRegistracija(false);
+		pacijent.setOdobrenaRegistracija(0);
 		pacijent.setJmbg(pacijentDTO.getJmbg());
 		Set<Authority> authorities = new HashSet<Authority>();
 		authorities.add(authorityRepository.findByUloga("PACIJENT"));
@@ -210,34 +128,24 @@ public class UserController {
 		kc.getZahteviZaRegistraciju().add(pacijent);
 		kc = KCService.save(kc);
 
-//		KlinickiCentar kc = pacijent.getKlinickiCentar();
-//		
-//		System.out.println("dodat u zahteve za registraciju");
-//		kc.getZahteviZaRegistraciju().add(pacijent);
-
 		return new ResponseEntity<>(new PacijentDTO(pacijent), HttpStatus.CREATED);
 	}
 
-	
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	@CrossOrigin(origins = "http://localhost:3000")
-	public ResponseEntity<?> createAuthenticationToken(HttpServletRequest req,@RequestBody UserDTO userDTO,
+	public ResponseEntity<?> createAuthenticationToken(HttpServletRequest req, @RequestBody UserDTO userDTO,
 
 			HttpServletResponse response) throws AuthenticationException, IOException {
 		System.out.println("LOGIN");
 		System.out.println(userDTO.getEmail());
 		System.out.println(userDTO.getLozinka());
 		UsernamePasswordAuthenticationToken u = new UsernamePasswordAuthenticationToken(userDTO.getEmail(),
-
 				userDTO.getLozinka());
 		System.out.println("prosao auth");
 		System.out.println(u);
 		final Authentication authentication = authenticationManager
+				.authenticate(new UsernamePasswordAuthenticationToken(userDTO.getEmail(), userDTO.getLozinka()));
 
-				.authenticate(new UsernamePasswordAuthenticationToken(userDTO.getEmail(),
-
-						userDTO.getLozinka()));
-		
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		System.out.println("***" + SecurityContextHolder.getContext().getAuthentication());
 //		SecurityContext sc = SecurityContextHolder.getContext();
@@ -250,6 +158,10 @@ public class UserController {
 		if (nekiKorisnik instanceof Pacijent) {
 
 			Pacijent pacijent = (Pacijent) nekiKorisnik;
+			if (pacijent.getOdobrenaRegistracija() == 3 || pacijent.getOdobrenaRegistracija() == 1
+					|| pacijent.getOdobrenaRegistracija() == 0) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
 
 			Collection<?> roles = pacijent.getAuthorities();
 
@@ -257,11 +169,16 @@ public class UserController {
 
 			int expiresIn = tokenUtils.getExpiredIn();
 
-			return ResponseEntity.ok(new UserTokenState(jwt, expiresIn, ((Authority) roles.iterator().next()).getUloga(),((Pacijent)authentication.getPrincipal()).getEmail()));
+			return ResponseEntity
+					.ok(new UserTokenState(jwt, expiresIn, ((Authority) roles.iterator().next()).getUloga(),
+							((Pacijent) authentication.getPrincipal()).getEmail()));
 
 		} else if (nekiKorisnik instanceof Lekar) {
 
 			Lekar lekar = (Lekar) nekiKorisnik;
+			if (lekar.getStatus() == 2) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
 
 			Collection<?> roles = lekar.getAuthorities();
 
@@ -269,42 +186,60 @@ public class UserController {
 
 			int expiresIn = tokenUtils.getExpiredIn();
 
-			return ResponseEntity.ok(new UserTokenState(jwt, expiresIn, ((Authority) roles.iterator().next()).getUloga(),((Lekar)authentication.getPrincipal()).getEmail()));
+			return ResponseEntity
+					.ok(new UserTokenState(jwt, expiresIn, ((Authority) roles.iterator().next()).getUloga(),
+							((Lekar) authentication.getPrincipal()).getEmail()));
 
 		} else if (nekiKorisnik instanceof MedicinskaSestra) {
 
 			MedicinskaSestra medicinskaSestra = (MedicinskaSestra) nekiKorisnik;
-
+			if (medicinskaSestra.getStatus() == 2) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
 			Collection<?> roles = medicinskaSestra.getAuthorities();
 
 			String jwt = tokenUtils.tokenMedicinskaSestra(medicinskaSestra, (Authority) roles.iterator().next());
 
 			int expiresIn = tokenUtils.getExpiredIn();
 
-			return ResponseEntity.ok(new UserTokenState(jwt, expiresIn, ((Authority) roles.iterator().next()).getUloga(),((MedicinskaSestra)authentication.getPrincipal()).getEmail()));
+			return ResponseEntity
+					.ok(new UserTokenState(jwt, expiresIn, ((Authority) roles.iterator().next()).getUloga(),
+							((MedicinskaSestra) authentication.getPrincipal()).getEmail()));
 
 		} else if (nekiKorisnik instanceof AdministratorKlinike) {
 
 			AdministratorKlinike administratorKlinike = (AdministratorKlinike) nekiKorisnik;
 
+			if (administratorKlinike.getStatus() == 2) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
 			Collection<?> roles = administratorKlinike.getAuthorities();
 
 			String jwt = tokenUtils.tokenAKC(administratorKlinike, (Authority) roles.iterator().next());
 
 			int expiresIn = tokenUtils.getExpiredIn();
-			
-			return ResponseEntity.ok(new UserTokenState(jwt, expiresIn, ((Authority) roles.iterator().next()).getUloga(),((AdministratorKlinike)authentication.getPrincipal()).getEmail()));
+
+			return ResponseEntity
+					.ok(new UserTokenState(jwt, expiresIn, ((Authority) roles.iterator().next()).getUloga(),
+							((AdministratorKlinike) authentication.getPrincipal()).getEmail()));
 
 		} else if (nekiKorisnik instanceof AdministratorKC) {
 
 			AdministratorKC administratorKlinickogCentra = (AdministratorKC) nekiKorisnik;
+
+			if (administratorKlinickogCentra.getStatus() == 2) {
+
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
 
 			Collection<?> roles = administratorKlinickogCentra.getAuthorities();
 
 			String jwt = tokenUtils.tokenAK(administratorKlinickogCentra, (Authority) roles.iterator().next());
 			int expiresIn = tokenUtils.getExpiredIn();
 
-			return ResponseEntity.ok(new UserTokenState(jwt, expiresIn, ((Authority) roles.iterator().next()).getUloga(),((AdministratorKC)authentication.getPrincipal()).getEmail()));
+			return ResponseEntity
+					.ok(new UserTokenState(jwt, expiresIn, ((Authority) roles.iterator().next()).getUloga(),
+							((AdministratorKC) authentication.getPrincipal()).getEmail()));
 
 		} else {
 
@@ -319,12 +254,12 @@ public class UserController {
 	public ResponseEntity<?> aktivirajPacijenta(@PathVariable Long id) {
 
 		// a student must exist
-		System.out.println("AKTIVIRAJ PACIJENTA");
 		Pacijent pacijent = pacijentService.findByID(id);
 
-		pacijent.setOdobrenaRegistracija(true);
+		pacijent.setOdobrenaRegistracija(2);
 
 		pacijent = pacijentService.save(pacijent);
 		return new ResponseEntity<>(new PacijentDTO(pacijent), HttpStatus.OK);
 	}
+
 }

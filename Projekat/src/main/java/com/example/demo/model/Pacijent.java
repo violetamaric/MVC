@@ -22,17 +22,19 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
-//@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Pacijent implements UserDetails{
+@JsonIgnoreProperties("zk")
+public class Pacijent implements UserDetails {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "zdravstveniKarton_id")
+	@JsonProperty("zk")
 	private ZdravstveniKarton zdravstveniKarton;
 
 	@Column(name = "ime", nullable = false)
@@ -43,7 +45,7 @@ public class Pacijent implements UserDetails{
 
 	@Column(name = "lbo", nullable = false)
 	private String lbo;
-	
+
 	@Column(name = "jmbg", nullable = false)
 	private String jmbg;
 
@@ -52,27 +54,29 @@ public class Pacijent implements UserDetails{
 
 	@Column(name = "email", nullable = false)
 	private String email;
-	
+
 	@Column(name = "adresa", nullable = false)
 	private String adresa;
-	
+
 	@Column(name = "grad", nullable = false)
 	private String grad;
-	
+
 	@Column(name = "drzava", nullable = false)
 	private String drzava;
-	
+
 	@Column(name = "telefon", nullable = false)
 	private String telefon;
-	
+
 	@Column(name = "odobrenaRegistracija", nullable = true)
-	private Boolean odobrenaRegistracija;
-	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private int odobrenaRegistracija;
+
+	@ManyToOne(fetch = FetchType.LAZY)
 	private KlinickiCentar klinickiCentar;
 
-	@ManyToMany(mappedBy ="listaPacijenataMedSestra")
-	//@JoinTable(name = "medicinskaSestra_pacijent", joinColumns = @JoinColumn(name = "pacijent_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "lekar_id", referencedColumnName = "id"))
+	@ManyToMany(mappedBy = "listaPacijenataMedSestra")
+	// @JoinTable(name = "medicinskaSestra_pacijent", joinColumns = @JoinColumn(name
+	// = "pacijent_id", referencedColumnName = "id"), inverseJoinColumns =
+	// @JoinColumn(name = "lekar_id", referencedColumnName = "id"))
 	private Set<MedicinskaSestra> listaMedicinskihSestara = new HashSet<MedicinskaSestra>();
 
 	@ManyToMany(mappedBy = "listaPacijenata")
@@ -80,17 +84,15 @@ public class Pacijent implements UserDetails{
 
 	@ManyToMany(mappedBy = "listaPacijenata")
 	private Set<Klinika> listaKlinika = new HashSet<Klinika>();
-	
-	@OneToMany(mappedBy = "pacijent", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+
+	@OneToMany(mappedBy = "pacijent", fetch = FetchType.LAZY)
 	private Set<Operacija> listaOperacija = new HashSet<Operacija>();
 
-	@OneToMany(mappedBy = "pacijent", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "pacijent", fetch = FetchType.LAZY)
 	private Set<Pregled> listaPregleda = new HashSet<Pregled>();
-	
+
 	@ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
-	@JoinTable(name = "pacijent_authority",
-			joinColumns = @JoinColumn(name = "pacijent_id", referencedColumnName = "id"),
-			inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
+	@JoinTable(name = "pacijent_authority", joinColumns = @JoinColumn(name = "pacijent_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
 	private Set<Authority> authorities;
 
 	public Pacijent() {
@@ -136,7 +138,6 @@ public class Pacijent implements UserDetails{
 	public void setLbo(String lbo) {
 		this.lbo = lbo;
 	}
-	
 
 	public String getJmbg() {
 		return jmbg;
@@ -167,8 +168,6 @@ public class Pacijent implements UserDetails{
 		// TODO Auto-generated method stub
 		return super.hashCode();
 	}
-
-
 
 	@Override
 	public boolean equals(Object arg0) {
@@ -239,12 +238,12 @@ public class Pacijent implements UserDetails{
 	public void setTelefon(String telefon) {
 		this.telefon = telefon;
 	}
-	
-	public Boolean getOdobrenaRegistracija() {
+
+	public int getOdobrenaRegistracija() {
 		return odobrenaRegistracija;
 	}
 
-	public void setOdobrenaRegistracija(Boolean odobrenaRegistracija) {
+	public void setOdobrenaRegistracija(int odobrenaRegistracija) {
 		this.odobrenaRegistracija = odobrenaRegistracija;
 	}
 
@@ -309,10 +308,5 @@ public class Pacijent implements UserDetails{
 	public void setAuthorities(Set<Authority> authorities) {
 		this.authorities = authorities;
 	}
-
-
-	
-	
-	
 
 }

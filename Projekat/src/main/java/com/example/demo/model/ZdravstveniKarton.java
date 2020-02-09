@@ -13,40 +13,35 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-import org.springframework.transaction.annotation.Transactional;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-//@Transactional
-//@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
 public class ZdravstveniKarton {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
-	@Column(name="visina", nullable=true)
+
+	@Column(name = "visina", nullable = true)
 	private double visina;
-	
-	@Column(name="tezina", nullable=true)
+
+	@Column(name = "tezina", nullable = true)
 	private double tezina;
-	
-	@Column(name="krvnaGrupa", nullable=true)
+
+	@Column(name = "krvnaGrupa", nullable = true)
 	private String krvnaGrupa;
-	
-	@OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+
+	@OneToOne(fetch = FetchType.LAZY)
 	private Pacijent pacijent;
-	
-	@OneToMany(mappedBy = "zdravstveniKarton", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+
+	@OneToMany(mappedBy = "zdravstveniKarton", fetch = FetchType.LAZY)
 	private Set<IzvestajOPregledu> listaIzvestajaOPregledu = new HashSet<IzvestajOPregledu>();
-	
-//	@OneToMany(mappedBy = "zdravstveniKarton", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//	private Set<Operacija> listaOperacija = new HashSet<Operacija>();
-	
+
 	public ZdravstveniKarton() {
 		super();
 	}
+
 	public ZdravstveniKarton(ZdravstveniKarton zk) {
 		this.id = zk.getId();
 		this.visina = zk.getVisina();
@@ -54,29 +49,18 @@ public class ZdravstveniKarton {
 		this.pacijent = zk.getPacijent();
 		this.krvnaGrupa = zk.getKrvnaGrupa();
 	}
-	
 
 	public String getKrvnaGrupa() {
 		return krvnaGrupa;
 	}
+
 	public void setKrvnaGrupa(String krvnaGrupa) {
 		this.krvnaGrupa = krvnaGrupa;
 	}
-//	public Set<Operacija> getListaOperacija() {
-//		return listaOperacija;
-//	}
-//
-//	public void setListaOperacija(Set<Operacija> listaOperacija) {
-//		this.listaOperacija = listaOperacija;
-//	}
-
-
-
 
 	public Long getId() {
 		return id;
 	}
-
 
 	@Override
 	public int hashCode() {
@@ -93,6 +77,7 @@ public class ZdravstveniKarton {
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		return result;
 	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -128,52 +113,41 @@ public class ZdravstveniKarton {
 			return false;
 		return true;
 	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
-
 
 	public double getVisina() {
 		return visina;
 	}
 
-
 	public void setVisina(double visina) {
 		this.visina = visina;
 	}
-
 
 	public double getTezina() {
 		return tezina;
 	}
 
-
 	public void setTezina(double tezina) {
 		this.tezina = tezina;
 	}
-
 
 	public Pacijent getPacijent() {
 		return pacijent;
 	}
 
-
 	public void setPacijent(Pacijent pacijent) {
 		this.pacijent = pacijent;
 	}
-
 
 	public Set<IzvestajOPregledu> getListaIzvestajaOPregledu() {
 		return listaIzvestajaOPregledu;
 	}
 
-
 	public void setListaIzvestajaOPregledu(Set<IzvestajOPregledu> listaIzvestajaOPregledu) {
 		this.listaIzvestajaOPregledu = listaIzvestajaOPregledu;
 	}
 
-	
-	
-	
-	
 }

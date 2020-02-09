@@ -27,16 +27,16 @@ public class Sala {
 	@Column(name="tipSale", nullable=false)	
 	private int tipSale; //tip sobe 0-operacije, 1-preg led 
 	
-	@OneToMany(mappedBy = "sala", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "sala", fetch = FetchType.LAZY)
 	private Set<Pregled> listaPregleda = new HashSet<Pregled>();
 	
-	@OneToMany(mappedBy = "sala", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "sala", fetch = FetchType.LAZY)
 	private Set<Operacija> listaOperacija = new HashSet<Operacija>();
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne( fetch = FetchType.LAZY)
 	private Klinika klinika;
 	
-	@OneToMany(mappedBy = "sala", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "sala", fetch = FetchType.LAZY )
 	private Set<Termin> zauzetiTermini = new HashSet<Termin>();
 	
 	public Long getId() {
@@ -108,7 +108,7 @@ public class Sala {
 		return "Sala [id=" + id + ", naziv=" + naziv + ", broj=" + broj + ", tipSale=" + tipSale +  ", zauzetiTermini="
 				+ zauzetiTermini + "]";
 	}
-	
+
 	
 	
 }

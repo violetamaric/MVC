@@ -25,7 +25,7 @@ public class OperacijaDTO {
 	private int status;
 	private int termin;
 	
-	private Set<LekarDTO> listaLekara = new HashSet<LekarDTO>();
+	private Set<Long> listaLekara = new HashSet<>();
 //	private List<Long> lekariID = new ArrayList<>();
 	
 	
@@ -41,14 +41,20 @@ public class OperacijaDTO {
 		this.klinikaID = operacija.getKlinika().getId();
 		this.nazivKl = operacija.getKlinika().getNaziv();
 		this.tipOperacije = operacija.getTipOperacije();
-		this.salaBR = operacija.getSala().getBroj();
-		this.salaID = operacija.getSala().getId();
-		this.salaN = operacija.getSala().getNaziv();
+		if(operacija.getSala() != null) {
+			this.salaBR = operacija.getSala().getBroj();
+			this.salaID = operacija.getSala().getId();
+			this.salaN = operacija.getSala().getNaziv();
+		}
+		
 		this.status = operacija.getStatus();
 		this.termin = operacija.getTermin();
-		for(Lekar l:operacija.getListaLekara()) {
-			this.listaLekara.add(new LekarDTO(l));
+		if(operacija.getListaLekara().size() != 0) {
+			for(Lekar l:operacija.getListaLekara()) {
+				this.listaLekara.add(l.getId());
+			}
 		}
+		
 		
 	}
 
@@ -66,6 +72,17 @@ public class OperacijaDTO {
 
 	public void setStatus(int status) {
 		this.status = status;
+	}
+
+	@Override
+	public String toString() {
+		return "OperacijaDTO [id=" + id + ", datum=" + datum + ", tipOperacije=" + tipOperacije + ", pacijentID="
+				+ pacijentID + ", klinikaID=" + klinikaID + ", salaID=" + salaID + ", salaN=" + salaN + ", salaBR="
+				+ salaBR + ", status=" + status + ", termin=" + termin + ", listaLekara=" + listaLekara + "]";
+	}
+	
+
+	public OperacijaDTO() {
 	}
 
 	@Override
@@ -200,11 +217,11 @@ public class OperacijaDTO {
 		this.termin = termin;
 	}
 
-	public Set<LekarDTO> getListaLekara() {
+	public Set<Long> getListaLekara() {
 		return listaLekara;
 	}
 
-	public void setListaLekara(Set<LekarDTO> listaLekara) {
+	public void setListaLekara(Set<Long> listaLekara) {
 		this.listaLekara = listaLekara;
 	}
 
