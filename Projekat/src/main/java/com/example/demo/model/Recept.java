@@ -24,7 +24,8 @@ public class Recept {
 	@Column(name = "medicinskaSestraOvera", nullable = false)
 	private boolean overen = false;
 
-	@ManyToOne( fetch = FetchType.LAZY)
+//	@ManyToOne( fetch = FetchType.LAZY)
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private IzvestajOPregledu izvestajOPregledu;
 
 	public Long getId() {

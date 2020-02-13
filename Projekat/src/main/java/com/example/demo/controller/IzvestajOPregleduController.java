@@ -100,18 +100,18 @@ public class IzvestajOPregleduController {
 			
 			lekar =  lekarService.save(lekar);
 		}
-
+		System.out.println("***********1");
 		Pacijent pacijent = pregled.getPacijent();
 		iz.setPregled(pregled);
-		
+		System.out.println("***********2");
 		//ZDRAVSTVENI KARTON
 		ZdravstveniKarton zk = pacijent.getZdravstveniKarton();
 		iz.setZdravstveniKarton(zk);
-		
+		System.out.println("***********3");
 		//DIJAGNOZA
 		Dijagnoza dijagnoza = dijagnozaService.findById(izDTO.getDijagnozaID());
 		iz.setDijagnoza(dijagnoza);
-		
+		System.out.println("***********4");
 		
 		
 		//RECEPTI
